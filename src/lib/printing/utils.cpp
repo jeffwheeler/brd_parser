@@ -1,5 +1,7 @@
 #include "utils.h"
 
+#include <cstdarg>
+
 void print_hex(uint32_t n) { std::printf("0x%X\n", n); }
 
 void log(std::ifstream *f, const char *fmt...) {

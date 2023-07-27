@@ -21,5 +21,5 @@ enable_testing()
 include_directories(.)
 
 add_subdirectory(lib)
-add_subdirectory(app)
+add_subdirectory(app EXCLUDE_FROM_ALL)
 add_subdirectory(test)
