@@ -1,11 +1,14 @@
 #ifndef TYPES_H
 #define TYPES_H
 
+#include <array>
+#include <cstddef>
 #include <map>
 #include <set>
 #include <string>
 #include <type_traits>
 #include <variant>
+#include <vector>
 
 #include "cadence_fp.h"
 

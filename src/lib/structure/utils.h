@@ -1,6 +1,8 @@
 #ifndef STRUCTURE_UTILS_H
 #define STRUCTURE_UTILS_H
 
+#include <optional>
+
 #include "types.h"
 
 std::pair<double, double> x01_center(const x01<A_174> *inst);
