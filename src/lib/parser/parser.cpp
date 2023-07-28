@@ -792,6 +792,7 @@ std::optional<File<A_174>> parse_file(const std::string& filepath) {
             return parse_file<A_166>(filepath);
         case 0x00140400:
         case 0x00140500:
+        case 0x00140600:
         case 0x00140700:
             return parse_file<A_172>(filepath);
         case 0x00140900:
