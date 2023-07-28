@@ -21,5 +21,6 @@ enable_testing()
 include_directories(.)
 
 add_subdirectory(lib)
-add_subdirectory(app EXCLUDE_FROM_ALL)
+add_subdirectory(brd_cli)
+add_subdirectory(brd_gui EXCLUDE_FROM_ALL)
 add_subdirectory(test)

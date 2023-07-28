@@ -1041,6 +1041,7 @@ File<version>::operator File<A_174>() const {
 // Explicit instantiations required, because there is nothing to otherwise
 // create them within the library code.
 template File<A_160>::operator File<A_174>() const;
+template File<A_162>::operator File<A_174>() const;
 template File<A_164>::operator File<A_174>() const;
 template File<A_165>::operator File<A_174>() const;
 template File<A_166>::operator File<A_174>() const;
