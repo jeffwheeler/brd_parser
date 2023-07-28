@@ -11,10 +11,6 @@ const double FACTOR_MAP[] = {60000., 1000., 2000., 600.,  1100.,  600.,
 
 int main(int argc, char *argv[]) {
     uint8_t id = 10;
-    // auto old_fs = parse_file("/Users/jeff/Downloads/BeagleBone-AI.brd");
-    // auto old_fs = parse_file("/Users/jeff/Downloads/BeagleBoard-xM.brd");
-    // File<A_174> fs = old_fs;
-    // return 0;
 
     QApplication app(argc, argv);
     MainWindow window;

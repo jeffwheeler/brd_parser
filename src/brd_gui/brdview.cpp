@@ -126,7 +126,7 @@ void BrdView::drawX05(const x05<A_174> *inst, QPen *pen_) {
 
     uint32_t k = inst->first_segment_ptr;
 
-    QPen *pen = nullptr;
+    QPen *pen = new QPen();
     uint32_t prev_width = -1;
     QPainterPath path;
     path.moveTo(*startingPoint(k) * 1.0 / factor);

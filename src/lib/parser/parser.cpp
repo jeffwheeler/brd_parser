@@ -95,6 +95,7 @@ uint32_t parse_x03(File<version>& fs, std::ifstream& f) {
             skip_and_pad(&f, 0);
             break;
             */
+        case 0x6D:
         case 0x6E:
         case 0x6F:
         case 0x68:
@@ -198,7 +199,7 @@ uint32_t parse_x1D(File<version>& fs, std::ifstream& f) {
     auto& inst = fs.x1D_map[k];
 
     // log(&f, "size_a = %d, size_b = %d\n", size_a, size_b);
-    skip(&f, inst.size_b * (version >= A_164 ? 56 : 48));
+    skip(&f, inst.size_b * (version >= A_162 ? 56 : 48));
     skip(&f, inst.size_a * 256);
     if (version >= A_172) {
         skip(&f, 4);
@@ -227,7 +228,7 @@ uint32_t parse_x1F(File<version>& fs, std::ifstream& f) {
 
     if constexpr (version >= A_172) {
         skip(&f, inst.size * 280 + 8);
-    } else if constexpr (version >= A_164) {
+    } else if constexpr (version >= A_162) {
         skip(&f, inst.size * 280 + 4);
     } else {
         skip(&f, inst.size * 240 + 4);
@@ -307,7 +308,9 @@ uint32_t parse_x31(File<version>& fs, std::ifstream& f) {
     if (version >= A_174) {
         skip(&f, 4);
     }
-    std::getline(f, x31_inst->s, (char)0);
+    if (x31_inst->hdr.len > 0) {
+        std::getline(f, x31_inst->s, (char)0);
+    }
     (fs.x31_map)[x31_inst->hdr.k] = *x31_inst;
     skip_and_pad(&f, 0);
     return 0;
@@ -404,6 +407,10 @@ uint32_t parse_x36(File<version>& fs, std::ifstream& f) {
             //     skip(&f, 1016 - 4 * 6);
             // }
             break;
+        case 0x0C:
+            skip(&f, inst->size * 232);
+        case 0x0D:
+            skip(&f, inst->size * 200);
         case 0x0F:
             for (uint32_t i = 0; i < inst->size; i++) {
                 x36_x0F<version> x;
@@ -468,8 +475,6 @@ File<version> parse_file(const std::string& filepath) {
         printf("Magic: 0x%08X\n", hdr->magic);
         std::cout << hdr->allegro_version << std::endl;
     }
-
-    printf("un5 = 0x %08X = %d\n", ntohl(hdr->un5), hdr->un5);
 
     // Skip until `unknown19`
     f.seekg(60, std::ios_base::cur);
@@ -759,15 +764,22 @@ File<version> parse_file(const std::string& filepath) {
 std::optional<File<A_174>> parse_file(const std::string& filepath) {
     std::ifstream f(filepath, std::ios::binary);
 
+    if (!f.is_open()) {
+        printf("Failed to open file \"%s\"\n", filepath.c_str());
+        return {};
+    }
+
     uint32_t magic;
     f.read((char*)&magic, sizeof(magic));
     f.close();
 
-    printf("Comparing magic 0x%08X\n", magic);
+    // printf("Comparing magic 0x%08X\n", magic);
     switch (magic) {
         case 0x00130000:
         case 0x00130200:
             return parse_file<A_160>(filepath);
+        case 0x00130402:
+            return parse_file<A_162>(filepath);
         case 0x00130C03:
             return parse_file<A_164>(filepath);
         case 0x00131003:
@@ -778,6 +790,7 @@ std::optional<File<A_174>> parse_file(const std::string& filepath) {
         case 0x00140400:
             return parse_file<A_172>(filepath);
         case 0x00140900:
+        case 0x00140901:
         case 0x00140902:
         case 0x00140E00:
             return parse_file<A_174>(filepath);

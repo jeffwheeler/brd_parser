@@ -281,6 +281,7 @@ sfs<version> SFS_TABLE[] = {
 // This syntax does not work in Clang.
 #ifndef __clang__
 template sfs<A_160> SFS_TABLE<A_160>;
+template sfs<A_162> SFS_TABLE<A_162>;
 template sfs<A_164> SFS_TABLE<A_164>;
 template sfs<A_165> SFS_TABLE<A_165>;
 template sfs<A_166> SFS_TABLE<A_166>;
