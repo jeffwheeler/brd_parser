@@ -380,6 +380,9 @@ uint32_t parse_x36(File<version>& fs, std::ifstream& f) {
                 // }
             }
             break;
+        case 0x05:
+            skip(&f, inst->size * 28);
+            break;
         case 0x08:
             for (uint32_t i = 0; i < inst->size; i++) {
                 x36_x08<version> x;
@@ -788,6 +791,8 @@ std::optional<File<A_174>> parse_file(const std::string& filepath) {
         case 0x00131504:
             return parse_file<A_166>(filepath);
         case 0x00140400:
+        case 0x00140500:
+        case 0x00140700:
             return parse_file<A_172>(filepath);
         case 0x00140900:
         case 0x00140901:
