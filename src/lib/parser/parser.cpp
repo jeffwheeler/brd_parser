@@ -121,7 +121,10 @@ uint32_t parse_x03(File<version>& fs, std::ifstream& f) {
             skip(&f, 4 * size);
         } break;
         case 0x70:
-            skip(&f, 12);
+            uint16_t a, b;
+            f.read((char*)&a, 2);
+            skip(&f, 6);
+            skip(&f, 4 * a);
             break;
         case 0x74:
             skip(&f, 16);
