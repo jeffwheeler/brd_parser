@@ -415,8 +415,10 @@ uint32_t parse_x36(File<version>& fs, std::ifstream& f) {
             break;
         case 0x0C:
             skip(&f, inst->size * 232);
+            break;
         case 0x0D:
             skip(&f, inst->size * 200);
+            break;
         case 0x0F:
             for (uint32_t i = 0; i < inst->size; i++) {
                 x36_x0F<version> x;
@@ -540,7 +542,7 @@ File<version> parse_file(const std::string& filepath) {
         }
 
         const parser_t parser = PARSER_TABLE<version>[t];
-        if (parser.parse != 0) {
+        if (t < 0x3E && parser.parse != 0) {
             parser.parse(fs, f);
         } else {
             log(&f, "\x1b[31m- Unrecognized type\x1b[0m\n");
