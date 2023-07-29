@@ -52,14 +52,15 @@ void stream_header(std::string& fname, File<A_174>& f) {
 void stream_strings(File<A_174>& f) {
     std::cout << R"A(
         <h2>Strings</h2>
-        <table class="table" style="max-width: 500px;">
-            <thead>
-                <tr>
-                    <th>Key</th>
-                    <th>Contents</th>
-                </tr>
-            </thead>
-            <tbody>
+        <div class="border overflow-auto mb-3" style="max-height: 300px; max-width: 500px">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Contents</th>
+                    </tr>
+                </thead>
+                <tbody>
     )A";
     for (auto& [k, s] : f.strings) {
         printf(
@@ -68,24 +69,26 @@ void stream_strings(File<A_174>& f) {
             k, s.c_str());
     }
     std::cout << R"A(
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     )A";
 }
 
 void stream_x30(File<A_174>& f) {
     std::cout << R"A(
         <h2>Placed string objects</h2>
-        <table class="table" style="max-width: 900px;">
-            <thead>
-                <tr>
-                    <th>Key</th>
-                    <th>Subtype/layer</th>
-                    <th style="width: 200px;">Coordinates</th>
-                    <th>Contents</th>
-                </tr>
-            </thead>
-            <tbody>
+        <div class="border overflow-auto mb-3" style="max-height: 300px; max-width: 900px">
+            <table class="table" style="max-width: 900px;">
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Subtype/layer</th>
+                        <th style="width: 200px;">Coordinates</th>
+                        <th>Contents</th>
+                    </tr>
+                </thead>
+                <tbody>
     )A";
     for (auto& [k, inst] : f.x30_map) {
         const x31* str_graphic =
@@ -103,8 +106,9 @@ void stream_x30(File<A_174>& f) {
                str_graphic->s.c_str());
     }
     std::cout << R"A(
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     )A";
 }
 
