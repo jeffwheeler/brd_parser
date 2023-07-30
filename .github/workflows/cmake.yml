@@ -10,16 +10,14 @@ env:
   BUILD_TYPE: Release
 
 jobs:
-  build:
+  ubuntu-build:
     name: CMake on Ubuntu
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
 
-    - name: Install Packages
-      run:
-        sudo apt install qt6-base-dev libgl1-mesa-dev
+    - name: Install Ubuntu Packages
+      run: sudo apt install qt6-base-dev libgl1-mesa-dev
 
     - name: Configure CMake
       run: CXX=g++-12 cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -S ${{github.workspace}}/src
