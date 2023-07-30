@@ -32,13 +32,21 @@ void BrdView::loadFile(File<A_174> *fs) {
     drawFile();
 }
 
+void BrdView::zoomIn() { scale(1.2, 1.2); }
+
+void BrdView::zoomOut() { scale(1 / 1.2, 1 / 1.2); }
+
+void BrdView::zoomFit() { fitInView(scene->sceneRect(), Qt::KeepAspectRatio); }
+
 void BrdView::keyPressEvent(QKeyEvent *event) {
     qint32 k = event->key();
 
     if (k == Qt::Key_I) {
-        scale(1.2, 1.2);
+        zoomIn();
     } else if (k == Qt::Key_O) {
-        scale(1 / 1.2, 1 / 1.2);
+        zoomOut();
+    } else if (k == Qt::Key_F) {
+        zoomFit();
     }
 };
 

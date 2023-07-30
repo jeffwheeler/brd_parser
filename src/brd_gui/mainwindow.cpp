@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), fs(nullptr) {
 
     setAcceptDrops(true);
 
+    createToolBar();
     // createDockWidget();
     createFilmSelectWidget();
 }
@@ -50,6 +51,17 @@ void MainWindow::loadFile(std::string path) {
     }
 }
 
+void MainWindow::openFile() {
+    QString filename = QFileDialog::getOpenFileName(this, "Open .brd file");
+    loadFile(filename.toStdString());
+}
+
+void MainWindow::zoomIn() { brdView->zoomIn(); }
+
+void MainWindow::zoomOut() { brdView->zoomOut(); }
+
+void MainWindow::zoomFit() { brdView->zoomFit(); }
+
 void MainWindow::createFilmSelectWidget() {
     QDockWidget* dock = new QDockWidget("Film Selector", this);
     dock->setAllowedAreas(Qt::RightDockWidgetArea);
@@ -79,6 +91,34 @@ void MainWindow::loadFilms() {
                    static_cast<QTreeWidget*>(nullptr),
                    QStringList(QString::fromStdString(pair.first))));
     }
+}
+
+void MainWindow::createToolBar() {
+    QToolBar* toolbar = new QToolBar("Main ToolBar");
+    toolbar->setFloatable(false);
+    toolbar->setMovable(false);
+
+    const QIcon openIcon = QIcon::fromTheme("document-open");
+    QAction* openAct = new QAction(openIcon, "Open", this);
+    openAct->setShortcuts(QKeySequence::Open);
+    connect(openAct, &QAction::triggered, this, &MainWindow::openFile);
+    toolbar->addAction(openAct);
+
+    toolbar->addSeparator();
+
+    QAction* zoomInAct = new QAction("Zoom In", this);
+    connect(zoomInAct, &QAction::triggered, this, &MainWindow::zoomIn);
+    toolbar->addAction(zoomInAct);
+
+    QAction* zoomOutAct = new QAction("Zoom Out", this);
+    connect(zoomOutAct, &QAction::triggered, this, &MainWindow::zoomOut);
+    toolbar->addAction(zoomOutAct);
+
+    QAction* zoomFitAct = new QAction("Zoom Fit", this);
+    connect(zoomFitAct, &QAction::triggered, this, &MainWindow::zoomFit);
+    toolbar->addAction(zoomFitAct);
+
+    this->addToolBar(toolbar);
 }
 
 void MainWindow::createDockWidget() {
