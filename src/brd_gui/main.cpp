@@ -5,17 +5,30 @@
 #include "lib/parser/parser.h"
 #include "mainwindow.h"
 
-const double FACTOR_MAP[] = {60000., 1000., 2000., 600.,  1100.,  600.,
-                             1000.,  1200., 500.,  6000., 10000., 500.,
-                             500.,   500.,  500.,  500.,  800.,   500.};
-
 int main(int argc, char *argv[]) {
-    uint8_t id = 10;
-
     QApplication app(argc, argv);
+    app.setApplicationName("brd_parser");
+    app.setApplicationVersion("0.0.0");
+
+    QCommandLineParser parser;
+    parser.addPositionalArgument("input", ".brd file to open");
+    parser.addHelpOption();
+    parser.addVersionOption();
+
+    parser.process(app);
+    const QStringList args = parser.positionalArguments();
+
+    if (args.length() > 1) {
+        parser.showHelp();
+    }
+
     MainWindow window;
     window.resize(1000, 700);
     window.setWindowTitle(QApplication::translate("toplevel", "PCB viewer"));
+
+    if (args.length() == 1) {
+        window.loadFile(args.at(0).toStdString());
+    }
 
     window.show();
     return app.exec();
