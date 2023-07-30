@@ -4,6 +4,7 @@
 #include <array>
 #include <cstddef>
 #include <map>
+#include <optional>
 #include <set>
 #include <string>
 #include <type_traits>
@@ -86,7 +87,7 @@ struct header {
     uint32_t x35_end;
 
     ll_ptrs ll_x36;
-    uint32_t un4[2];
+    ll_ptrs ll_x21;
     ll_ptrs ll_unused_4;
     ll_ptrs ll_x0A;
     uint32_t un5;
@@ -784,6 +785,35 @@ struct x20 {
     uint32_t un[7];
 
     uint32_t TAIL;
+};
+
+struct x21_header {
+    uint16_t t;
+    uint16_t r;
+    uint32_t size;
+    uint32_t k;
+};
+
+struct meta_netlist_path {
+    x21_header hdr;
+    uint32_t un1;
+    uint32_t bitmask;
+    uint32_t TAIL;
+    std::string path;
+};
+
+struct stackup_material {
+    x21_header hdr;
+    uint32_t a;
+    uint32_t layer_id;
+    char material[20];
+    char thickness[20];
+    char thermal_conductivity[20];
+    char electrical_conductivity[20];
+    char d_k[20];
+    char kind[20];  // E.g. DIELECTRIC, PLANE, SURFACE, CONDUCTOR
+    char d_f[20];
+    char unknown[20];
 };
 
 template <AllegroVersion version>
@@ -1514,6 +1544,9 @@ class File {
     std::map<uint32_t, x3A<version>> x3A_map;
     std::map<uint32_t, x3B<version>> x3B_map;
     std::map<uint32_t, x3C<version>> x3C_map;
+
+    std::map<uint32_t, stackup_material> stackup_materials;
+    std::optional<meta_netlist_path> netlist_path;
 
     uint8_t layer_count = 0;
     uint32_t x27_end_pos;

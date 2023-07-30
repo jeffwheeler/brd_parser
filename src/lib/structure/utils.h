@@ -6,6 +6,7 @@
 #include "types.h"
 
 std::pair<double, double> x01_center(const x01<A_174> *inst);
+const std::vector<stackup_material> ordered_stackup_materials(File<A_174> &f);
 
 template <AllegroVersion version>
 std::optional<std::string> x2B_footprint(const x2B<version> *inst,

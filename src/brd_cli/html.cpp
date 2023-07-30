@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "lib/structure/utils.h"
+
 char HTML_HEADER[] = R"A(
 <!doctype html>
 <html lang="en-US">
@@ -46,6 +48,41 @@ void stream_header(std::string& fname, File<A_174>& f) {
     std::cout << R"A(
             </tbody>
         </table>
+    )A";
+}
+
+void stream_layers(File<A_174>& f) {
+    std::cout << R"A(
+        <h2>Layers</h2>
+        <div class="border overflow-auto mb-3" style="max-height: 300px; max-width: 900px">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Layer ID</th>
+                        <th>Material</th>
+                        <th>Kind</th>
+                        <th>Thickness</th>
+                        <th>Dk</th>
+                        <th>Df</th>
+                        <th>Thermal conductivity</th>
+                        <th>Electrical conductivity</th>
+                    </tr>
+                </thead>
+                <tbody>
+    )A";
+    for (const auto& sm : ordered_stackup_materials(f)) {
+        printf(
+            "<tr><td>%d</td><td><em>%s</em></td>"
+            "<td><em>%s</em></td><td><em>%s</em></td>"
+            "<td><em>%s</em></td><td><em>%s</em></td>"
+            "<td><em>%s</em></td><td><em>%s</em></td></tr>\n",
+            sm.layer_id, sm.material, sm.kind, sm.thickness, sm.d_k, sm.d_f,
+            sm.thermal_conductivity, sm.electrical_conductivity);
+    }
+    std::cout << R"A(
+                </tbody>
+            </table>
+        </div>
     )A";
 }
 
@@ -112,10 +149,28 @@ void stream_x30(File<A_174>& f) {
     )A";
 }
 
+void stream_misc_metadata(File<A_174>& f) {
+    std::cout << R"A(
+        <h2>Misc other metadata</h2>
+        <div class="mb-3">
+    )A";
+    if (f.netlist_path) {
+        printf("<p>Netlist path: <code>%s</code></p>",
+               (*f.netlist_path).path.c_str());
+    } else {
+        std::cout << "<p>Netlist path <em>unspecified</em></p>";
+    }
+    std::cout << R"A(
+        </div>
+    )A";
+}
+
 void stream_file(std::string& fname, File<A_174>& f) {
     std::cout << HTML_HEADER;
     stream_header(fname, f);
+    stream_layers(f);
     stream_strings(f);
     stream_x30(f);
+    stream_misc_metadata(f);
     std::cout << HTML_FOOTER;
 }

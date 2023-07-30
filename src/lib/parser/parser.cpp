@@ -6,15 +6,6 @@
 #include "lib/printing/utils.h"
 #include "lib/structure/utils.h"
 
-/* Type groups
- *
- * - 03, 04, 22, 26, 28, 2B, 2C, 2D, 30, 31, 31, 32, 33
- * - 37, 3C
- * - 01, 15, 16, 17
- * - 05, 09
- *
- */
-
 void skip(std::ifstream* f, std::ifstream::pos_type n) {
     f->seekg(n, std::ios_base::cur);
 }
@@ -242,10 +233,32 @@ uint32_t parse_x1F(File<version>& fs, std::ifstream& f) {
 
 template <AllegroVersion version>
 uint32_t parse_x21(File<version>& fs, std::ifstream& f) {
-    uint32_t size;
-    skip(&f, 4);
-    f.read((char*)&size, 4);
-    skip(&f, size - 8);
+    x21_header i;
+    f.read((char*)&i, sizeof(x21_header));
+    skip(&f, -sizeof(x21_header));
+    // log(&f, "- Next words:");
+    // log_n_words(&f, 8);
+    // skip(&f, -4 * 8);
+    if (i.r == 1304) {
+        stackup_material ps;
+        f.read((char*)&ps, sizeof(ps));
+        fs.stackup_materials[ps.hdr.k] = ps;
+        // log(&f, "- - Stackup material... %02d->%s\n", ps.layer_id,
+        // ps.material);
+    } else if (i.r == 14093) {
+        // log(&f, "- - i.r=\x1b[31m14093\x1b[0m...?\n");
+        skip(&f, i.size);
+        // } else if (i.r == 2050) {
+    } else if (i.r == 0x0407) {
+        meta_netlist_path r;
+        char s[1028];
+        f.read((char*)&r, sizeof_until_tail<meta_netlist_path>());
+        f.read(s, sizeof(s));
+        r.path = std::string(s);
+        fs.netlist_path = r;
+    } else {
+        skip(&f, i.size);
+    }
     return 0;
 }
 
@@ -552,219 +565,7 @@ File<version> parse_file(const std::string& filepath) {
         }
     }
 
-    // Print layers
-    // for (const auto& tuple : *fs.layers) {
-    //     std::printf("Layer %d maps to:\n", std::get<0>(tuple));
-
-    //     uint32_t ptr = std::get<1>(tuple);
-    //     if (fs.x2A_map->contains(ptr)) {
-    //         const x2A *x = &fs.x2A_map->at(ptr);
-    //         print_struct((const void*)x, &fs, 1);
-    //     } else {
-    //         printf_d(1, "null\n");
-    //     }
-    // }
-
     fs.layer_count = layer_count(&fs);
-
-    // Print strings
-    // for (const auto& [k, string] : fs.strings) {
-    //     std::printf("string %08X: %s\n", k, string.c_str());
-    // }
-
-    // Print x01_map
-    // for (const auto& [k, x01_inst] : fs.x01_map) {
-    //     auto inst = upgrade<version, A_174>(x01_inst);
-    //     print_struct(&inst, &fs, 0);
-    // }
-
-    // Print x03_map
-    // for (const auto& [k, x03_inst] : fs.x03_map) {
-    //     print_struct(&x03_inst, &fs, 0);
-    // }
-
-    // Print x04_map
-    // for (const auto& [k, x04_inst] : fs.x04_map) {
-    //     print_struct(&x04_inst, &fs, 0);
-    // }
-
-    // Print x05_map
-    // for (const auto& [k, x05_inst] : fs.x05_map) {
-    //     print_struct(&x05_inst, &fs, 0);
-    //     std::printf("\x1b[35m-----------------------------------------------\x1b[0m\n");
-    // }
-
-    // Print x06_map
-    // for (const auto& [k, x06_inst] : fs.x06_map) {
-    //     print_struct(&x06_inst, &fs, 0);
-    // }
-
-    // Print instances
-    // for (const auto& [k, x07_inst] : fs.x07_map) {
-    //     print_struct(&x07_inst, &fs, 0);
-    // }
-
-    // Print x08_map
-    // for (const auto& [k, x08_inst] : fs.x08_map) {
-    //     print_struct(&x08_inst, &fs, 0);
-    // }
-
-    // Print x09_map
-    // for (const auto& [k, x09_inst] : fs.x09_map) {
-    //     print_struct(&x09_inst, &fs, 0);
-    // }
-
-    // Print x0D_map
-    // for (const auto& [k, x0D_inst] : fs.x0D_map) {
-    //     print_struct(&x0D_inst, &fs, 0);
-    // }
-
-    // Print x0F_map
-    // for (const auto& [k, x0F_inst] : fs.x0F_map) {
-    //     print_struct(&x0F_inst, &fs, 0);
-    // }
-
-    // Print x10_map
-    // for (const auto& [k, x10_inst] : fs.x10_map) {
-    //     print_struct(&x10_inst, &fs, 0);
-    // }
-
-    // Print x11_map
-    // for (const auto& [k, x11_inst] : fs.x11_map) {
-    //     print_struct(&x11_inst, &fs, 0);
-    // }
-
-    // Print x12_map
-    // for (const auto& [k, x12_inst] : fs.x12_map) {
-    //     print_struct(&x12_inst, &fs, 0);
-    // }
-
-    // Print x14_map
-    // for (const auto& [k, x14_inst] : fs.x14_map) {
-    //     print_struct(&x14_inst, &fs, 0);
-    // }
-
-    // Print x15_map
-    // for (const auto& [k, x15_inst] : fs.x15_map) {
-    //     print_struct(&x15_inst, &fs, 0);
-    // }
-
-    // Print x16_map
-    // for (const auto& [k, x16_inst] : fs.x16_map) {
-    //     print_struct(&x16_inst, &fs, 0);
-    // }
-
-    // Print x17_map
-    // for (const auto& [k, x17_inst] : fs.x17_map) {
-    //     print_struct(&x17_inst, &fs, 0);
-    // }
-
-    // Print x1B_map
-    // for (const auto& [k, x1B_inst] : fs.x1B_map) {
-    //     print_struct(&x1B_inst, &fs, 0);
-    // }
-
-    // Print x1C_map
-    // for (const auto& [k, x1C_inst] : fs.x1C_map) {
-    //     print_struct(&x1C_inst, &fs, 0);
-    // }
-
-    // Print x1E_map
-    // for (const auto& [k, x1E_inst] : *fs.x1E_map) {
-    //     print_struct(&x1E_inst, &fs, 0);
-    // }
-
-    // Print x22_map
-    // for (const auto& [k, x22_inst] : fs.x22_map) {
-    //     print_struct(&x22_inst, &fs, 0);
-    // }
-
-    // Print x23_map (connectivity [rats])
-    // for (const auto& [k, x23_inst] : *fs.x23_map) {
-    //     print_struct(&x23_inst, &fs, 0);
-    // }
-
-    // Print x26_map
-    // for (const auto& [k, x26_inst] : *fs.x26_map) {
-    //     print_struct(&x26_inst, &fs, 0);
-    // }
-
-    // Print x28_map
-    // for (const auto& [k, x28_inst] : fs.x28_map) {
-    //     print_struct(&x28_inst, &fs, 0);
-    // }
-
-    // Print x2A_map
-    // for (const auto& [k, x2A_inst] : fs.x2A_map) {
-    //     print_struct(&x2A_inst, &fs, 0);
-    // }
-
-    // Print x2B_map
-    // for (const auto& [k, x2B_inst] : *fs.x2B_map) {
-    //     print_struct(&x2B_inst, &fs, 0);
-    // }
-
-    // Print x2C_map
-    // for (const auto& [k, x2C_inst] : *fs.x2C_map) {
-    //     print_struct(&x2C_inst, &fs, 0);
-    // }
-
-    // Print x2D_map
-    // for (const auto& [k, x2D_inst] : fs.x2D_map) {
-    //     print_struct(&x2D_inst, &fs, 0);
-    // }
-
-    // Print x30_map (placed text wrapper)
-    // for (const auto& [k, x30_inst] : fs.x30_map) {
-    //     print_struct(&x30_inst, &fs, 0);
-    // }
-
-    // Print x31_map (placed text)
-    // for (const auto& [k, x31_inst] : *fs.x31_map) {
-    //     print_struct(&x31_inst, &fs, 0);
-    // }
-
-    // Print x32_map (pad)
-    // for (const auto& [k, x32_inst] : fs.x32_map) {
-    //     print_struct(&x32_inst, &fs, 0);
-    //     std::printf(
-    //         "\x1b[35m-----------------------------------------------\x1b[0m\n");
-    // }
-
-    // Print x33_map
-    // for (const auto& [k_, x33_inst] : *fs.x33_map) {
-    //     print_struct(&x33_inst, &fs, 0);
-    // }
-
-    // Print x34_map
-    // for (const auto& [k, x34_inst] : *fs.x34_map) {
-    //     print_struct(&x34_inst, &fs, 0);
-    // }
-
-    // Print x36_map
-    // for (const auto& [k, x36_inst] : fs.x36_map) {
-    //     print_struct(&x36_inst, &fs, 0);
-    // }
-
-    // Print x37_map
-    // for (const auto& [k, x37_inst] : fs.x37_map) {
-    //     print_struct(&x37_inst, &fs, 0);
-    // }
-
-    // Print x38_map (films)
-    // for (const auto& [k, x38_inst] : fs.x38_map) {
-    //     print_struct(&x38_inst, &fs, 0);
-    // }
-
-    // Print x39_map
-    // for (const auto& [k, x39_inst] : fs.x39_map) {
-    //     print_struct(&x39_inst, &fs, 0);
-    // }
-
-    // Print x3C_map
-    // for (const auto& [k, x3C_inst] : fs.x3C_map) {
-    //     print_struct(&x3C_inst, &fs, 0);
-    // }
 
     return fs;
 }
