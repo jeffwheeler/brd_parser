@@ -935,6 +935,7 @@ x3C<A_160>::operator x3C<A_174>() const {
     return new_inst;
 }
 
+/*
 template <AllegroVersion version>
 File<version>::operator File<A_174>() const {
     File<A_174> new_file;
@@ -1049,3 +1050,4 @@ template File<A_164>::operator File<A_174>() const;
 template File<A_165>::operator File<A_174>() const;
 template File<A_166>::operator File<A_174>() const;
 template File<A_172>::operator File<A_174>() const;
+*/

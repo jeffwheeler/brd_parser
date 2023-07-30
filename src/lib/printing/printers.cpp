@@ -77,16 +77,6 @@ void print_struct(const uint32_t k, File<version> &fs, const int d) {
     }
 }
 
-template void print_struct<A_160>(const uint32_t k, File<A_160> &fs,
-                                  const int d);
-template void print_struct<A_164>(const uint32_t k, File<A_164> &fs,
-                                  const int d);
-template void print_struct<A_165>(const uint32_t k, File<A_165> &fs,
-                                  const int d);
-template void print_struct<A_166>(const uint32_t k, File<A_166> &fs,
-                                  const int d);
-template void print_struct<A_172>(const uint32_t k, File<A_172> &fs,
-                                  const int d);
 template void print_struct<A_174>(const uint32_t k, File<A_174> &fs,
                                   const int d);
 
