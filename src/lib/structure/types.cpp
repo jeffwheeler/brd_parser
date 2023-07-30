@@ -1035,6 +1035,9 @@ File<version>::operator File<A_174>() const {
     new_file.layer_count = this->layer_count;
     new_file.x27_end_pos = this->x27_end_pos;
 
+    new_file.stackup_materials = this->stackup_materials;
+    new_file.netlist_path = this->netlist_path;
+
     return new_file;
 }
 
