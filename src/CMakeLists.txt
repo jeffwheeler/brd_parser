@@ -22,5 +22,5 @@ include_directories(.)
 
 add_subdirectory(lib)
 add_subdirectory(brd_cli)
-add_subdirectory(brd_gui EXCLUDE_FROM_ALL)
+add_subdirectory(brd_gui)
 add_subdirectory(test)
