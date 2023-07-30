@@ -35,20 +35,20 @@ uint8_t layer_count(File<version>* fs) {
 }
 
 template <template <AllegroVersion> typename T, AllegroVersion version>
-uint32_t default_parser(File<version>& fs, std::ifstream& f) {
+uint32_t default_parser(File<A_174>& fs, std::ifstream& f) {
     T<version>* inst = new T<version>;
     f.read((char*)inst, sizeof_until_tail<T<version>>());
-    std::map<uint32_t, T<version>>* m = find_map<T<version>>(fs);
+    std::map<uint32_t, T<A_174>>* m = find_map<T<A_174>>(fs);
     if (m->contains(inst->k)) {
         log(&f, "- Already seen this key! = 0x %08X\n", ntohl(inst->k));
         exit(1);
     }
-    (*m)[inst->k] = *inst;
+    (*m)[inst->k] = upgrade<version, A_174>(*inst);
     return inst->k;
 }
 
 template <AllegroVersion version>
-uint32_t parse_x03(File<version>& fs, std::ifstream& f) {
+uint32_t parse_x03(File<A_174>& fs, std::ifstream& f) {
     char* buf;
     x03* x03_inst = new x03;
     f.read((char*)&x03_inst->hdr, sizeof(x03_hdr));
@@ -135,7 +135,7 @@ uint32_t parse_x03(File<version>& fs, std::ifstream& f) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x12(File<version>& fs, std::ifstream& f) {
+uint32_t parse_x12(File<A_174>& fs, std::ifstream& f) {
     uint8_t s;
     if (version <= A_164) {
         s = 24;
@@ -156,7 +156,7 @@ uint32_t parse_x12(File<version>& fs, std::ifstream& f) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x1C(File<version>& fs, std::ifstream& f) {
+uint32_t parse_x1C(File<A_174>& fs, std::ifstream& f) {
     uint16_t size;
     x1C<version>* x1C_inst = new x1C<version>;
     f.read((char*)&x1C_inst->hdr, sizeof_until_tail<x1C_header<version>>());
@@ -183,12 +183,12 @@ uint32_t parse_x1C(File<version>& fs, std::ifstream& f) {
 
     skip(&f, x1C_inst->hdr.n * 40);
 
-    (fs.x1C_map)[x1C_inst->hdr.k] = *x1C_inst;
+    (fs.x1C_map)[x1C_inst->hdr.k] = upgrade<version, A_174>(*x1C_inst);
     return 0;
 }
 
 template <AllegroVersion version>
-uint32_t parse_x1D(File<version>& fs, std::ifstream& f) {
+uint32_t parse_x1D(File<A_174>& fs, std::ifstream& f) {
     uint32_t k = default_parser<x1D, version>(fs, f);
     auto& inst = fs.x1D_map[k];
 
@@ -202,7 +202,7 @@ uint32_t parse_x1D(File<version>& fs, std::ifstream& f) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x1E(File<version>& fs, std::ifstream& f) {
+uint32_t parse_x1E(File<A_174>& fs, std::ifstream& f) {
     x1E* x1E_inst = new x1E;
     f.read((char*)x1E_inst, sizeof(x1E_hdr));
     x1E_inst->s = new char[x1E_inst->hdr.size];
@@ -216,7 +216,7 @@ uint32_t parse_x1E(File<version>& fs, std::ifstream& f) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x1F(File<version>& fs, std::ifstream& f) {
+uint32_t parse_x1F(File<A_174>& fs, std::ifstream& f) {
     uint32_t k = default_parser<x1F, version>(fs, f);
     auto& inst = fs.x1F_map[k];
 
@@ -232,7 +232,7 @@ uint32_t parse_x1F(File<version>& fs, std::ifstream& f) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x21(File<version>& fs, std::ifstream& f) {
+uint32_t parse_x21(File<A_174>& fs, std::ifstream& f) {
     x21_header i;
     f.read((char*)&i, sizeof(x21_header));
     skip(&f, -sizeof(x21_header));
@@ -263,7 +263,7 @@ uint32_t parse_x21(File<version>& fs, std::ifstream& f) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x27(File<version>& fs, std::ifstream& f) {
+uint32_t parse_x27(File<A_174>& fs, std::ifstream& f) {
     if (PRINT_ALL_ITEMS) {
         log(&f, "- Expecting to read until 0x%08X\n", fs.x27_end_pos - 1);
     }
@@ -280,7 +280,7 @@ uint32_t parse_x27(File<version>& fs, std::ifstream& f) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x2A(File<version>& fs, std::ifstream& f) {
+uint32_t parse_x2A(File<A_174>& fs, std::ifstream& f) {
     x2A* x2A_inst = new x2A;
     f.read((char*)&x2A_inst->hdr, sizeof(x2A_hdr));
     if (version >= A_174) {
@@ -318,7 +318,7 @@ uint32_t parse_x2A(File<version>& fs, std::ifstream& f) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x31(File<version>& fs, std::ifstream& f) {
+uint32_t parse_x31(File<A_174>& fs, std::ifstream& f) {
     x31* x31_inst = new x31;
     f.read((char*)x31_inst, sizeof(x31_hdr));
     if (version >= A_174) {
@@ -333,13 +333,13 @@ uint32_t parse_x31(File<version>& fs, std::ifstream& f) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x35(File<version>& fs, std::ifstream& f) {
+uint32_t parse_x35(File<A_174>& fs, std::ifstream& f) {
     skip(&f, 124);
     return 0;
 }
 
 template <AllegroVersion version>
-uint32_t parse_x36(File<version>& fs, std::ifstream& f) {
+uint32_t parse_x36(File<A_174>& fs, std::ifstream& f) {
     x36<version>* inst = new x36<version>;
     f.read((char*)inst, sizeof_until_tail<x36<version>>());
 
@@ -452,12 +452,12 @@ uint32_t parse_x36(File<version>& fs, std::ifstream& f) {
             exit(1);
     }
 
-    fs.x36_map[inst->k] = *inst;
+    fs.x36_map[inst->k] = upgrade<version, A_174>(*inst);
     return 0;
 }
 
 template <AllegroVersion version>
-uint32_t parse_x3B(File<version>& fs, std::ifstream& f) {
+uint32_t parse_x3B(File<A_174>& fs, std::ifstream& f) {
     x3B<version>* x3B_inst = new x3B<version>;
     f.read((char*)x3B_inst, sizeof_until_tail<x3B<version>>());
 
@@ -469,7 +469,7 @@ uint32_t parse_x3B(File<version>& fs, std::ifstream& f) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x3C(File<version>& fs, std::ifstream& f) {
+uint32_t parse_x3C(File<A_174>& fs, std::ifstream& f) {
     uint32_t k = default_parser<x3C, version>(fs, f);
     auto& inst = fs.x3C_map[k];
 
@@ -483,8 +483,8 @@ uint32_t parse_x3C(File<version>& fs, std::ifstream& f) {
 }
 
 template <AllegroVersion version>
-File<version> parse_file(const std::string& filepath) {
-    File<version> fs;
+File<A_174> parse_file_raw(const std::string& filepath) {
+    File<A_174> fs;
 
     std::ifstream f(filepath, std::ios::binary);
 
@@ -586,26 +586,26 @@ std::optional<File<A_174>> parse_file(const std::string& filepath) {
     switch (magic) {
         case 0x00130000:
         case 0x00130200:
-            return parse_file<A_160>(filepath);
+            return parse_file_raw<A_160>(filepath);
         case 0x00130402:
-            return parse_file<A_162>(filepath);
+            return parse_file_raw<A_162>(filepath);
         case 0x00130C03:
-            return parse_file<A_164>(filepath);
+            return parse_file_raw<A_164>(filepath);
         case 0x00131003:
-            return parse_file<A_165>(filepath);
+            return parse_file_raw<A_165>(filepath);
         case 0x00131503:
         case 0x00131504:
-            return parse_file<A_166>(filepath);
+            return parse_file_raw<A_166>(filepath);
         case 0x00140400:
         case 0x00140500:
         case 0x00140600:
         case 0x00140700:
-            return parse_file<A_172>(filepath);
+            return parse_file_raw<A_172>(filepath);
         case 0x00140900:
         case 0x00140901:
         case 0x00140902:
         case 0x00140E00:
-            return parse_file<A_174>(filepath);
+            return parse_file_raw<A_174>(filepath);
     }
 
     printf("Magic unrecognized! Magic = 0x%08X\n", magic);

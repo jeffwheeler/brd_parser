@@ -785,6 +785,7 @@ struct x20 {
     uint32_t un[7];
 
     uint32_t TAIL;
+    static constexpr AllegroVersion versions[0] = {};
 };
 
 struct x21_header {

@@ -280,12 +280,6 @@ sfs<version> SFS_TABLE[] = {
 // G++ requires these forward declarations, but Clang implicitly finds them.
 // This syntax does not work in Clang.
 #ifndef __clang__
-template sfs<A_160> SFS_TABLE<A_160>;
-template sfs<A_162> SFS_TABLE<A_162>;
-template sfs<A_164> SFS_TABLE<A_164>;
-template sfs<A_165> SFS_TABLE<A_165>;
-template sfs<A_166> SFS_TABLE<A_166>;
-template sfs<A_172> SFS_TABLE<A_172>;
 template sfs<A_174> SFS_TABLE<A_174>;
 #endif
 
