@@ -54,6 +54,7 @@ void stream_header(std::string& fname, File<A_174>& f) {
 void stream_layers(File<A_174>& f) {
     std::cout << R"A(
         <h2>Layers</h2>
+        <p>Not all fields shown</p>
         <div class="border overflow-auto mb-3" style="max-height: 300px; max-width: 900px">
             <table class="table">
                 <thead>
@@ -64,8 +65,6 @@ void stream_layers(File<A_174>& f) {
                         <th>Thickness</th>
                         <th>Dk</th>
                         <th>Df</th>
-                        <th>Thermal conductivity</th>
-                        <th>Electrical conductivity</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -74,10 +73,8 @@ void stream_layers(File<A_174>& f) {
         printf(
             "<tr><td>%d</td><td><em>%s</em></td>"
             "<td><em>%s</em></td><td><em>%s</em></td>"
-            "<td><em>%s</em></td><td><em>%s</em></td>"
             "<td><em>%s</em></td><td><em>%s</em></td></tr>\n",
-            sm.layer_id, sm.material, sm.kind, sm.thickness, sm.d_k, sm.d_f,
-            sm.thermal_conductivity, sm.electrical_conductivity);
+            sm.layer_id, sm.material, sm.kind, sm.thickness, sm.d_k, sm.d_f);
     }
     std::cout << R"A(
                 </tbody>
