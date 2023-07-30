@@ -11,7 +11,7 @@ const std::vector<stackup_material> ordered_stackup_materials(File<A_174> &f);
 template <AllegroVersion version>
 std::optional<std::string> x2B_footprint(const x2B<version> *inst,
                                          File<version> *fs) {
-    if (fs->strings.contains(inst->footprint_string_ref)) {
+    if (fs->strings.count(inst->footprint_string_ref) > 0) {
         return fs->strings.at(inst->footprint_string_ref);
     } else {
         return {};
@@ -175,13 +175,13 @@ const x36_x08<version> *font_lookup(uint8_t k, File<version> &fs) {
 
 template <AllegroVersion version>
 int8_t read_layer(File<version> &fs, uint32_t k) {
-    if (fs.x05_map.contains(k)) {
+    if (fs.x05_map.count(k) > 0) {
         const x05<version> *inst = (const x05<version> *)&fs.x05_map.at(k);
         return inst->layer;
-    } else if (fs.x28_map.contains(k)) {
+    } else if (fs.x28_map.count(k) > 0) {
         const x28<version> *inst = (const x28<version> *)&fs.x28_map.at(k);
         return inst->layer;
-    } else if (fs.x34_map.contains(k)) {
+    } else if (fs.x34_map.count(k) > 0) {
         const x34<version> *inst = (const x34<version> *)&fs.x34_map.at(k);
         return inst->layer;
     }
