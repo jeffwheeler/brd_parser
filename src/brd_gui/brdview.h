@@ -19,6 +19,10 @@ class BrdView : public QGraphicsView {
 
     void loadFile(File<A_174> *fs);
 
+    void zoomIn();
+    void zoomOut();
+    void zoomFit();
+
     void drawX01(const x01<A_174> *inst, QPainterPath *path);
     void drawX05(const x05<A_174> *inst, QPen *pen);
     void drawX14(const x14<A_174> *inst, QPen *pen);

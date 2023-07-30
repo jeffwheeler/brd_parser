@@ -25,6 +25,11 @@ class MainWindow : public QMainWindow {
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dropEvent(QDropEvent *event) override;
 
+    void openFile();
+    void zoomIn();
+    void zoomOut();
+    void zoomFit();
+
    private slots:
     void selectLayer();
     void selectFilm();
@@ -35,6 +40,7 @@ class MainWindow : public QMainWindow {
     QTreeWidget *tree;
     std::map<std::string, uint32_t> layer_cache;
 
+    void createToolBar();
     void createDockWidget();
     void createFilmSelectWidget();
     void loadFilms();
