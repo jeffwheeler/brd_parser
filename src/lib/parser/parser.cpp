@@ -533,17 +533,9 @@ File<A_174> parse_file_raw(const std::string& filepath) {
         skip_and_pad(&f, 0);
     }
 
-    uint32_t prev_pos = 0;
     // If we peek a `0x00`, we may be at the end of the file, but have extra
     // empty bytes appended.
     while (f.peek() != EOF && f.peek() != 0x00) {
-        if (prev_pos == f.tellg()) {
-            log(&f, "\x1b[31m- Did not move from previous position\x1b[0m\n");
-            exit(1);
-        } else {
-            prev_pos = f.tellg();
-        }
-
         uint8_t t = f.peek() & 0xFF;
         if (PRINT_ALL_ITEMS) {
             log(&f, "Handling t=0x%02X: ", t);
