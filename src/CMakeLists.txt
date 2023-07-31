@@ -1,17 +1,21 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.15)
+cmake_policy(SET CMP0091 NEW)
 
 project(AllegroParser)
 
-set(CMAKE_CXX_STANDARD 20)
-# set(CMAKE_BUILD_TYPE Debug)
+option(BUILD_GUI "Build Qt GUI")
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_FLAGS "-O3") # Use -Wall here
+set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 include(FetchContent)
 FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/06f44bc951046150f1348598854b211afdcf37fc.zip
-  DOWNLOAD_EXTRACT_TIMESTAMP YES
+    googletest
+    URL https://github.com/google/googletest/archive/06f44bc951046150f1348598854b211afdcf37fc.zip
+    DOWNLOAD_EXTRACT_TIMESTAMP YES
 )
 FetchContent_MakeAvailable(googletest)
 
@@ -22,5 +26,7 @@ include_directories(.)
 
 add_subdirectory(lib)
 add_subdirectory(brd_cli)
-add_subdirectory(brd_gui)
+if (BUILD_GUI)
+    add_subdirectory(brd_gui)
+endif ()
 add_subdirectory(test)

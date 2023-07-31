@@ -13,11 +13,17 @@
 
 #include "cadence_fp.h"
 
-#define HAS_ENTRY(MAP, KEY) (fs->MAP->contains(KEY))
-#define HAS_ENTRY2(MAP, KEY) (fs->MAP.contains(KEY))
+#define HAS_ENTRY(MAP, KEY) (fs->MAP->count(KEY) > 0)
+#define HAS_ENTRY2(MAP, KEY) (fs->MAP.count(KEY) > 0)
 
+#if _MSC_VER
+#define COND_FIELD(COND, T, NAME)                                             \
+    [[msvc::no_unique_address]] std::conditional_t<(COND), T, std::monostate> \
+        NAME;
+#else
 #define COND_FIELD(COND, T, NAME) \
     [[no_unique_address]] std::conditional_t<(COND), T, std::monostate> NAME;
+#endif
 
 enum AllegroVersion {
     A_160 = 0x00130000,
@@ -743,7 +749,7 @@ struct x1D {
     uint16_t size_b;
 
     uint32_t TAIL;
-    static constexpr AllegroVersion versions[0] = {};
+    static constexpr AllegroVersion versions[1] = {A_160};
 };
 
 struct x1E_hdr {
@@ -774,7 +780,7 @@ struct x1F {
     uint16_t size;
 
     uint32_t TAIL;
-    static constexpr AllegroVersion versions[0] = {};
+    static constexpr AllegroVersion versions[1] = {A_160};
 };
 
 template <AllegroVersion version>
@@ -785,7 +791,7 @@ struct x20 {
     uint32_t un[7];
 
     uint32_t TAIL;
-    static constexpr AllegroVersion versions[0] = {};
+    static constexpr AllegroVersion versions[1] = {A_160};
 };
 
 struct x21_header {
@@ -1432,7 +1438,7 @@ struct x39 {
 
     uint32_t TAIL;
     operator x39<A_174>() const;
-    static constexpr AllegroVersion versions[0] = {};
+    static constexpr AllegroVersion versions[1] = {A_160};
 };
 
 template <AllegroVersion version>

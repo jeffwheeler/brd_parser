@@ -19,7 +19,7 @@ template <AllegroVersion version>
 uint8_t layer_count(File<version>* fs) {
     std::tuple<uint32_t, uint32_t> tup = (fs->layers)[4];
     uint32_t ptr = std::get<1>(tup);
-    if (fs->x2A_map.contains(ptr)) {
+    if (fs->x2A_map.count(ptr) > 0) {
         const x2A* x = &fs->x2A_map.at(ptr);
         if (x->references) {
             return x->reference_entries.size();
@@ -37,7 +37,7 @@ uint32_t default_parser(File<A_174>& fs, std::ifstream& f) {
     T<version>* inst = new T<version>;
     f.read((char*)inst, sizeof_until_tail<T<version>>());
     std::map<uint32_t, T<A_174>>* m = find_map<T<A_174>>(fs);
-    if (m->contains(inst->k)) {
+    if (m->count(inst->k) > 0) {
         log(&f, "- Already seen this key! = 0x %08X\n", ntohl(inst->k));
         exit(1);
     }
@@ -50,7 +50,7 @@ uint32_t parse_x03(File<A_174>& fs, std::ifstream& f) {
     char* buf;
     x03* x03_inst = new x03;
     f.read((char*)&x03_inst->hdr, sizeof(x03_hdr));
-    if (fs.x03_map.contains(x03_inst->hdr.k)) {
+    if (fs.x03_map.count(x03_inst->hdr.k) > 0) {
         log(&f, "- Already seen this key!\n");
         exit(1);
     }
@@ -145,7 +145,7 @@ uint32_t parse_x12(File<A_174>& fs, std::ifstream& f) {
     if (version >= A_174) {
         skip(&f, 4);
     }
-    if (fs.x12_map.contains(x12_inst->k)) {
+    if (fs.x12_map.count(x12_inst->k) > 0) {
         log(&f, "- Already seen this key!\n");
         exit(1);
     }
@@ -291,8 +291,7 @@ uint32_t parse_x2A(File<A_174>& fs, std::ifstream& f) {
             char buf[36] = {0};
             f.read((char*)buf, 36);
             uint32_t suffix = *((uint32_t*)&buf[32]);
-            x2A_local_entry entry =
-                x2A_local_entry{.s = std::string(buf), .suffix = suffix};
+            x2A_local_entry entry = x2A_local_entry{std::string(buf), suffix};
             x2A_inst->local_entries.push_back(entry);
         }
     } else {
