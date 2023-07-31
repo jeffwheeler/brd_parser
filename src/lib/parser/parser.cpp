@@ -15,6 +15,14 @@ void skip_and_pad(std::ifstream* f, std::ifstream::pos_type n) {
     }
 }
 
+uint32_t round_to_word(uint32_t len) {
+    if (len % 4 != 0) {
+        return len / 4 * 4 + 4;
+    } else {
+        return len;
+    }
+}
+
 template <AllegroVersion version>
 uint8_t layer_count(File<version>* fs) {
     std::tuple<uint32_t, uint32_t> tup = (fs->layers)[4];
@@ -94,12 +102,11 @@ uint32_t parse_x03(File<A_174>& fs, std::ifstream& f) {
         case 0x78:
             // log(&f, "- Expecting %d characters\n",
             // x03_inst->hdr.subtype.size);
-            f.read(buf, x03_inst->hdr.subtype.size);
+            f.read(buf, round_to_word(x03_inst->hdr.subtype.size));
             x03_inst->s = std::string(buf);
             // log(&f, "- Read \"%s\"\n", buf);
             x03_inst->has_str = true;
             // log(&f, "- Read \"%s\"\n", x03_inst->s.c_str());
-            skip_and_pad(&f, 0);
             break;
         case 0x69:
             skip(&f, 8);
@@ -204,8 +211,7 @@ uint32_t parse_x1E(File<A_174>& fs, std::ifstream& f) {
     x1E* x1E_inst = new x1E;
     f.read((char*)x1E_inst, sizeof(x1E_hdr));
     x1E_inst->s = new char[x1E_inst->hdr.size];
-    f.read(x1E_inst->s, x1E_inst->hdr.size);
-    skip_and_pad(&f, 0);
+    f.read(x1E_inst->s, round_to_word(x1E_inst->hdr.size));
     (fs.x1E_map)[x1E_inst->hdr.k] = *x1E_inst;
     if (version >= A_172) {
         skip(&f, 4);
