@@ -8,21 +8,19 @@ The main goal of this library is to write an example decoder that can eventually
 
 ### Prerequisites
 
-The only dependency is [Qt6][qt6], which is used in the GUI viewer only.
+The only dependency is [Qt6][qt6], which is used in the GUI viewer only. Qt6 is only required when running `cmake` with `-DBUILD_GUI=ON`.
 
 * On Mac, Qt6 can be installed using Brew: `brew install qt6`
 * On Ubuntu, Qt6 can be installed using Apt: `sudo apt install qt6-base-dev libgl1-mesa-dev`
 
 ### Build
 
-GCC >= 12 or Clang is required.
-
 ```shell
 $ git clone git@github.com:jeffwheeler/brd_parser.git
 $ cd brd_parser
 $ mkdir build
 $ cd build
-$ cmake ../src/
+$ cmake ../src/ -DBUILD_GUI=ON
 $ make
 ```
 
