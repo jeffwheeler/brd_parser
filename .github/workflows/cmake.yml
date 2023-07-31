@@ -36,7 +36,7 @@ jobs:
       run: sudo apt install qt6-base-dev libgl1-mesa-dev
 
     - name: Configure CMake
-      run: CXX=g++-12 cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_GUI=ON -S ${{github.workspace}}/src
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_GUI=ON -S ${{github.workspace}}/src
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
