@@ -186,7 +186,11 @@ uint32_t parse_x1C(File<A_174>& fs, std::ifstream& f) {
         skip(&f, 4);
     }
 
-    skip(&f, x1C_inst->hdr.n * 40);
+    if constexpr (version >= A_172) {
+        skip(&f, x1C_inst->hdr.n * 40);
+    } else {
+        skip(&f, x1C_inst->hdr.n * 32);
+    }
 
     (fs.x1C_map)[x1C_inst->hdr.k] = upgrade<version, A_174>(*x1C_inst);
     return 0;

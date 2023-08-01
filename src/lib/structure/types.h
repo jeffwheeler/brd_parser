@@ -1128,6 +1128,17 @@ struct x2E {
     static constexpr AllegroVersion versions[1] = {A_172};
 };
 
+template <AllegroVersion version>
+struct x2F {
+    uint32_t t;
+    uint32_t k;
+    uint32_t un[6];
+
+    uint32_t TAIL;
+    operator x2F<A_174>() const;
+    static constexpr AllegroVersion versions[1] = {A_160};
+};
+
 // `x30` wraps a string graphic object and includes info like rotation and
 // layer.
 enum TextAlignment : uint8_t {
@@ -1539,6 +1550,7 @@ class File {
     std::map<uint32_t, x2C<version>> x2C_map;
     std::map<uint32_t, x2D<version>> x2D_map;
     std::map<uint32_t, x2E<version>> x2E_map;
+    std::map<uint32_t, x2F<version>> x2F_map;
     std::map<uint32_t, x30<version>> x30_map;
     std::map<uint32_t, x31> x31_map;
     std::map<uint32_t, x32<version>> x32_map;
