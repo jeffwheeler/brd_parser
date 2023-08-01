@@ -272,7 +272,14 @@ uint32_t parse_x27(File<A_174>& fs, std::ifstream& f) {
         log(&f, "- Expecting to read until 0x%08X\n", fs.x27_end_pos - 1);
     }
     f.read((char*)&fs.x27_db.t, 4);
-    f.seekg(fs.x27_end_pos - 1);
+    uint32_t k;
+    uint32_t pos;
+    pos = f.tellg();
+    while (pos < fs.x27_end_pos - 1) {
+        f.read((char*)&k, 4);
+        fs.x27_db.keys.insert(k);
+        pos += 4;
+    };
     return 0;
 }
 
