@@ -253,6 +253,8 @@ constexpr std::map<uint32_t, T> *find_map(File<version> &fs) {
         return &fs.x2D_map;
     } else if constexpr (std::is_same_v<T, x2E<version>>) {
         return &fs.x2E_map;
+    } else if constexpr (std::is_same_v<T, x2F<version>>) {
+        return &fs.x2F_map;
     } else if constexpr (std::is_same_v<T, x30<version>>) {
         return &fs.x30_map;
     } else if constexpr (std::is_same_v<T, x32<version>>) {
