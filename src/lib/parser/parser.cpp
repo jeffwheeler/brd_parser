@@ -42,15 +42,15 @@ uint8_t layer_count(File<version>* fs) {
 
 template <template <AllegroVersion> typename T, AllegroVersion version>
 uint32_t default_parser(File<A_174>& fs, std::ifstream& f) {
-    T<version>* inst = new T<version>;
-    f.read((char*)inst, sizeof_until_tail<T<version>>());
+    T<version> inst;
+    f.read((char*)&inst, sizeof_until_tail<T<version>>());
     std::map<uint32_t, T<A_174>>* m = find_map<T<A_174>>(fs);
-    if (m->count(inst->k) > 0) {
-        log(&f, "- Already seen this key! = 0x %08X\n", ntohl(inst->k));
-        exit(1);
-    }
-    (*m)[inst->k] = upgrade<version, A_174>(*inst);
-    return inst->k;
+    // if (m->count(inst.k) > 0) {
+    //     log(&f, "- Already seen this key! = 0x %08X\n", ntohl(inst.k));
+    //     exit(1);
+    // }
+    (*m)[inst.k] = upgrade<version, A_174>(inst);
+    return inst.k;
 }
 
 template <AllegroVersion version>
