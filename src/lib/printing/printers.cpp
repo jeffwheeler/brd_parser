@@ -298,24 +298,24 @@ void print_x01(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x03(const void *untyped_inst, File<version> *fs, const int d) {
-    const x03 *inst = (const x03 *)untyped_inst;
-    if (inst->hdr.subtype.t == 0x6A) {
+    const x03<version> *inst = (const x03<version> *)untyped_inst;
+    if (inst->subtype.t == 0x6A) {
         printf_d(d,
                  "x03: \x1b[36;3mString?\x1b[0m type=0x%08X k=0x%08X %02X:"
-                 " ptr=0x%08X \x1b[34m\"%.70s\"\x1b[0m\n",
-                 ntohl(inst->hdr.type), ntohl(inst->hdr.k), inst->hdr.subtype.t,
-                 ntohl(inst->hdr.ptr), fs->strings.at(inst->ptr).c_str());
+                 " next=0x%08X \x1b[34m\"%.70s\"\x1b[0m\n",
+                 ntohl(inst->t), ntohl(inst->k), inst->subtype.t,
+                 ntohl(inst->next), fs->strings.at(inst->ptr).c_str());
     } else {
         printf_d(d,
                  "x03: \x1b[36;3mString?\x1b[0m type=0x%08X k=0x%08X %02X:"
-                 " ptr=0x%08X \x1b[34m\"%.70s\"\x1b[0m\n",
-                 ntohl(inst->hdr.type), ntohl(inst->hdr.k), inst->hdr.subtype.t,
-                 ntohl(inst->hdr.ptr), inst->s.c_str());
+                 " next=0x%08X \x1b[34m\"%.70s\"\x1b[0m\n",
+                 ntohl(inst->t), ntohl(inst->k), inst->subtype.t,
+                 ntohl(inst->next), inst->s.c_str());
     }
 
-    if (!inst->has_str && inst->hdr.subtype.t != 0x6A) {
-        printf_d(d + 1, "subtype = %02X, un3 = %02X\n", inst->hdr.subtype.t,
-                 inst->hdr.subtype.un3);
+    if (!inst->has_str && inst->subtype.t != 0x6A) {
+        printf_d(d + 1, "subtype = %02X, un3 = %02X\n", inst->subtype.t,
+                 inst->subtype.un3);
         printf_d(d + 1, "value: %d = 0x %08X\n", inst->ptr, ntohl(inst->ptr));
     }
 }

@@ -55,40 +55,29 @@ uint32_t default_parser(File<A_174>& fs, std::ifstream& f) {
 
 template <AllegroVersion version>
 uint32_t parse_x03(File<A_174>& fs, std::ifstream& f) {
-    char* buf;
-    x03* x03_inst = new x03;
-    f.read((char*)&x03_inst->hdr, sizeof(x03_hdr));
-    if (fs.x03_map.count(x03_inst->hdr.k) > 0) {
-        log(&f, "- Already seen this key!\n");
-        exit(1);
-    }
+    uint32_t k = default_parser<x03, version>(fs, f);
+    auto& inst = fs.x03_map[k];
 
-    if (version >= A_172) {
-        // log(&f, "- Next words:");
-        // log_n_words(&f, 8);
-        // skip(&f, -4*8);
-        f.read((char*)&x03_inst->hdr.subtype, 4);
-        skip(&f, 4);
-    }
+    char* buf;
 
     // buf = new char[subtype.size];
-    buf = (char*)malloc(x03_inst->hdr.subtype.size);
-    x03_inst->s = std::string();
-    x03_inst->has_str = false;
+    buf = (char*)malloc(inst.subtype.size);
+    inst.s = std::string();
+    inst.has_str = false;
 
-    // log(&f, "- Subtype.t = 0x%02X\n", x03_inst->hdr.subtype.t);
+    // log(&f, "- Subtype.t = 0x%02X\n", inst.hdr.subtype.t);
 
-    switch (x03_inst->hdr.subtype.t & 0xFF) {
+    switch (inst.subtype.t & 0xFF) {
         case 0x65:
             break;
         case 0x64:
         case 0x66:
         case 0x67:
         case 0x6A:
-            f.read((char*)&x03_inst->ptr, 4);
+            f.read((char*)&inst.ptr, 4);
             break;
             /*
-            std::getline(f, x03_inst.s, (char)0);
+            std::getline(f, inst.s, (char)0);
             skip_and_pad(&f, 0);
             break;
             */
@@ -101,12 +90,12 @@ uint32_t parse_x03(File<A_174>& fs, std::ifstream& f) {
         case 0x73:
         case 0x78:
             // log(&f, "- Expecting %d characters\n",
-            // x03_inst->hdr.subtype.size);
-            f.read(buf, round_to_word(x03_inst->hdr.subtype.size));
-            x03_inst->s = std::string(buf);
+            // inst.hdr.subtype.size);
+            f.read(buf, round_to_word(inst.subtype.size));
+            inst.s = std::string(buf);
             // log(&f, "- Read \"%s\"\n", buf);
-            x03_inst->has_str = true;
-            // log(&f, "- Read \"%s\"\n", x03_inst->s.c_str());
+            inst.has_str = true;
+            // log(&f, "- Read \"%s\"\n", inst.s.c_str());
             break;
         case 0x69:
             skip(&f, 8);
@@ -118,7 +107,7 @@ uint32_t parse_x03(File<A_174>& fs, std::ifstream& f) {
         } break;
         case 0x70:
             // log(&f, "- Expecting %d characters\n",
-            // x03_inst->hdr.subtype.size);
+            // inst.hdr.subtype.size);
             uint16_t a, b;
             f.read((char*)&a, 2);
             f.read((char*)&b, 2);
@@ -128,28 +117,24 @@ uint32_t parse_x03(File<A_174>& fs, std::ifstream& f) {
             // a=7,  b=8  -> 36 (exp=40)
             // skip(&f, 4);
             // skip(&f, 4 * a);
-            skip(&f, b);
-            skip(&f, 4 * a);
+            skip(&f, b + 4 * a);
             break;
         case 0x74:
             uint16_t c, d;
             f.read((char*)&c, 2);
             f.read((char*)&d, 2);
             // log(&f, "- c = %d, d = %d\n", c, d);
-            skip(&f, d);
-            skip(&f, 4 * c);
+            skip(&f, d + 4 * c);
             break;
         case 0xF6:
             // log(&f, "- Doing f6\n");
             skip(&f, 80);
             break;
         default:
-            log(&f, "- Unexpected value subtype=0x%02X\n",
-                x03_inst->hdr.subtype.t);
+            log(&f, "- Unexpected value subtype=0x%02X\n", inst.subtype.t);
             exit(1);
     };
 
-    (fs.x03_map)[x03_inst->hdr.k] = *x03_inst;
     return 0;
 }
 

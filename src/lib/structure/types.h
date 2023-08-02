@@ -187,18 +187,22 @@ struct x03_hdr_subtype {
     uint16_t size;
 };
 
-struct x03_hdr {
-    uint32_t type;
+template <AllegroVersion version>
+struct x03 {
+    uint32_t t;
     uint32_t k;
 
     // May point to `x36_x0F` object, among other types?
-    uint32_t ptr;
+    uint32_t next;
 
+    COND_FIELD(version >= A_172, uint32_t, un1);
     x03_hdr_subtype subtype;
-};
+    COND_FIELD(version >= A_172, uint32_t, un2);
 
-struct x03 {
-    x03_hdr hdr;
+    uint32_t TAIL;
+    operator x03<A_174>() const;
+    static constexpr AllegroVersion versions[1] = {A_172};
+
     bool has_str;
     std::string s;
     uint32_t ptr;
@@ -1514,7 +1518,7 @@ class File {
 
     std::map<uint32_t, std::string> strings;
     std::map<uint32_t, x01<version>> x01_map;
-    std::map<uint32_t, x03> x03_map;
+    std::map<uint32_t, x03<version>> x03_map;
     std::map<uint32_t, x04<version>> x04_map;
     std::map<uint32_t, x05<version>> x05_map;
     std::map<uint32_t, x06<version>> x06_map;
