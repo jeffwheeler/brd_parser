@@ -193,6 +193,8 @@ template <typename T, AllegroVersion version>
 constexpr std::map<uint32_t, T> *find_map(File<version> &fs) {
     if constexpr (std::is_same_v<T, x01<version>>) {
         return &fs.x01_map;
+    } else if constexpr (std::is_same_v<T, x03<version>>) {
+        return &fs.x03_map;
     } else if constexpr (std::is_same_v<T, x04<version>>) {
         return &fs.x04_map;
     } else if constexpr (std::is_same_v<T, x05<version>>) {

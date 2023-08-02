@@ -24,6 +24,19 @@ x01<A_160>::operator x01<A_174>() const {
 }
 
 template <>
+x03<A_160>::operator x03<A_174>() const {
+    x03<A_174> new_inst;
+    new_inst.t = this->t;
+    new_inst.k = this->k;
+    new_inst.next = this->next;
+    new_inst.subtype = this->subtype;
+    new_inst.has_str = this->has_str;
+    new_inst.s = this->s;
+    new_inst.ptr = this->ptr;
+    return new_inst;
+}
+
+template <>
 x04<A_160>::operator x04<A_174>() const {
     x04<A_174> new_inst;
     new_inst.t = this->t;
