@@ -576,6 +576,11 @@ void BrdView::drawX33(const x33<A_174> *inst, QPen *pen) {
     item->setData(0, inst->k);
     */
 
+    if (fs->x1C_map.count(inst->ptr4) == 0) {
+        printf("Drawing x33, but didn't find x1C; is it an x2F?\n");
+        return;
+    }
+
     const x1C<A_174> *x1C_inst = &fs->x1C_map.at(inst->ptr4);
 
     QPointF center =
