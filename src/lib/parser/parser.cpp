@@ -117,13 +117,27 @@ uint32_t parse_x03(File<A_174>& fs, std::ifstream& f) {
             skip(&f, 4 * size);
         } break;
         case 0x70:
+            // log(&f, "- Expecting %d characters\n",
+            // x03_inst->hdr.subtype.size);
             uint16_t a, b;
             f.read((char*)&a, 2);
-            skip(&f, 6);
+            f.read((char*)&b, 2);
+            // log(&f, "- a = %d, b = %d\n", a, b);
+            // a=1,  b=4  -> 20 (exp=16)
+            // a=13, b=16 -> 68 (exp=72)
+            // a=7,  b=8  -> 36 (exp=40)
+            // skip(&f, 4);
+            // skip(&f, 4 * a);
+            skip(&f, b);
             skip(&f, 4 * a);
             break;
         case 0x74:
-            skip(&f, 16);
+            uint16_t c, d;
+            f.read((char*)&c, 2);
+            f.read((char*)&d, 2);
+            // log(&f, "- c = %d, d = %d\n", c, d);
+            skip(&f, d);
+            skip(&f, 4 * c);
             break;
         case 0xF6:
             // log(&f, "- Doing f6\n");
@@ -581,7 +595,7 @@ std::optional<File<A_174>> parse_file(const std::string& filepath) {
     f.read((char*)&magic, sizeof(magic));
     f.close();
 
-    // printf("Comparing magic 0x%08X\n", magic);
+    printf("Comparing magic 0x%08X\n", magic);
     switch (magic) {
         case 0x00130000:
         case 0x00130200:
