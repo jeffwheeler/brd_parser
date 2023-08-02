@@ -106,25 +106,10 @@ uint32_t parse_x03(File<A_174>& fs, std::ifstream& f) {
             skip(&f, 4 * size);
         } break;
         case 0x70:
-            // log(&f, "- Expecting %d characters\n",
-            // inst.hdr.subtype.size);
-            uint16_t a, b;
-            f.read((char*)&a, 2);
-            f.read((char*)&b, 2);
-            // log(&f, "- a = %d, b = %d\n", a, b);
-            // a=1,  b=4  -> 20 (exp=16)
-            // a=13, b=16 -> 68 (exp=72)
-            // a=7,  b=8  -> 36 (exp=40)
-            // skip(&f, 4);
-            // skip(&f, 4 * a);
-            skip(&f, b + 4 * a);
-            break;
         case 0x74:
-            uint16_t c, d;
-            f.read((char*)&c, 2);
-            f.read((char*)&d, 2);
-            // log(&f, "- c = %d, d = %d\n", c, d);
-            skip(&f, d + 4 * c);
+            uint16_t x[2];
+            f.read((char*)&x, 4);
+            skip(&f, x[1] + 4 * x[0]);
             break;
         case 0xF6:
             // log(&f, "- Doing f6\n");
