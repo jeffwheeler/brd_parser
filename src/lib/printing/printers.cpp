@@ -2334,24 +2334,24 @@ void print_x30(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x31(const void *untyped_inst, File<version> *fs, const int d) {
-    const x31 *inst = (const x31 *)untyped_inst;
+    const x31<version> *inst = (const x31<version> *)untyped_inst;
     printf_d(d,
              "x31: \x1b[36;3mString Graphic\x1b[0m"
              " t=0x%04X subtype=%02X layer=%d k=0x%08X un=%08X "
              "\x1b[34m\"%s\"\x1b[0m"
              " \x1b[2m(%d, %d)\x1b[0m\n",
-             ntohs(inst->hdr.t), inst->hdr.subtype, inst->hdr.layer,
-             ntohl(inst->hdr.k), ntohl(inst->hdr.un), inst->s.c_str(),
-             inst->hdr.coords[0], inst->hdr.coords[1]);
+             ntohs(inst->t), inst->subtype, inst->layer, ntohl(inst->k),
+             ntohl(inst->un), inst->s.c_str(), inst->coords[0],
+             inst->coords[1]);
 
     printf_d(d + 1, "str_graphic_wrapper_ptr:\n");
-    if (fs->x30_map.count(inst->hdr.str_graphic_wrapper_ptr) > 0) {
+    if (fs->x30_map.count(inst->str_graphic_wrapper_ptr) > 0) {
         print_struct(
-            (const void *)&fs->x30_map.at(inst->hdr.str_graphic_wrapper_ptr),
-            fs, d + 2);
+            (const void *)&fs->x30_map.at(inst->str_graphic_wrapper_ptr), fs,
+            d + 2);
     } else {
         printf_d(d + 2, "str_graphic_wrapper_ptr unrecognized: 0x%08X\n",
-                 ntohl(inst->hdr.str_graphic_wrapper_ptr));
+                 ntohl(inst->str_graphic_wrapper_ptr));
         exit(0);
     }
 }

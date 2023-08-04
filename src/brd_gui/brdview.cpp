@@ -433,8 +433,8 @@ void BrdView::drawX30(const x30<A_174> *inst, QPen *pen) {
         return;
     }
 
-    const x31 *str_graphic =
-        (const x31 *)&fs->x31_map.at(inst->str_graphic_ptr);
+    const x31<A_174> *str_graphic =
+        (const x31<A_174> *)&fs->x31_map.at(inst->str_graphic_ptr);
 
     QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
     font.setFixedPitch(true);
@@ -458,8 +458,8 @@ void BrdView::drawX30(const x30<A_174> *inst, QPen *pen) {
     }
 
     if (!str_graphic->s.empty()) {
-        qreal x = str_graphic->hdr.coords[0] / 1000.;
-        qreal y = str_graphic->hdr.coords[1] / 1000.;
+        qreal x = str_graphic->coords[0] / 1000.;
+        qreal y = str_graphic->coords[1] / 1000.;
         QTransform t =
             QTransform()
                 .translate(x, y)
