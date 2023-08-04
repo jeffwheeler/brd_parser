@@ -722,11 +722,33 @@ void print_x08(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (fs->x03_map.count(inst->ptr4) > 0) {
+        if (fs->x31_map.count(inst->ptr4) > 0) {
+            print_struct((const void *)&fs->x31_map.at(inst->ptr4), fs, d + 2);
+        } else if (fs->x31_map.count(inst->ptr4) > 0) {
+            print_struct((const void *)&fs->x31_map.at(inst->ptr4), fs, d + 2);
+        } else if (fs->x30_map.count(inst->ptr4) > 0) {
+            print_struct((const void *)&fs->x30_map.at(inst->ptr4), fs, d + 2);
+        } else if (fs->x2D_map.count(inst->ptr4) > 0) {
+            print_struct((const void *)&fs->x2D_map.at(inst->ptr4), fs, d + 2);
+        } else if (fs->x1B_map.count(inst->ptr4) > 0) {
+            print_struct((const void *)&fs->x1B_map.at(inst->ptr4), fs, d + 2);
+        } else if (fs->x17_map.count(inst->ptr4) > 0) {
+            print_struct((const void *)&fs->x17_map.at(inst->ptr4), fs, d + 2);
+        } else if (fs->x16_map.count(inst->ptr4) > 0) {
+            print_struct((const void *)&fs->x16_map.at(inst->ptr4), fs, d + 2);
+        } else if (fs->x14_map.count(inst->ptr4) > 0) {
+            print_struct((const void *)&fs->x14_map.at(inst->ptr4), fs, d + 2);
+        } else if (fs->x12_map.count(inst->ptr4) > 0) {
+            print_struct((const void *)&fs->x12_map.at(inst->ptr4), fs, d + 2);
+        } else if (fs->x08_map.count(inst->ptr4) > 0) {
+            print_struct((const void *)&fs->x08_map.at(inst->ptr4), fs, d + 2);
+        } else if (fs->x07_map.count(inst->ptr4) > 0) {
+            print_struct((const void *)&fs->x07_map.at(inst->ptr4), fs, d + 2);
+        } else if (fs->x03_map.count(inst->ptr4) > 0) {
             print_struct((const void *)&fs->x03_map.at(inst->ptr4), fs, d + 2);
         } else {
             printf_d(d + 2, "ptr4 unrecognized: 0x%08X\n", ntohl(inst->ptr4));
-            exit(0);
+            // exit(0);
         }
     }
 }
@@ -1757,7 +1779,19 @@ void print_x28(const void *untyped_inst, File<version> *fs, const int d) {
 
     if (inst->ptr6 != 0) {
         printf_d(d + 1, "ptr6:\n");
-        if (fs->x03_map.count(inst->ptr6) > 0) {
+        if (fs->x32_map.count(inst->ptr6) > 0) {
+            print_struct((const void *)&fs->x32_map.at(inst->ptr6), fs, d + 2);
+        } else if (fs->x17_map.count(inst->ptr6) > 0) {
+            print_struct((const void *)&fs->x17_map.at(inst->ptr6), fs, d + 2);
+        } else if (fs->x16_map.count(inst->ptr6) > 0) {
+            print_struct((const void *)&fs->x16_map.at(inst->ptr6), fs, d + 2);
+        } else if (fs->x15_map.count(inst->ptr6) > 0) {
+            print_struct((const void *)&fs->x15_map.at(inst->ptr6), fs, d + 2);
+        } else if (fs->x14_map.count(inst->ptr6) > 0) {
+            print_struct((const void *)&fs->x14_map.at(inst->ptr6), fs, d + 2);
+        } else if (fs->x07_map.count(inst->ptr6) > 0) {
+            print_struct((const void *)&fs->x07_map.at(inst->ptr6), fs, d + 2);
+        } else if (fs->x03_map.count(inst->ptr6) > 0) {
             print_struct((const void *)&fs->x03_map.at(inst->ptr6), fs, d + 2);
         } else {
             printf_d(d + 2, "ptr6 unrecognized: 0x%08X\n", ntohl(inst->ptr6));
@@ -2126,7 +2160,11 @@ void print_x2D(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (fs->x26_map.count(inst->group_assignment_ptr) > 0) {
+        if (fs->x2C_map.count(inst->group_assignment_ptr) > 0) {
+            print_struct(
+                (const void *)&fs->x2C_map.at(inst->group_assignment_ptr), fs,
+                d + 2);
+        } else if (fs->x26_map.count(inst->group_assignment_ptr) > 0) {
             print_struct(
                 (const void *)&fs->x26_map.at(inst->group_assignment_ptr), fs,
                 d + 2);
@@ -2172,7 +2210,7 @@ void print_x30(const void *untyped_inst, File<version> *fs, const int d) {
         if (inst->un4 == 0) {
             printf(" \x1b[2mnull\x1b[0m\n");
         } else {
-            std::printf(" 0x %08X\n", ntohl(inst->un4));
+            std::printf(" 0x %08X = %d\n", ntohl(inst->un4), inst->un4);
         }
     }
 
@@ -2186,28 +2224,16 @@ void print_x30(const void *untyped_inst, File<version> *fs, const int d) {
     }
 
     if constexpr (!std::is_same_v<decltype(inst->ptr3), std::monostate>) {
-        printf_d(d + 1, "ptr3:");
-        if (inst->ptr3 == 0) {
-            printf(" \x1b[2mnull\x1b[0m\n");
-        } else {
-            std::printf(" 0x %08X\n", ntohl(inst->ptr3));
-        }
-    }
-
-    if constexpr (!std::is_same_v<decltype(inst->un6), std::monostate>) {
-        printf_d(d + 1, "un6:");
-        if (inst->un6 == 0) {
-            printf(" \x1b[2mnull\x1b[0m\n");
-        } else {
-            std::printf(" 0x %08X\n", ntohl(inst->un6));
-        }
-    }
-
-    if constexpr (!std::is_same_v<decltype(inst->ptr3), std::monostate>) {
         if (inst->ptr3 != 0) {
             printf_d(d + 1, "ptr3:\n");
             if (fs->x01_map.count(inst->ptr3) > 0) {
                 print_struct((const void *)&fs->x01_map.at(inst->ptr3), fs,
+                             d + 2);
+            } else if (fs->x1B_map.count(inst->ptr3) > 0) {
+                print_struct((const void *)&fs->x1B_map.at(inst->ptr3), fs,
+                             d + 2);
+            } else if (fs->x03_map.count(inst->ptr3) > 0) {
+                print_struct((const void *)&fs->x03_map.at(inst->ptr3), fs,
                              d + 2);
             } else if (fs->x04_map.count(inst->ptr3) > 0) {
                 print_struct((const void *)&fs->x04_map.at(inst->ptr3), fs,
@@ -2215,13 +2241,68 @@ void print_x30(const void *untyped_inst, File<version> *fs, const int d) {
             } else if (fs->x09_map.count(inst->ptr3) > 0) {
                 print_struct((const void *)&fs->x09_map.at(inst->ptr3), fs,
                              d + 2);
+            } else if (fs->x0E_map.count(inst->ptr3) > 0) {
+                print_struct((const void *)&fs->x0E_map.at(inst->ptr3), fs,
+                             d + 2);
+            } else if (fs->x12_map.count(inst->ptr3) > 0) {
+                print_struct((const void *)&fs->x12_map.at(inst->ptr3), fs,
+                             d + 2);
+            } else if (fs->x14_map.count(inst->ptr3) > 0) {
+                print_struct((const void *)&fs->x14_map.at(inst->ptr3), fs,
+                             d + 2);
+            } else if (fs->x15_map.count(inst->ptr3) > 0) {
+                print_struct((const void *)&fs->x15_map.at(inst->ptr3), fs,
+                             d + 2);
+            } else if (fs->x16_map.count(inst->ptr3) > 0) {
+                print_struct((const void *)&fs->x16_map.at(inst->ptr3), fs,
+                             d + 2);
+            } else if (fs->x17_map.count(inst->ptr3) > 0) {
+                print_struct((const void *)&fs->x17_map.at(inst->ptr3), fs,
+                             d + 2);
+            } else if (fs->x1F_map.count(inst->ptr3) > 0) {
+                print_struct((const void *)&fs->x1F_map.at(inst->ptr3), fs,
+                             d + 2);
+            } else if (fs->x30_map.count(inst->ptr3) > 0) {
+                print_struct((const void *)&fs->x30_map.at(inst->ptr3), fs,
+                             d + 2);
+            } else if (fs->x32_map.count(inst->ptr3) > 0) {
+                print_struct((const void *)&fs->x32_map.at(inst->ptr3), fs,
+                             d + 2);
+            } else if (fs->x24_map.count(inst->ptr3) > 0) {
+                print_struct((const void *)&fs->x24_map.at(inst->ptr3), fs,
+                             d + 2);
             } else if (fs->x26_map.count(inst->ptr3) > 0) {
                 print_struct((const void *)&fs->x26_map.at(inst->ptr3), fs,
+                             d + 2);
+            } else if (fs->x28_map.count(inst->ptr3) > 0) {
+                print_struct((const void *)&fs->x28_map.at(inst->ptr3), fs,
+                             d + 2);
+            } else if (fs->x37_map.count(inst->ptr3) > 0) {
+                print_struct((const void *)&fs->x37_map.at(inst->ptr3), fs,
                              d + 2);
             } else {
                 printf_d(d + 2, "ptr3 unrecognized: 0x%08X\n",
                          ntohl(inst->ptr3));
-                exit(0);
+                // exit(0);
+            }
+        }
+    }
+
+    if constexpr (!std::is_same_v<decltype(inst->ptr4), std::monostate>) {
+        printf_d(d + 1, "ptr4:");
+        if (inst->ptr4 == 0) {
+            printf(" \x1b[2mnull\x1b[0m\n");
+        } else {
+            printf("\n");
+            if (fs->x15_map.count(inst->ptr4) > 0) {
+                print_struct((const void *)&fs->x15_map.at(inst->ptr4), fs,
+                             d + 2);
+            } else if (fs->x17_map.count(inst->ptr4) > 0) {
+                print_struct((const void *)&fs->x17_map.at(inst->ptr4), fs,
+                             d + 2);
+            } else {
+                printf_d(d + 2, "ptr4 unrecognized: 0x %08X\n",
+                         ntohl(inst->ptr4));
             }
         }
     }
@@ -2523,7 +2604,9 @@ void print_x33(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (fs->x1C_map.count(inst->ptr4) > 0) {
+        if (fs->x2F_map.count(inst->ptr4) > 0) {
+            print_struct((const void *)&fs->x2F_map.at(inst->ptr4), fs, d + 2);
+        } else if (fs->x1C_map.count(inst->ptr4) > 0) {
             print_struct((const void *)&fs->x1C_map.at(inst->ptr4), fs, d + 2);
         } else {
             printf_d(d + 2, "ptr4 unrecognized: 0x%08X\n", ntohl(inst->ptr4));
@@ -2549,7 +2632,9 @@ void print_x33(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf(" -\n");
-        if (fs->x26_map.count(inst->ptr6) > 0) {
+        if (fs->x2C_map.count(inst->ptr6) > 0) {
+            print_struct((const void *)&fs->x2C_map.at(inst->ptr6), fs, d + 2);
+        } else if (fs->x26_map.count(inst->ptr6) > 0) {
             print_struct((const void *)&fs->x26_map.at(inst->ptr6), fs, d + 2);
         } else {
             printf_d(d + 2, "ptr6 unrecognized: 0x%08X\n", ntohl(inst->ptr6));
