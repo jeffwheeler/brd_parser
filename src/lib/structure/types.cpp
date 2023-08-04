@@ -703,12 +703,15 @@ x30<A_172>::operator x30<A_174>() const {
     new_inst.next = this->next;
     new_inst.str_graphic_ptr = this->str_graphic_ptr;
     new_inst.un1 = this->un1;
+    new_inst.un4 = this->un4;
+    new_inst.un5 = this->un5;
     new_inst.font = this->font;
     new_inst.coords[0] = this->coords[0];
     new_inst.coords[1] = this->coords[1];
     new_inst.un3 = this->un3;
     new_inst.rotation = this->rotation;
     new_inst.ptr3 = this->ptr3;
+    new_inst.ptr4 = this->ptr4;
     return new_inst;
 }
 
