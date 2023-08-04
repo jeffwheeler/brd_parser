@@ -59,14 +59,9 @@ uint32_t parse_x03(File<A_174>& fs, std::ifstream& f) {
     auto& inst = fs.x03_map[k];
 
     char* buf;
-
-    // buf = new char[subtype.size];
-    buf = (char*)malloc(inst.subtype.size);
-    inst.s = std::string();
     inst.has_str = false;
 
     // log(&f, "- Subtype.t = 0x%02X\n", inst.hdr.subtype.t);
-
     switch (inst.subtype.t & 0xFF) {
         case 0x65:
             break;
@@ -91,8 +86,10 @@ uint32_t parse_x03(File<A_174>& fs, std::ifstream& f) {
         case 0x78:
             // log(&f, "- Expecting %d characters\n",
             // inst.hdr.subtype.size);
+            buf = (char*)malloc(inst.subtype.size);
             f.read(buf, round_to_word(inst.subtype.size));
             inst.s = std::string(buf);
+            free(buf);
             // log(&f, "- Read \"%s\"\n", buf);
             inst.has_str = true;
             // log(&f, "- Read \"%s\"\n", inst.s.c_str());
@@ -260,14 +257,13 @@ uint32_t parse_x27(File<A_174>& fs, std::ifstream& f) {
         log(&f, "- Expecting to read until 0x%08X\n", fs.x27_end_pos - 1);
     }
     f.read((char*)&fs.x27_db.t, 4);
-    uint32_t k;
-    uint32_t pos;
-    pos = f.tellg();
-    while (pos < fs.x27_end_pos - 1) {
-        f.read((char*)&k, 4);
-        fs.x27_db.keys.insert(k);
-        pos += 4;
-    };
+
+    uint32_t pos = f.tellg();
+    uint32_t size = fs.x27_end_pos - 1 - pos;
+    std::vector<uint32_t> xs(size / 4);
+    f.read((char*)&xs[0], size);
+    fs.x27_db.keys = std::set<uint32_t>(xs.begin(), xs.end());
+
     return 0;
 }
 
@@ -310,16 +306,17 @@ uint32_t parse_x2A(File<A_174>& fs, std::ifstream& f) {
 
 template <AllegroVersion version>
 uint32_t parse_x31(File<A_174>& fs, std::ifstream& f) {
-    x31* x31_inst = new x31;
-    f.read((char*)x31_inst, sizeof(x31_hdr));
-    if (version >= A_174) {
-        skip(&f, 4);
+    uint32_t k = default_parser<x31, version>(fs, f);
+    auto& inst = fs.x31_map[k];
+
+    if (inst.len > 0) {
+        uint32_t len = round_to_word(inst.len);
+        char* s = (char*)malloc(round_to_word(inst.len));
+        f.read(s, len);
+        inst.s = std::string(s);
+        free(s);
     }
-    if (x31_inst->hdr.len > 0) {
-        std::getline(f, x31_inst->s, (char)0);
-    }
-    (fs.x31_map)[x31_inst->hdr.k] = *x31_inst;
-    skip_and_pad(&f, 0);
+
     return 0;
 }
 
@@ -452,10 +449,12 @@ uint32_t parse_x3B(File<A_174>& fs, std::ifstream& f) {
     x3B<version>* x3B_inst = new x3B<version>;
     f.read((char*)x3B_inst, sizeof_until_tail<x3B<version>>());
 
-    char* buf = (char*)malloc(x3B_inst->len);
-    f.read(buf, x3B_inst->len);
-    skip_and_pad(&f, 0);
-    x3B_inst->model_str = std::string(buf);
+    uint32_t len = round_to_word(x3B_inst->len);
+    char* s = (char*)malloc(len);
+    f.read(s, len);
+    x3B_inst->model_str = std::string(s);
+    free(s);
+
     return 0;
 }
 

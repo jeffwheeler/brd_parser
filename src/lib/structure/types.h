@@ -1193,7 +1193,8 @@ struct x30 {
 };
 
 // String graphic
-struct x31_hdr {
+template <AllegroVersion version>
+struct x31 {
     uint16_t t;
     uint8_t subtype;
     uint8_t layer;
@@ -1208,10 +1209,12 @@ struct x31_hdr {
     uint16_t un;
 
     uint16_t len;
-};
+    COND_FIELD(version >= A_174, uint32_t, un2);
 
-struct x31 {
-    x31_hdr hdr;
+    uint32_t TAIL;
+    operator x31<A_174>() const;
+    static constexpr AllegroVersion versions[1] = {A_174};
+
     std::string s;
 };
 
@@ -1556,7 +1559,7 @@ class File {
     std::map<uint32_t, x2E<version>> x2E_map;
     std::map<uint32_t, x2F<version>> x2F_map;
     std::map<uint32_t, x30<version>> x30_map;
-    std::map<uint32_t, x31> x31_map;
+    std::map<uint32_t, x31<version>> x31_map;
     std::map<uint32_t, x32<version>> x32_map;
     std::map<uint32_t, x33<version>> x33_map;
     std::map<uint32_t, x34<version>> x34_map;

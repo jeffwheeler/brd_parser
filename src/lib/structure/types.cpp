@@ -716,6 +716,21 @@ x30<A_172>::operator x30<A_174>() const {
 }
 
 template <>
+x31<A_160>::operator x31<A_174>() const {
+    x31<A_174> new_inst;
+    new_inst.t = this->t;
+    new_inst.subtype = this->subtype;
+    new_inst.layer = this->layer;
+    new_inst.k = this->k;
+    new_inst.str_graphic_wrapper_ptr = this->str_graphic_wrapper_ptr;
+    new_inst.coords[0] = this->coords[0];
+    new_inst.coords[1] = this->coords[1];
+    new_inst.un = this->un;
+    new_inst.len = this->len;
+    return new_inst;
+}
+
+template <>
 x32<A_160>::operator x32<A_174>() const {
     x32<A_174> new_inst;
     new_inst.type = this->type;

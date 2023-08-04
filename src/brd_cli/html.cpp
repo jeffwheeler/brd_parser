@@ -125,8 +125,8 @@ void stream_x30(File<A_174>& f) {
                 <tbody>
     )A";
     for (auto& [k, inst] : f.x30_map) {
-        const x31* str_graphic =
-            (const x31*)&f.x31_map.at(inst.str_graphic_ptr);
+        const x31<A_174>* str_graphic =
+            (const x31<A_174>*)&f.x31_map.at(inst.str_graphic_ptr);
 
         printf(R"A(
                 <tr>
