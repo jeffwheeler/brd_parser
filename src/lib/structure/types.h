@@ -1179,7 +1179,7 @@ struct x30 {
     uint32_t un1;
     COND_FIELD(version < A_172, TextProperties, font_16x);
 
-    COND_FIELD(version >= A_172, uint32_t, un6);
+    COND_FIELD(version >= A_172, uint32_t, ptr4);
 
     int32_t coords[2];
     uint32_t un3;
