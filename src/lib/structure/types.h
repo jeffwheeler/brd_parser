@@ -2,6 +2,7 @@
 #define TYPES_H
 
 #include <array>
+#include <boost/interprocess/mapped_region.hpp>
 #include <cstddef>
 #include <map>
 #include <optional>
@@ -12,6 +13,8 @@
 #include <vector>
 
 #include "cadence_fp.h"
+
+using namespace boost::interprocess;
 
 #define HAS_ENTRY(MAP, KEY) (fs->MAP.count(KEY) > 0)
 
@@ -733,7 +736,7 @@ struct t13 {
 static_assert(sizeof(t13<A_160>) == 28);
 static_assert(sizeof(t13<A_174>) == 36);
 
-// x1C shows how to draw pads
+// x1 shows how to draw pads
 template <AllegroVersion version>
 struct x1C {
     x1C_header<version> hdr;
@@ -1515,6 +1518,9 @@ struct x3C {
 template <AllegroVersion version>
 class File {
    public:
+    File(mapped_region region);
+    mapped_region region;
+
     header *hdr;
     std::vector<std::tuple<uint32_t, uint32_t>> layers;
 

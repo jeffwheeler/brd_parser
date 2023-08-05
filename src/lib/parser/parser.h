@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 
+#include <boost/interprocess/mapped_region.hpp>
 #include <fstream>
 #include <optional>
 
@@ -12,44 +13,44 @@ template <AllegroVersion version>
 int8_t read_layer(File<version>& fs, uint32_t k);
 
 template <template <AllegroVersion> typename T, AllegroVersion version>
-uint32_t default_parser(File<A_174>& fs, std::ifstream& f);
+uint32_t default_parser(File<A_174>& fs, void*& address);
 
 template <AllegroVersion version>
-uint32_t parse_x03(File<A_174>& fs, std::ifstream& f);
+uint32_t parse_x03(File<A_174>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x12(File<A_174>& fs, std::ifstream& f);
+uint32_t parse_x12(File<A_174>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x1C(File<A_174>& fs, std::ifstream& f);
+uint32_t parse_x1C(File<A_174>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x1D(File<A_174>& fs, std::ifstream& f);
+uint32_t parse_x1D(File<A_174>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x1E(File<A_174>& fs, std::ifstream& f);
+uint32_t parse_x1E(File<A_174>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x1F(File<A_174>& fs, std::ifstream& f);
+uint32_t parse_x1F(File<A_174>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x21(File<A_174>& fs, std::ifstream& f);
+uint32_t parse_x21(File<A_174>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x27(File<A_174>& fs, std::ifstream& f);
+uint32_t parse_x27(File<A_174>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x2A(File<A_174>& fs, std::ifstream& f);
+uint32_t parse_x2A(File<A_174>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x31(File<A_174>& fs, std::ifstream& f);
+uint32_t parse_x31(File<A_174>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x35(File<A_174>& fs, std::ifstream& f);
+uint32_t parse_x35(File<A_174>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x36(File<A_174>& fs, std::ifstream& f);
+uint32_t parse_x36(File<A_174>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x38(File<A_174>& fs, std::ifstream& f);
+uint32_t parse_x38(File<A_174>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x3A(File<A_174>& fs, std::ifstream& f);
+uint32_t parse_x3A(File<A_174>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x3B(File<A_174>& fs, std::ifstream& f);
+uint32_t parse_x3B(File<A_174>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x3C(File<A_174>& fs, std::ifstream& f);
+uint32_t parse_x3C(File<A_174>& fs, void*& address);
 
 template <AllegroVersion version>
 struct parser_t {
-    uint32_t (*parse)(File<A_174>&, std::ifstream&);
+    uint32_t (*parse)(File<A_174>&, void*& cur_addr);
 };
 
 template <AllegroVersion version>
@@ -194,7 +195,7 @@ void skip(std::ifstream* f, std::ifstream::pos_type n);
 void skip_and_pad(std::ifstream* f, std::ifstream::pos_type n);
 
 template <AllegroVersion version>
-File<A_174> parse_file_raw(const std::string& filepath);
+File<A_174> parse_file_raw(boost::interprocess::mapped_region region);
 
 // Non-template version automatically upgrades
 std::optional<File<A_174>> parse_file(const std::string& filepath);

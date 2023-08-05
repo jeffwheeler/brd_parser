@@ -91,8 +91,9 @@ std::string x38_layer_name(const x38<version> &inst, File<version> *fs) {
 
 template <AllegroVersion version>
 std::vector<std::pair<uint8_t, uint8_t>> x39_layers(const x39<version> &inst,
-                                                    File<version> *fs) {
+                                                    File<version> &fs_x) {
     std::vector<std::pair<uint8_t, uint8_t>> layers;
+    File<version> *fs = &fs_x;
 
     uint32_t next_key = inst.ptr1;
     while (HAS_ENTRY(x3A_map, next_key)) {
@@ -106,8 +107,10 @@ std::vector<std::pair<uint8_t, uint8_t>> x39_layers(const x39<version> &inst,
 }
 
 template <AllegroVersion version>
-std::vector<std::pair<std::string, uint32_t>> layer_list(File<version> *fs) {
+std::vector<std::pair<std::string, uint32_t>> layer_list(File<version> &fs_x) {
     std::vector<std::pair<std::string, uint32_t>> list;
+    File<version> *fs = &fs_x;
+
     for (const auto &[k, x38_inst] : fs->x38_map) {
         list.push_back(std::make_pair(x38_layer_name(x38_inst, fs), k));
     }

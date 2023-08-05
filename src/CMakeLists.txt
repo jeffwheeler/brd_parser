@@ -21,6 +21,9 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
+find_package(Boost 1.82 REQUIRED)
+include_directories(${Boost_INCLUDE_DIRS})
+
 # This allows headers to be imported from "lib/.../*.h"
 include_directories(.)
 

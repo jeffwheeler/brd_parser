@@ -966,6 +966,13 @@ x3C<A_160>::operator x3C<A_174>() const {
     return new_inst;
 }
 
+template <AllegroVersion version>
+File<version>::File(mapped_region region) {
+    this->region = std::move(region);
+}
+
+template File<A_174>::File(mapped_region region);
+
 /*
 template <AllegroVersion version>
 File<version>::operator File<A_174>() const {

@@ -2848,7 +2848,7 @@ void print_x39(const void *untyped_inst, File<version> *fs, const int d) {
     */
 
     printf_d(d + 1, "[");
-    for (auto layer_pair : x39_layers(*inst, fs)) {
+    for (auto layer_pair : x39_layers(*inst, *fs)) {
         std::printf("(%02X.%3d), ", layer_pair.first, layer_pair.second);
     }
     std::printf("]\n");
