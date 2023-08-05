@@ -15,8 +15,6 @@
 #define MAX_DEPTH 3
 
 #define PRINT(MAP, KEY, DEPTH) \
-    (print_struct((const void *)&fs->MAP->at(KEY), fs, DEPTH))
-#define PRINT2(MAP, KEY, DEPTH) \
     (print_struct((const void *)&fs->MAP.at(KEY), fs, DEPTH))
 
 template <AllegroVersion version>
