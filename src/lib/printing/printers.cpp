@@ -304,7 +304,7 @@ void print_x03(const void *untyped_inst, File<version> *fs, const int d) {
                  "x03: \x1b[36;3mString?\x1b[0m type=0x%08X k=0x%08X %02X:"
                  " next=0x%08X \x1b[34m\"%.70s\"\x1b[0m\n",
                  ntohl(inst->t), ntohl(inst->k), inst->subtype.t,
-                 ntohl(inst->next), fs->strings.at(inst->ptr).c_str());
+                 ntohl(inst->next), str_lookup(inst->ptr, *fs));
     } else {
         printf_d(d,
                  "x03: \x1b[36;3mString?\x1b[0m type=0x%08X k=0x%08X %02X:"
@@ -530,8 +530,8 @@ template <AllegroVersion version>
 void print_x06(const void *untyped_inst, File<version> *fs, const int d) {
     const x06<A_174> *inst = (const x06<A_174> *)untyped_inst;
     printf_d(d, "x06: t=0x%08X k=0x%08X \x1b[34m\"%s\" \"%s\"\x1b[0m\n",
-             ntohl(inst->t), ntohl(inst->k), fs->strings.at(inst->ptr1).c_str(),
-             fs->strings.at(inst->ptr2).c_str());
+             ntohl(inst->t), ntohl(inst->k), str_lookup(inst->ptr1, *fs),
+             str_lookup(inst->ptr2, *fs));
 
     printf_d(d + 1, "ptr3:\n");
     if (fs->x07_map.count(inst->ptr3) > 0) {
@@ -666,7 +666,7 @@ void print_x08(const void *untyped_inst, File<version> *fs, const int d) {
              " un1=%08X"
              " \x1b[34m\"%s\"\x1b[0m\n",
              ntohl(inst->t), ntohl(inst->k), inst->un1,
-             fs->strings.at(str_ptr).c_str());
+             str_lookup(str_ptr, *fs));
 
     printf_d(
         d + 1,
@@ -858,7 +858,7 @@ void print_x0D(const void *untyped_inst, File<version> *fs, const int d) {
              " \x1b[34m\"%s\"\x1b[0m\n",
              ntohl(inst->t), ntohl(inst->k), ntohl(inst->bitmask),
              inst->coords[0], inst->coords[1], inst->rotation / 1000.,
-             fs->strings.at(inst->str_ptr).c_str());
+             str_lookup(inst->str_ptr, *fs));
 
     /* Not interesting
     printf_d(d+1, "ptr2:");
@@ -897,7 +897,7 @@ void print_x0F(const void *untyped_inst, File<version> *fs, const int d) {
     printf_d(d,
              "x0F: \x1b[36;3mFootprint Instance\x1b[0m t=0x%08X k=0x%08X"
              " \x1b[34m\"%s\" \"%s\"\x1b[0m\n",
-             ntohl(inst->t), ntohl(inst->k), fs->strings.at(inst->ptr1).c_str(),
+             ntohl(inst->t), ntohl(inst->k), str_lookup(inst->ptr1, *fs),
              inst->s);
 
     printf_d(d + 1, "ptr2:\n");
@@ -998,8 +998,7 @@ void print_x11(const void *untyped_inst, File<version> *fs, const int d) {
     printf_d(d,
              "x11: \x1b[36;3mSchematic Pin\x1b[0m t=0x%08X k=0x%08X"
              " \x1b[34m\"%s\"\x1b[0m\n",
-             ntohl(inst->t), ntohl(inst->k),
-             fs->strings.at(inst->ptr1).c_str());
+             ntohl(inst->t), ntohl(inst->k), str_lookup(inst->ptr1, *fs));
 
     printf_d(d + 1,
              "ptr2 \x1b[3m(next pin, or footprint if last pin)\x1b[0m:\n");
@@ -1305,7 +1304,7 @@ void print_x1B(const void *untyped_inst, File<version> *fs, const int d) {
              "x1B: \x1b[36;3mNet\x1b[0m t=0x%08X k=0x%08X type=%08X %08X "
              "\x1b[34m\"%s\"\x1b[0m\n",
              ntohl(inst->t), ntohl(inst->k), ntohl(inst->type),
-             ntohl(inst->un2), fs->strings.at(inst->net_name).c_str());
+             ntohl(inst->un2), str_lookup(inst->net_name, *fs));
 
     printf_d(d + 1, "ptr1:");
     if (inst->ptr2 == 0) {
@@ -1426,8 +1425,7 @@ void print_t13(const t13<version> &t13_inst, File<version> *fs, const int d,
                    t13_inst.w, t13_inst.h, t13_inst.x2, t13_inst.x3,
                    t13_inst.x4, ntohl(t13_inst.str_ptr));
             if (fs->strings.count(t13_inst.str_ptr) > 0) {
-                printf_d(d + 1, "\"%s\"",
-                         fs->strings.at(t13_inst.str_ptr).c_str());
+                printf_d(d + 1, "\"%s\"", str_lookup(t13_inst.str_ptr, *fs));
             } else if (fs->x28_map.count(t13_inst.str_ptr) > 0) {
                 print_struct((const void *)&fs->x28_map.at(t13_inst.str_ptr),
                              fs, d + 1);
@@ -1453,7 +1451,7 @@ void print_x1C(const void *untyped_inst, File<version> *fs, const int d) {
              " \x1b[2m(%d, %d, %d, %d, %d, %d)\x1b[0m"
              " \x1b[2m(%d, %d, %d, %d)\x1b[0m\n",
              ntohl(inst->hdr.t), ntohl(inst->hdr.k),
-             fs->strings.at(inst->hdr.pad_str).c_str(), inst->hdr.un0_0,
+             str_lookup(inst->hdr.pad_str, *fs), inst->hdr.un0_0,
              inst->hdr.un0_1, inst->hdr.pad_path, inst->hdr.un0_3,
              inst->hdr.un0_4, inst->hdr.un0_5, inst->hdr.coords2[0],
              inst->hdr.coords2[1], inst->hdr.coords2[2], inst->hdr.coords2[3]);
@@ -1828,7 +1826,7 @@ void print_x2A(const void *untyped_inst, File<version> *fs, const int d) {
     if (inst->references) {
         for (const auto &entry : inst->reference_entries) {
             printf_d(d + 1, "%08X \x1b[34m\"%s\"\x1b[0m\n", ntohl(entry.suffix),
-                     fs->strings.at(entry.ptr).c_str());
+                     str_lookup(entry.ptr, *fs));
         }
     } else {
         for (const auto &entry : inst->local_entries) {
@@ -2000,7 +1998,7 @@ void print_x2C(const void *untyped_inst, File<version> *fs, const int d) {
 
     if (inst->string_ptr != 0) {
         std::printf(" \x1b[34m\"%s\"\x1b[0m",
-                    fs->strings.at(inst->string_ptr).c_str());
+                    str_lookup(inst->string_ptr, *fs));
     }
     std::cout << std::endl;
 

@@ -15,6 +15,9 @@ int8_t read_layer(File<version>& fs, uint32_t k);
 template <template <AllegroVersion> typename T, AllegroVersion version>
 uint32_t default_parser(File<A_174>& fs, void*& address);
 
+template <template <AllegroVersion> typename T, AllegroVersion version>
+uint32_t new_default_parser(File<A_174>& fs, void*& address);
+
 template <AllegroVersion version>
 uint32_t parse_x03(File<A_174>& fs, void*& address);
 template <AllegroVersion version>
@@ -58,7 +61,7 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x00
     {},
     // 0x01
-    {&default_parser<x01, version>},
+    {&new_default_parser<x01, version>},
     // 0x02
     {},
     // 0x03
@@ -96,13 +99,13 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x13
     {},
     // 0x14
-    {&default_parser<x14, version>},
+    {&new_default_parser<x14, version>},
     // 0x15
-    {&default_parser<x15, version>},
+    {&new_default_parser<x15, version>},
     // 0x16
-    {&default_parser<x16, version>},
+    {&new_default_parser<x16, version>},
     // 0x17
-    {&default_parser<x17, version>},
+    {&new_default_parser<x17, version>},
     // 0x18
     {},
     // 0x19

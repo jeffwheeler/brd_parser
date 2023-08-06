@@ -9,6 +9,15 @@ std::pair<double, double> x01_center(const x01<A_174> *inst);
 const std::vector<stackup_material> ordered_stackup_materials(File<A_174> &f);
 
 template <AllegroVersion version>
+char *str_lookup(uint32_t id, File<version> &fs) {
+    if (fs.strings.count(id) > 0) {
+        return fs.strings[id];
+    } else {
+        return nullptr;
+    }
+}
+
+template <AllegroVersion version>
 std::optional<std::string> x2B_footprint(const x2B<version> *inst,
                                          File<version> *fs) {
     if (fs->strings.count(inst->footprint_string_ref) > 0) {
@@ -135,8 +144,8 @@ std::optional<std::string> x0D_pin_name(const uint32_t k, File<version> *fs) {
 template <AllegroVersion version>
 std::optional<uint8_t> x14_layer(const uint32_t k, File<version> *fs) {
     if (HAS_ENTRY(x14_map, k)) {
-        const x14<version> *inst = &fs->x14_map.at(k);
-        return inst->layer;
+        const x14<version> inst = fs->get_x14(k);
+        return inst.layer;
     } else {
         return std::optional<uint8_t>();
     }
@@ -194,9 +203,10 @@ int8_t read_layer(File<version> &fs, uint32_t k) {
 
 template <typename T, AllegroVersion version>
 constexpr std::map<uint32_t, T> *find_map(File<version> &fs) {
-    if constexpr (std::is_same_v<T, x01<version>>) {
+    /* if constexpr (std::is_same_v<T, x01<version>>) {
         return &fs.x01_map;
-    } else if constexpr (std::is_same_v<T, x03<version>>) {
+    } else */
+    if constexpr (std::is_same_v<T, x03<version>>) {
         return &fs.x03_map;
     } else if constexpr (std::is_same_v<T, x04<version>>) {
         return &fs.x04_map;
@@ -224,8 +234,6 @@ constexpr std::map<uint32_t, T> *find_map(File<version> &fs) {
         return &fs.x10_map;
     } else if constexpr (std::is_same_v<T, x11<version>>) {
         return &fs.x11_map;
-    } else if constexpr (std::is_same_v<T, x14<version>>) {
-        return &fs.x14_map;
     } else if constexpr (std::is_same_v<T, x15<version>>) {
         return &fs.x15_map;
     } else if constexpr (std::is_same_v<T, x16<version>>) {
@@ -280,6 +288,21 @@ constexpr std::map<uint32_t, T> *find_map(File<version> &fs) {
         return &fs.x3A_map;
     } else if constexpr (std::is_same_v<T, x3C<version>>) {
         return &fs.x3C_map;
+    }
+}
+
+template <typename T, AllegroVersion version>
+constexpr std::map<uint32_t, void *> &new_find_map(File<version> &fs) {
+    if constexpr (std::is_same_v<T, x01<version>>) {
+        return fs.x01_map;
+    } else if constexpr (std::is_same_v<T, x14<version>>) {
+        return fs.x14_map;
+    } else if constexpr (std::is_same_v<T, x15<version>>) {
+        return fs.x15_map;
+    } else if constexpr (std::is_same_v<T, x16<version>>) {
+        return fs.x16_map;
+    } else if constexpr (std::is_same_v<T, x17<version>>) {
+        return fs.x17_map;
     }
 }
 

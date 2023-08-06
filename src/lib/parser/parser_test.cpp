@@ -48,10 +48,10 @@ void check_header_values(File<version>& fs) {
                     fs.x28_map.count(fs.hdr->ll_x0E_x28.head) > 0);
     }
     if (fs.hdr->ll_x14.head != 0) {
-        auto& x = fs.x14_map.at(fs.hdr->ll_x14.head);
+        auto x = fs.get_x14(fs.hdr->ll_x14.head);
         while (x.next != fs.hdr->ll_x14.tail) {
             EXPECT_TRUE(fs.x14_map.count(x.next) > 0);
-            x = fs.x14_map.at(x.next);
+            x = fs.get_x14(x.next);
         }
     }
     if (fs.hdr->ll_x1B.head != 0) {
@@ -156,8 +156,10 @@ TEST(ParseFile, Slugs) {
 // Magic is 0x00130C03
 // Allegro 16.3 S021
 TEST(ParseFile, Parallella) {
+    printf("Parallella 0\n");
     File<A_174> fs =
         *parse_file("../../test/data/parallella/parallella_layout.brd");
+    printf("Parallella 1\n");
 
     EXPECT_EQ(fs.layer_count, 12);
     EXPECT_EQ(fs.x17_map.size(), 17053);
@@ -297,9 +299,9 @@ TEST(ParseFile, BeagleBoneAIParsed) {
     EXPECT_EQ(x1C_inst->parts[0].w, 23000);
     EXPECT_EQ(x1C_inst->parts[0].h, 43000);
 
-    const x01<A_174>* x01_inst = &fs.x01_map.at(0x000278DE);
-    EXPECT_EQ(x01_inst->coords[0], -575000);
-    EXPECT_EQ(x01_inst->coords[1], 125000);
+    const x01<A_174> x01_inst = fs.get_x01(0x000278DE);
+    EXPECT_EQ(x01_inst.coords[0], -575000);
+    EXPECT_EQ(x01_inst.coords[1], 125000);
 }
 
 // Magic is 0x00140400

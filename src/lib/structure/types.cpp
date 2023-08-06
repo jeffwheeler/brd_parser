@@ -497,7 +497,7 @@ template <>
 x1C<A_160>::operator x1C<A_174>() const {
     x1C<A_174> new_inst;
     new_inst.hdr = this->hdr;
-    for (const auto& v : this->parts) new_inst.parts.push_back(v);
+    for (const auto &v : this->parts) new_inst.parts.push_back(v);
     return new_inst;
 }
 
@@ -505,8 +505,8 @@ template <>
 x1C<A_165>::operator x1C<A_174>() const {
     x1C<A_174> new_inst;
     new_inst.hdr = this->hdr;
-    for (const auto& v : this->parts)
-        new_inst.parts.push_back(*reinterpret_cast<const t13<A_160>*>(&v));
+    for (const auto &v : this->parts)
+        new_inst.parts.push_back(*reinterpret_cast<const t13<A_160> *>(&v));
     return new_inst;
 }
 
@@ -524,17 +524,17 @@ x22<A_160>::operator x22<A_174>() const {
 
 template <>
 x23<A_160>::operator x23<A_174>() const {
-    return *reinterpret_cast<const x23<A_174>*>(this);
+    return *reinterpret_cast<const x23<A_174> *>(this);
 }
 
 template <>
 x23<A_164>::operator x23<A_174>() const {
-    return *reinterpret_cast<const x23<A_174>*>(this);
+    return *reinterpret_cast<const x23<A_174> *>(this);
 }
 
 template <>
 x24<A_160>::operator x24<A_174>() const {
-    return *reinterpret_cast<const x24<A_174>*>(this);
+    return *reinterpret_cast<const x24<A_174> *>(this);
 }
 
 template <>
@@ -671,7 +671,7 @@ x2D<A_160>::operator x2D<A_174>() const {
 
 template <>
 x2E<A_160>::operator x2E<A_174>() const {
-    return *reinterpret_cast<const x2E<A_174>*>(this);
+    return *reinterpret_cast<const x2E<A_174> *>(this);
 }
 
 template <>
@@ -850,11 +850,11 @@ x36<A_160>::operator x36<A_174>() const {
     new_inst.last_idx = this->last_idx;
     new_inst.un3 = this->un3;
     new_inst.un2 = 0;
-    for (const auto& x08_inst : this->x08s) {
+    for (const auto &x08_inst : this->x08s) {
         new_inst.x08s.push_back(upgrade<A_160, A_174>(x08_inst));
     }
-    for (const auto& x0F_inst : this->x0Fs) {
-        x36_x0F i = *reinterpret_cast<const x36_x0F<A_174>*>(&x0F_inst);
+    for (const auto &x0F_inst : this->x0Fs) {
+        x36_x0F i = *reinterpret_cast<const x36_x0F<A_174> *>(&x0F_inst);
         new_inst.x0Fs.push_back(i);
     }
     return new_inst;
@@ -873,11 +873,11 @@ x36<A_172>::operator x36<A_174>() const {
     new_inst.last_idx = this->last_idx;
     new_inst.un3 = this->un3;
     new_inst.un2 = 0;
-    for (const auto& x08_inst : this->x08s) {
+    for (const auto &x08_inst : this->x08s) {
         new_inst.x08s.push_back(upgrade<A_172, A_174>(x08_inst));
     }
-    for (const auto& x0F_inst : this->x0Fs) {
-        x36_x0F i = *reinterpret_cast<const x36_x0F<A_174>*>(&x0F_inst);
+    for (const auto &x0F_inst : this->x0Fs) {
+        x36_x0F i = *reinterpret_cast<const x36_x0F<A_174> *>(&x0F_inst);
         new_inst.x0Fs.push_back(i);
     }
     return new_inst;
@@ -930,12 +930,12 @@ x38<A_166>::operator x38<A_174>() const {
 
 template <>
 x39<A_160>::operator x39<A_174>() const {
-    return *reinterpret_cast<const x39<A_174>*>(this);
+    return *reinterpret_cast<const x39<A_174> *>(this);
 }
 
 template <>
 x3A<A_160>::operator x3A<A_174>() const {
-    return *reinterpret_cast<const x3A<A_174>*>(this);
+    return *reinterpret_cast<const x3A<A_174> *>(this);
 }
 
 template <>
@@ -967,11 +967,100 @@ x3C<A_160>::operator x3C<A_174>() const {
 }
 
 template <AllegroVersion version>
-File<version>::File(mapped_region region) {
-    this->region = std::move(region);
+File<version>::File(mapped_region input_region)
+    : region(std::move(input_region)) {}
+
+// Explicit instantiation
+template File<A_174>::File(mapped_region region);
+
+template <>
+void File<A_174>::cache_upgrade_funcs() {
+    // Need to lookup true version, because it's not A_174
+    switch (this->hdr->magic) {
+        case 0x00130000:
+        case 0x00130200:
+            this->x01_upgrade = new_upgrade<A_160, A_174, x01>;
+            this->x14_upgrade = new_upgrade<A_160, A_174, x14>;
+            this->x15_upgrade = new_upgrade<A_160, A_174, x15>;
+            this->x16_upgrade = new_upgrade<A_160, A_174, x16>;
+            this->x17_upgrade = new_upgrade<A_160, A_174, x17>;
+            break;
+        case 0x00130402:
+            this->x01_upgrade = new_upgrade<A_162, A_174, x01>;
+            this->x14_upgrade = new_upgrade<A_162, A_174, x14>;
+            this->x15_upgrade = new_upgrade<A_162, A_174, x15>;
+            this->x16_upgrade = new_upgrade<A_162, A_174, x16>;
+            this->x17_upgrade = new_upgrade<A_162, A_174, x17>;
+            break;
+        case 0x00130C03:
+            this->x01_upgrade = new_upgrade<A_164, A_174, x01>;
+            this->x14_upgrade = new_upgrade<A_164, A_174, x14>;
+            this->x15_upgrade = new_upgrade<A_164, A_174, x15>;
+            this->x16_upgrade = new_upgrade<A_164, A_174, x16>;
+            this->x17_upgrade = new_upgrade<A_164, A_174, x17>;
+            break;
+        case 0x00131003:
+            this->x01_upgrade = new_upgrade<A_165, A_174, x01>;
+            this->x14_upgrade = new_upgrade<A_165, A_174, x14>;
+            this->x15_upgrade = new_upgrade<A_165, A_174, x15>;
+            this->x16_upgrade = new_upgrade<A_165, A_174, x16>;
+            this->x17_upgrade = new_upgrade<A_165, A_174, x17>;
+            break;
+        case 0x00131503:
+        case 0x00131504:
+            this->x01_upgrade = new_upgrade<A_166, A_174, x01>;
+            this->x14_upgrade = new_upgrade<A_166, A_174, x14>;
+            this->x15_upgrade = new_upgrade<A_166, A_174, x15>;
+            this->x16_upgrade = new_upgrade<A_166, A_174, x16>;
+            this->x17_upgrade = new_upgrade<A_166, A_174, x17>;
+            break;
+        case 0x00140400:
+        case 0x00140500:
+        case 0x00140600:
+        case 0x00140700:
+            this->x01_upgrade = new_upgrade<A_172, A_174, x01>;
+            this->x14_upgrade = new_upgrade<A_172, A_174, x14>;
+            this->x15_upgrade = new_upgrade<A_172, A_174, x15>;
+            this->x16_upgrade = new_upgrade<A_172, A_174, x16>;
+            this->x17_upgrade = new_upgrade<A_172, A_174, x17>;
+            break;
+        case 0x00140900:
+        case 0x00140901:
+        case 0x00140902:
+        case 0x00140E00:
+            this->x01_upgrade = new_upgrade<A_174, A_174, x01>;
+            this->x14_upgrade = new_upgrade<A_174, A_174, x14>;
+            this->x15_upgrade = new_upgrade<A_174, A_174, x15>;
+            this->x16_upgrade = new_upgrade<A_174, A_174, x16>;
+            this->x17_upgrade = new_upgrade<A_174, A_174, x17>;
+            break;
+    }
 }
 
-template File<A_174>::File(mapped_region region);
+template <>
+x01<A_174> File<A_174>::get_x01(uint32_t k) {
+    return this->x01_upgrade(this->x01_map[k]);
+}
+
+template <>
+x14<A_174> File<A_174>::get_x14(uint32_t k) {
+    return this->x14_upgrade(this->x14_map[k]);
+}
+
+template <>
+x15<A_174> File<A_174>::get_x15(uint32_t k) {
+    return this->x15_upgrade(this->x15_map[k]);
+}
+
+template <>
+x16<A_174> File<A_174>::get_x16(uint32_t k) {
+    return this->x16_upgrade(this->x16_map[k]);
+}
+
+template <>
+x17<A_174> File<A_174>::get_x17(uint32_t k) {
+    return this->x17_upgrade(this->x17_map[k]);
+}
 
 /*
 template <AllegroVersion version>

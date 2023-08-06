@@ -100,7 +100,7 @@ void stream_strings(File<A_174>& f) {
         printf(
             "<tr><td><code>0x%08X</code></td><td "
             "class='text-break'><code>%s</code></tr>\n",
-            k, s.c_str());
+            k, s);
     }
     std::cout << R"A(
                 </tbody>

@@ -63,6 +63,14 @@ uint32_t default_parser(File<A_174>& fs, void*& address) {
     return inst.k;
 }
 
+template <template <AllegroVersion> typename T, AllegroVersion version>
+uint32_t new_default_parser(File<A_174>& fs, void*& address) {
+    T<version>* inst = static_cast<T<version>*>(address);
+    new_find_map<T<A_174>>(fs)[inst->k] = address;
+    skip(address, sizeof_until_tail<T<version>>());
+    return inst->k;
+}
+
 template <AllegroVersion version>
 uint32_t parse_x03(File<A_174>& fs, void*& address) {
     uint32_t k = default_parser<x03, version>(fs, address);
@@ -548,14 +556,12 @@ File<A_174> parse_file_raw(mapped_region region) {
     // memcpy(fs.hdr, cur_addr, sizeof(header));
     if (PRINT_ALL_ITEMS) {
         printf("Magic: 0x%08X\n", fs.hdr->magic);
+        printf("Logcated at %p\n", &fs.hdr->magic);
         std::cout << fs.hdr->allegro_version << std::endl;
     }
     skip(cur_addr, sizeof(header));
-    log(base_addr_glb, cur_addr, "Magic = %08X\n", fs.hdr->magic);
 
-    // Skip until `unknown19`
-    // cur_addr += 60;
-    skip(cur_addr, 60);
+    fs.cache_upgrade_funcs();
 
     /*
     if (PRINT_ALL_ITEMS) {
@@ -580,7 +586,6 @@ File<A_174> parse_file_raw(mapped_region region) {
         skip(cur_addr, 4);
         fs.layers.push_back(std::make_tuple(xs[0], xs[1]));
     }
-    log(base_addr_glb, cur_addr, "Magic = %08X\n", fs.hdr->magic);
 
     // Skip `unknown20`
     if (PRINT_ALL_ITEMS) {
@@ -591,15 +596,13 @@ File<A_174> parse_file_raw(mapped_region region) {
         uint32_t id = *((uint32_t*)(cur_addr));
         skip(cur_addr, 4);
 
-        fs.strings[id] = std::string((char*)cur_addr);
+        fs.strings[id] = (char*)cur_addr;
 
         // Add one to include the NULL byte that might force the length to one
         // word longer.
-        uint32_t len = strlen((char*)cur_addr) + 1;
-
-        skip(cur_addr, round_to_word(len));
+        uint32_t len = strlen((char*)cur_addr);
+        skip(cur_addr, round_to_word(len + 1));
     }
-    log(base_addr_glb, cur_addr, "Magic = %08X\n", fs.hdr->magic);
 
     /*
     // If we peek a `0x00`, we may be at the end of the file, but have extra
@@ -646,6 +649,7 @@ File<A_174> parse_file_raw(mapped_region region) {
 }
 
 std::optional<File<A_174>> parse_file(const std::string& filepath) {
+    printf("A\n");
     file_mapping mapped_file(filepath.c_str(), read_only);
     mapped_region region(mapped_file, read_only);
 
@@ -659,10 +663,12 @@ std::optional<File<A_174>> parse_file(const std::string& filepath) {
     void* address = region.get_address();
     base_addr_glb = address;
 
+    printf("B\n");
     std::size_t size = region.get_size();
     uint32_t magic = *((uint32_t*)address);
+    printf("C\n");
 
-    // printf("Comparing magic 0x%08X\n", magic);
+    printf("Comparing magic 0x%08X\n", magic);
     switch (magic) {
         case 0x00130000:
         case 0x00130200:

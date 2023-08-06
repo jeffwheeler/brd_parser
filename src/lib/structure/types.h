@@ -55,6 +55,25 @@ constexpr T<end> upgrade(const T<start> &a) {
     return *reinterpret_cast<const T<end> *>(&a);
 }
 
+template <AllegroVersion start, AllegroVersion end,
+          template <AllegroVersion> class T>
+constexpr T<end> new_upgrade(void *x) {
+    T<start> &a = *static_cast<T<start> *>(x);
+    constexpr uint8_t n = sizeof(T<start>::versions) / sizeof(AllegroVersion);
+    if constexpr (n >= 1 && start < T<start>::versions[0]) {
+        // Reinterpret the element as T<A_160> so we can use the explicitly-
+        // defined conversion function.
+        return *reinterpret_cast<const T<A_160> *>(&a);
+    }
+    if constexpr (n >= 2 && start < T<start>::versions[1]) {
+        return *reinterpret_cast<const T<T<start>::versions[0]> *>(&a);
+    }
+    if constexpr (n >= 3 && start < T<start>::versions[2]) {
+        return *reinterpret_cast<const T<T<start>::versions[1]> *>(&a);
+    }
+    return *reinterpret_cast<const T<end> *>(&a);
+}
+
 // This alternative to `sizeof` is used where conditional fields are at the end
 // of a `struct`. Without a `uint32_t TAIL` at the end, the size is incorrect.
 template <typename T>
@@ -100,6 +119,9 @@ struct header {
     ll_ptrs ll_x0A;
     uint32_t un5;
     char allegro_version[60];
+    uint32_t un6;
+    uint32_t max_key;
+    uint32_t un7[13];
 };
 
 // BOOST_FUSION_ADAPT_STRUCT(header, magic, un1, allegro_version);
@@ -1518,14 +1540,13 @@ struct x3C {
 template <AllegroVersion version>
 class File {
    public:
-    File(mapped_region region);
-    mapped_region region;
+    File(mapped_region input_region);
 
     header *hdr;
     std::vector<std::tuple<uint32_t, uint32_t>> layers;
 
-    std::map<uint32_t, std::string> strings;
-    std::map<uint32_t, x01<version>> x01_map;
+    std::map<uint32_t, char *> strings;
+    std::map<uint32_t, void *> x01_map;
     std::map<uint32_t, x03<version>> x03_map;
     std::map<uint32_t, x04<version>> x04_map;
     std::map<uint32_t, x05<version>> x05_map;
@@ -1541,10 +1562,10 @@ class File {
     std::map<uint32_t, x10<version>> x10_map;
     std::map<uint32_t, x11<version>> x11_map;
     std::map<uint32_t, x12> x12_map;
-    std::map<uint32_t, x14<version>> x14_map;
-    std::map<uint32_t, x15<version>> x15_map;
-    std::map<uint32_t, x16<version>> x16_map;
-    std::map<uint32_t, x17<version>> x17_map;
+    std::map<uint32_t, void *> x14_map;
+    std::map<uint32_t, void *> x15_map;
+    std::map<uint32_t, void *> x16_map;
+    std::map<uint32_t, void *> x17_map;
     std::map<uint32_t, x1B<version>> x1B_map;
     std::map<uint32_t, x1C<version>> x1C_map;
     std::map<uint32_t, x1D<version>> x1D_map;
@@ -1582,7 +1603,26 @@ class File {
     uint8_t layer_count = 0;
     uint32_t x27_end_pos;
 
+    x01<A_174> get_x01(uint32_t k);
+    x14<A_174> get_x14(uint32_t k);
+    x15<A_174> get_x15(uint32_t k);
+    x16<A_174> get_x16(uint32_t k);
+    x17<A_174> get_x17(uint32_t k);
+
+    // This is not done in the constructor because the header hasn't been set
+    // yet, so we can't read what magic we are.
+    void cache_upgrade_funcs();
+
     operator File<A_174>() const;
+
+   private:
+    mapped_region region;
+
+    x01<A_174> (*x01_upgrade)(void *);
+    x14<A_174> (*x14_upgrade)(void *);
+    x15<A_174> (*x15_upgrade)(void *);
+    x16<A_174> (*x16_upgrade)(void *);
+    x17<A_174> (*x17_upgrade)(void *);
 };
 
 #endif
