@@ -77,11 +77,12 @@ uint32_t new_default_parser(File<A_174>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x03(File<A_174>& fs, void*& address) {
-    uint32_t k = default_parser<x03, version>(fs, address);
-    auto& inst = fs.x03_map[k];
+    uint32_t k = new_default_parser<x03, version>(fs, address);
+    const auto& inst = fs.get_x03(k);
 
     char* buf;
-    inst.has_str = false;
+    // inst.has_str = false;
+    uint32_t size;
 
     // log(base_addr_glb, address, "- Subtype.t = 0x%02X\n", inst.subtype.t);
     switch (inst.subtype.t & 0xFF) {
@@ -91,15 +92,8 @@ uint32_t parse_x03(File<A_174>& fs, void*& address) {
         case 0x66:
         case 0x67:
         case 0x6A:
-            // f.read((char*)&inst.ptr, 4);
-            inst.ptr = *(static_cast<uint32_t*>(address));
             skip(address, 4);
             break;
-            /*
-            std::getline(f, inst.s, (char)0);
-            skip_and_pad(&f, 0);
-            break;
-            */
         case 0x6D:
         case 0x6E:
         case 0x6F:
@@ -108,27 +102,15 @@ uint32_t parse_x03(File<A_174>& fs, void*& address) {
         case 0x71:
         case 0x73:
         case 0x78:
-            // log(&f, "- Expecting %d characters\n",
-            // inst.hdr.subtype.size);
-            // buf = (char*)malloc(inst.subtype.size);
-            // f.read(buf, round_to_word(inst.subtype.size));
-            inst.s = std::string((char*)address);
             skip(address, round_to_word(inst.subtype.size));
-            // free(buf);
-            // log(&f, "- Read \"%s\"\n", buf);
-            inst.has_str = true;
-            // log(&f, "- Read \"%s\"\n", inst.s.c_str());
             break;
         case 0x69:
-            // skip(&f, 8);
             skip(address, 8);
             break;
-        case 0x6C: {
-            uint32_t size = *(static_cast<uint32_t*>((void*)address));
+        case 0x6C:
+            size = *(static_cast<uint32_t*>((void*)address));
             skip(address, 4 + 4 * size);
-            // f.read((char*)&size, 4);
-            // skip(&f, 4 * size);
-        } break;
+            break;
         case 0x70:
         case 0x74:
             uint16_t x[2];
@@ -136,13 +118,9 @@ uint32_t parse_x03(File<A_174>& fs, void*& address) {
             skip(address, 2);
             x[1] = *(static_cast<uint16_t*>((void*)address));
             skip(address, 2);
-            // f.read((char*)&x, 4);
-            // skip(&f, x[1] + 4 * x[0]);
             skip(address, x[1] + 4 * x[0]);
             break;
         case 0xF6:
-            // log(&f, "- Doing f6\n");
-            // skip(&f, 80);
             skip(address, 80);
             break;
         default:

@@ -143,7 +143,7 @@ std::optional<std::string> x0D_pin_name(const uint32_t k, File<version> *fs) {
 
 template <AllegroVersion version>
 std::optional<uint8_t> x14_layer(const uint32_t k, File<version> *fs) {
-    if (fs->has_x14(k)) {
+    if (fs->is_type(k, 0x14)) {
         const x14<version> inst = fs->get_x14(k);
         return inst.layer;
     } else {
@@ -153,7 +153,7 @@ std::optional<uint8_t> x14_layer(const uint32_t k, File<version> *fs) {
 
 template <AllegroVersion version>
 char *x1B_net_name(const uint32_t k, File<version> *fs) {
-    if (fs->has_x1B(k)) {
+    if (fs->is_type(k, 0x1B)) {
         const x1B<version> inst = fs->get_x1B(k);
         return str_lookup(inst.net_name, *fs);
     } else {

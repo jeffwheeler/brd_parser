@@ -37,6 +37,13 @@ enum AllegroVersion {
     A_174 = 0x00140900
 };
 
+// This alternative to `sizeof` is used where conditional fields are at the end
+// of a `struct`. Without a `uint32_t TAIL` at the end, the size is incorrect.
+template <typename T>
+constexpr size_t sizeof_until_tail() {
+    return offsetof(T, TAIL);
+}
+
 template <AllegroVersion start, AllegroVersion end,
           template <AllegroVersion> class T>
 constexpr T<end> upgrade(const T<start> &a) {
@@ -59,26 +66,25 @@ template <AllegroVersion start, AllegroVersion end,
           template <AllegroVersion> class T>
 constexpr T<end> new_upgrade(void *x) {
     T<start> &a = *static_cast<T<start> *>(x);
+    T<end> t;
     constexpr uint8_t n = sizeof(T<start>::versions) / sizeof(AllegroVersion);
     if constexpr (n >= 1 && start < T<start>::versions[0]) {
         // Reinterpret the element as T<A_160> so we can use the explicitly-
         // defined conversion function.
-        return *reinterpret_cast<const T<A_160> *>(&a);
+        t = *reinterpret_cast<const T<A_160> *>(&a);
+        return t;
     }
     if constexpr (n >= 2 && start < T<start>::versions[1]) {
-        return *reinterpret_cast<const T<T<start>::versions[0]> *>(&a);
+        t = *reinterpret_cast<const T<T<start>::versions[0]> *>(&a);
+        return t;
     }
     if constexpr (n >= 3 && start < T<start>::versions[2]) {
-        return *reinterpret_cast<const T<T<start>::versions[1]> *>(&a);
+        t = *reinterpret_cast<const T<T<start>::versions[1]> *>(&a);
+        return t;
     }
-    return *reinterpret_cast<const T<end> *>(&a);
-}
 
-// This alternative to `sizeof` is used where conditional fields are at the end
-// of a `struct`. Without a `uint32_t TAIL` at the end, the size is incorrect.
-template <typename T>
-constexpr size_t sizeof_until_tail() {
-    return offsetof(T, TAIL);
+    memcpy(&t, x, sizeof_until_tail<T<end>>());
+    return t;
 }
 
 // Linked list
@@ -1548,7 +1554,6 @@ class File {
     std::unordered_map<uint32_t, void *> ptrs;
 
     std::map<uint32_t, char *> strings;
-    std::map<uint32_t, x03<version>> x03_map;
     std::map<uint32_t, x04<version>> x04_map;
     std::map<uint32_t, x05<version>> x05_map;
     std::map<uint32_t, x06<version>> x06_map;
@@ -1600,18 +1605,14 @@ class File {
     uint32_t x27_end_pos;
 
     x01<A_174> get_x01(uint32_t k);
+    const x03<A_174> get_x03(uint32_t k);
     x14<A_174> get_x14(uint32_t k);
     x15<A_174> get_x15(uint32_t k);
     x16<A_174> get_x16(uint32_t k);
     x17<A_174> get_x17(uint32_t k);
     x1B<A_174> get_x1B(uint32_t k);
 
-    bool has_x01(uint32_t k);
-    bool has_x14(uint32_t k);
-    bool has_x15(uint32_t k);
-    bool has_x16(uint32_t k);
-    bool has_x17(uint32_t k);
-    bool has_x1B(uint32_t k);
+    bool is_type(uint32_t k, uint8_t t);
 
     // This is not done in the constructor because the header hasn't been set
     // yet, so we can't read what magic we are.
@@ -1625,6 +1626,7 @@ class File {
     void cache_upgrade_funcs();
 
     x01<A_174> (*x01_upgrade)(void *);
+    x03<A_174> (*x03_upgrade)(void *);
     x14<A_174> (*x14_upgrade)(void *);
     x15<A_174> (*x15_upgrade)(void *);
     x16<A_174> (*x16_upgrade)(void *);

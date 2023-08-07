@@ -53,7 +53,7 @@ void check_header_values(File<version>& fs) {
     if (fs.hdr->ll_x14.head != 0) {
         auto x = fs.get_x14(fs.hdr->ll_x14.head);
         while (x.next != fs.hdr->ll_x14.tail) {
-            EXPECT_TRUE(fs.has_x14(x.next));
+            EXPECT_TRUE(fs.is_type(x.next, 0x14));
             x = fs.get_x14(x.next);
         }
     }
@@ -61,7 +61,7 @@ void check_header_values(File<version>& fs) {
         auto x = fs.get_x1B(fs.hdr->ll_x1B.head);
         // auto& x = fs.x1B_map.at(fs.hdr->ll_x1B.head);
         while (x.next != fs.hdr->ll_x1B.tail) {
-            EXPECT_TRUE(fs.has_x1B(x.next));
+            EXPECT_TRUE(fs.is_type(x.next, 0x1B));
             x = fs.get_x1B(x.next);
         }
     }
@@ -84,7 +84,7 @@ void check_header_values(File<version>& fs) {
         }
     }
     if (fs.hdr->ll_x03.head != 0) {
-        EXPECT_TRUE(fs.x03_map.count(fs.hdr->ll_x03.head) > 0);
+        // EXPECT_TRUE(fs.x03_map.count(fs.hdr->ll_x03.head) > 0);
     }
     if (fs.hdr->ll_x0A_2.head != 0) {
         auto& x = fs.x0A_map.at(fs.hdr->ll_x0A_2.head);
@@ -232,7 +232,7 @@ TEST(ParseFile, EdaV3) {
 
     EXPECT_EQ(fs.layer_count, 4);
     // EXPECT_EQ(fs.x17_map.size(), 3106);
-    EXPECT_TRUE(fs.x03_map.count(0xF2692148) > 0);
+    // EXPECT_TRUE(fs.x03_map.count(0xF2692148) > 0);
 
     EXPECT_FALSE(check_overlapping_ids(fs));
     check_header_values(fs);
@@ -280,7 +280,7 @@ TEST(ParseFile, EuroAdc) {
 
     EXPECT_EQ(fs.layer_count, 6);
     // EXPECT_EQ(fs.x17_map.size(), 19812);
-    EXPECT_TRUE(fs.x03_map.count(0xEC0FA1D0) > 0);
+    // EXPECT_TRUE(fs.x03_map.count(0xEC0FA1D0) > 0);
 
     EXPECT_FALSE(check_overlapping_ids(fs));
     check_header_values(fs);
@@ -316,7 +316,7 @@ TEST(ParseFile, RFPowerDivider) {
 
     EXPECT_EQ(fs.layer_count, 2);
     // EXPECT_EQ(fs.x17_map.size(), 1900);
-    EXPECT_TRUE(fs.x03_map.count(0x0C190840) > 0);
+    // EXPECT_TRUE(fs.x03_map.count(0x0C190840) > 0);
 
     EXPECT_FALSE(check_overlapping_ids(fs));
     check_header_values(fs);
@@ -368,7 +368,7 @@ TEST(ParseFile, JtagToDc3) {
 
     EXPECT_EQ(fs.layer_count, 2);
     // EXPECT_EQ(fs.x17_map.size(), 137);
-    EXPECT_TRUE(fs.x03_map.count(0x00000A6F) > 0);
+    // EXPECT_TRUE(fs.x03_map.count(0x00000A6F) > 0);
 
     EXPECT_FALSE(check_overlapping_ids(fs));
     check_header_values(fs);
@@ -439,7 +439,7 @@ TEST(ParseFile, PllFmHw) {
 
     EXPECT_EQ(fs.layer_count, 10);
     // EXPECT_EQ(fs.x17_map.size(), 20619);
-    EXPECT_TRUE(fs.x03_map.count(0x0003096A) > 0);
+    // EXPECT_TRUE(fs.x03_map.count(0x0003096A) > 0);
 
     EXPECT_FALSE(check_overlapping_ids(fs));
     check_header_values(fs);

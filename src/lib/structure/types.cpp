@@ -31,7 +31,7 @@ x03<A_160>::operator x03<A_174>() const {
     new_inst.next = this->next;
     new_inst.subtype = this->subtype;
     new_inst.has_str = this->has_str;
-    new_inst.s = this->s;
+    // new_inst.s = this->s;
     new_inst.ptr = this->ptr;
     return new_inst;
 }
@@ -994,6 +994,7 @@ void File<version>::cache_upgrade_funcs() {
         case 0x00130000:
         case 0x00130200:
             this->x01_upgrade = new_upgrade<A_160, A_174, x01>;
+            this->x03_upgrade = new_upgrade<A_160, A_174, x03>;
             this->x14_upgrade = new_upgrade<A_160, A_174, x14>;
             this->x15_upgrade = new_upgrade<A_160, A_174, x15>;
             this->x16_upgrade = new_upgrade<A_160, A_174, x16>;
@@ -1002,6 +1003,7 @@ void File<version>::cache_upgrade_funcs() {
             break;
         case 0x00130402:
             this->x01_upgrade = new_upgrade<A_162, A_174, x01>;
+            this->x03_upgrade = new_upgrade<A_162, A_174, x03>;
             this->x14_upgrade = new_upgrade<A_162, A_174, x14>;
             this->x15_upgrade = new_upgrade<A_162, A_174, x15>;
             this->x16_upgrade = new_upgrade<A_162, A_174, x16>;
@@ -1010,6 +1012,7 @@ void File<version>::cache_upgrade_funcs() {
             break;
         case 0x00130C03:
             this->x01_upgrade = new_upgrade<A_164, A_174, x01>;
+            this->x03_upgrade = new_upgrade<A_164, A_174, x03>;
             this->x14_upgrade = new_upgrade<A_164, A_174, x14>;
             this->x15_upgrade = new_upgrade<A_164, A_174, x15>;
             this->x16_upgrade = new_upgrade<A_164, A_174, x16>;
@@ -1018,6 +1021,7 @@ void File<version>::cache_upgrade_funcs() {
             break;
         case 0x00131003:
             this->x01_upgrade = new_upgrade<A_165, A_174, x01>;
+            this->x03_upgrade = new_upgrade<A_165, A_174, x03>;
             this->x14_upgrade = new_upgrade<A_165, A_174, x14>;
             this->x15_upgrade = new_upgrade<A_165, A_174, x15>;
             this->x16_upgrade = new_upgrade<A_165, A_174, x16>;
@@ -1027,6 +1031,7 @@ void File<version>::cache_upgrade_funcs() {
         case 0x00131503:
         case 0x00131504:
             this->x01_upgrade = new_upgrade<A_166, A_174, x01>;
+            this->x03_upgrade = new_upgrade<A_166, A_174, x03>;
             this->x14_upgrade = new_upgrade<A_166, A_174, x14>;
             this->x15_upgrade = new_upgrade<A_166, A_174, x15>;
             this->x16_upgrade = new_upgrade<A_166, A_174, x16>;
@@ -1038,6 +1043,7 @@ void File<version>::cache_upgrade_funcs() {
         case 0x00140600:
         case 0x00140700:
             this->x01_upgrade = new_upgrade<A_172, A_174, x01>;
+            this->x03_upgrade = new_upgrade<A_172, A_174, x03>;
             this->x14_upgrade = new_upgrade<A_172, A_174, x14>;
             this->x15_upgrade = new_upgrade<A_172, A_174, x15>;
             this->x16_upgrade = new_upgrade<A_172, A_174, x16>;
@@ -1049,6 +1055,7 @@ void File<version>::cache_upgrade_funcs() {
         case 0x00140902:
         case 0x00140E00:
             this->x01_upgrade = new_upgrade<A_174, A_174, x01>;
+            this->x03_upgrade = new_upgrade<A_174, A_174, x03>;
             this->x14_upgrade = new_upgrade<A_174, A_174, x14>;
             this->x15_upgrade = new_upgrade<A_174, A_174, x15>;
             this->x16_upgrade = new_upgrade<A_174, A_174, x16>;
@@ -1061,6 +1068,63 @@ void File<version>::cache_upgrade_funcs() {
 template <>
 x01<A_174> File<A_174>::get_x01(uint32_t k) {
     return this->x01_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x03<A_174> File<A_174>::get_x03(uint32_t k) {
+    size_t size;
+    switch (this->hdr->magic) {
+        case 0x00130000:
+        case 0x00130200:
+            size = sizeof_until_tail<x03<A_160>>();
+            break;
+        case 0x00130402:
+            size = sizeof_until_tail<x03<A_162>>();
+            break;
+        case 0x00130C03:
+            size = sizeof_until_tail<x03<A_164>>();
+            break;
+        case 0x00131003:
+            size = sizeof_until_tail<x03<A_165>>();
+            break;
+        case 0x00131503:
+        case 0x00131504:
+            size = sizeof_until_tail<x03<A_166>>();
+            break;
+        case 0x00140400:
+        case 0x00140500:
+        case 0x00140600:
+        case 0x00140700:
+            size = sizeof_until_tail<x03<A_172>>();
+            break;
+        case 0x00140900:
+        case 0x00140901:
+        case 0x00140902:
+        case 0x00140E00:
+            size = sizeof_until_tail<x03<A_174>>();
+            break;
+    }
+
+    void *p = this->ptrs[k];
+    x03<A_174> i = this->x03_upgrade(p);
+    void *next_ptr = ((char *)p) + size;
+    switch (i.subtype.t & 0xFF) {
+        case 0x64:
+        case 0x66:
+        case 0x67:
+        case 0x6A:
+            i.ptr = *static_cast<uint32_t *>(next_ptr);
+        case 0x6D:
+        case 0x6E:
+        case 0x6F:
+        case 0x68:
+        case 0x6B:
+        case 0x71:
+        case 0x73:
+        case 0x78:
+            i.s = std::string(static_cast<char *>(next_ptr));
+    }
+    return i;
 }
 
 template <>
@@ -1089,33 +1153,8 @@ x1B<A_174> File<A_174>::get_x1B(uint32_t k) {
 }
 
 template <>
-bool File<A_174>::has_x01(uint32_t k) {
-    return (this->ptrs.count(k) > 0) && (*(uint8_t *)this->ptrs[k] == 0x01);
-}
-
-template <>
-bool File<A_174>::has_x14(uint32_t k) {
-    return (this->ptrs.count(k) > 0) && (*(uint8_t *)this->ptrs[k] == 0x14);
-}
-
-template <>
-bool File<A_174>::has_x15(uint32_t k) {
-    return (this->ptrs.count(k) > 0) && (*(uint8_t *)this->ptrs[k] == 0x15);
-}
-
-template <>
-bool File<A_174>::has_x16(uint32_t k) {
-    return (this->ptrs.count(k) > 0) && (*(uint8_t *)this->ptrs[k] == 0x16);
-}
-
-template <>
-bool File<A_174>::has_x17(uint32_t k) {
-    return (this->ptrs.count(k) > 0) && (*(uint8_t *)this->ptrs[k] == 0x17);
-}
-
-template <>
-bool File<A_174>::has_x1B(uint32_t k) {
-    return (this->ptrs.count(k) > 0) && (*(uint8_t *)this->ptrs[k] == 0x1B);
+bool File<A_174>::is_type(uint32_t k, uint8_t t) {
+    return (this->ptrs.count(k) > 0) && (*(uint8_t *)this->ptrs[k] == t);
 }
 
 /*
