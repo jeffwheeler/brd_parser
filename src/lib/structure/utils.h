@@ -143,7 +143,7 @@ std::optional<std::string> x0D_pin_name(const uint32_t k, File<version> *fs) {
 
 template <AllegroVersion version>
 std::optional<uint8_t> x14_layer(const uint32_t k, File<version> *fs) {
-    if (HAS_ENTRY(x14_map, k)) {
+    if (fs->has_x14(k)) {
         const x14<version> inst = fs->get_x14(k);
         return inst.layer;
     } else {
@@ -152,12 +152,12 @@ std::optional<uint8_t> x14_layer(const uint32_t k, File<version> *fs) {
 }
 
 template <AllegroVersion version>
-std::optional<std::string> x1B_net_name(const uint32_t k, File<version> *fs) {
-    if (HAS_ENTRY(x1B_map, k)) {
-        const x1B<version> *inst = &fs->x1B_map.at(k);
-        return fs->strings.at(inst->net_name);
+char *x1B_net_name(const uint32_t k, File<version> *fs) {
+    if (fs->has_x1B(k)) {
+        const x1B<version> inst = fs->get_x1B(k);
+        return str_lookup(inst.net_name, *fs);
     } else {
-        return std::optional<std::string>();
+        return nullptr;
     }
 }
 
@@ -291,8 +291,10 @@ constexpr std::map<uint32_t, T> *find_map(File<version> &fs) {
     }
 }
 
+/*
 template <typename T, AllegroVersion version>
-constexpr std::map<uint32_t, void *> &new_find_map(File<version> &fs) {
+constexpr std::unordered_map<uint32_t, void *> &new_find_map(
+    File<version> &fs) {
     if constexpr (std::is_same_v<T, x01<version>>) {
         return fs.x01_map;
     } else if constexpr (std::is_same_v<T, x14<version>>) {
@@ -303,7 +305,10 @@ constexpr std::map<uint32_t, void *> &new_find_map(File<version> &fs) {
         return fs.x16_map;
     } else if constexpr (std::is_same_v<T, x17<version>>) {
         return fs.x17_map;
+    } else if constexpr (std::is_same_v<T, x1B<version>>) {
+        return fs.x1B_map;
     }
 }
+*/
 
 #endif

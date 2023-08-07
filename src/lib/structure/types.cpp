@@ -974,7 +974,21 @@ File<version>::File(mapped_region input_region)
 template File<A_174>::File(mapped_region region);
 
 template <>
-void File<A_174>::cache_upgrade_funcs() {
+void File<A_174>::prepare() {
+    // FIXME: What's a reasonable number?
+    this->ptrs.reserve(10000000);
+    // this->x01_map.reserve(10000000);
+    // this->x14_map.reserve(10000000);
+    // this->x15_map.reserve(10000000);
+    // this->x16_map.reserve(10000000);
+    // this->x17_map.reserve(10000000);
+    // this->x1B_map.reserve(10000000);
+
+    cache_upgrade_funcs();
+}
+
+template <AllegroVersion version>
+void File<version>::cache_upgrade_funcs() {
     // Need to lookup true version, because it's not A_174
     switch (this->hdr->magic) {
         case 0x00130000:
@@ -984,6 +998,7 @@ void File<A_174>::cache_upgrade_funcs() {
             this->x15_upgrade = new_upgrade<A_160, A_174, x15>;
             this->x16_upgrade = new_upgrade<A_160, A_174, x16>;
             this->x17_upgrade = new_upgrade<A_160, A_174, x17>;
+            this->x1B_upgrade = new_upgrade<A_160, A_174, x1B>;
             break;
         case 0x00130402:
             this->x01_upgrade = new_upgrade<A_162, A_174, x01>;
@@ -991,6 +1006,7 @@ void File<A_174>::cache_upgrade_funcs() {
             this->x15_upgrade = new_upgrade<A_162, A_174, x15>;
             this->x16_upgrade = new_upgrade<A_162, A_174, x16>;
             this->x17_upgrade = new_upgrade<A_162, A_174, x17>;
+            this->x1B_upgrade = new_upgrade<A_162, A_174, x1B>;
             break;
         case 0x00130C03:
             this->x01_upgrade = new_upgrade<A_164, A_174, x01>;
@@ -998,6 +1014,7 @@ void File<A_174>::cache_upgrade_funcs() {
             this->x15_upgrade = new_upgrade<A_164, A_174, x15>;
             this->x16_upgrade = new_upgrade<A_164, A_174, x16>;
             this->x17_upgrade = new_upgrade<A_164, A_174, x17>;
+            this->x1B_upgrade = new_upgrade<A_164, A_174, x1B>;
             break;
         case 0x00131003:
             this->x01_upgrade = new_upgrade<A_165, A_174, x01>;
@@ -1005,6 +1022,7 @@ void File<A_174>::cache_upgrade_funcs() {
             this->x15_upgrade = new_upgrade<A_165, A_174, x15>;
             this->x16_upgrade = new_upgrade<A_165, A_174, x16>;
             this->x17_upgrade = new_upgrade<A_165, A_174, x17>;
+            this->x1B_upgrade = new_upgrade<A_165, A_174, x1B>;
             break;
         case 0x00131503:
         case 0x00131504:
@@ -1013,6 +1031,7 @@ void File<A_174>::cache_upgrade_funcs() {
             this->x15_upgrade = new_upgrade<A_166, A_174, x15>;
             this->x16_upgrade = new_upgrade<A_166, A_174, x16>;
             this->x17_upgrade = new_upgrade<A_166, A_174, x17>;
+            this->x1B_upgrade = new_upgrade<A_166, A_174, x1B>;
             break;
         case 0x00140400:
         case 0x00140500:
@@ -1023,6 +1042,7 @@ void File<A_174>::cache_upgrade_funcs() {
             this->x15_upgrade = new_upgrade<A_172, A_174, x15>;
             this->x16_upgrade = new_upgrade<A_172, A_174, x16>;
             this->x17_upgrade = new_upgrade<A_172, A_174, x17>;
+            this->x1B_upgrade = new_upgrade<A_172, A_174, x1B>;
             break;
         case 0x00140900:
         case 0x00140901:
@@ -1033,33 +1053,69 @@ void File<A_174>::cache_upgrade_funcs() {
             this->x15_upgrade = new_upgrade<A_174, A_174, x15>;
             this->x16_upgrade = new_upgrade<A_174, A_174, x16>;
             this->x17_upgrade = new_upgrade<A_174, A_174, x17>;
+            this->x1B_upgrade = new_upgrade<A_174, A_174, x1B>;
             break;
     }
 }
 
 template <>
 x01<A_174> File<A_174>::get_x01(uint32_t k) {
-    return this->x01_upgrade(this->x01_map[k]);
+    return this->x01_upgrade(this->ptrs[k]);
 }
 
 template <>
 x14<A_174> File<A_174>::get_x14(uint32_t k) {
-    return this->x14_upgrade(this->x14_map[k]);
+    return this->x14_upgrade(this->ptrs[k]);
 }
 
 template <>
 x15<A_174> File<A_174>::get_x15(uint32_t k) {
-    return this->x15_upgrade(this->x15_map[k]);
+    return this->x15_upgrade(this->ptrs[k]);
 }
 
 template <>
 x16<A_174> File<A_174>::get_x16(uint32_t k) {
-    return this->x16_upgrade(this->x16_map[k]);
+    return this->x16_upgrade(this->ptrs[k]);
 }
 
 template <>
 x17<A_174> File<A_174>::get_x17(uint32_t k) {
-    return this->x17_upgrade(this->x17_map[k]);
+    return this->x17_upgrade(this->ptrs[k]);
+}
+
+template <>
+x1B<A_174> File<A_174>::get_x1B(uint32_t k) {
+    return this->x1B_upgrade(this->ptrs[k]);
+}
+
+template <>
+bool File<A_174>::has_x01(uint32_t k) {
+    return (this->ptrs.count(k) > 0) && (*(uint8_t *)this->ptrs[k] == 0x01);
+}
+
+template <>
+bool File<A_174>::has_x14(uint32_t k) {
+    return (this->ptrs.count(k) > 0) && (*(uint8_t *)this->ptrs[k] == 0x14);
+}
+
+template <>
+bool File<A_174>::has_x15(uint32_t k) {
+    return (this->ptrs.count(k) > 0) && (*(uint8_t *)this->ptrs[k] == 0x15);
+}
+
+template <>
+bool File<A_174>::has_x16(uint32_t k) {
+    return (this->ptrs.count(k) > 0) && (*(uint8_t *)this->ptrs[k] == 0x16);
+}
+
+template <>
+bool File<A_174>::has_x17(uint32_t k) {
+    return (this->ptrs.count(k) > 0) && (*(uint8_t *)this->ptrs[k] == 0x17);
+}
+
+template <>
+bool File<A_174>::has_x1B(uint32_t k) {
+    return (this->ptrs.count(k) > 0) && (*(uint8_t *)this->ptrs[k] == 0x1B);
 }
 
 /*

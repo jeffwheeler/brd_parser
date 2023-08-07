@@ -151,8 +151,8 @@ void print_struct(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_struct(const uint32_t k, File<version> &fs, const int d) {
-    if (fs.x01_map.count(k) > 0) {
-        print_struct((const void *)&fs.x01_map.at(k), &fs, d);
+    if (fs.has_x01(k)) {
+        print_struct((const void *)fs.ptrs[k], &fs, d);
     } else if (fs.x04_map.count(k) > 0) {
         print_struct((const void *)&fs.x04_map.at(k), &fs, d);
     } else if (fs.x05_map.count(k) > 0) {
@@ -163,16 +163,16 @@ void print_struct(const uint32_t k, File<version> &fs, const int d) {
         print_struct((const void *)&fs.x0C_map.at(k), &fs, d);
     } else if (fs.x0D_map.count(k) > 0) {
         print_struct((const void *)&fs.x0D_map.at(k), &fs, d);
-    } else if (fs.x14_map.count(k) > 0) {
-        print_struct((const void *)&fs.x14_map.at(k), &fs, d);
-    } else if (fs.x15_map.count(k) > 0) {
-        print_struct((const void *)&fs.x15_map.at(k), &fs, d);
-    } else if (fs.x16_map.count(k) > 0) {
-        print_struct((const void *)&fs.x16_map.at(k), &fs, d);
-    } else if (fs.x17_map.count(k) > 0) {
-        print_struct((const void *)&fs.x17_map.at(k), &fs, d);
-    } else if (fs.x1B_map.count(k) > 0) {
-        print_struct((const void *)&fs.x1B_map.at(k), &fs, d);
+    } else if (fs.has_x14(k)) {
+        print_struct((const void *)fs.ptrs[k], &fs, d);
+    } else if (fs.has_x15(k)) {
+        print_struct((const void *)fs.ptrs[k], &fs, d);
+    } else if (fs.has_x16(k)) {
+        print_struct((const void *)fs.ptrs[k], &fs, d);
+    } else if (fs.has_x17(k)) {
+        print_struct((const void *)fs.ptrs[k], &fs, d);
+    } else if (fs.has_x1B(k)) {
+        print_struct((const void *)fs.ptrs[k], &fs, d);
     } else if (fs.x23_map.count(k) > 0) {
         print_struct((const void *)&fs.x23_map.at(k), &fs, d);
     } else if (fs.x28_map.count(k) > 0) {
@@ -241,18 +241,18 @@ void print_x01(const void *untyped_inst, File<version> *fs, const int d) {
         print_struct((const void *)&fs->x34_map.at(inst->next), fs, d + 2);
     } else if (fs->x28_map.count(inst->next) > 0) {
         print_struct((const void *)&fs->x28_map.at(inst->next), fs, d + 2);
-    } else if (fs->x17_map.count(inst->next) > 0) {
-        print_struct((const void *)&fs->x17_map.at(inst->next), fs, d + 2);
-    } else if (fs->x16_map.count(inst->next) > 0) {
-        print_struct((const void *)&fs->x16_map.at(inst->next), fs, d + 2);
-    } else if (fs->x15_map.count(inst->next) > 0) {
-        print_struct((const void *)&fs->x15_map.at(inst->next), fs, d + 2);
-    } else if (fs->x14_map.count(inst->next) > 0) {
-        print_struct((const void *)&fs->x14_map.at(inst->next), fs, d + 2);
+    } else if (fs->has_x17(inst->next)) {
+        print_struct((const void *)fs->ptrs[inst->next], fs, d + 2);
+    } else if (fs->has_x16(inst->next)) {
+        print_struct((const void *)fs->ptrs[inst->next], fs, d + 2);
+    } else if (fs->has_x15(inst->next)) {
+        print_struct((const void *)fs->ptrs[inst->next], fs, d + 2);
+    } else if (fs->has_x14(inst->next)) {
+        print_struct((const void *)fs->ptrs[inst->next], fs, d + 2);
     } else if (fs->x05_map.count(inst->next) > 0) {
         print_struct((const void *)&fs->x05_map.at(inst->next), fs, d + 2);
-    } else if (fs->x01_map.count(inst->next) > 0) {
-        print_struct((const void *)&fs->x01_map.at(inst->next), fs, d + 2);
+    } else if (fs->has_x01(inst->next)) {
+        print_struct((const void *)fs->ptrs[inst->next], fs, d + 2);
     } else {
         printf_d(d + 2, "next unrecognized: 0x%08X\n", ntohl(inst->next));
         exit(0);
@@ -263,18 +263,18 @@ void print_x01(const void *untyped_inst, File<version> *fs, const int d) {
         print_struct((const void *)&fs->x34_map.at(inst->parent), fs, d + 2);
     } else if (fs->x28_map.count(inst->parent) > 0) {
         print_struct((const void *)&fs->x28_map.at(inst->parent), fs, d + 2);
-    } else if (fs->x17_map.count(inst->parent) > 0) {
-        print_struct((const void *)&fs->x17_map.at(inst->parent), fs, d + 2);
-    } else if (fs->x16_map.count(inst->parent) > 0) {
-        print_struct((const void *)&fs->x16_map.at(inst->parent), fs, d + 2);
-    } else if (fs->x15_map.count(inst->parent) > 0) {
-        print_struct((const void *)&fs->x15_map.at(inst->parent), fs, d + 2);
-    } else if (fs->x14_map.count(inst->parent) > 0) {
-        print_struct((const void *)&fs->x14_map.at(inst->parent), fs, d + 2);
+    } else if (fs->has_x17(inst->parent)) {
+        print_struct((const void *)fs->ptrs[inst->parent], fs, d + 2);
+    } else if (fs->has_x16(inst->parent)) {
+        print_struct((const void *)fs->ptrs[inst->parent], fs, d + 2);
+    } else if (fs->has_x15(inst->parent)) {
+        print_struct((const void *)fs->ptrs[inst->parent], fs, d + 2);
+    } else if (fs->has_x14(inst->parent)) {
+        print_struct((const void *)fs->ptrs[inst->parent], fs, d + 2);
     } else if (fs->x05_map.count(inst->parent) > 0) {
         print_struct((const void *)&fs->x05_map.at(inst->parent), fs, d + 2);
-    } else if (fs->x01_map.count(inst->parent) > 0) {
-        print_struct((const void *)&fs->x01_map.at(inst->parent), fs, d + 2);
+    } else if (fs->has_x01(inst->parent)) {
+        print_struct((const void *)fs->ptrs[inst->parent], fs, d + 2);
     } else {
         printf_d(d + 2, "parent unrecognized: 0x%08X\n", ntohl(inst->parent));
         exit(0);
@@ -326,13 +326,12 @@ void print_x04(const void *untyped_inst, File<version> *fs, const int d) {
     printf_d(d,
              "x04: \x1b[36;3mNet/Shape Pair\x1b[0m t=0x%08X k=0x%08X"
              " \x1b[34m\"%s\"\x1b[0m ↔ \x1b[34m\"%s\"\x1b[0m\n",
-             ntohl(inst->t), ntohl(inst->k),
-             x1B_net_name(inst->ptr1, fs)->c_str(),
+             ntohl(inst->t), ntohl(inst->k), x1B_net_name(inst->ptr1, fs),
              x32_pin_name(inst->ptr2, fs)->c_str());
 
     printf_d(d + 1, "ptr1:\n");
-    if (fs->x1B_map.count(inst->ptr1) > 0) {
-        print_struct((const void *)&fs->x1B_map.at(inst->ptr1), fs, d + 2);
+    if (fs->has_x1B(inst->ptr1)) {
+        print_struct((const void *)fs->ptrs[inst->ptr1], fs, d + 2);
     } else if (inst->ptr1 == fs->hdr->ll_x04.tail) {
         printf_d(d + 2, "\x1b[33mptr1 is in header, 0x%08x?\x1b[0m\n",
                  ntohl(inst->ptr1));
@@ -377,20 +376,20 @@ void print_x05(const void *untyped_inst, File<version> *fs, const int d) {
         print_struct((const void *)&fs->x2E_map.at(inst->ptr0), fs, d + 2);
     } else if (fs->x28_map.count(inst->ptr0) > 0) {
         print_struct((const void *)&fs->x28_map.at(inst->ptr0), fs, d + 2);
-    } else if (fs->x17_map.count(inst->ptr0) > 0) {
-        print_struct((const void *)&fs->x17_map.at(inst->ptr0), fs, d + 2);
-    } else if (fs->x16_map.count(inst->ptr0) > 0) {
-        print_struct((const void *)&fs->x16_map.at(inst->ptr0), fs, d + 2);
-    } else if (fs->x15_map.count(inst->ptr0) > 0) {
-        print_struct((const void *)&fs->x15_map.at(inst->ptr0), fs, d + 2);
-    } else if (fs->x14_map.count(inst->ptr0) > 0) {
-        print_struct((const void *)&fs->x14_map.at(inst->ptr0), fs, d + 2);
+    } else if (fs->has_x17(inst->ptr0)) {
+        print_struct((const void *)fs->ptrs[inst->ptr0], fs, d + 2);
+    } else if (fs->has_x16(inst->ptr0)) {
+        print_struct((const void *)fs->ptrs[inst->ptr0], fs, d + 2);
+    } else if (fs->has_x15(inst->ptr0)) {
+        print_struct((const void *)fs->ptrs[inst->ptr0], fs, d + 2);
+    } else if (fs->has_x14(inst->ptr0)) {
+        print_struct((const void *)fs->ptrs[inst->ptr0], fs, d + 2);
     } else if (fs->x05_map.count(inst->ptr0) > 0) {
         print_struct((const void *)&fs->x05_map.at(inst->ptr0), fs, d + 2);
     } else if (fs->x04_map.count(inst->ptr0) > 0) {
         print_struct((const void *)&fs->x04_map.at(inst->ptr0), fs, d + 2);
-    } else if (fs->x01_map.count(inst->ptr0) > 0) {
-        print_struct((const void *)&fs->x01_map.at(inst->ptr0), fs, d + 2);
+    } else if (fs->has_x01(inst->ptr0)) {
+        print_struct((const void *)fs->ptrs[inst->ptr0], fs, d + 2);
     } else {
         printf_d(d + 2, "ptr0 unrecognized: 0x%08X\n", ntohl(inst->ptr0));
         exit(0);
@@ -489,6 +488,7 @@ void print_x05(const void *untyped_inst, File<version> *fs, const int d) {
         }
     }
 
+    /*
     printf_d(d + 1, "first_segment_ptr:\n");
     if (fs->x17_map.count(inst->first_segment_ptr) > 0) {
         print_struct((const void *)&fs->x17_map.at(inst->first_segment_ptr), fs,
@@ -507,6 +507,7 @@ void print_x05(const void *untyped_inst, File<version> *fs, const int d) {
                  ntohl(inst->first_segment_ptr));
         exit(0);
     }
+    */
 
     printf_d(d + 1, "ptr5:");
     if (inst->ptr5 == 0) {
@@ -717,6 +718,7 @@ void print_x08(const void *untyped_inst, File<version> *fs, const int d) {
         }
     }
 
+    /*
     printf_d(d + 1, "ptr4:");
     if (inst->ptr4 == 0) {
         printf(" \x1b[2mnull\x1b[0m\n");
@@ -751,6 +753,7 @@ void print_x08(const void *untyped_inst, File<version> *fs, const int d) {
             // exit(0);
         }
     }
+    */
 }
 
 template <AllegroVersion version>
@@ -827,9 +830,11 @@ void print_x0A(const void *untyped_inst, File<version> *fs, const int d) {
     printf_d(d + 1, "un5={%08X %08X %08X %08X}\n", ntohl(inst->un5[0]),
              ntohl(inst->un5[1]), ntohl(inst->un5[2]), ntohl(inst->un5[3]));
 
-    if (HAS_ENTRY(x01_map, inst->un4[3])) {
-        PRINT(x01_map, inst->un4[3], d + 1);
+    /*
+    if (HAS_ENTRY2(x01_map, inst->un4[3])) {
+        PRINT2(x01_map, inst->un4[3], d + 1);
     }
+    */
 }
 
 template <AllegroVersion version>
@@ -1085,6 +1090,7 @@ void print_x14(const void *untyped_inst, File<version> *fs, const int d) {
         exit(0);
     }
 
+    /*
     printf_d(d + 1, "ptr2:\n");
     if (fs->x17_map.count(inst->ptr2) > 0) {
         print_struct((const void *)&fs->x17_map.at(inst->ptr2), fs, d + 2);
@@ -1098,6 +1104,7 @@ void print_x14(const void *untyped_inst, File<version> *fs, const int d) {
         printf_d(d + 2, "ptr2 unrecognized: 0x%08X\n", ntohl(inst->ptr2));
         exit(0);
     }
+    */
 
     printf_d(d + 1, "ptr3:");
     if (inst->ptr3 == 0) {
@@ -1143,6 +1150,7 @@ void print_x15(const void *untyped_inst, File<version> *fs, const int d) {
              inst->width);
     print_type_hint(d, "Some graphical object? (Has dimensions)");
 
+    /*
     printf_d(d + 1, "next:\n");
     if (fs->x34_map.count(inst->next) > 0) {
         print_struct((const void *)&fs->x34_map.at(inst->next), fs, d + 2);
@@ -1164,7 +1172,9 @@ void print_x15(const void *untyped_inst, File<version> *fs, const int d) {
         printf_d(d + 2, "next unrecognized: 0x%08X\n", ntohl(inst->next));
         exit(0);
     }
+    */
 
+    /*
     printf_d(d + 1, "parent:\n");
     if (fs->x34_map.count(inst->parent) > 0) {
         print_struct((const void *)&fs->x34_map.at(inst->parent), fs, d + 2);
@@ -1186,6 +1196,7 @@ void print_x15(const void *untyped_inst, File<version> *fs, const int d) {
         printf_d(d + 2, "parent unrecognized: 0x%08X\n", ntohl(inst->parent));
         exit(0);
     }
+    */
 }
 
 template <AllegroVersion version>
@@ -1205,6 +1216,7 @@ void print_x16(const void *untyped_inst, File<version> *fs, const int d) {
              inst->width);
     print_type_hint(d, "Line");
 
+    /*
     printf_d(d + 1, "next:\n");
     if (fs->x34_map.count(inst->next) > 0) {
         print_struct((const void *)&fs->x34_map.at(inst->next), fs, d + 2);
@@ -1226,7 +1238,9 @@ void print_x16(const void *untyped_inst, File<version> *fs, const int d) {
         printf_d(d + 2, "next unrecognized: 0x%08X\n", ntohl(inst->next));
         exit(0);
     }
+    */
 
+    /*
     printf_d(d + 1, "parent:\n");
     if (fs->x05_map.count(inst->parent) > 0) {
         print_struct((const void *)&fs->x05_map.at(inst->parent), fs, d + 2);
@@ -1240,6 +1254,7 @@ void print_x16(const void *untyped_inst, File<version> *fs, const int d) {
         printf_d(d + 2, "parent unrecognized: 0x%08X\n", ntohl(inst->parent));
         exit(0);
     }
+    */
 }
 
 template <AllegroVersion version>
@@ -1260,6 +1275,7 @@ void print_x17(const void *untyped_inst, File<version> *fs, const int d) {
     print_type_hint(d,
                     "Also a graphical object of some kind? (Has dimensions)");
 
+    /*
     printf_d(d + 1, "next:\n");
     if (fs->x34_map.count(inst->next) > 0) {
         print_struct((const void *)&fs->x34_map.at(inst->next), fs, d + 2);
@@ -1295,6 +1311,7 @@ void print_x17(const void *untyped_inst, File<version> *fs, const int d) {
         printf_d(d + 2, "parent unrecognized: 0x%08X\n", ntohl(inst->parent));
         exit(0);
     }
+    */
 }
 
 template <AllegroVersion version>
@@ -1523,6 +1540,7 @@ void print_x23(const void *untyped_inst, File<version> *fs, const int d) {
              inst->coords[1], inst->coords[2], inst->coords[3],
              inst->coords[4]);
 
+    /*
     printf_d(d + 1, "ptr0:\n");
     if (HAS_ENTRY(x23_map, inst->ptr0)) {
         PRINT(x23_map, inst->ptr0, d + 2);
@@ -1532,6 +1550,7 @@ void print_x23(const void *untyped_inst, File<version> *fs, const int d) {
         printf_d(d + 2, "ptr0 unrecognized: 0x%08X\n", ntohl(inst->ptr0));
         exit(0);
     }
+    */
 
     printf_d(d + 1, "ptr1:\n");
     if (HAS_ENTRY(x32_map, inst->ptr1)) {
@@ -1579,6 +1598,7 @@ void print_x26(const void *untyped_inst, File<version> *fs, const int d) {
              " t=0x%08X k=0x%08X\n",
              ntohl(inst->t), ntohl(inst->k));
 
+    /*
     printf_d(d + 1, "member_ptr:\n");
     if (HAS_ENTRY(x33_map, inst->member_ptr)) {
         PRINT(x33_map, inst->member_ptr, d + 2);
@@ -1609,6 +1629,7 @@ void print_x26(const void *untyped_inst, File<version> *fs, const int d) {
                  ntohl(inst->member_ptr));
         exit(0);
     }
+    */
 
     printf_d(d + 1, "group_ptr:\n");
     if (fs->x33_map.count(inst->group_ptr) > 0) {
@@ -1754,6 +1775,7 @@ void print_x28(const void *untyped_inst, File<version> *fs, const int d) {
         }
     }
 
+    /*
     if (inst->first_segment_ptr != 0) {
         printf_d(d + 1, "first_segment_ptr:\n");
         if (fs->x17_map.count(inst->first_segment_ptr) > 0) {
@@ -1774,7 +1796,9 @@ void print_x28(const void *untyped_inst, File<version> *fs, const int d) {
             exit(0);
         }
     }
+    */
 
+    /*
     if (inst->ptr6 != 0) {
         printf_d(d + 1, "ptr6:\n");
         if (fs->x32_map.count(inst->ptr6) > 0) {
@@ -1796,6 +1820,7 @@ void print_x28(const void *untyped_inst, File<version> *fs, const int d) {
             exit(0);
         }
     }
+    */
 
     if constexpr (!std::is_same_v<decltype(inst->ptr7), std::monostate>) {
         if (inst->ptr7 != 0) {
@@ -1909,6 +1934,7 @@ void print_x2B(const void *untyped_inst, File<version> *fs, const int d) {
         }
     }
 
+    /*
     printf_d(d + 1, "ptr5:");
     if (inst->ptr5 == 0) {
         printf(" \x1b[2mnull\x1b[0m\n");
@@ -1921,6 +1947,7 @@ void print_x2B(const void *untyped_inst, File<version> *fs, const int d) {
             exit(0);
         }
     }
+    */
 
     printf_d(d + 1, "str_ptr:");
     if (inst->str_ptr == 0) {
@@ -2081,6 +2108,7 @@ void print_x2D(const void *untyped_inst, File<version> *fs, const int d) {
         }
     }
 
+    /*
     printf_d(d + 1, "ptr1:");
     if (inst->ptr1 == 0) {
         printf(" \x1b[2mnull\x1b[0m\n");
@@ -2093,6 +2121,7 @@ void print_x2D(const void *untyped_inst, File<version> *fs, const int d) {
             exit(0);
         }
     }
+    */
 
     printf_d(d + 1, "first_pad_ptr:");
     if (inst->first_pad_ptr == 0) {
@@ -2221,6 +2250,7 @@ void print_x30(const void *untyped_inst, File<version> *fs, const int d) {
         }
     }
 
+    /*
     if constexpr (!std::is_same_v<decltype(inst->ptr3), std::monostate>) {
         if (inst->ptr3 != 0) {
             printf_d(d + 1, "ptr3:\n");
@@ -2285,7 +2315,9 @@ void print_x30(const void *untyped_inst, File<version> *fs, const int d) {
             }
         }
     }
+    */
 
+    /*
     if constexpr (!std::is_same_v<decltype(inst->ptr4), std::monostate>) {
         printf_d(d + 1, "ptr4:");
         if (inst->ptr4 == 0) {
@@ -2304,6 +2336,7 @@ void print_x30(const void *untyped_inst, File<version> *fs, const int d) {
             }
         }
     }
+    */
 
     const x36_x08<version> *maybe_font;
     if constexpr (!std::is_same_v<decltype(inst->font), std::monostate>) {
@@ -2663,6 +2696,7 @@ void print_x34(const void *untyped_inst, File<version> *fs, const int d) {
         exit(0);
     }
 
+    /*
     printf_d(d + 1, "ptr2:\n");
     if (HAS_ENTRY(x17_map, inst->ptr2)) {
         PRINT(x17_map, inst->ptr2, d + 2);
@@ -2676,6 +2710,7 @@ void print_x34(const void *untyped_inst, File<version> *fs, const int d) {
         printf_d(d + 2, "ptr2 unrecognized: 0x%08X\n", ntohl(inst->ptr2));
         exit(0);
     }
+    */
 
     printf_d(d + 1, "ptr3:");
     if (inst->ptr3 == 0) {
@@ -2758,6 +2793,7 @@ void print_x37(const void *untyped_inst, File<version> *fs, const int d) {
     }
     */
 
+    /*
     for (uint32_t i = 0; i < MAX_TO_PRINT && i < inst->count; i++) {
         printf_d(d + 1, "ptr[% 3d] = 0x%08X\n", i, ntohl(inst->ptrs[i]));
         if (fs->x30_map.count(inst->ptrs[i]) > 0) {
@@ -2786,6 +2822,7 @@ void print_x37(const void *untyped_inst, File<version> *fs, const int d) {
                          d + 2);
         }
     }
+    */
 
     if (inst->count > MAX_TO_PRINT) {
         printf_d(d + 1, "⋮\n");
@@ -2883,18 +2920,23 @@ void print_x3C(const void *untyped_inst, File<version> *fs, const int d) {
     const x3C<version> *inst = (const x3C<version> *)untyped_inst;
     printf_d(d, "x3C: t=0x%08X k=0x%08X\n", ntohl(inst->t), ntohl(inst->k));
 
-    if (HAS_ENTRY(x32_map, inst->ptrs[0]) &&
-        HAS_ENTRY(x32_map, inst->ptrs[1])) {
+    /*
+    if (HAS_ENTRY2(x32_map, inst->ptrs[0]) &&
+        HAS_ENTRY2(x32_map, inst->ptrs[1])) {
         const x32<version> *a = &fs->x32_map.at(inst->ptrs[0]);
         const x32<version> *b = &fs->x32_map.at(inst->ptrs[1]);
         printf_d(d + 1, "\x1b[33mPad connectivity pair\x1b[0m\n");
-    } else if (HAS_ENTRY(x1B_map, inst->ptrs[0]) &&
-               HAS_ENTRY(x1B_map, inst->ptrs[1])) {
-        const x1B<version> *a = &fs->x1B_map.at(inst->ptrs[0]);
-        const x1B<version> *b = &fs->x1B_map.at(inst->ptrs[1]);
+    } else if (HAS_ENTRY2(x1B_map, inst->ptrs[0]) &&
+               HAS_ENTRY2(x1B_map, inst->ptrs[1])) {
+        const x1B<version> &a = fs->get_x1B(inst->ptrs[0]);
+        const x1B<version> &b = fs->get_x1B(inst->ptrs[1]);
+        // const x1B<version> *a = &fs->x1B_map.at(inst->ptrs[0]);
+        // const x1B<version> *b = &fs->x1B_map.at(inst->ptrs[1]);
         printf_d(d + 1, "\x1b[33mNet pair\x1b[0m\n");
     }
+    */
 
+    /*
     int i = 0;
     int non_null = 0;
     for (const auto &ptr : inst->ptrs) {
@@ -2914,4 +2956,5 @@ void print_x3C(const void *untyped_inst, File<version> *fs, const int d) {
             PRINT(x1B_map, ptr, d + 2);
         }
     }
+    */
 }

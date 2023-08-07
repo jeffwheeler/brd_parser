@@ -58,6 +58,7 @@ uint32_t default_parser(File<A_174>& fs, void*& address) {
     //     exit(1);
     // }
     (*m)[inst.k] = upgrade<version, A_174>(inst);
+    size_t size = sizeof_until_tail<T<version>>();
     skip(address, sizeof_until_tail<T<version>>());
     // address = (void*)((char*)address)+sizeof_until_tail<T<version>>();
     return inst.k;
@@ -66,8 +67,11 @@ uint32_t default_parser(File<A_174>& fs, void*& address) {
 template <template <AllegroVersion> typename T, AllegroVersion version>
 uint32_t new_default_parser(File<A_174>& fs, void*& address) {
     T<version>* inst = static_cast<T<version>*>(address);
-    new_find_map<T<A_174>>(fs)[inst->k] = address;
-    skip(address, sizeof_until_tail<T<version>>());
+    // fs.ptrs[inst->k] = address;
+    // new_find_map<T<A_174>>(fs)[inst->k] = address;
+    fs.ptrs[inst->k] = address;
+    size_t size = sizeof_until_tail<T<version>>();
+    skip(address, size);
     return inst->k;
 }
 
@@ -561,7 +565,8 @@ File<A_174> parse_file_raw(mapped_region region) {
     }
     skip(cur_addr, sizeof(header));
 
-    fs.cache_upgrade_funcs();
+    // This must be done after reading the header
+    fs.prepare();
 
     /*
     if (PRINT_ALL_ITEMS) {
@@ -649,7 +654,6 @@ File<A_174> parse_file_raw(mapped_region region) {
 }
 
 std::optional<File<A_174>> parse_file(const std::string& filepath) {
-    printf("A\n");
     file_mapping mapped_file(filepath.c_str(), read_only);
     mapped_region region(mapped_file, read_only);
 
@@ -663,10 +667,8 @@ std::optional<File<A_174>> parse_file(const std::string& filepath) {
     void* address = region.get_address();
     base_addr_glb = address;
 
-    printf("B\n");
     std::size_t size = region.get_size();
     uint32_t magic = *((uint32_t*)address);
-    printf("C\n");
 
     printf("Comparing magic 0x%08X\n", magic);
     switch (magic) {

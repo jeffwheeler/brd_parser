@@ -1545,8 +1545,9 @@ class File {
     header *hdr;
     std::vector<std::tuple<uint32_t, uint32_t>> layers;
 
+    std::unordered_map<uint32_t, void *> ptrs;
+
     std::map<uint32_t, char *> strings;
-    std::map<uint32_t, void *> x01_map;
     std::map<uint32_t, x03<version>> x03_map;
     std::map<uint32_t, x04<version>> x04_map;
     std::map<uint32_t, x05<version>> x05_map;
@@ -1562,11 +1563,6 @@ class File {
     std::map<uint32_t, x10<version>> x10_map;
     std::map<uint32_t, x11<version>> x11_map;
     std::map<uint32_t, x12> x12_map;
-    std::map<uint32_t, void *> x14_map;
-    std::map<uint32_t, void *> x15_map;
-    std::map<uint32_t, void *> x16_map;
-    std::map<uint32_t, void *> x17_map;
-    std::map<uint32_t, x1B<version>> x1B_map;
     std::map<uint32_t, x1C<version>> x1C_map;
     std::map<uint32_t, x1D<version>> x1D_map;
     std::map<uint32_t, x1E> x1E_map;
@@ -1608,21 +1604,32 @@ class File {
     x15<A_174> get_x15(uint32_t k);
     x16<A_174> get_x16(uint32_t k);
     x17<A_174> get_x17(uint32_t k);
+    x1B<A_174> get_x1B(uint32_t k);
+
+    bool has_x01(uint32_t k);
+    bool has_x14(uint32_t k);
+    bool has_x15(uint32_t k);
+    bool has_x16(uint32_t k);
+    bool has_x17(uint32_t k);
+    bool has_x1B(uint32_t k);
 
     // This is not done in the constructor because the header hasn't been set
     // yet, so we can't read what magic we are.
-    void cache_upgrade_funcs();
+    void prepare();
 
     operator File<A_174>() const;
 
    private:
     mapped_region region;
 
+    void cache_upgrade_funcs();
+
     x01<A_174> (*x01_upgrade)(void *);
     x14<A_174> (*x14_upgrade)(void *);
     x15<A_174> (*x15_upgrade)(void *);
     x16<A_174> (*x16_upgrade)(void *);
     x17<A_174> (*x17_upgrade)(void *);
+    x1B<A_174> (*x1B_upgrade)(void *);
 };
 
 #endif
