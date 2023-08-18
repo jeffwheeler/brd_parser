@@ -53,12 +53,12 @@ std::optional<std::string> x2D_refdes(const uint32_t k, File<version> *fs) {
         return std::optional<std::string>();
     } else {
         if (inst == nullptr || inst->inst_ref == 0 ||
-            !HAS_ENTRY(x07_map, inst->inst_ref)) {
+            !fs->is_type(inst->inst_ref, 0x07)) {
             return std::optional<std::string>();
         }
 
-        const x07<version> *x07_inst = &fs->x07_map.at(inst->inst_ref);
-        return inst_refdes(x07_inst, fs);
+        const x07<version> x07_inst = fs->get_x07(inst->inst_ref);
+        return inst_refdes(&x07_inst, fs);
     }
 }
 
@@ -214,8 +214,6 @@ constexpr std::map<uint32_t, T> *find_map(File<version> &fs) {
         return &fs.x05_map;
     } else if constexpr (std::is_same_v<T, x06<version>>) {
         return &fs.x06_map;
-    } else if constexpr (std::is_same_v<T, x07<version>>) {
-        return &fs.x07_map;
     } else if constexpr (std::is_same_v<T, x08<version>>) {
         return &fs.x08_map;
     } else if constexpr (std::is_same_v<T, x09<version>>) {
@@ -230,8 +228,6 @@ constexpr std::map<uint32_t, T> *find_map(File<version> &fs) {
         return &fs.x0E_map;
     } else if constexpr (std::is_same_v<T, x0F<version>>) {
         return &fs.x0F_map;
-    } else if constexpr (std::is_same_v<T, x10<version>>) {
-        return &fs.x10_map;
     } else if constexpr (std::is_same_v<T, x11<version>>) {
         return &fs.x11_map;
     } else if constexpr (std::is_same_v<T, x15<version>>) {

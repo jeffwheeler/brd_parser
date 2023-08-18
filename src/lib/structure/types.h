@@ -4,11 +4,12 @@
 #include <array>
 #include <boost/interprocess/mapped_region.hpp>
 #include <cstddef>
+#include <iterator>
 #include <map>
 #include <optional>
-#include <set>
 #include <string>
 #include <type_traits>
+#include <unordered_set>
 #include <variant>
 #include <vector>
 
@@ -106,7 +107,7 @@ struct header {
     ll_ptrs ll_x24_x28;
     ll_ptrs ll_unused_1;
     ll_ptrs ll_x2B;
-    ll_ptrs ll_x03;
+    ll_ptrs ll_x03_x30;
     ll_ptrs ll_x0A_2;
     ll_ptrs ll_x1D_x1E_x1F;
     ll_ptrs ll_unused_2;
@@ -940,7 +941,7 @@ struct x26 {
 
 struct x27 {
     uint32_t t;
-    std::set<uint32_t> keys;
+    std::unordered_set<uint32_t> keys;
 };
 
 // Shape
@@ -1554,18 +1555,12 @@ class File {
     std::unordered_map<uint32_t, void *> ptrs;
 
     std::map<uint32_t, char *> strings;
-    std::map<uint32_t, x04<version>> x04_map;
     std::map<uint32_t, x05<version>> x05_map;
-    std::map<uint32_t, x06<version>> x06_map;
-    std::map<uint32_t, x07<version>> x07_map;
-    std::map<uint32_t, x08<version>> x08_map;
-    std::map<uint32_t, x09<version>> x09_map;
     std::map<uint32_t, x0A<version>> x0A_map;
     std::map<uint32_t, x0C<version>> x0C_map;
     std::map<uint32_t, x0D<version>> x0D_map;
     std::map<uint32_t, x0E<version>> x0E_map;
     std::map<uint32_t, x0F<version>> x0F_map;
-    std::map<uint32_t, x10<version>> x10_map;
     std::map<uint32_t, x11<version>> x11_map;
     std::map<uint32_t, x12> x12_map;
     std::map<uint32_t, x1C<version>> x1C_map;
@@ -1606,11 +1601,17 @@ class File {
 
     x01<A_174> get_x01(uint32_t k);
     const x03<A_174> get_x03(uint32_t k);
-    x14<A_174> get_x14(uint32_t k);
+    const x04<A_174> get_x04(uint32_t k);
+    const x06<A_174> get_x06(uint32_t k);
+    const x07<A_174> get_x07(uint32_t k);
+    const x08<A_174> get_x08(uint32_t k);
+    const x09<A_174> get_x09(uint32_t k);
+    const x10<A_174> get_x10(uint32_t k);
+    const x14<A_174> get_x14(uint32_t k);
     x15<A_174> get_x15(uint32_t k);
     x16<A_174> get_x16(uint32_t k);
     x17<A_174> get_x17(uint32_t k);
-    x1B<A_174> get_x1B(uint32_t k);
+    const x1B<A_174> get_x1B(uint32_t k);
 
     bool is_type(uint32_t k, uint8_t t);
 
@@ -1620,6 +1621,49 @@ class File {
 
     operator File<A_174>() const;
 
+    template <typename T>
+    struct Iter {
+       public:
+        using iterator_category = std::forward_iterator_tag;
+        using value_type = const T;
+        using pointer = uint32_t;
+        using reference = const T &;
+
+        Iter(File &f, const pointer k,
+             value_type (File<version>::*func)(pointer))
+            : f(f), k(k), func(func){};
+        Iter &operator++() {
+            reference inst = (f.*func)(k);
+            k = inst.next;
+            return *this;
+        }
+        bool operator==(Iter other) const { return k == other.k; }
+        bool operator!=(Iter other) const { return !(*this == other); }
+        value_type operator*() const { return (f.*func)(k); }
+
+       private:
+        File &f;
+        value_type (File<version>::*func)(pointer);
+        pointer k;
+    };
+
+    template <typename T>
+    class IterWrapper {
+       public:
+        IterWrapper(Iter<T> begin, Iter<T> end) : _begin(begin), _end(end){};
+        Iter<T> begin() { return _begin; }
+        Iter<T> end() { return _end; }
+
+       private:
+        Iter<T> _begin, _end;
+    };
+
+    IterWrapper<x04<version>> iter_x04() {
+        return IterWrapper<x04<version>>(
+            Iter<x04<version>>(*this, this->hdr->ll_x04.head, &File::get_x04),
+            Iter<x04<version>>(*this, this->hdr->ll_x04.tail, &File::get_x04));
+    };
+
    private:
     mapped_region region;
 
@@ -1627,6 +1671,12 @@ class File {
 
     x01<A_174> (*x01_upgrade)(void *);
     x03<A_174> (*x03_upgrade)(void *);
+    x04<A_174> (*x04_upgrade)(void *);
+    x06<A_174> (*x06_upgrade)(void *);
+    x07<A_174> (*x07_upgrade)(void *);
+    x08<A_174> (*x08_upgrade)(void *);
+    x09<A_174> (*x09_upgrade)(void *);
+    x10<A_174> (*x10_upgrade)(void *);
     x14<A_174> (*x14_upgrade)(void *);
     x15<A_174> (*x15_upgrade)(void *);
     x16<A_174> (*x16_upgrade)(void *);

@@ -653,11 +653,11 @@ void BrdView::drawShape(const uint32_t ptr, QPen *pen) {
         // std::printf("Trying to draw x05\n");
         const x05<A_174> *inst = (const x05<A_174> *)&fs->x05_map.at(ptr);
         drawX05(inst, pen);
-    } else if (fs->x10_map.count(ptr) > 0) {
-        const x10<A_174> *inst = (const x10<A_174> *)&fs->x10_map.at(ptr);
-        drawShape(inst->ptr1, darkerPen);
-        drawShape(inst->ptr2, darkerPen);
-        drawShape(inst->ptr3, darkerPen);
+    } else if (fs->is_type(ptr, 0x10)) {
+        const x10<A_174> inst = fs->get_x10(ptr);
+        drawShape(inst.ptr1, darkerPen);
+        drawShape(inst.ptr2, darkerPen);
+        drawShape(inst.ptr3, darkerPen);
     } else if (fs->is_type(ptr, 0x14)) {
         const x14<A_174> inst = fs->get_x14(ptr);
         drawX14(&inst, pen);
@@ -802,9 +802,30 @@ void BrdView::drawFile() {
     }
 
     // Text
-    for (const auto &[k, x30_inst] : fs->x30_map) {
-        drawShape(k, pen3);
+    /*
+    ll_ptrs text_ll = fs->hdr->ll_x03_x30;
+    uint32_t k = text_ll.head;
+    while (1) {
+        if (fs->x30_map.count(k) > 0) {
+            auto &i = fs->x30_map[k];
+            printf("Found x30 w/ key = 0x %08X\n", ntohl(k));
+            drawShape(k, pen4);
+            k = i.next;
+        } else if (fs->is_type(k, 0x03)) {
+            auto &i = fs->get_x03(k);
+            printf("Found x03 w/ key = 0x %08X\n", ntohl(k));
+            k = i.next;
+        } else {
+            printf("Unexpected item k = 0x %08X in list\n", ntohl(k));
+            break;
+        }
     }
+    */
+
+    for (const auto &[k, x30_inst] : fs->x30_map) {
+        drawShape(k, pen2);
+    }
+
 
     // Pads
     // for (const auto& [k, x32_inst] : *fs.x32_map) {
@@ -1010,11 +1031,10 @@ std::optional<QPointF> BrdView::endingPoint(uint32_t k) {
 char *BrdView::netName(uint32_t k) {
     if (fs->x28_map.count(k) > 0) {
         const x28<A_174> *x28_inst = (const x28<A_174> *)&fs->x28_map.at(k);
-        if (fs->x04_map.count(x28_inst->ptr1) > 0) {
-            const x04<A_174> *x04_inst =
-                (const x04<A_174> *)&fs->x04_map.at(x28_inst->ptr1);
-            if (fs->is_type(x04_inst->ptr1, 0x1B)) {
-                const x1B<A_174> x1B_inst = fs->get_x1B(x04_inst->ptr1);
+        if (fs->is_type(x28_inst->ptr1, 0x04)) {
+            const x04<A_174> &x04_inst = fs->get_x04(x28_inst->ptr1);
+            if (fs->is_type(x04_inst.ptr1, 0x1B)) {
+                const x1B<A_174> x1B_inst = fs->get_x1B(x04_inst.ptr1);
                 // qDebug("Net name: 0x%08X", x1B_inst->net_name);
                 return fs->strings.at(x1B_inst.net_name);
             }

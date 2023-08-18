@@ -67,17 +67,17 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x03
     {&parse_x03<version>},
     // 0x04
-    {&default_parser<x04, version>},
+    {&new_default_parser<x04, version>},
     // 0x05
     {&default_parser<x05, version>},
     // 0x06
-    {&default_parser<x06, version>},
+    {&new_default_parser<x06, version>},
     // 0x07
-    {&default_parser<x07, version>},
+    {&new_default_parser<x07, version>},
     // 0x08
-    {&default_parser<x08, version>},
+    {&new_default_parser<x08, version>},
     // 0x09
-    {&default_parser<x09, version>},
+    {&new_default_parser<x09, version>},
     // 0x0A
     {&default_parser<x0A, version>},
     // 0x0B
@@ -91,7 +91,7 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x0F
     {&default_parser<x0F, version>},
     // 0x10
-    {&default_parser<x10, version>},
+    {&new_default_parser<x10, version>},
     // 0x11
     {&default_parser<x11, version>},
     // 0x12

@@ -26,17 +26,27 @@ bool check_overlapping_ids(File<version>& fs) {
 template <AllegroVersion version>
 void check_header_values(File<version>& fs) {
     if (fs.hdr->ll_x04.head != 0) {
-        auto& x = fs.x04_map.at(fs.hdr->ll_x04.head);
+        auto x = fs.get_x04(fs.hdr->ll_x04.head);
+        uint32_t j = 0, k = 0;
         while (x.next != fs.hdr->ll_x04.tail) {
-            EXPECT_TRUE(fs.x04_map.count(x.next) > 0);
-            x = fs.x04_map.at(x.next);
+            EXPECT_TRUE(fs.is_type(x.next, 0x04));
+            x = fs.get_x04(x.next);
+            j++;
         }
+        printf("\n");
+
+        for (auto& i : fs.iter_x04()) {
+            k++;
+        }
+
+        EXPECT_EQ(j + 1, k);
     }
+
     if (fs.hdr->ll_x06.head != 0) {
-        auto& x = fs.x06_map.at(fs.hdr->ll_x06.head);
+        auto x = fs.get_x06(fs.hdr->ll_x06.head);
         while (x.next != fs.hdr->ll_x06.tail) {
-            EXPECT_TRUE(fs.x06_map.count(x.next) > 0);
-            x = fs.x06_map.at(x.next);
+            EXPECT_TRUE(fs.is_type(x.next, 0x06));
+            x = fs.get_x06(x.next);
         }
     }
     if (fs.hdr->ll_x0C_2.head != 0) {
@@ -83,7 +93,7 @@ void check_header_values(File<version>& fs) {
             x = fs.x2B_map.at(x.next);
         }
     }
-    if (fs.hdr->ll_x03.head != 0) {
+    if (fs.hdr->ll_x03_x30.head != 0) {
         // EXPECT_TRUE(fs.x03_map.count(fs.hdr->ll_x03.head) > 0);
     }
     if (fs.hdr->ll_x0A_2.head != 0) {
@@ -219,7 +229,7 @@ TEST(ParseFile, OpenCellularRf) {
 
     EXPECT_EQ(fs.layer_count, 6);
     // EXPECT_EQ(fs.x17_map.size(), 24624);
-    EXPECT_TRUE(fs.x09_map.count(0x035B0010) > 0);
+    EXPECT_TRUE(fs.is_type(0x035B0010, 0x09));
 
     EXPECT_FALSE(check_overlapping_ids(fs));
     check_header_values(fs);
