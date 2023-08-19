@@ -32,6 +32,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Install Ubuntu Packages
+      run: sudo apt install libboost-dev
+
     - name: Configure CMake
       run: CXX=g++-9 cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -S ${{github.workspace}}/src
 
