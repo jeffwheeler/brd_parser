@@ -96,8 +96,8 @@ int main(int argc, char* argv[]) {
             auto& i = parsed_file->x0C_map[k];
             printf("Found x0C w/ key = 0x %08X\n", ntohl(k));
             k = i.next;
-        } else if (parsed_file->x0A_map.count(k) > 0) {
-            auto& i = parsed_file->x0A_map[k];
+        } else if (parsed_file->is_type(k, 0x0A)) {
+            auto& i = parsed_file->get_x0A(k);
             printf("Found x0A w/ key = 0x %08X\n", ntohl(k));
             k = i.next;
         } else if (parsed_file->is_type(k, 0x09)) {

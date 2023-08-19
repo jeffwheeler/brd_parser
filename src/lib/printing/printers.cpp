@@ -165,8 +165,8 @@ void print_struct(const uint32_t k, File<version> &fs, const int d) {
         print_struct((const void *)fs.ptrs[k], &fs, d);
     } else if (fs.x05_map.count(k) > 0) {
         print_struct((const void *)&fs.x05_map.at(k), &fs, d);
-    } else if (fs.x0A_map.count(k) > 0) {
-        print_struct((const void *)&fs.x0A_map.at(k), &fs, d);
+    } else if (fs.is_type(k, 0x0A)) {
+        print_struct((const void *)fs.ptrs[k], &fs, d);
     } else if (fs.x0C_map.count(k) > 0) {
         print_struct((const void *)&fs.x0C_map.at(k), &fs, d);
     } else if (fs.x0D_map.count(k) > 0) {
