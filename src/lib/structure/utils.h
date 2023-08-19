@@ -25,7 +25,7 @@ std::string inst_refdes(const x07<version> *inst, File<version> *fs) {
 
 template <AllegroVersion version>
 std::optional<std::string> x2B_refdes(const uint32_t k, File<version> *fs) {
-    if (!HAS_ENTRY2(x2B_map, k)) {
+    if (!HAS_ENTRY(x2B_map, k)) {
         return std::optional<std::string>();
     }
 
@@ -35,7 +35,7 @@ std::optional<std::string> x2B_refdes(const uint32_t k, File<version> *fs) {
 
 template <AllegroVersion version>
 std::optional<std::string> x2D_refdes(const uint32_t k, File<version> *fs) {
-    if (!HAS_ENTRY2(x2D_map, k)) {
+    if (!HAS_ENTRY(x2D_map, k)) {
         return std::optional<std::string>();
     }
 
@@ -44,7 +44,7 @@ std::optional<std::string> x2D_refdes(const uint32_t k, File<version> *fs) {
         return std::optional<std::string>();
     } else {
         if (inst == nullptr || inst->inst_ref == 0 ||
-            !HAS_ENTRY2(x07_map, inst->inst_ref)) {
+            !HAS_ENTRY(x07_map, inst->inst_ref)) {
             return std::optional<std::string>();
         }
 
@@ -66,7 +66,7 @@ std::optional<std::string> x2B_or_x2D_refdes(const uint32_t k,
 
 template <AllegroVersion version>
 std::optional<std::string> x32_pin_name(const uint32_t k, File<version> *fs) {
-    if (HAS_ENTRY2(x32_map, k)) {
+    if (HAS_ENTRY(x32_map, k)) {
         const x32<version> *inst = &fs->x32_map.at(k);
         return x2B_or_x2D_refdes(inst->ptr3, fs).value_or(std::string("?")) +
                "." + x0D_pin_name(inst->ptr5, fs).value_or(std::string("?"));
@@ -95,7 +95,7 @@ std::vector<std::pair<uint8_t, uint8_t>> x39_layers(const x39<version> &inst,
     std::vector<std::pair<uint8_t, uint8_t>> layers;
 
     uint32_t next_key = inst.ptr1;
-    while (HAS_ENTRY2(x3A_map, next_key)) {
+    while (HAS_ENTRY(x3A_map, next_key)) {
         const x3A<version> *x3A_inst =
             (const x3A<version> *)&fs->x3A_map.at(next_key);
         layers.push_back(std::make_pair(x3A_inst->subtype, x3A_inst->layer));
@@ -116,13 +116,13 @@ std::vector<std::pair<std::string, uint32_t>> layer_list(File<version> *fs) {
 
 template <AllegroVersion version>
 std::optional<std::string> x0D_pin_name(const uint32_t k, File<version> *fs) {
-    if (!HAS_ENTRY2(x0D_map, k)) {
+    if (!HAS_ENTRY(x0D_map, k)) {
         return std::optional<std::string>();
     }
 
     const x0D<version> *inst = (const x0D<version> *)&fs->x0D_map.at(k);
     if (inst == nullptr || inst->str_ptr == 0 ||
-        !HAS_ENTRY2(strings, inst->str_ptr)) {
+        !HAS_ENTRY(strings, inst->str_ptr)) {
         return std::optional<std::string>();
     }
 
@@ -131,7 +131,7 @@ std::optional<std::string> x0D_pin_name(const uint32_t k, File<version> *fs) {
 
 template <AllegroVersion version>
 std::optional<uint8_t> x14_layer(const uint32_t k, File<version> *fs) {
-    if (HAS_ENTRY2(x14_map, k)) {
+    if (HAS_ENTRY(x14_map, k)) {
         const x14<version> *inst = &fs->x14_map.at(k);
         return inst->layer;
     } else {
@@ -141,7 +141,7 @@ std::optional<uint8_t> x14_layer(const uint32_t k, File<version> *fs) {
 
 template <AllegroVersion version>
 std::optional<std::string> x1B_net_name(const uint32_t k, File<version> *fs) {
-    if (HAS_ENTRY2(x1B_map, k)) {
+    if (HAS_ENTRY(x1B_map, k)) {
         const x1B<version> *inst = &fs->x1B_map.at(k);
         return fs->strings.at(inst->net_name);
     } else {
@@ -151,7 +151,7 @@ std::optional<std::string> x1B_net_name(const uint32_t k, File<version> *fs) {
 
 template <AllegroVersion version>
 std::optional<uint8_t> x2D_layer(const uint32_t k, File<version> *fs) {
-    if (HAS_ENTRY2(x2D_map, k)) {
+    if (HAS_ENTRY(x2D_map, k)) {
         const x2D<version> *inst = &fs->x2D_map.at(k);
         return x14_layer(inst->ptr1, fs);
     } else {

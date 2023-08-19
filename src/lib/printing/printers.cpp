@@ -589,8 +589,8 @@ void print_x07(const void *untyped_inst, File<version> *fs, const int d) {
 
     if constexpr (!std::is_same_v<decltype(inst->ptr0), std::monostate>) {
         printf_d(d + 1, "ptr0:\n");
-        if (HAS_ENTRY2(x06_map, inst->ptr0)) {
-            PRINT2(x06_map, inst->ptr0, d + 2);
+        if (HAS_ENTRY(x06_map, inst->ptr0)) {
+            PRINT(x06_map, inst->ptr0, d + 2);
         } else {
             printf_d(d + 2, "ptr0 unrecognized: 0x%08X\n", ntohl(inst->ptr0));
             // exit(0);
@@ -612,8 +612,8 @@ void print_x07(const void *untyped_inst, File<version> *fs, const int d) {
     }
 
     printf_d(d + 1, "ptr2: 0x%08X\n", ntohl(inst->ptr2));
-    if (HAS_ENTRY2(x10_map, inst->ptr2)) {
-        PRINT2(x10_map, inst->ptr2, d + 2);
+    if (HAS_ENTRY(x10_map, inst->ptr2)) {
+        PRINT(x10_map, inst->ptr2, d + 2);
     } else {
         printf_d(d + 2, "ptr2 unrecognized: 0x%08X\n", ntohl(inst->ptr2));
         exit(0);
@@ -827,8 +827,8 @@ void print_x0A(const void *untyped_inst, File<version> *fs, const int d) {
     printf_d(d + 1, "un5={%08X %08X %08X %08X}\n", ntohl(inst->un5[0]),
              ntohl(inst->un5[1]), ntohl(inst->un5[2]), ntohl(inst->un5[3]));
 
-    if (HAS_ENTRY2(x01_map, inst->un4[3])) {
-        PRINT2(x01_map, inst->un4[3], d + 1);
+    if (HAS_ENTRY(x01_map, inst->un4[3])) {
+        PRINT(x01_map, inst->un4[3], d + 1);
     }
 }
 
@@ -1032,26 +1032,26 @@ void print_x12(const void *untyped_inst, File<version> *fs, const int d) {
     printf_d(d, "x12: t=0x%08X k=0x%08X\n", ntohl(inst->t), ntohl(inst->k));
 
     printf_d(d + 1, "ptr1:\n");
-    if (HAS_ENTRY2(x12_map, inst->ptr1)) {
-        PRINT2(x12_map, inst->ptr1, d + 2);
-    } else if (HAS_ENTRY2(x10_map, inst->ptr1)) {
-        PRINT2(x10_map, inst->ptr1, d + 2);
+    if (HAS_ENTRY(x12_map, inst->ptr1)) {
+        PRINT(x12_map, inst->ptr1, d + 2);
+    } else if (HAS_ENTRY(x10_map, inst->ptr1)) {
+        PRINT(x10_map, inst->ptr1, d + 2);
     } else {
         printf_d(d + 2, "ptr1 unrecognized: 0x%08X\n", ntohl(inst->ptr1));
         exit(0);
     }
 
     printf_d(d + 1, "ptr2:\n");
-    if (HAS_ENTRY2(x11_map, inst->ptr2)) {
-        PRINT2(x11_map, inst->ptr2, d + 2);
+    if (HAS_ENTRY(x11_map, inst->ptr2)) {
+        PRINT(x11_map, inst->ptr2, d + 2);
     } else {
         printf_d(d + 2, "ptr2 unrecognized: 0x%08X\n", ntohl(inst->ptr2));
         exit(0);
     }
 
     printf_d(d + 1, "ptr3:\n");
-    if (HAS_ENTRY2(x32_map, inst->ptr3)) {
-        PRINT2(x32_map, inst->ptr3, d + 2);
+    if (HAS_ENTRY(x32_map, inst->ptr3)) {
+        PRINT(x32_map, inst->ptr3, d + 2);
     } else {
         printf_d(d + 2, "ptr3 unrecognized: 0x%08X\n", ntohl(inst->ptr3));
         exit(0);
@@ -1492,8 +1492,8 @@ void print_x1E(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY2(x03_map, inst->hdr.str_ptr)) {
-            PRINT2(x03_map, inst->hdr.str_ptr, d + 2);
+        if (HAS_ENTRY(x03_map, inst->hdr.str_ptr)) {
+            PRINT(x03_map, inst->hdr.str_ptr, d + 2);
         } else {
             printf_d(d + 2, "str_ptr unrecognized: 0x%08X\n",
                      ntohl(inst->hdr.str_ptr));
@@ -1526,18 +1526,18 @@ void print_x23(const void *untyped_inst, File<version> *fs, const int d) {
              inst->coords[4]);
 
     printf_d(d + 1, "ptr0:\n");
-    if (HAS_ENTRY2(x23_map, inst->ptr0)) {
-        PRINT2(x23_map, inst->ptr0, d + 2);
-    } else if (HAS_ENTRY2(x1B_map, inst->ptr0)) {
-        PRINT2(x1B_map, inst->ptr0, d + 2);
+    if (HAS_ENTRY(x23_map, inst->ptr0)) {
+        PRINT(x23_map, inst->ptr0, d + 2);
+    } else if (HAS_ENTRY(x1B_map, inst->ptr0)) {
+        PRINT(x1B_map, inst->ptr0, d + 2);
     } else {
         printf_d(d + 2, "ptr0 unrecognized: 0x%08X\n", ntohl(inst->ptr0));
         exit(0);
     }
 
     printf_d(d + 1, "ptr1:\n");
-    if (HAS_ENTRY2(x32_map, inst->ptr1)) {
-        PRINT2(x32_map, inst->ptr1, d + 2);
+    if (HAS_ENTRY(x32_map, inst->ptr1)) {
+        PRINT(x32_map, inst->ptr1, d + 2);
     } else {
         printf_d(d + 2, "ptr1 unrecognized: 0x%08X\n", ntohl(inst->ptr1));
         exit(0);
@@ -1548,8 +1548,8 @@ void print_x23(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY2(x23_map, inst->ptr2)) {
-            PRINT2(x23_map, inst->ptr2, d + 2);
+        if (HAS_ENTRY(x23_map, inst->ptr2)) {
+            PRINT(x23_map, inst->ptr2, d + 2);
         } else {
             printf_d(d + 2, "ptr2 unrecognized: 0x%08X\n", ntohl(inst->ptr2));
             exit(0);
@@ -1557,8 +1557,8 @@ void print_x23(const void *untyped_inst, File<version> *fs, const int d) {
     }
 
     printf_d(d + 1, "ptr3:\n");
-    if (HAS_ENTRY2(x32_map, inst->ptr3)) {
-        PRINT2(x32_map, inst->ptr3, d + 2);
+    if (HAS_ENTRY(x32_map, inst->ptr3)) {
+        PRINT(x32_map, inst->ptr3, d + 2);
     } else {
         printf_d(d + 2, "ptr3 unrecognized: 0x%08X\n", ntohl(inst->ptr3));
         exit(0);
@@ -1582,30 +1582,30 @@ void print_x26(const void *untyped_inst, File<version> *fs, const int d) {
              ntohl(inst->t), ntohl(inst->k));
 
     printf_d(d + 1, "member_ptr:\n");
-    if (HAS_ENTRY2(x33_map, inst->member_ptr)) {
-        PRINT2(x33_map, inst->member_ptr, d + 2);
-    } else if (HAS_ENTRY2(x32_map, inst->member_ptr)) {
-        PRINT2(x32_map, inst->member_ptr, d + 2);
-    } else if (HAS_ENTRY2(x30_map, inst->member_ptr)) {
-        PRINT2(x30_map, inst->member_ptr, d + 2);
-    } else if (HAS_ENTRY2(x2D_map, inst->member_ptr)) {
-        PRINT2(x2D_map, inst->member_ptr, d + 2);
-    } else if (HAS_ENTRY2(x2C_map, inst->member_ptr)) {
-        PRINT2(x2C_map, inst->member_ptr, d + 2);
-    } else if (HAS_ENTRY2(x28_map, inst->member_ptr)) {
-        PRINT2(x28_map, inst->member_ptr, d + 2);
-    } else if (HAS_ENTRY2(x26_map, inst->member_ptr)) {
-        PRINT2(x26_map, inst->member_ptr, d + 2);
-    } else if (HAS_ENTRY2(x24_map, inst->member_ptr)) {
-        PRINT2(x24_map, inst->member_ptr, d + 2);
-    } else if (HAS_ENTRY2(x22_map, inst->member_ptr)) {
-        PRINT2(x22_map, inst->member_ptr, d + 2);
-    } else if (HAS_ENTRY2(x1B_map, inst->member_ptr)) {
-        PRINT2(x1B_map, inst->member_ptr, d + 2);
-    } else if (HAS_ENTRY2(x14_map, inst->member_ptr)) {
-        PRINT2(x14_map, inst->member_ptr, d + 2);
-    } else if (HAS_ENTRY2(x0C_map, inst->member_ptr)) {
-        PRINT2(x0C_map, inst->member_ptr, d + 2);
+    if (HAS_ENTRY(x33_map, inst->member_ptr)) {
+        PRINT(x33_map, inst->member_ptr, d + 2);
+    } else if (HAS_ENTRY(x32_map, inst->member_ptr)) {
+        PRINT(x32_map, inst->member_ptr, d + 2);
+    } else if (HAS_ENTRY(x30_map, inst->member_ptr)) {
+        PRINT(x30_map, inst->member_ptr, d + 2);
+    } else if (HAS_ENTRY(x2D_map, inst->member_ptr)) {
+        PRINT(x2D_map, inst->member_ptr, d + 2);
+    } else if (HAS_ENTRY(x2C_map, inst->member_ptr)) {
+        PRINT(x2C_map, inst->member_ptr, d + 2);
+    } else if (HAS_ENTRY(x28_map, inst->member_ptr)) {
+        PRINT(x28_map, inst->member_ptr, d + 2);
+    } else if (HAS_ENTRY(x26_map, inst->member_ptr)) {
+        PRINT(x26_map, inst->member_ptr, d + 2);
+    } else if (HAS_ENTRY(x24_map, inst->member_ptr)) {
+        PRINT(x24_map, inst->member_ptr, d + 2);
+    } else if (HAS_ENTRY(x22_map, inst->member_ptr)) {
+        PRINT(x22_map, inst->member_ptr, d + 2);
+    } else if (HAS_ENTRY(x1B_map, inst->member_ptr)) {
+        PRINT(x1B_map, inst->member_ptr, d + 2);
+    } else if (HAS_ENTRY(x14_map, inst->member_ptr)) {
+        PRINT(x14_map, inst->member_ptr, d + 2);
+    } else if (HAS_ENTRY(x0C_map, inst->member_ptr)) {
+        PRINT(x0C_map, inst->member_ptr, d + 2);
     } else {
         printf_d(d + 2, "member_ptr unrecognized: 0x%08X\n",
                  ntohl(inst->member_ptr));
@@ -1630,8 +1630,8 @@ void print_x26(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY2(x03_map, inst->const_ptr)) {
-            PRINT2(x03_map, inst->const_ptr, d + 2);
+        if (HAS_ENTRY(x03_map, inst->const_ptr)) {
+            PRINT(x03_map, inst->const_ptr, d + 2);
         } else {
             printf_d(d + 2, "const_ptr unrecognized: 0x%08X\n",
                      ntohl(inst->const_ptr));
@@ -1877,8 +1877,8 @@ void print_x2B(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY2(x2D_map, inst->ptr2)) {
-            PRINT2(x2D_map, inst->ptr2, d + 2);
+        if (HAS_ENTRY(x2D_map, inst->ptr2)) {
+            PRINT(x2D_map, inst->ptr2, d + 2);
         } else {
             printf_d(d + 2, "ptr2 unrecognized: 0x%08X\n", ntohl(inst->ptr2));
             exit(0);
@@ -1890,8 +1890,8 @@ void print_x2B(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY2(x0D_map, inst->ptr3)) {
-            PRINT2(x0D_map, inst->ptr3, d + 2);
+        if (HAS_ENTRY(x0D_map, inst->ptr3)) {
+            PRINT(x0D_map, inst->ptr3, d + 2);
         } else {
             printf_d(d + 2, "ptr3 unrecognized: 0x%08X\n", ntohl(inst->ptr3));
             exit(0);
@@ -1903,8 +1903,8 @@ void print_x2B(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY2(x32_map, inst->ptr4)) {
-            PRINT2(x32_map, inst->ptr4, d + 2);
+        if (HAS_ENTRY(x32_map, inst->ptr4)) {
+            PRINT(x32_map, inst->ptr4, d + 2);
         } else {
             printf_d(d + 2, "ptr4 unrecognized: 0x%08X\n", ntohl(inst->ptr4));
             exit(0);
@@ -1916,8 +1916,8 @@ void print_x2B(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY2(x14_map, inst->ptr5)) {
-            PRINT2(x14_map, inst->ptr5, d + 2);
+        if (HAS_ENTRY(x14_map, inst->ptr5)) {
+            PRINT(x14_map, inst->ptr5, d + 2);
         } else {
             printf_d(d + 2, "ptr5 unrecognized: 0x%08X\n", ntohl(inst->ptr5));
             exit(0);
@@ -1929,8 +1929,8 @@ void print_x2B(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY2(x03_map, inst->str_ptr)) {
-            PRINT2(x03_map, inst->str_ptr, d + 2);
+        if (HAS_ENTRY(x03_map, inst->str_ptr)) {
+            PRINT(x03_map, inst->str_ptr, d + 2);
         } else {
             printf_d(d + 2, "str_ptr unrecognized: 0x%08X\n",
                      ntohl(inst->str_ptr));
@@ -1943,10 +1943,10 @@ void print_x2B(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY2(x28_map, inst->ptr6)) {
-            PRINT2(x28_map, inst->ptr6, d + 2);
-        } else if (HAS_ENTRY2(x0E_map, inst->ptr6)) {
-            PRINT2(x0E_map, inst->ptr6, d + 2);
+        if (HAS_ENTRY(x28_map, inst->ptr6)) {
+            PRINT(x28_map, inst->ptr6, d + 2);
+        } else if (HAS_ENTRY(x0E_map, inst->ptr6)) {
+            PRINT(x0E_map, inst->ptr6, d + 2);
         } else {
             printf_d(d + 2, "ptr6 unrecognized: 0x%08X\n", ntohl(inst->ptr6));
             exit(0);
@@ -1958,10 +1958,10 @@ void print_x2B(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY2(x28_map, inst->ptr7)) {
-            PRINT2(x28_map, inst->ptr7, d + 2);
-        } else if (HAS_ENTRY2(x24_map, inst->ptr7)) {
-            PRINT2(x24_map, inst->ptr7, d + 2);
+        if (HAS_ENTRY(x28_map, inst->ptr7)) {
+            PRINT(x28_map, inst->ptr7, d + 2);
+        } else if (HAS_ENTRY(x24_map, inst->ptr7)) {
+            PRINT(x24_map, inst->ptr7, d + 2);
         } else {
             printf_d(d + 2, "ptr7 unrecognized: 0x%08X\n", ntohl(inst->ptr7));
             exit(0);
@@ -1973,10 +1973,10 @@ void print_x2B(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY2(x33_map, inst->ptr8)) {
-            PRINT2(x33_map, inst->ptr8, d + 2);
-        } else if (HAS_ENTRY2(x28_map, inst->ptr8)) {
-            PRINT2(x28_map, inst->ptr8, d + 2);
+        if (HAS_ENTRY(x33_map, inst->ptr8)) {
+            PRINT(x33_map, inst->ptr8, d + 2);
+        } else if (HAS_ENTRY(x28_map, inst->ptr8)) {
+            PRINT(x28_map, inst->ptr8, d + 2);
         } else {
             printf_d(d + 2, "ptr8 unrecognized: 0x%08X\n", ntohl(inst->ptr8));
             exit(0);
@@ -2009,10 +2009,10 @@ void print_x2C(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY2(x3C_map, inst->ptr1)) {
-            PRINT2(x3C_map, inst->ptr1, d + 2);
-        } else if (HAS_ENTRY2(x37_map, inst->ptr1)) {
-            PRINT2(x37_map, inst->ptr1, d + 2);
+        if (HAS_ENTRY(x3C_map, inst->ptr1)) {
+            PRINT(x3C_map, inst->ptr1, d + 2);
+        } else if (HAS_ENTRY(x37_map, inst->ptr1)) {
+            PRINT(x37_map, inst->ptr1, d + 2);
         } else {
             printf_d(d + 2, "ptr1 unrecognized: 0x%08X\n", ntohl(inst->ptr1));
             exit(0);
@@ -2024,8 +2024,8 @@ void print_x2C(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY2(x03_map, inst->ptr2)) {
-            PRINT2(x03_map, inst->ptr2, d + 2);
+        if (HAS_ENTRY(x03_map, inst->ptr2)) {
+            PRINT(x03_map, inst->ptr2, d + 2);
         } else {
             printf_d(d + 2, "ptr2 unrecognized: 0x%08X\n", ntohl(inst->ptr2));
             exit(0);
@@ -2037,10 +2037,10 @@ void print_x2C(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY2(x2C_map, inst->ptr3)) {
-            PRINT2(x2C_map, inst->ptr3, d + 2);
-        } else if (HAS_ENTRY2(x26_map, inst->ptr3)) {
-            PRINT2(x26_map, inst->ptr3, d + 2);
+        if (HAS_ENTRY(x2C_map, inst->ptr3)) {
+            PRINT(x2C_map, inst->ptr3, d + 2);
+        } else if (HAS_ENTRY(x26_map, inst->ptr3)) {
+            PRINT(x26_map, inst->ptr3, d + 2);
         } else {
             printf_d(d + 2, "ptr3 unrecognized: 0x%08X\n", ntohl(inst->ptr3));
             exit(0);
@@ -2072,7 +2072,7 @@ void print_x2D(const void *untyped_inst, File<version> *fs, const int d) {
             printf(" \x1b[2mnull\x1b[0m\n");
         } else {
             std::printf("\n");
-            if (HAS_ENTRY2(x07_map, inst->inst_ref)) {
+            if (HAS_ENTRY(x07_map, inst->inst_ref)) {
                 print_struct((const void *)&fs->x07_map.at(inst->inst_ref), fs,
                              d + 2);
             } else {
@@ -2376,8 +2376,8 @@ void print_x32(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY2(x04_map, inst->ptr1)) {
-            PRINT2(x04_map, inst->ptr1, d + 2);
+        if (HAS_ENTRY(x04_map, inst->ptr1)) {
+            PRINT(x04_map, inst->ptr1, d + 2);
         } else {
             printf_d(d + 2, "ptr1 unrecognized: 0x%08X\n", ntohl(inst->ptr1));
             exit(0);
@@ -2385,22 +2385,22 @@ void print_x32(const void *untyped_inst, File<version> *fs, const int d) {
     }
 
     printf_d(d + 1, "next:\n");
-    if (HAS_ENTRY2(x32_map, inst->next)) {
-        PRINT2(x32_map, inst->next, d + 2);
-    } else if (HAS_ENTRY2(x2D_map, inst->next)) {
-        PRINT2(x2D_map, inst->next, d + 2);
-    } else if (HAS_ENTRY2(x2B_map, inst->next)) {
-        PRINT2(x2B_map, inst->next, d + 2);
+    if (HAS_ENTRY(x32_map, inst->next)) {
+        PRINT(x32_map, inst->next, d + 2);
+    } else if (HAS_ENTRY(x2D_map, inst->next)) {
+        PRINT(x2D_map, inst->next, d + 2);
+    } else if (HAS_ENTRY(x2B_map, inst->next)) {
+        PRINT(x2B_map, inst->next, d + 2);
     } else {
         printf_d(d + 2, "next unrecognized: 0x%08X\n", ntohl(inst->next));
         exit(0);
     }
 
     printf_d(d + 1, "ptr3 \x1b[3m(placed symbol)\x1b[0m:\n");
-    if (HAS_ENTRY2(x2D_map, inst->ptr3)) {
-        PRINT2(x2D_map, inst->ptr3, d + 2);
-    } else if (HAS_ENTRY2(x2B_map, inst->ptr3)) {
-        PRINT2(x2B_map, inst->ptr3, d + 2);
+    if (HAS_ENTRY(x2D_map, inst->ptr3)) {
+        PRINT(x2D_map, inst->ptr3, d + 2);
+    } else if (HAS_ENTRY(x2B_map, inst->ptr3)) {
+        PRINT(x2B_map, inst->ptr3, d + 2);
     } else {
         printf_d(d + 2, "ptr3 unrecognized: 0x%08X\n", ntohl(inst->ptr3));
         exit(0);
@@ -2411,10 +2411,10 @@ void print_x32(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY2(x09_map, inst->ptr4)) {
-            PRINT2(x09_map, inst->ptr4, d + 2);
-        } else if (HAS_ENTRY2(x05_map, inst->ptr4)) {
-            PRINT2(x05_map, inst->ptr4, d + 2);
+        if (HAS_ENTRY(x09_map, inst->ptr4)) {
+            PRINT(x09_map, inst->ptr4, d + 2);
+        } else if (HAS_ENTRY(x05_map, inst->ptr4)) {
+            PRINT(x05_map, inst->ptr4, d + 2);
         } else {
             printf_d(d + 2, "ptr4 unrecognized: 0x%08X\n", ntohl(inst->ptr4));
             exit(0);
@@ -2422,8 +2422,8 @@ void print_x32(const void *untyped_inst, File<version> *fs, const int d) {
     }
 
     printf_d(d + 1, "ptr5:\n");
-    if (HAS_ENTRY2(x0D_map, inst->ptr5)) {
-        PRINT2(x0D_map, inst->ptr5, d + 2);
+    if (HAS_ENTRY(x0D_map, inst->ptr5)) {
+        PRINT(x0D_map, inst->ptr5, d + 2);
     } else {
         printf_d(d + 2, "ptr5 unrecognized: 0x%08X\n", ntohl(inst->ptr5));
         exit(0);
@@ -2434,8 +2434,8 @@ void print_x32(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY2(x12_map, inst->ptr6)) {
-            PRINT2(x12_map, inst->ptr6, d + 2);
+        if (HAS_ENTRY(x12_map, inst->ptr6)) {
+            PRINT(x12_map, inst->ptr6, d + 2);
         } else {
             printf_d(d + 2, "ptr6 unrecognized: 0x%08X\n", ntohl(inst->ptr6));
             exit(0);
@@ -2447,8 +2447,8 @@ void print_x32(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY2(x23_map, inst->ptr7)) {
-            PRINT2(x23_map, inst->ptr7, d + 2);
+        if (HAS_ENTRY(x23_map, inst->ptr7)) {
+            PRINT(x23_map, inst->ptr7, d + 2);
         } else {
             printf_d(d + 2, "ptr7 unrecognized: 0x%08X\n", ntohl(inst->ptr7));
             exit(0);
@@ -2460,8 +2460,8 @@ void print_x32(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY2(x08_map, inst->ptr8)) {
-            PRINT2(x08_map, inst->ptr8, d + 2);
+        if (HAS_ENTRY(x08_map, inst->ptr8)) {
+            PRINT(x08_map, inst->ptr8, d + 2);
         } else {
             printf_d(d + 2, "ptr8 unrecognized: 0x%08X\n", ntohl(inst->ptr8));
             exit(0);
@@ -2491,10 +2491,10 @@ void print_x32(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY2(x30_map, inst->ptr10)) {
-            PRINT2(x30_map, inst->ptr10, d + 2);
-        } else if (HAS_ENTRY2(x03_map, inst->ptr10)) {
-            PRINT2(x03_map, inst->ptr10, d + 2);
+        if (HAS_ENTRY(x30_map, inst->ptr10)) {
+            PRINT(x30_map, inst->ptr10, d + 2);
+        } else if (HAS_ENTRY(x03_map, inst->ptr10)) {
+            PRINT(x03_map, inst->ptr10, d + 2);
         } else {
             printf_d(d + 2, "ptr10 unrecognized: 0x%08X\n", ntohl(inst->ptr10));
             exit(0);
@@ -2506,8 +2506,8 @@ void print_x32(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY2(x26_map, inst->ptr11)) {
-            PRINT2(x26_map, inst->ptr11, d + 2);
+        if (HAS_ENTRY(x26_map, inst->ptr11)) {
+            PRINT(x26_map, inst->ptr11, d + 2);
         } else {
             printf_d(d + 2, "ptr11 unrecognized: 0x%08X\n", ntohl(inst->ptr11));
             exit(0);
@@ -2658,22 +2658,22 @@ void print_x34(const void *untyped_inst, File<version> *fs, const int d) {
              ntohl(inst->bitmask1), ntohl(un2), ntohl(inst->un));
 
     printf_d(d + 1, "ptr1:\n");
-    if (HAS_ENTRY2(x28_map, inst->ptr1)) {
-        PRINT2(x28_map, inst->ptr1, d + 2);
+    if (HAS_ENTRY(x28_map, inst->ptr1)) {
+        PRINT(x28_map, inst->ptr1, d + 2);
     } else {
         printf_d(d + 2, "ptr1 unrecognized: 0x%08X\n", ntohl(inst->ptr1));
         exit(0);
     }
 
     printf_d(d + 1, "ptr2:\n");
-    if (HAS_ENTRY2(x17_map, inst->ptr2)) {
-        PRINT2(x17_map, inst->ptr2, d + 2);
-    } else if (HAS_ENTRY2(x16_map, inst->ptr2)) {
-        PRINT2(x16_map, inst->ptr2, d + 2);
-    } else if (HAS_ENTRY2(x15_map, inst->ptr2)) {
-        PRINT2(x15_map, inst->ptr2, d + 2);
-    } else if (HAS_ENTRY2(x01_map, inst->ptr2)) {
-        PRINT2(x01_map, inst->ptr2, d + 2);
+    if (HAS_ENTRY(x17_map, inst->ptr2)) {
+        PRINT(x17_map, inst->ptr2, d + 2);
+    } else if (HAS_ENTRY(x16_map, inst->ptr2)) {
+        PRINT(x16_map, inst->ptr2, d + 2);
+    } else if (HAS_ENTRY(x15_map, inst->ptr2)) {
+        PRINT(x15_map, inst->ptr2, d + 2);
+    } else if (HAS_ENTRY(x01_map, inst->ptr2)) {
+        PRINT(x01_map, inst->ptr2, d + 2);
     } else {
         printf_d(d + 2, "ptr2 unrecognized: 0x%08X\n", ntohl(inst->ptr2));
         exit(0);
@@ -2684,8 +2684,8 @@ void print_x34(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY2(x03_map, inst->ptr3)) {
-            PRINT2(x03_map, inst->ptr3, d + 2);
+        if (HAS_ENTRY(x03_map, inst->ptr3)) {
+            PRINT(x03_map, inst->ptr3, d + 2);
         } else {
             printf_d(d + 2, "ptr3 unrecognized: 0x%08X\n", ntohl(inst->ptr3));
             exit(0);
@@ -2703,8 +2703,8 @@ void print_x36_x0F(const x36_x0F<version> &x, File<version> *fs, const int d) {
             printf(" \x1b[2mnull\x1b[0m\n");
         } else {
             std::printf("\n");
-            if (HAS_ENTRY2(x2C_map, x.ptrs[i])) {
-                PRINT2(x2C_map, x.ptrs[i], d + 2);
+            if (HAS_ENTRY(x2C_map, x.ptrs[i])) {
+                PRINT(x2C_map, x.ptrs[i], d + 2);
             } else {
                 printf_d(d + 2, "ptrs[%d] unrecognized: 0x%08X\n", i,
                          ntohl(x.ptrs[i]));
@@ -2718,8 +2718,8 @@ void print_x36_x0F(const x36_x0F<version> &x, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY2(x03_map, x.ptr2)) {
-            PRINT2(x03_map, x.ptr2, d + 2);
+        if (HAS_ENTRY(x03_map, x.ptr2)) {
+            PRINT(x03_map, x.ptr2, d + 2);
         } else {
             printf_d(d + 2, "ptr2 unrecognized: 0x%08X\n", ntohl(x.ptr2));
             exit(0);
@@ -2817,8 +2817,8 @@ void print_x38(const void *untyped_inst, File<version> *fs, const int d) {
     }
     */
 
-    if (HAS_ENTRY2(x39_map, inst->ptr1)) {
-        PRINT2(x39_map, inst->ptr1, d + 1);
+    if (HAS_ENTRY(x39_map, inst->ptr1)) {
+        PRINT(x39_map, inst->ptr1, d + 1);
     } else {
         printf_d(d + 1, "ptr1 unrecognized: 0x%08X\n", ntohl(inst->ptr1));
         exit(0);
@@ -2870,10 +2870,10 @@ void print_x3A(const void *untyped_inst, File<version> *fs, const int d) {
              ntohl(inst->t), inst->subtype, inst->layer, ntohl(inst->k),
              inst->un);
 
-    if (HAS_ENTRY2(x3A_map, inst->next)) {
-        PRINT2(x3A_map, inst->next, d + 1);
-    } else if (HAS_ENTRY2(x39_map, inst->next)) {
-        PRINT2(x39_map, inst->next, d + 1);
+    if (HAS_ENTRY(x3A_map, inst->next)) {
+        PRINT(x3A_map, inst->next, d + 1);
+    } else if (HAS_ENTRY(x39_map, inst->next)) {
+        PRINT(x39_map, inst->next, d + 1);
     } else {
         printf_d(d + 1, "next unrecognized: 0x%08X\n", ntohl(inst->next));
         exit(0);
@@ -2885,13 +2885,13 @@ void print_x3C(const void *untyped_inst, File<version> *fs, const int d) {
     const x3C<version> *inst = (const x3C<version> *)untyped_inst;
     printf_d(d, "x3C: t=0x%08X k=0x%08X\n", ntohl(inst->t), ntohl(inst->k));
 
-    if (HAS_ENTRY2(x32_map, inst->ptrs[0]) &&
-        HAS_ENTRY2(x32_map, inst->ptrs[1])) {
+    if (HAS_ENTRY(x32_map, inst->ptrs[0]) &&
+        HAS_ENTRY(x32_map, inst->ptrs[1])) {
         const x32<version> *a = &fs->x32_map.at(inst->ptrs[0]);
         const x32<version> *b = &fs->x32_map.at(inst->ptrs[1]);
         printf_d(d + 1, "\x1b[33mPad connectivity pair\x1b[0m\n");
-    } else if (HAS_ENTRY2(x1B_map, inst->ptrs[0]) &&
-               HAS_ENTRY2(x1B_map, inst->ptrs[1])) {
+    } else if (HAS_ENTRY(x1B_map, inst->ptrs[0]) &&
+               HAS_ENTRY(x1B_map, inst->ptrs[1])) {
         const x1B<version> *a = &fs->x1B_map.at(inst->ptrs[0]);
         const x1B<version> *b = &fs->x1B_map.at(inst->ptrs[1]);
         printf_d(d + 1, "\x1b[33mNet pair\x1b[0m\n");
@@ -2904,16 +2904,16 @@ void print_x3C(const void *untyped_inst, File<version> *fs, const int d) {
         if (ptr != 0x0) {
             non_null++;
         }
-        if (HAS_ENTRY2(x32_map, ptr)) {
-            PRINT2(x32_map, ptr, d + 2);
-        } else if (HAS_ENTRY2(x2D_map, ptr)) {
-            PRINT2(x2D_map, ptr, d + 2);
-        } else if (HAS_ENTRY2(x28_map, ptr)) {
-            PRINT2(x28_map, ptr, d + 2);
-        } else if (HAS_ENTRY2(x22_map, ptr)) {
-            PRINT2(x22_map, ptr, d + 2);
-        } else if (HAS_ENTRY2(x1B_map, ptr)) {
-            PRINT2(x1B_map, ptr, d + 2);
+        if (HAS_ENTRY(x32_map, ptr)) {
+            PRINT(x32_map, ptr, d + 2);
+        } else if (HAS_ENTRY(x2D_map, ptr)) {
+            PRINT(x2D_map, ptr, d + 2);
+        } else if (HAS_ENTRY(x28_map, ptr)) {
+            PRINT(x28_map, ptr, d + 2);
+        } else if (HAS_ENTRY(x22_map, ptr)) {
+            PRINT(x22_map, ptr, d + 2);
+        } else if (HAS_ENTRY(x1B_map, ptr)) {
+            PRINT(x1B_map, ptr, d + 2);
         }
     }
 }

@@ -13,8 +13,7 @@
 
 #include "cadence_fp.h"
 
-#define HAS_ENTRY(MAP, KEY) (fs->MAP->count(KEY) > 0)
-#define HAS_ENTRY2(MAP, KEY) (fs->MAP.count(KEY) > 0)
+#define HAS_ENTRY(MAP, KEY) (fs->MAP.count(KEY) > 0)
 
 #if _MSC_VER
 #define COND_FIELD(COND, T, NAME)                                             \
