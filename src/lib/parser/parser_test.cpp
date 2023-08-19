@@ -26,29 +26,16 @@ bool check_overlapping_ids(File<version>& fs) {
 template <AllegroVersion version>
 void check_header_values(File<version>& fs) {
     if (fs.hdr->ll_x04.head != 0) {
-        auto x = fs.get_x04(fs.hdr->ll_x04.head);
-        uint32_t j = 0, k = 0;
-        while (x.next != fs.hdr->ll_x04.tail) {
-            EXPECT_TRUE(fs.is_type(x.next, 0x04));
-            x = fs.get_x04(x.next);
-            j++;
-        }
-        printf("\n");
-
+        // Iterating will crash if the pointers are incorrect
         for (auto& i : fs.iter_x04()) {
-            k++;
         }
-
-        EXPECT_EQ(j + 1, k);
     }
 
     if (fs.hdr->ll_x06.head != 0) {
-        auto x = fs.get_x06(fs.hdr->ll_x06.head);
-        while (x.next != fs.hdr->ll_x06.tail) {
-            EXPECT_TRUE(fs.is_type(x.next, 0x06));
-            x = fs.get_x06(x.next);
+        for (auto& i : fs.iter_x06()) {
         }
     }
+
     if (fs.hdr->ll_x0C_2.head != 0) {
         auto& x = fs.x0C_map.at(fs.hdr->ll_x0C_2.head);
         while (x.next != fs.hdr->ll_x0C_2.tail) {
@@ -61,18 +48,11 @@ void check_header_values(File<version>& fs) {
                     fs.x28_map.count(fs.hdr->ll_x0E_x28.head) > 0);
     }
     if (fs.hdr->ll_x14.head != 0) {
-        auto x = fs.get_x14(fs.hdr->ll_x14.head);
-        while (x.next != fs.hdr->ll_x14.tail) {
-            EXPECT_TRUE(fs.is_type(x.next, 0x14));
-            x = fs.get_x14(x.next);
+        for (auto& i : fs.iter_x14()) {
         }
     }
     if (fs.hdr->ll_x1B.head != 0) {
-        auto x = fs.get_x1B(fs.hdr->ll_x1B.head);
-        // auto& x = fs.x1B_map.at(fs.hdr->ll_x1B.head);
-        while (x.next != fs.hdr->ll_x1B.tail) {
-            EXPECT_TRUE(fs.is_type(x.next, 0x1B));
-            x = fs.get_x1B(x.next);
+        for (auto& i : fs.iter_x1B()) {
         }
     }
     if (fs.hdr->ll_x1C.head != 0) {

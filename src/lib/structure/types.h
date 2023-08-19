@@ -1648,9 +1648,9 @@ class File {
     };
 
     template <typename T>
-    class IterWrapper {
+    class IterBase {
        public:
-        IterWrapper(Iter<T> begin, Iter<T> end) : _begin(begin), _end(end){};
+        IterBase(Iter<T> begin, Iter<T> end) : _begin(begin), _end(end){};
         Iter<T> begin() { return _begin; }
         Iter<T> end() { return _end; }
 
@@ -1658,10 +1658,28 @@ class File {
         Iter<T> _begin, _end;
     };
 
-    IterWrapper<x04<version>> iter_x04() {
-        return IterWrapper<x04<version>>(
+    IterBase<x04<version>> iter_x04() {
+        return IterBase<x04<version>>(
             Iter<x04<version>>(*this, this->hdr->ll_x04.head, &File::get_x04),
             Iter<x04<version>>(*this, this->hdr->ll_x04.tail, &File::get_x04));
+    };
+
+    IterBase<x06<version>> iter_x06() {
+        return IterBase<x06<version>>(
+            Iter<x06<version>>(*this, this->hdr->ll_x06.head, &File::get_x06),
+            Iter<x06<version>>(*this, this->hdr->ll_x06.tail, &File::get_x06));
+    };
+
+    IterBase<x14<version>> iter_x14() {
+        return IterBase<x14<version>>(
+            Iter<x14<version>>(*this, this->hdr->ll_x14.head, &File::get_x14),
+            Iter<x14<version>>(*this, this->hdr->ll_x14.tail, &File::get_x14));
+    };
+
+    IterBase<x1B<version>> iter_x1B() {
+        return IterBase<x1B<version>>(
+            Iter<x1B<version>>(*this, this->hdr->ll_x1B.head, &File::get_x1B),
+            Iter<x1B<version>>(*this, this->hdr->ll_x1B.tail, &File::get_x1B));
     };
 
    private:
