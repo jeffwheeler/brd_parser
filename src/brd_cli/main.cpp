@@ -3,6 +3,7 @@
 #include "html.h"
 #include "lib/parser/parser.h"
 #include "lib/printing/printers.h"
+#include "lib/structure/utils.h"
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
@@ -16,11 +17,14 @@ int main(int argc, char* argv[]) {
         // stream_file(fname, *parsed_file);
     }
 
-    ll_ptrs pts = parsed_file->hdr->ll_x2C;
+    ll_ptrs pts = parsed_file->hdr->ll_x1B;
     uint32_t k = pts.head;
-    k = 0xA173C17C;
+    // k = 0x00D06996;
+    printf("Chain started at key = 0x %08X\n", ntohl(k));
+    uint32_t i = 0;
     uint32_t off = 0;
     while (1) {
+        i++;
         if (parsed_file->x38_map.count(k) > 0) {
             auto& i = parsed_file->x38_map[k];
             printf("Found x38 w/ key = 0x %08X\n", ntohl(k));
@@ -60,12 +64,12 @@ int main(int argc, char* argv[]) {
             printf("Found x2B w/ key = 0x %08X\n", ntohl(k));
             print_struct(k, *parsed_file, off);
             k = i.next;
-        } else if (parsed_file->x28_map.count(k) > 0) {
-            auto& i = parsed_file->x28_map[k];
+        } else if (parsed_file->is_type(k, 0x28)) {
+            auto& i = parsed_file->get_x28(k);
             printf("Found x28 w/ key = 0x %08X\n", ntohl(k));
             k = i.ptr1;
-        } else if (parsed_file->x24_map.count(k) > 0) {
-            auto& i = parsed_file->x24_map[k];
+        } else if (parsed_file->is_type(k, 0x24)) {
+            auto& i = parsed_file->get_x24(k);
             printf("Found x24 w/ key = 0x %08X\n", ntohl(k));
             k = i.un[0];
         } else if (parsed_file->x1F_map.count(k) > 0) {
@@ -86,7 +90,43 @@ int main(int argc, char* argv[]) {
             k = i.hdr.next;
         } else if (parsed_file->is_type(k, 0x1B)) {
             auto& i = parsed_file->get_x1B(k);
-            printf("Found x1B w/ key = 0x %08X\n", ntohl(k));
+            printf("Found x1B w/ key = 0x %08X (\"%s\")\n", ntohl(k),
+                   x1B_net_name(k, &parsed_file.value()));
+            if (parsed_file->is_type(i.ptr1, 0x04)) {
+                auto& i_x04 = parsed_file->get_x04(i.ptr1);
+                uint32_t j = i_x04.ptr2;
+                while (1) {
+                    printf("- j = 0x %08X\n", ntohl(j));
+                    if (parsed_file->x33_map.count(j) > 0) {
+                        auto& i = parsed_file->x33_map[j];
+                        printf("- - Found x33 w/ key = 0x %08X\n", ntohl(j));
+                        j = i.un1;
+                    } else if (parsed_file->x32_map.count(j) > 0) {
+                        auto& i = parsed_file->x32_map[j];
+                        printf("- - Found x32 w/ key = 0x %08X\n", ntohl(j));
+                        j = i.un1;
+                    } else if (parsed_file->x2E_map.count(j) > 0) {
+                        auto& i = parsed_file->x2E_map[j];
+                        printf("- - Found x2E w/ key = 0x %08X\n", ntohl(j));
+                        j = i.un[0];
+                    } else if (parsed_file->is_type(j, 0x28)) {
+                        auto& x = parsed_file->get_x28(j);
+                        printf("- - x28\n");
+                        print_struct(j, *parsed_file, off + 1);
+                        j = x.un1;
+                    } else if (parsed_file->x05_map.count(j) > 0) {
+                        auto& i = parsed_file->x05_map[j];
+                        printf("- - Found x05 w/ key = 0x %08X\n", ntohl(j));
+                        j = i.ptr0;
+                    } else if (parsed_file->is_type(j, 0x04)) {
+                        printf("- - Found x04 again!\n");
+                        break;
+                    } else {
+                        printf("- - \x1b[31mUnexpected key\x1b[0m :(\n");
+                        break;
+                    }
+                }
+            }
             k = i.next;
         } else if (parsed_file->is_type(k, 0x14)) {
             auto& i = parsed_file->get_x14(k);
@@ -124,6 +164,7 @@ int main(int argc, char* argv[]) {
         } else {
             printf("Chain ended at key = 0x %08X\n", ntohl(k));
             printf("Matched expected value? %d\n", pts.tail == k);
+            printf("i = %d\n", i);
             break;
         }
     }

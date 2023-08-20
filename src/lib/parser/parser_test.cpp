@@ -45,7 +45,7 @@ void check_header_values(File<version>& fs) {
     }
     if (fs.hdr->ll_x0E_x28.head != 0) {
         EXPECT_TRUE(fs.x0E_map.count(fs.hdr->ll_x0E_x28.head) > 0 ||
-                    fs.x28_map.count(fs.hdr->ll_x0E_x28.head) > 0);
+                    fs.is_type(fs.hdr->ll_x0E_x28.head, 0x28));
     }
     if (fs.hdr->ll_x14.head != 0) {
         for (auto& i : fs.iter_x14()) {
@@ -63,8 +63,8 @@ void check_header_values(File<version>& fs) {
         }
     }
     if (fs.hdr->ll_x24_x28.head != 0) {
-        EXPECT_TRUE(fs.x24_map.count(fs.hdr->ll_x24_x28.head) > 0 ||
-                    fs.x28_map.count(fs.hdr->ll_x24_x28.head) > 0);
+        EXPECT_TRUE(fs.is_type(fs.hdr->ll_x24_x28.head, 0x24) ||
+                    fs.is_type(fs.hdr->ll_x24_x28.head, 0x28));
     }
     if (fs.hdr->ll_x2B.head != 0) {
         auto& x = fs.x2B_map.at(fs.hdr->ll_x2B.head);

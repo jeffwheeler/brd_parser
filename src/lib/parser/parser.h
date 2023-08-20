@@ -131,15 +131,15 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x23
     {&new_default_parser<x23, version>},
     // 0x24
-    {&default_parser<x24, version>},
+    {&new_default_parser<x24, version>},
     // 0x25
     {},
     // 0x26
-    {&default_parser<x26, version>},
+    {&new_default_parser<x26, version>},
     // 0x27
     {&parse_x27<version>},
     // 0x28
-    {&default_parser<x28, version>},
+    {&new_default_parser<x28, version>},
     // 0x29
     {},
     // 0x2A

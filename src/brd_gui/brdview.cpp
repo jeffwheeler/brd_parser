@@ -350,7 +350,7 @@ void BrdView::drawX28(const x28<A_174> *inst, QPen *pen) {
     item->setData(0, inst->k);
 
     // Recurse if type(ptr2) == x28?
-    if (fs->x28_map.count(inst->next) > 0) {
+    if (fs->is_type(inst->next, 0x28)) {
         drawShape(inst->next, pen);
     }
 };
@@ -679,9 +679,9 @@ void BrdView::drawShape(const uint32_t ptr, QPen *pen) {
     } else if (fs->is_type(ptr, 0x23)) {
         const x23<A_174> inst = fs->get_x23(ptr);
         drawX23(&inst, pen);
-    } else if (fs->x28_map.count(ptr) > 0) {
-        const x28<A_174> *inst = (const x28<A_174> *)&fs->x28_map.at(ptr);
-        drawX28((const x28<A_174> *)&fs->x28_map.at(ptr), pen);
+    } else if (fs->is_type(ptr, 0x28)) {
+        const x28<A_174> inst = fs->get_x28(ptr);
+        drawX28(&inst, pen);
         // drawShape(inst->ptr5, darkerPen);
         // drawShape(inst->ptr1, darkerPen);
         // drawShape(inst->ptr2, darkerPen);
@@ -742,14 +742,44 @@ void BrdView::drawFile() {
     QPen *pen5 = new QPen(QColor(132, 169, 140, 127), 0);
     QPen *pen6 = new QPen(QColor(237, 211, 130, 127), 0);
 
-    // Shape
-    for (const auto &[k, x28_inst] : fs->x28_map) {
-        drawShape(k, pen2);
-    }
-
-    // Line segment
-    for (const auto &[k, x05_inst] : fs->x05_map) {
-        drawShape(k, pen3);
+    for (auto &i_x1B : fs->iter_x1B()) {
+        if (fs->is_type(i_x1B.ptr1, 0x04)) {
+            auto &i_x04 = fs->get_x04(i_x1B.ptr1);
+            uint32_t k = i_x04.ptr2;
+            while (1) {
+                if (fs->x33_map.count(k) > 0) {
+                    auto &i = fs->x33_map[k];
+                    // printf("- - Found x33 w/ key = 0x %08X\n", ntohl(k));
+                    k = i.un1;
+                } else if (fs->x32_map.count(k) > 0) {
+                    auto &i = fs->x32_map[k];
+                    // printf("- - Found x32 w/ key = 0x %08X\n", ntohl(k));
+                    k = i.un1;
+                } else if (fs->x2E_map.count(k) > 0) {
+                    auto &i = fs->x2E_map[k];
+                    // printf("- - Found x2E w/ key = 0x %08X\n", ntohl(k));
+                    k = i.un[0];
+                } else if (fs->is_type(k, 0x28)) {
+                    auto &x = fs->get_x28(k);
+                    drawShape(x.k, pen2);
+                    k = x.un1;
+                } else if (fs->x0E_map.count(k) > 0) {
+                    auto &x = fs->x0E_map[k];
+                    k = x.un[0];
+                } else if (fs->x05_map.count(k) > 0) {
+                    auto &x = fs->x05_map[k];
+                    drawShape(x.k, pen3);
+                    k = x.ptr0;
+                } else if (fs->is_type(k, 0x04)) {
+                    // printf("- - Found x04 again!\n");
+                    break;
+                } else {
+                    printf("- - \x1b[31mUnexpected key\x1b[0m = 0x %08X :(\n",
+                           ntohl(k));
+                    break;
+                }
+            }
+        }
     }
 
     // for (const auto& [k, x14_inst] : *fs.x14_map) {
@@ -871,9 +901,9 @@ QColor BrdView::customPenColor(uint32_t x05_k, QColor default_) {
         }
     } else if (fs->is_type(x05_k, 0x14)) {
         return QColorConstants::Svg::goldenrod;
-    } else if (fs->x28_map.count(x05_k) > 0) {
-        const x28<A_174> *inst = (const x28<A_174> *)&fs->x28_map.at(x05_k);
-        if (onSelectedLayer(inst->subtype, inst->layer)) {
+    } else if (fs->is_type(x05_k, 0x28)) {
+        const x28<A_174> &inst = fs->get_x28(x05_k);
+        if (onSelectedLayer(inst.subtype, inst.layer)) {
             return QColorConstants::Svg::palevioletred;
         } else {
             return default_;
@@ -1028,10 +1058,10 @@ std::optional<QPointF> BrdView::endingPoint(uint32_t k) {
 }
 
 char *BrdView::netName(uint32_t k) {
-    if (fs->x28_map.count(k) > 0) {
-        const x28<A_174> *x28_inst = (const x28<A_174> *)&fs->x28_map.at(k);
-        if (fs->is_type(x28_inst->ptr1, 0x04)) {
-            const x04<A_174> &x04_inst = fs->get_x04(x28_inst->ptr1);
+    if (fs->is_type(k, 0x28)) {
+        const x28<A_174> &x28_inst = fs->get_x28(k);
+        if (fs->is_type(x28_inst.ptr1, 0x04)) {
+            const x04<A_174> &x04_inst = fs->get_x04(x28_inst.ptr1);
             if (fs->is_type(x04_inst.ptr1, 0x1B)) {
                 const x1B<A_174> x1B_inst = fs->get_x1B(x04_inst.ptr1);
                 // qDebug("Net name: 0x%08X", x1B_inst->net_name);
