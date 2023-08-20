@@ -676,9 +676,9 @@ void BrdView::drawShape(const uint32_t ptr, QPen *pen) {
         // drawX17(inst, pen);
         // drawShape(inst->un1, darkerPen);
         // drawShape(inst->ptr, darkerPen);
-    } else if (fs->x23_map.count(ptr) > 0) {
-        const x23<A_174> *inst = (const x23<A_174> *)&fs->x23_map.at(ptr);
-        drawX23((const x23<A_174> *)&fs->x23_map.at(ptr), pen);
+    } else if (fs->is_type(ptr, 0x23)) {
+        const x23<A_174> inst = fs->get_x23(ptr);
+        drawX23(&inst, pen);
     } else if (fs->x28_map.count(ptr) > 0) {
         const x28<A_174> *inst = (const x28<A_174> *)&fs->x28_map.at(ptr);
         drawX28((const x28<A_174> *)&fs->x28_map.at(ptr), pen);
@@ -825,7 +825,6 @@ void BrdView::drawFile() {
     for (const auto &[k, x30_inst] : fs->x30_map) {
         drawShape(k, pen2);
     }
-
 
     // Pads
     // for (const auto& [k, x32_inst] : *fs.x32_map) {

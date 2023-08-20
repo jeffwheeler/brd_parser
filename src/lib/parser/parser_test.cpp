@@ -131,7 +131,7 @@ TEST(ParseFile, Slugs) {
 
     EXPECT_EQ(fs.layer_count, 4);
     // EXPECT_EQ(fs.x17_map.size(), 2859);
-    EXPECT_TRUE(fs.x23_map.count(0x06634ED0) > 0);
+    EXPECT_TRUE(fs.is_type(0x06634ED0, 0x23));
 
     EXPECT_FALSE(check_overlapping_ids(fs));
     check_header_values(fs);
@@ -151,7 +151,7 @@ TEST(ParseFile, Parallella) {
 
     EXPECT_EQ(fs.layer_count, 12);
     // EXPECT_EQ(fs.x17_map.size(), 17053);
-    EXPECT_TRUE(fs.x23_map.count(0x0B63E710) > 0);
+    EXPECT_TRUE(fs.is_type(0x0B63E710, 0x23));
 
     EXPECT_FALSE(check_overlapping_ids(fs));
     check_header_values(fs);
@@ -177,7 +177,7 @@ TEST(ParseFile, SmartPlug) {
 
     EXPECT_EQ(fs.layer_count, 2);
     // EXPECT_EQ(fs.x17_map.size(), 2762);
-    EXPECT_TRUE(fs.x23_map.count(0x0EBB2200) > 0);
+    EXPECT_TRUE(fs.is_type(0x0EBB2200, 0x23));
 
     EXPECT_FALSE(check_overlapping_ids(fs));
     check_header_values(fs);
@@ -190,7 +190,7 @@ TEST(ParseFile, AvalonParsed) {
 
     EXPECT_EQ(fs.layer_count, 4);
     // EXPECT_EQ(fs.x17_map.size(), 4079);
-    EXPECT_TRUE(fs.x23_map.count(0x13E64B30) > 0);
+    EXPECT_TRUE(fs.is_type(0x13E64B30, 0x23));
 
     EXPECT_FALSE(check_overlapping_ids(fs));
     check_header_values(fs);
@@ -231,7 +231,7 @@ TEST(ParseFile, OpenCellularGbc) {
 
     EXPECT_EQ(fs.layer_count, 10);
     // EXPECT_EQ(fs.x17_map.size(), 97199);
-    EXPECT_TRUE(fs.x23_map.count(0x163ECF78) > 0);
+    EXPECT_TRUE(fs.is_type(0x163ECF78, 0x23));
 
     EXPECT_FALSE(check_overlapping_ids(fs));
     check_header_values(fs);
@@ -250,7 +250,7 @@ TEST(ParseFile, OpenCellularSdr) {
 
     EXPECT_EQ(fs.layer_count, 10);
     // EXPECT_EQ(fs.x17_map.size(), 31392);
-    EXPECT_TRUE(fs.x23_map.count(0x0FD96758) > 0);
+    EXPECT_TRUE(fs.is_type(0x0FD96758, 0x23));
 
     EXPECT_FALSE(check_overlapping_ids(fs));
     check_header_values(fs);
@@ -278,7 +278,7 @@ TEST(ParseFile, BeagleBoneAIParsed) {
 
     EXPECT_EQ(fs.layer_count, 12);
     // EXPECT_EQ(fs.x17_map.size(), 18405);
-    EXPECT_TRUE(fs.x23_map.count(0x0002814C) > 0);
+    EXPECT_TRUE(fs.is_type(0x0002814C, 0x23));
 
     EXPECT_FALSE(check_overlapping_ids(fs));
     check_header_values(fs);
@@ -325,7 +325,7 @@ TEST(ParseFile, M1K) {
 
     EXPECT_EQ(fs.layer_count, 4);
     // EXPECT_EQ(fs.x17_map.size(), 5607);
-    EXPECT_TRUE(fs.x23_map.count(0x084A1B4D) > 0);
+    EXPECT_TRUE(fs.is_type(0x084A1B4D, 0x23));
 
     EXPECT_FALSE(check_overlapping_ids(fs));
     check_header_values(fs);
@@ -364,7 +364,7 @@ TEST(ParseFile, FmcTlu) {
 
     EXPECT_EQ(fs.layer_count, 6);
     // EXPECT_EQ(fs.x17_map.size(), 11249);
-    EXPECT_TRUE(fs.x23_map.count(0x0001937A) > 0);
+    EXPECT_TRUE(fs.is_type(0x0001937A, 0x23));
 
     EXPECT_FALSE(check_overlapping_ids(fs));
     check_header_values(fs);
@@ -378,7 +378,7 @@ TEST(ParseFile, MotorEncoderParsed) {
 
     EXPECT_EQ(fs.layer_count, 2);
     // EXPECT_EQ(fs.x17_map.size(), 410);
-    EXPECT_TRUE(fs.x23_map.count(0x00001197) > 0);
+    EXPECT_TRUE(fs.is_type(0x00001197, 0x23));
 
     EXPECT_FALSE(check_overlapping_ids(fs));
     check_header_values(fs);
@@ -392,7 +392,7 @@ TEST(ParseFile, Pc069A) {
 
     EXPECT_EQ(fs.layer_count, 6);
     // EXPECT_EQ(fs.x17_map.size(), 4628);
-    EXPECT_TRUE(fs.x23_map.count(0x0000CDE7) > 0);
+    EXPECT_TRUE(fs.is_type(0x0000CDE7, 0x23));
 
     EXPECT_FALSE(check_overlapping_ids(fs));
     check_header_values(fs);
@@ -406,7 +406,7 @@ TEST(ParseFile, MtcaInterfaceBoard) {
 
     EXPECT_EQ(fs.layer_count, 10);
     // EXPECT_EQ(fs.x17_map.size(), 16792);
-    EXPECT_TRUE(fs.x23_map.count(0x0002ABBC) > 0);
+    EXPECT_TRUE(fs.is_type(0x0002ABBC, 0x23));
 
     EXPECT_FALSE(check_overlapping_ids(fs));
     check_header_values(fs);
