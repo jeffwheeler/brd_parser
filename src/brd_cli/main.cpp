@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
         // stream_file(fname, *parsed_file);
     }
 
-    ll_ptrs pts = parsed_file->hdr->ll_x1B;
+    ll_ptrs pts = parsed_file->hdr->ll_x2B;
     uint32_t k = pts.head;
     // k = 0x00D06996;
     printf("Chain started at key = 0x %08X\n", ntohl(k));
@@ -50,19 +50,18 @@ int main(int argc, char* argv[]) {
             auto& i = parsed_file->x33_map[k];
             printf("Found x33 w/ key = 0x %08X\n", ntohl(k));
             k = i.un1;
-        } else if (parsed_file->x2D_map.count(k) > 0) {
-            auto& i = parsed_file->x2D_map[k];
+        } else if (parsed_file->is_type(k, 0x2D)) {
+            auto& i = parsed_file->get_x2D(k);
             printf("Found x2D w/ key = 0x %08X\n", ntohl(k));
             print_struct(k, *parsed_file, off);
             k = i.un1;
-        } else if (parsed_file->x2C_map.count(k) > 0) {
-            auto& i = parsed_file->x2C_map[k];
+        } else if (parsed_file->is_type(k, 0x2C)) {
+            auto& i = parsed_file->get_x2C(k);
             printf("Found x2C w/ key = 0x %08X\n", ntohl(k));
             k = i.next;
         } else if (parsed_file->is_type(k, 0x2B)) {
             auto& i = parsed_file->get_x2B(k);
             printf("Found x2B w/ key = 0x %08X\n", ntohl(k));
-            print_struct(k, *parsed_file, off);
             k = i.next;
         } else if (parsed_file->is_type(k, 0x28)) {
             auto& i = parsed_file->get_x28(k);

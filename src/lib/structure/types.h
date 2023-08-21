@@ -1569,8 +1569,6 @@ class File {
     std::map<uint32_t, x1F<version>> x1F_map;
     x27 x27_db;
     std::map<uint32_t, x2A> x2A_map;
-    std::map<uint32_t, x2C<version>> x2C_map;
-    std::map<uint32_t, x2D<version>> x2D_map;
     std::map<uint32_t, x2E<version>> x2E_map;
     std::map<uint32_t, x2F<version>> x2F_map;
     std::map<uint32_t, x30<version>> x30_map;
@@ -1611,6 +1609,8 @@ class File {
     const x26<A_174> get_x26(uint32_t k);
     const x28<A_174> get_x28(uint32_t k);
     const x2B<A_174> get_x2B(uint32_t k);
+    const x2C<A_174> get_x2C(uint32_t k);
+    const x2D<A_174> get_x2D(uint32_t k);
 
     bool is_type(uint32_t k, uint8_t t);
 
@@ -1713,6 +1713,25 @@ class File {
             Iter<x2B<version>>(*this, this->hdr->ll_x2B.tail, &File::get_x2B));
     };
 
+    IterBase<x2C<version>> iter_x2C() {
+        return IterBase<x2C<version>>(
+            Iter<x2C<version>>(*this, this->hdr->ll_x2C.head, &File::get_x2C),
+            Iter<x2C<version>>(*this, this->hdr->ll_x2C.tail, &File::get_x2C));
+    };
+
+    IterBase<x04<version>> iter_x2D(uint32_t i_x2B) {
+        auto &i = this->get_x2B(i_x2B);
+        if (i.ptr2 == 0) {
+            return IterBase<x04<version>>(
+                Iter<x04<version>>(*this, i.k, &File::get_x04),
+                Iter<x04<version>>(*this, i.k, &File::get_x04));
+        } else {
+            return IterBase<x04<version>>(
+                Iter<x04<version>>(*this, i.ptr2, &File::get_x04),
+                Iter<x04<version>>(*this, i.k, &File::get_x04));
+        }
+    };
+
    private:
     mapped_region region;
 
@@ -1737,6 +1756,8 @@ class File {
     x26<A_174> (*x26_upgrade)(void *);
     x28<A_174> (*x28_upgrade)(void *);
     x2B<A_174> (*x2B_upgrade)(void *);
+    x2C<A_174> (*x2C_upgrade)(void *);
+    x2D<A_174> (*x2D_upgrade)(void *);
 };
 
 #endif

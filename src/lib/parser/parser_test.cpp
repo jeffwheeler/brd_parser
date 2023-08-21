@@ -90,10 +90,7 @@ void check_header_values(File<version>& fs) {
         }
     }
     if (fs.hdr->ll_x2C.head != 0) {
-        auto& x = fs.x2C_map.at(fs.hdr->ll_x2C.head);
-        while (x.next != fs.hdr->ll_x2C.tail) {
-            EXPECT_TRUE(fs.x2C_map.count(x.next) > 0);
-            x = fs.x2C_map.at(x.next);
+        for (auto& i : fs.iter_x2C()) {
         }
     }
     if (fs.hdr->ll_x0C.head != 0) {

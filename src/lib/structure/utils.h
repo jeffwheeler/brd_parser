@@ -44,20 +44,19 @@ std::optional<std::string> x2B_refdes(const uint32_t k, File<version> *fs) {
 
 template <AllegroVersion version>
 std::optional<std::string> x2D_refdes(const uint32_t k, File<version> *fs) {
-    if (!HAS_ENTRY(x2D_map, k)) {
+    if (!fs->is_type(k, 0x2D)) {
         return std::optional<std::string>();
     }
 
-    const x2D<version> *inst = (const x2D<version> *)&fs->x2D_map.at(k);
-    if constexpr (std::is_same_v<decltype(inst->inst_ref), std::monostate>) {
+    const x2D<version> &inst = fs->get_x2D(k);
+    if constexpr (std::is_same_v<decltype(inst.inst_ref), std::monostate>) {
         return std::optional<std::string>();
     } else {
-        if (inst == nullptr || inst->inst_ref == 0 ||
-            !fs->is_type(inst->inst_ref, 0x07)) {
+        if (inst.inst_ref == 0 || !fs->is_type(inst.inst_ref, 0x07)) {
             return std::optional<std::string>();
         }
 
-        const x07<version> x07_inst = fs->get_x07(inst->inst_ref);
+        const x07<version> x07_inst = fs->get_x07(inst.inst_ref);
         return inst_refdes(&x07_inst, fs);
     }
 }
@@ -163,9 +162,9 @@ char *x1B_net_name(const uint32_t k, File<version> *fs) {
 
 template <AllegroVersion version>
 std::optional<uint8_t> x2D_layer(const uint32_t k, File<version> *fs) {
-    if (HAS_ENTRY(x2D_map, k)) {
-        const x2D<version> *inst = &fs->x2D_map.at(k);
-        return x14_layer(inst->ptr1, fs);
+    if (fs->is_type(k, 0x2D)) {
+        const x2D<version> &inst = fs->get_x2D(k);
+        return x14_layer(inst.ptr1, fs);
     } else {
         return std::optional<uint8_t>();
     }

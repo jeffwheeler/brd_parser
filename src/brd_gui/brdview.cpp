@@ -481,11 +481,10 @@ void BrdView::drawX30(const x30<A_174> *inst, QPen *pen) {
 // Pad
 void BrdView::drawX32(const x32<A_174> *inst, QPen *pen,
                       uint32_t sym_rotation) {
-    if (fs->x2D_map.count(inst->ptr3) > 0) {
-        const x2D<A_174> *x2D_inst =
-            (const x2D<A_174> *)&fs->x2D_map.at(inst->ptr3);
+    if (fs->is_type(inst->ptr3, 0x2D)) {
+        const x2D<A_174> x2D_inst = fs->get_x2D(inst->ptr3);
         if (!onSelectedLayer(inst->subtype,
-                             x2D_inst->layer == 0 ? 0 : fs->layer_count - 1)) {
+                             x2D_inst.layer == 0 ? 0 : fs->layer_count - 1)) {
             return;
         }
     } else {
@@ -686,12 +685,9 @@ void BrdView::drawShape(const uint32_t ptr, QPen *pen) {
         // drawShape(inst->ptr1, darkerPen);
         // drawShape(inst->ptr2, darkerPen);
         // drawShape(inst->ptr5, darkerPen);
-    } else if (fs->is_type(ptr, 0x2B)) {
-        const x2B<A_174> inst = fs->get_x2B(ptr);
-        drawX2B(&inst, pen);
-    } else if (fs->x2D_map.count(ptr) > 0) {
-        const x2D<A_174> *inst = (const x2D<A_174> *)&fs->x2D_map.at(ptr);
-        drawX2D((const x2D<A_174> *)&fs->x2D_map.at(ptr), pen);
+    } else if (fs->is_type(ptr, 0x2D)) {
+        const x2D<A_174> inst = fs->get_x2D(ptr);
+        drawX2D(&inst, pen);
     } else if (fs->x30_map.count(ptr) > 0) {
         const x30<A_174> *inst = (const x30<A_174> *)&fs->x30_map.at(ptr);
         drawX30((const x30<A_174> *)&fs->x30_map.at(ptr), pen);
@@ -823,8 +819,10 @@ void BrdView::drawFile() {
     //     drawShape(k, pen4);
     // }
 
-    for (const auto &[k, x2D_inst] : fs->x2D_map) {
-        drawShape(k, pen4);
+    for (auto &x2B_inst : fs->iter_x2B()) {
+        for (auto &x2D_inst : fs->iter_x2D(x2B_inst.k)) {
+            drawShape(x2D_inst.k, pen4);
+        }
     }
 
     // Text
