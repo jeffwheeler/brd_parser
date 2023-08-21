@@ -1,2 +1,3 @@
 .DS_Store
 src/test/proprietary_designs/
+src/compile_commands.json
