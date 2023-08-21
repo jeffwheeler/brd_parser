@@ -814,11 +814,6 @@ void BrdView::drawFile() {
         }
     }
 
-    // Keepout/keepin/etc. region
-    // for (const auto &[k, x34_inst] : fs->x34_map) {
-    //     drawShape(k, pen6);
-    // }
-
     // Connectivity (rats)
     // for (const auto& [k, x23_inst] : *fs.x23_map) {
     //     drawShape(k, pen4);
