@@ -1731,6 +1731,19 @@ class File {
         }
     };
 
+    IterBase<x32<version>> iter_x32(uint32_t i_x2D) {
+        auto &i = this->get_x2D(i_x2D);
+        if (i.first_pad_ptr == 0) {
+            return IterBase<x32<version>>(
+                Iter<x32<version>>(*this, i.k, &File::get_x32),
+                Iter<x32<version>>(*this, i.k, &File::get_x32));
+        } else {
+            return IterBase<x32<version>>(
+                Iter<x32<version>>(*this, i.first_pad_ptr, &File::get_x32),
+                Iter<x32<version>>(*this, i.k, &File::get_x32));
+        }
+    };
+
     IterBase<x34<version>> iter_x34(uint32_t i_x28) {
         auto &i = this->get_x28(i_x28);
         if (i.ptr4 == 0) {

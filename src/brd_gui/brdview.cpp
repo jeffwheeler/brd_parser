@@ -396,16 +396,8 @@ void BrdView::drawX2D(const x2D<A_174> *inst, QPen *pen) {
 
     // drawShape(inst->ptr4[2], pen);
 
-    uint32_t k = inst->first_pad_ptr;
-    while (1) {
-        if (fs->is_type(k, 0x32)) {
-            const x32<A_174> &pad_inst = fs->get_x32(k);
-            drawX32(&pad_inst, pen, inst->rotation);
-            k = pad_inst.next;
-        } else {
-            // std::printf("Stopping at key 0x%08X\n", ntohl(k));
-            return;
-        }
+    for (auto &i_x32 : fs->iter_x32(inst->k)) {
+        drawX32(&i_x32, pen, inst->rotation);
     }
 }
 
