@@ -42,19 +42,19 @@ int main(int argc, char* argv[]) {
             printf("Found x30 w/ key = 0x %08X\n", ntohl(k));
             print_struct(k, *parsed_file, off);
             k = i.next;
-        } else if (parsed_file->x32_map.count(k) > 0) {
-            auto& i = parsed_file->x32_map[k];
+        } else if (parsed_file->is_type(k, 0x32)) {
+            auto& i = parsed_file->get_x32(k);
             printf("Found x32 w/ key = 0x %08X\n", ntohl(k));
             k = i.ptr4;
-        } else if (parsed_file->x33_map.count(k) > 0) {
-            auto& i = parsed_file->x33_map[k];
+        } else if (parsed_file->is_type(k, 0x33)) {
+            auto& i = parsed_file->get_x33(k);
             printf("Found x33 w/ key = 0x %08X\n", ntohl(k));
             k = i.un1;
         } else if (parsed_file->is_type(k, 0x2D)) {
             auto& i = parsed_file->get_x2D(k);
             printf("Found x2D w/ key = 0x %08X\n", ntohl(k));
             print_struct(k, *parsed_file, off);
-            k = i.un1;
+            k = i.next;
         } else if (parsed_file->is_type(k, 0x2C)) {
             auto& i = parsed_file->get_x2C(k);
             printf("Found x2C w/ key = 0x %08X\n", ntohl(k));

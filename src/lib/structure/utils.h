@@ -74,10 +74,10 @@ std::optional<std::string> x2B_or_x2D_refdes(const uint32_t k,
 
 template <AllegroVersion version>
 std::optional<std::string> x32_pin_name(const uint32_t k, File<version> *fs) {
-    if (HAS_ENTRY(x32_map, k)) {
-        const x32<version> *inst = &fs->x32_map.at(k);
-        return x2B_or_x2D_refdes(inst->ptr3, fs).value_or(std::string("?")) +
-               "." + x0D_pin_name(inst->ptr5, fs).value_or(std::string("?"));
+    if (fs->is_type(k, 0x32)) {
+        const x32<version> &inst = fs->get_x32(k);
+        return x2B_or_x2D_refdes(inst.ptr3, fs).value_or(std::string("?")) +
+               "." + x0D_pin_name(inst.ptr5, fs).value_or(std::string("?"));
     } else {
         return std::optional<std::string>();
     }

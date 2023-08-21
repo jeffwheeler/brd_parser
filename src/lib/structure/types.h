@@ -1113,7 +1113,7 @@ struct x2D {
     uint8_t un0;
 
     uint32_t k;
-    uint32_t un1;  // Points to x2B or x2D
+    uint32_t next;  // Points to x2B or x2D
 
     // Points to x2B?
     COND_FIELD(version >= A_172, uint32_t, un4);
@@ -1338,7 +1338,7 @@ struct x34 {
     uint8_t layer;
 
     uint32_t k;
-    uint32_t un1;
+    uint32_t next;
 
     uint32_t ptr1;  // x28
     COND_FIELD(version >= A_172, uint32_t, un2);
@@ -1571,9 +1571,6 @@ class File {
     std::map<uint32_t, x2A> x2A_map;
     std::map<uint32_t, x30<version>> x30_map;
     std::map<uint32_t, x31<version>> x31_map;
-    std::map<uint32_t, x32<version>> x32_map;
-    std::map<uint32_t, x33<version>> x33_map;
-    std::map<uint32_t, x34<version>> x34_map;
     std::map<uint32_t, x36<version>> x36_map;
     std::map<uint32_t, x37<version>> x37_map;
     std::map<uint32_t, x38<version>> x38_map;
@@ -1610,6 +1607,9 @@ class File {
     const x2C<A_174> get_x2C(uint32_t k);
     const x2D<A_174> get_x2D(uint32_t k);
     const x2E<A_174> get_x2E(uint32_t k);
+    const x32<A_174> get_x32(uint32_t k);
+    const x33<A_174> get_x33(uint32_t k);
+    const x34<A_174> get_x34(uint32_t k);
 
     bool is_type(uint32_t k, uint8_t t);
 
@@ -1718,16 +1718,29 @@ class File {
             Iter<x2C<version>>(*this, this->hdr->ll_x2C.tail, &File::get_x2C));
     };
 
-    IterBase<x04<version>> iter_x2D(uint32_t i_x2B) {
+    IterBase<x2D<version>> iter_x2D(uint32_t i_x2B) {
         auto &i = this->get_x2B(i_x2B);
         if (i.ptr2 == 0) {
-            return IterBase<x04<version>>(
-                Iter<x04<version>>(*this, i.k, &File::get_x04),
-                Iter<x04<version>>(*this, i.k, &File::get_x04));
+            return IterBase<x2D<version>>(
+                Iter<x2D<version>>(*this, i.k, &File::get_x2D),
+                Iter<x2D<version>>(*this, i.k, &File::get_x2D));
         } else {
-            return IterBase<x04<version>>(
-                Iter<x04<version>>(*this, i.ptr2, &File::get_x04),
-                Iter<x04<version>>(*this, i.k, &File::get_x04));
+            return IterBase<x2D<version>>(
+                Iter<x2D<version>>(*this, i.ptr2, &File::get_x2D),
+                Iter<x2D<version>>(*this, i.k, &File::get_x2D));
+        }
+    };
+
+    IterBase<x34<version>> iter_x34(uint32_t i_x28) {
+        auto &i = this->get_x28(i_x28);
+        if (i.ptr4 == 0) {
+            return IterBase<x34<version>>(
+                Iter<x34<version>>(*this, i.k, &File::get_x34),
+                Iter<x34<version>>(*this, i.k, &File::get_x34));
+        } else {
+            return IterBase<x34<version>>(
+                Iter<x34<version>>(*this, i.ptr4, &File::get_x34),
+                Iter<x34<version>>(*this, i.k, &File::get_x34));
         }
     };
 
@@ -1758,6 +1771,9 @@ class File {
     x2C<A_174> (*x2C_upgrade)(void *);
     x2D<A_174> (*x2D_upgrade)(void *);
     x2E<A_174> (*x2E_upgrade)(void *);
+    x32<A_174> (*x32_upgrade)(void *);
+    x33<A_174> (*x33_upgrade)(void *);
+    x34<A_174> (*x34_upgrade)(void *);
 };
 
 #endif
