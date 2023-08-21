@@ -171,7 +171,7 @@ void BrdView::drawX05(const x05<A_174> *inst, QPen *pen_) {
 
 void BrdView::drawX14(const x14<A_174> *inst, QPen *pen_) {
     if (!onSelectedLayer(inst->subtype, inst->layer) ||
-        fs->x2B_map.count(inst->ptr1) > 0) {
+        fs->is_type(inst->ptr1, 0x2B)) {
         return;
     }
 
@@ -263,7 +263,7 @@ void BrdView::drawX23(const x23<A_174> *inst, QPen *pen) {
 // Shapes
 void BrdView::drawX28(const x28<A_174> *inst, QPen *pen) {
     if (!onSelectedLayer(inst->subtype, inst->layer) ||
-        fs->x2B_map.count(inst->ptr1) > 0) {
+        fs->is_type(inst->ptr1, 0x2B)) {
         return;
     }
 
@@ -686,9 +686,9 @@ void BrdView::drawShape(const uint32_t ptr, QPen *pen) {
         // drawShape(inst->ptr1, darkerPen);
         // drawShape(inst->ptr2, darkerPen);
         // drawShape(inst->ptr5, darkerPen);
-    } else if (fs->x2B_map.count(ptr) > 0) {
-        const x2B<A_174> *inst = (const x2B<A_174> *)&fs->x2B_map.at(ptr);
-        drawX2B((const x2B<A_174> *)&fs->x2B_map.at(ptr), pen);
+    } else if (fs->is_type(ptr, 0x2B)) {
+        const x2B<A_174> inst = fs->get_x2B(ptr);
+        drawX2B(&inst, pen);
     } else if (fs->x2D_map.count(ptr) > 0) {
         const x2D<A_174> *inst = (const x2D<A_174> *)&fs->x2D_map.at(ptr);
         drawX2D((const x2D<A_174> *)&fs->x2D_map.at(ptr), pen);

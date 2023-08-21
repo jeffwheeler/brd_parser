@@ -59,8 +59,8 @@ int main(int argc, char* argv[]) {
             auto& i = parsed_file->x2C_map[k];
             printf("Found x2C w/ key = 0x %08X\n", ntohl(k));
             k = i.next;
-        } else if (parsed_file->x2B_map.count(k) > 0) {
-            auto& i = parsed_file->x2B_map[k];
+        } else if (parsed_file->is_type(k, 0x2B)) {
+            auto& i = parsed_file->get_x2B(k);
             printf("Found x2B w/ key = 0x %08X\n", ntohl(k));
             print_struct(k, *parsed_file, off);
             k = i.next;
@@ -92,99 +92,6 @@ int main(int argc, char* argv[]) {
             auto& i = parsed_file->get_x1B(k);
             printf("Found x1B w/ key = 0x %08X (\"%s\")\n", ntohl(k),
                    x1B_net_name(k, &parsed_file.value()));
-            for (auto& i_x04 : parsed_file->iter_x04(i.k)) {
-                printf("- x04: k = 0x %08X\n", ntohl(i_x04.k));
-                uint32_t j = i_x04.ptr2;
-                while (1) {
-                    printf("- - j = 0x %08X\n", ntohl(j));
-                    if (parsed_file->x33_map.count(j) > 0) {
-                        auto& i = parsed_file->x33_map[j];
-                        printf("- - Found x33 w/ key = 0x %08X\n", ntohl(j));
-                        j = i.un1;
-                    } else if (parsed_file->x32_map.count(j) > 0) {
-                        auto& i = parsed_file->x32_map[j];
-                        printf("- - Found x32 w/ key = 0x %08X\n", ntohl(j));
-                        j = i.un1;
-                    } else if (parsed_file->x2E_map.count(j) > 0) {
-                        auto& i = parsed_file->x2E_map[j];
-                        printf("- - Found x2E w/ key = 0x %08X\n", ntohl(j));
-                        j = i.un[0];
-                    } else if (parsed_file->is_type(j, 0x28)) {
-                        auto& x = parsed_file->get_x28(j);
-                        printf("- - - x28\n");
-                        print_struct(j, *parsed_file, off + 1);
-                        j = x.un1;
-                    } else if (parsed_file->x0E_map.count(j) > 0) {
-                        auto& i = parsed_file->x0E_map[j];
-                        printf("- - Found x0E w/ key = 0x %08X\n", ntohl(j));
-                        j = i.un[0];
-                    } else if (parsed_file->x05_map.count(j) > 0) {
-                        auto& i = parsed_file->x05_map[j];
-                        printf("- - - x05 w/ key = 0x %08X\n", ntohl(j));
-                        j = i.ptr0;
-                    } else if (parsed_file->is_type(j, 0x04) ||
-                               parsed_file->is_type(j, 0x1B)) {
-                        printf("- - - Reached end\n");
-                        break;
-                    } else {
-                        printf("- - - \x1b[31mUnexpected key\x1b[0m :(\n");
-                        break;
-                    }
-                }
-            }
-            /*
-            if (parsed_file->is_type(i.ptr1, 0x04)) {
-                auto& i_x04 = parsed_file->get_x04(i.ptr1);
-                uint32_t j = i_x04.ptr2;
-                while (1) {
-                    printf("- x04 k = 0x %08X, j = 0x %08X\n", ntohl(i_x04.k),
-                           ntohl(j));
-                    if (j == 0) {
-                        printf("- - j = null\n");
-                        break;
-                    } else if (parsed_file->x33_map.count(j) > 0) {
-                        auto& i = parsed_file->x33_map[j];
-                        printf("- - Found x33 w/ key = 0x %08X\n", ntohl(j));
-                        j = i.un1;
-                    } else if (parsed_file->x32_map.count(j) > 0) {
-                        auto& i = parsed_file->x32_map[j];
-                        printf("- - Found x32 w/ key = 0x %08X\n", ntohl(j));
-                        j = i.un1;
-                    } else if (parsed_file->x2E_map.count(j) > 0) {
-                        auto& i = parsed_file->x2E_map[j];
-                        printf("- - Found x2E w/ key = 0x %08X\n", ntohl(j));
-                        j = i.un[0];
-                    } else if (parsed_file->is_type(j, 0x28)) {
-                        auto& x = parsed_file->get_x28(j);
-                        printf("- - x28\n");
-                        print_struct(j, *parsed_file, off + 1);
-                        j = x.un1;
-                    } else if (parsed_file->is_type(j, 0x16)) {
-                        auto x = parsed_file->get_x16(j);
-                        printf("- - x16\n");
-                        j = x.next;
-                    } else if (parsed_file->x0E_map.count(j) > 0) {
-                        auto& i = parsed_file->x0E_map[j];
-                        printf("- - Found x0E w/ key = 0x %08X\n", ntohl(j));
-                        j = i.un[0];
-                    } else if (parsed_file->x05_map.count(j) > 0) {
-                        auto& i = parsed_file->x05_map[j];
-                        printf("- - Found x05 w/ key = 0x %08X\n", ntohl(j));
-                        j = i.ptr0;
-                    } else if (parsed_file->is_type(j, 0x04)) {
-                        auto& x = parsed_file->get_x04(j);
-                        printf("- - Found x04 again!\n");
-                        j = x.next;
-                        auto& y = parsed_file->get_x04(j);
-                        j = y.ptr2;
-                        // break;
-                    } else {
-                        printf("- - \x1b[31mUnexpected key\x1b[0m :(\n");
-                        break;
-                    }
-                }
-            }
-            */
             k = i.next;
         } else if (parsed_file->is_type(k, 0x14)) {
             auto& i = parsed_file->get_x14(k);

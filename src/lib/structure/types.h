@@ -1569,7 +1569,6 @@ class File {
     std::map<uint32_t, x1F<version>> x1F_map;
     x27 x27_db;
     std::map<uint32_t, x2A> x2A_map;
-    std::map<uint32_t, x2B<version>> x2B_map;
     std::map<uint32_t, x2C<version>> x2C_map;
     std::map<uint32_t, x2D<version>> x2D_map;
     std::map<uint32_t, x2E<version>> x2E_map;
@@ -1611,6 +1610,7 @@ class File {
     const x24<A_174> get_x24(uint32_t k);
     const x26<A_174> get_x26(uint32_t k);
     const x28<A_174> get_x28(uint32_t k);
+    const x2B<A_174> get_x2B(uint32_t k);
 
     bool is_type(uint32_t k, uint8_t t);
 
@@ -1707,6 +1707,12 @@ class File {
             Iter<x1B<version>>(*this, this->hdr->ll_x1B.tail, &File::get_x1B));
     };
 
+    IterBase<x2B<version>> iter_x2B() {
+        return IterBase<x2B<version>>(
+            Iter<x2B<version>>(*this, this->hdr->ll_x2B.head, &File::get_x2B),
+            Iter<x2B<version>>(*this, this->hdr->ll_x2B.tail, &File::get_x2B));
+    };
+
    private:
     mapped_region region;
 
@@ -1730,6 +1736,7 @@ class File {
     x24<A_174> (*x24_upgrade)(void *);
     x26<A_174> (*x26_upgrade)(void *);
     x28<A_174> (*x28_upgrade)(void *);
+    x2B<A_174> (*x2B_upgrade)(void *);
 };
 
 #endif

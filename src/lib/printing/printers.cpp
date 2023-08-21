@@ -185,8 +185,8 @@ void print_struct(const uint32_t k, File<version> &fs, const int d) {
         print_struct((const void *)fs.ptrs[k], &fs, d);
     } else if (fs.is_type(k, 0x28)) {
         print_struct((const void *)fs.ptrs[k], &fs, d);
-    } else if (fs.x2B_map.count(k) > 0) {
-        print_struct((const void *)&fs.x2B_map.at(k), &fs, d);
+    } else if (fs.is_type(k, 0x2B)) {
+        print_struct((const void *)fs.ptrs[k], &fs, d);
     } else if (fs.x2C_map.count(k) > 0) {
         print_struct((const void *)&fs.x2C_map.at(k), &fs, d);
     } else if (fs.x2D_map.count(k) > 0) {
@@ -1098,8 +1098,8 @@ void print_x14(const void *untyped_inst, File<version> *fs, const int d) {
     printf_d(d + 1, "ptr1:\n");
     if (fs->x2D_map.count(inst->ptr1) > 0) {
         print_struct((const void *)&fs->x2D_map.at(inst->ptr1), fs, d + 2);
-    } else if (fs->x2B_map.count(inst->ptr1) > 0) {
-        print_struct((const void *)&fs->x2B_map.at(inst->ptr1), fs, d + 2);
+    } else if (fs->is_type(inst->ptr1, 0x2B)) {
+        print_struct((const void *)fs->ptrs[inst->ptr1], fs, d + 2);
     } else if (inst->ptr1 == fs->hdr->ll_x14.tail) {
         printf_d(d + 2, "\x1b[33mptr1 is in header, 0x%08X\x1b[0m\n",
                  ntohl(inst->ptr1));
@@ -1725,8 +1725,8 @@ void print_x28(const void *untyped_inst, File<version> *fs, const int d) {
         printf_d(d + 1, "ptr1:\n");
         if (fs->x2D_map.count(inst->ptr1) > 0) {
             print_struct((const void *)&fs->x2D_map.at(inst->ptr1), fs, d + 2);
-        } else if (fs->x2B_map.count(inst->ptr1) > 0) {
-            print_struct((const void *)&fs->x2B_map.at(inst->ptr1), fs, d + 2);
+        } else if (fs->is_type(inst->ptr1, 0x2B)) {
+            print_struct((const void *)fs->ptrs[inst->ptr1], fs, d + 2);
         } else if (fs->is_type(inst->ptr1, 0x04)) {
             print_struct((const void *)fs->ptrs[inst->ptr1], fs, d + 2);
         } else if (inst->ptr1 == fs->hdr->ll_x0E_x28.tail) {
@@ -1888,7 +1888,7 @@ void print_x2B(const void *untyped_inst, File<version> *fs, const int d) {
 
     /*
     printf_d(d+1, "ptr1:\n");
-    if (HAS_ENTRY(x2B_map, inst->ptr1)) {
+    if (fs->is_type(inst->ptr1, 0x2B)) {
         PRINT(x2B_map, inst->ptr1, d+2);
     } else if (inst->ptr1 == fs->hdr->un1[32]) {
         printf_d(d+2, "\x1b[33mptr1 is in header, 0x%08x?\x1b[0m\n",
@@ -2419,8 +2419,8 @@ void print_x32(const void *untyped_inst, File<version> *fs, const int d) {
         PRINT(x32_map, inst->next, d + 2);
     } else if (HAS_ENTRY(x2D_map, inst->next)) {
         PRINT(x2D_map, inst->next, d + 2);
-    } else if (HAS_ENTRY(x2B_map, inst->next)) {
-        PRINT(x2B_map, inst->next, d + 2);
+    } else if (fs->is_type(inst->next, 0x2B)) {
+        print_struct((const void *)fs->ptrs[inst->next], fs, d + 2);
     } else {
         printf_d(d + 2, "next unrecognized: 0x%08X\n", ntohl(inst->next));
         exit(0);
@@ -2429,8 +2429,8 @@ void print_x32(const void *untyped_inst, File<version> *fs, const int d) {
     printf_d(d + 1, "ptr3 \x1b[3m(placed symbol)\x1b[0m:\n");
     if (HAS_ENTRY(x2D_map, inst->ptr3)) {
         PRINT(x2D_map, inst->ptr3, d + 2);
-    } else if (HAS_ENTRY(x2B_map, inst->ptr3)) {
-        PRINT(x2B_map, inst->ptr3, d + 2);
+    } else if (fs->is_type(inst->ptr3, 0x2B)) {
+        print_struct((const void *)fs->ptrs[inst->next], fs, d + 2);
     } else {
         printf_d(d + 2, "ptr3 unrecognized: 0x%08X\n", ntohl(inst->ptr3));
         exit(0);
@@ -2568,8 +2568,8 @@ void print_x33(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (fs->x2B_map.count(inst->ptr1) > 0) {
-            print_struct((const void *)&fs->x2B_map.at(inst->ptr1), fs, d + 2);
+        if (fs->is_type(inst->ptr1, 0x2B)) {
+            print_struct((const void *)fs->ptrs[inst->ptr1], fs, d + 2);
         } else if (fs->is_type(inst->ptr1, 0x04)) {
             print_struct((const void *)fs->ptrs[inst->ptr1], fs, d + 2);
         } else {

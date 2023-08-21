@@ -67,10 +67,7 @@ void check_header_values(File<version>& fs) {
                     fs.is_type(fs.hdr->ll_x24_x28.head, 0x28));
     }
     if (fs.hdr->ll_x2B.head != 0) {
-        auto& x = fs.x2B_map.at(fs.hdr->ll_x2B.head);
-        while (x.next != fs.hdr->ll_x2B.tail) {
-            EXPECT_TRUE(fs.x2B_map.count(x.next) > 0);
-            x = fs.x2B_map.at(x.next);
+        for (auto& i : fs.iter_x2B()) {
         }
     }
     if (fs.hdr->ll_x03_x30.head != 0) {

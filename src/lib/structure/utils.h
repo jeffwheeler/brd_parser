@@ -34,12 +34,12 @@ std::string inst_refdes(const x07<version> *inst, File<version> *fs) {
 
 template <AllegroVersion version>
 std::optional<std::string> x2B_refdes(const uint32_t k, File<version> *fs) {
-    if (!HAS_ENTRY(x2B_map, k)) {
+    if (!fs->is_type(k, 0x2B)) {
         return std::optional<std::string>();
     }
 
-    const x2B<version> *inst = (const x2B<version> *)&fs->x2B_map.at(k);
-    return x2D_refdes(inst->ptr2, fs);
+    const x2B<version> &inst = fs->get_x2B(k);
+    return x2D_refdes(inst.ptr2, fs);
 }
 
 template <AllegroVersion version>
