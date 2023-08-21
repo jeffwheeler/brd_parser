@@ -1569,8 +1569,6 @@ class File {
     std::map<uint32_t, x1F<version>> x1F_map;
     x27 x27_db;
     std::map<uint32_t, x2A> x2A_map;
-    std::map<uint32_t, x2E<version>> x2E_map;
-    std::map<uint32_t, x2F<version>> x2F_map;
     std::map<uint32_t, x30<version>> x30_map;
     std::map<uint32_t, x31<version>> x31_map;
     std::map<uint32_t, x32<version>> x32_map;
@@ -1611,6 +1609,7 @@ class File {
     const x2B<A_174> get_x2B(uint32_t k);
     const x2C<A_174> get_x2C(uint32_t k);
     const x2D<A_174> get_x2D(uint32_t k);
+    const x2E<A_174> get_x2E(uint32_t k);
 
     bool is_type(uint32_t k, uint8_t t);
 
@@ -1758,6 +1757,7 @@ class File {
     x2B<A_174> (*x2B_upgrade)(void *);
     x2C<A_174> (*x2C_upgrade)(void *);
     x2D<A_174> (*x2D_upgrade)(void *);
+    x2E<A_174> (*x2E_upgrade)(void *);
 };
 
 #endif

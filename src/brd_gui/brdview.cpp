@@ -751,8 +751,8 @@ void BrdView::drawFile() {
                     auto &i = fs->x32_map[k];
                     // printf("- - Found x32 w/ key = 0x %08X\n", ntohl(k));
                     k = i.un1;
-                } else if (fs->x2E_map.count(k) > 0) {
-                    auto &i = fs->x2E_map[k];
+                } else if (fs->is_type(k, 0x2E)) {
+                    auto &i = fs->get_x2E(k);
                     // printf("- - Found x2E w/ key = 0x %08X\n", ntohl(k));
                     k = i.un[0];
                 } else if (fs->is_type(k, 0x28)) {
