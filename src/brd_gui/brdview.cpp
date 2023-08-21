@@ -743,13 +743,13 @@ void BrdView::drawFile() {
     QPen *pen6 = new QPen(QColor(237, 211, 130, 127), 0);
 
     for (auto &i_x1B : fs->iter_x1B()) {
-        if (fs->is_type(i_x1B.ptr1, 0x04)) {
-            auto &i_x04 = fs->get_x04(i_x1B.ptr1);
+        for (auto &i_x04 : fs->iter_x04(i_x1B.k)) {
             uint32_t k = i_x04.ptr2;
             while (1) {
                 if (fs->x33_map.count(k) > 0) {
                     auto &i = fs->x33_map[k];
                     // printf("- - Found x33 w/ key = 0x %08X\n", ntohl(k));
+                    drawShape(k, pen3);
                     k = i.un1;
                 } else if (fs->x32_map.count(k) > 0) {
                     auto &i = fs->x32_map[k];
@@ -763,6 +763,8 @@ void BrdView::drawFile() {
                     auto &x = fs->get_x28(k);
                     drawShape(x.k, pen2);
                     k = x.un1;
+                } else if (fs->is_type(k, 0x1B)) {
+                    break;
                 } else if (fs->x0E_map.count(k) > 0) {
                     auto &x = fs->x0E_map[k];
                     k = x.un[0];
@@ -771,7 +773,6 @@ void BrdView::drawFile() {
                     drawShape(x.k, pen3);
                     k = x.ptr0;
                 } else if (fs->is_type(k, 0x04)) {
-                    // printf("- - Found x04 again!\n");
                     break;
                 } else {
                     printf("- - \x1b[31mUnexpected key\x1b[0m = 0x %08X :(\n",
@@ -824,11 +825,6 @@ void BrdView::drawFile() {
 
     for (const auto &[k, x2D_inst] : fs->x2D_map) {
         drawShape(k, pen4);
-    }
-
-    // Vias
-    for (const auto &[k, x33_inst] : fs->x33_map) {
-        drawShape(k, pen3);  // x33
     }
 
     // Text

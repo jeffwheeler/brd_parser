@@ -1663,6 +1663,19 @@ class File {
             Iter<x04<version>>(*this, this->hdr->ll_x04.tail, &File::get_x04));
     };
 
+    IterBase<x04<version>> iter_x04(uint32_t i_x1B) {
+        auto &i = this->get_x1B(i_x1B);
+        if (i.ptr1 == 0) {
+            return IterBase<x04<version>>(
+                Iter<x04<version>>(*this, i.next, &File::get_x04),
+                Iter<x04<version>>(*this, i.next, &File::get_x04));
+        } else {
+            return IterBase<x04<version>>(
+                Iter<x04<version>>(*this, i.ptr1, &File::get_x04),
+                Iter<x04<version>>(*this, i.k, &File::get_x04));
+        }
+    };
+
     IterBase<x06<version>> iter_x06() {
         return IterBase<x06<version>>(
             Iter<x06<version>>(*this, this->hdr->ll_x06.head, &File::get_x06),
