@@ -17,10 +17,11 @@ int main(int argc, char* argv[]) {
         // stream_file(fname, *parsed_file);
     }
 
-    ll_ptrs pts = parsed_file->hdr->ll_x2B;
+    ll_ptrs pts = parsed_file->hdr->ll_x03_x30;
     uint32_t k = pts.head;
-    // k = 0x00D06996;
-    printf("Chain started at key = 0x %08X\n", ntohl(k));
+    // k = ntohl(0x2FA3AD00);
+    printf("Chain started at key = 0x %08X, expecting to end at 0x %08X\n",
+           ntohl(k), ntohl(pts.tail));
     uint32_t i = 0;
     uint32_t off = 0;
     while (1) {
@@ -37,10 +38,10 @@ int main(int argc, char* argv[]) {
             auto& i = parsed_file->x31_map[k];
             printf("Found x31 w/ key = 0x %08X\n", ntohl(k));
             k = i.str_graphic_wrapper_ptr;
-        } else if (parsed_file->x30_map.count(k) > 0) {
-            auto& i = parsed_file->x30_map[k];
+        } else if (parsed_file->is_type(k, 0x30)) {
+            auto& i = parsed_file->get_x30(k);
             printf("Found x30 w/ key = 0x %08X\n", ntohl(k));
-            print_struct(k, *parsed_file, off);
+            // print_struct(k, *parsed_file, off);
             k = i.next;
         } else if (parsed_file->is_type(k, 0x32)) {
             auto& i = parsed_file->get_x32(k);
@@ -53,7 +54,7 @@ int main(int argc, char* argv[]) {
         } else if (parsed_file->is_type(k, 0x2D)) {
             auto& i = parsed_file->get_x2D(k);
             printf("Found x2D w/ key = 0x %08X\n", ntohl(k));
-            print_struct(k, *parsed_file, off);
+            // print_struct(k, *parsed_file, off);
             k = i.next;
         } else if (parsed_file->is_type(k, 0x2C)) {
             auto& i = parsed_file->get_x2C(k);
@@ -123,7 +124,7 @@ int main(int argc, char* argv[]) {
         } else if (parsed_file->is_type(k, 0x03)) {
             auto& i = parsed_file->get_x03(k);
             printf("Found x03 w/ key = 0x %08X\n", ntohl(k));
-            print_struct(k, *parsed_file, off);
+            // print_struct(k, *parsed_file, off);
             k = i.next;
         } else {
             printf("Chain ended at key = 0x %08X\n", ntohl(k));

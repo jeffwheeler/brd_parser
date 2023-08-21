@@ -396,6 +396,10 @@ void BrdView::drawX2D(const x2D<A_174> *inst, QPen *pen) {
 
     // drawShape(inst->ptr4[2], pen);
 
+    for (auto &i_x30 : fs->iter_x30(inst->k)) {
+        drawX30(&i_x30, pen);
+    }
+
     for (auto &i_x32 : fs->iter_x32(inst->k)) {
         drawX32(&i_x32, pen, inst->rotation);
     }
@@ -406,9 +410,11 @@ void BrdView::drawX30(const x30<A_174> *inst, QPen *pen) {
         return;
     }
 
+    /*
     if (fs->x27_db.keys.count(inst->str_graphic_ptr) == 0) {
         return;
     }
+    */
 
     const x31<A_174> *str_graphic =
         (const x31<A_174> *)&fs->x31_map.at(inst->str_graphic_ptr);
@@ -685,9 +691,9 @@ void BrdView::drawShape(const uint32_t ptr, QPen *pen) {
     } else if (fs->is_type(ptr, 0x2D)) {
         const x2D<A_174> inst = fs->get_x2D(ptr);
         drawX2D(&inst, pen);
-    } else if (fs->x30_map.count(ptr) > 0) {
-        const x30<A_174> *inst = (const x30<A_174> *)&fs->x30_map.at(ptr);
-        drawX30((const x30<A_174> *)&fs->x30_map.at(ptr), pen);
+    } else if (fs->is_type(ptr, 0x30)) {
+        const x30<A_174> &inst = fs->get_x30(ptr);
+        drawX30(&inst, pen);
         // } else if (fs.x31_map->count(ptr) > 0) {
         //     const x31 *inst = (const x31*)&fs.x31_map->at(ptr);
         //     drawX31((const x31*)&fs.x31_map->at(ptr), pen);
@@ -822,7 +828,7 @@ void BrdView::drawFile() {
     ll_ptrs text_ll = fs->hdr->ll_x03_x30;
     uint32_t k = text_ll.head;
     while (1) {
-        if (fs->x30_map.count(k) > 0) {
+        if (fs->is_type(k, 0x30)) {
             auto &i = fs->x30_map[k];
             printf("Found x30 w/ key = 0x %08X\n", ntohl(k));
             drawShape(k, pen4);
@@ -838,9 +844,14 @@ void BrdView::drawFile() {
     }
     */
 
-    for (const auto &[k, x30_inst] : fs->x30_map) {
-        drawShape(k, pen2);
+    for (auto &i_x03_x30 : fs->iter_x30()) {
+        if (fs->is_type(i_x03_x30.k, 0x30)) {
+            drawShape(i_x03_x30.k, pen2);
+        }
     }
+    // for (const auto &[k, x30_inst] : fs->x30_map) {
+    //     drawShape(k, pen2);
+    // }
 
     // Pads
     // for (const auto& [k, x32_inst] : *fs.x32_map) {
@@ -902,9 +913,9 @@ QColor BrdView::customPenColor(uint32_t x05_k, QColor default_) {
         } else {
             return QColorConstants::Svg::blanchedalmond;
         }
-    } else if (fs->x30_map.count(x05_k) > 0) {
-        const x30<A_174> *inst = (const x30<A_174> *)&fs->x30_map.at(x05_k);
-        if (onSelectedLayer(inst->subtype, inst->layer)) {
+    } else if (fs->is_type(x05_k, 0x30)) {
+        const x30<A_174> &inst = fs->get_x30(x05_k);
+        if (onSelectedLayer(inst.subtype, inst.layer)) {
             return QColorConstants::Svg::lightsalmon;
         } else {
             return QColorConstants::Svg::darkviolet;

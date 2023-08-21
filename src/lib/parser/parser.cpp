@@ -286,13 +286,13 @@ uint32_t parse_x27(File<A_174>& fs, void*& address) {
     skip(address, 4);
 
     // uint32_t pos = f.tellg();
-    uint32_t size =
-        fs.x27_end_pos - 1 - ((char*)address - (char*)base_addr_glb);
+    // uint32_t size =
+    //     fs.x27_end_pos - 1 - ((char*)address - (char*)base_addr_glb);
     // uint32_t size = fs.x27_end_pos - 1;
-    std::vector<uint32_t> xs(size / 4);
+    // std::vector<uint32_t> xs(size / 4);
     // f.read((char*)&xs[0], size);
-    memcpy(&xs[0], address, size);
-    fs.x27_db.keys = std::unordered_set<uint32_t>(xs.begin(), xs.end());
+    // memcpy(&xs[0], address, size);
+    // fs.x27_db.keys = std::unordered_set<uint32_t>(xs.begin(), xs.end());
 
     address = (char*)base_addr_glb + fs.x27_end_pos - 1;
 

@@ -124,6 +124,7 @@ void stream_x30(File<A_174>& f) {
                 </thead>
                 <tbody>
     )A";
+    /*
     for (auto& [k, inst] : f.x30_map) {
         const x31<A_174>* str_graphic =
             (const x31<A_174>*)&f.x31_map.at(inst.str_graphic_ptr);
@@ -139,6 +140,7 @@ void stream_x30(File<A_174>& f) {
                k, inst.subtype, inst.layer, inst.coords[0], inst.coords[1],
                str_graphic->s.c_str());
     }
+    */
     std::cout << R"A(
                 </tbody>
             </table>

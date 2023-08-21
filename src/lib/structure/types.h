@@ -1569,7 +1569,6 @@ class File {
     std::map<uint32_t, x1F<version>> x1F_map;
     x27 x27_db;
     std::map<uint32_t, x2A> x2A_map;
-    std::map<uint32_t, x30<version>> x30_map;
     std::map<uint32_t, x31<version>> x31_map;
     std::map<uint32_t, x36<version>> x36_map;
     std::map<uint32_t, x37<version>> x37_map;
@@ -1607,6 +1606,7 @@ class File {
     const x2C<A_174> get_x2C(uint32_t k);
     const x2D<A_174> get_x2D(uint32_t k);
     const x2E<A_174> get_x2E(uint32_t k);
+    const x30<A_174> get_x30(uint32_t k);
     const x32<A_174> get_x32(uint32_t k);
     const x33<A_174> get_x33(uint32_t k);
     const x34<A_174> get_x34(uint32_t k);
@@ -1731,6 +1731,27 @@ class File {
         }
     };
 
+    IterBase<x30<version>> iter_x30(uint32_t i_x2D) {
+        auto &i = this->get_x2D(i_x2D);
+        if (i.first_pad_ptr == 0) {
+            return IterBase<x30<version>>(
+                Iter<x30<version>>(*this, i.k, &File::get_x30),
+                Iter<x30<version>>(*this, i.k, &File::get_x30));
+        } else {
+            return IterBase<x30<version>>(
+                Iter<x30<version>>(*this, i.ptr3, &File::get_x30),
+                Iter<x30<version>>(*this, i.k, &File::get_x30));
+        }
+    };
+
+    IterBase<x30<version>> iter_x30() {
+        return IterBase<x30<version>>(
+            Iter<x30<version>>(*this, this->hdr->ll_x03_x30.head,
+                               &File::get_x30),
+            Iter<x30<version>>(*this, this->hdr->ll_x03_x30.tail,
+                               &File::get_x30));
+    };
+
     IterBase<x32<version>> iter_x32(uint32_t i_x2D) {
         auto &i = this->get_x2D(i_x2D);
         if (i.first_pad_ptr == 0) {
@@ -1784,6 +1805,7 @@ class File {
     x2C<A_174> (*x2C_upgrade)(void *);
     x2D<A_174> (*x2D_upgrade)(void *);
     x2E<A_174> (*x2E_upgrade)(void *);
+    x30<A_174> (*x30_upgrade)(void *);
     x32<A_174> (*x32_upgrade)(void *);
     x33<A_174> (*x33_upgrade)(void *);
     x34<A_174> (*x34_upgrade)(void *);

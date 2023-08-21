@@ -130,8 +130,8 @@ TEST(ParseFile, Slugs) {
     EXPECT_FALSE(check_overlapping_ids(fs));
     check_header_values(fs);
 
-    const auto x30_inst = &fs.x30_map.at(0x065BD3E8);
-    const auto x36_x08_inst = font_lookup(x30_inst->font.key, fs);
+    const auto x30_inst = fs.get_x30(0x065BD3E8);
+    const auto x36_x08_inst = font_lookup(x30_inst.font.key, fs);
     EXPECT_EQ(x36_x08_inst->char_height, 5000);
 }
 
@@ -158,8 +158,8 @@ TEST(ParseFile, Parallella) {
     EXPECT_EQ(x3C_inst->ptrs.size(), 2);
     EXPECT_EQ(x3C_inst->ptrs.at(0), 0x0ACCDAC8);
 
-    const auto x30_inst = &fs.x30_map.at(0x0AD336C0);
-    const auto x36_x08_inst = font_lookup(x30_inst->font.key, fs);
+    const auto x30_inst = fs.get_x30(0x0AD336C0);
+    const auto x36_x08_inst = font_lookup(x30_inst.font.key, fs);
     EXPECT_EQ(x36_x08_inst->char_height, 12500);
 }
 
@@ -230,8 +230,8 @@ TEST(ParseFile, OpenCellularGbc) {
     EXPECT_FALSE(check_overlapping_ids(fs));
     check_header_values(fs);
 
-    const auto x30_inst = &fs.x30_map.at(0x147E3120);
-    const auto x36_x08_inst = font_lookup(x30_inst->font.key, fs);
+    const auto x30_inst = fs.get_x30(0x147E3120);
+    const auto x36_x08_inst = font_lookup(x30_inst.font.key, fs);
     EXPECT_EQ(x36_x08_inst->char_height, 75000);
 }
 
@@ -405,8 +405,8 @@ TEST(ParseFile, MtcaInterfaceBoard) {
     EXPECT_FALSE(check_overlapping_ids(fs));
     check_header_values(fs);
 
-    const auto x30_inst = &fs.x30_map.at(0x00001CD4);
-    const auto x36_x08_inst = font_lookup(x30_inst->font.key, fs);
+    const auto x30_inst = fs.get_x30(0x00001CD4);
+    const auto x36_x08_inst = font_lookup(x30_inst.font.key, fs);
     EXPECT_EQ(x36_x08_inst->char_height, 127000);
 }
 
