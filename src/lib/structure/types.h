@@ -15,7 +15,6 @@
 #include <optional>
 #include <string>
 #include <type_traits>
-#include <unordered_set>
 #include <variant>
 #include <vector>
 
@@ -562,6 +561,7 @@ struct x11 {
     static constexpr AllegroVersion versions[1] = {A_174};
 };
 
+template <AllegroVersion version>
 struct x12 {
     uint32_t t;
     uint32_t k;
@@ -575,7 +575,13 @@ struct x12 {
     // x32
     uint32_t ptr3;
 
-    uint32_t un[2];
+    uint32_t un0;
+    COND_FIELD(version >= A_165, uint32_t, un1);
+    COND_FIELD(version >= A_174, uint32_t, un2);
+
+    uint32_t TAIL;
+    operator x12<A_174>() const;
+    static constexpr AllegroVersion versions[2] = {A_165, A_174};
 };
 
 template <AllegroVersion version>
@@ -949,7 +955,6 @@ struct x26 {
 
 struct x27 {
     uint32_t t;
-    std::unordered_set<uint32_t> keys;
 };
 
 // Shape
@@ -1575,7 +1580,6 @@ class File {
     std::map<uint32_t, x0E<version>> x0E_map;
     std::map<uint32_t, x0F<version>> x0F_map;
     std::map<uint32_t, x11<version>> x11_map;
-    std::map<uint32_t, x12> x12_map;
     std::map<uint32_t, x1C<version>> x1C_map;
     std::map<uint32_t, x1D<version>> x1D_map;
     std::map<uint32_t, x1E> x1E_map;

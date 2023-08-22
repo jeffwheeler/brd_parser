@@ -133,29 +133,6 @@ uint32_t parse_x03(File<A_174>& fs, void*& address) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x12(File<A_174>& fs, void*& address) {
-    uint8_t s;
-    if (version <= A_164) {
-        s = 24;
-    } else {
-        s = 28;
-    }
-    x12* x12_inst = static_cast<x12*>(address);
-    skip(address, s);
-    // f.read((char*)x12_inst, s);
-    if (version >= A_174) {
-        // skip(&f, 4);
-        skip(address, 4);
-    }
-    if (fs.x12_map.count(x12_inst->k) > 0) {
-        // log(&f, "- Already seen this key!\n");
-        exit(1);
-    }
-    (fs.x12_map)[x12_inst->k] = *x12_inst;
-    return 0;
-}
-
-template <AllegroVersion version>
 uint32_t parse_x1C(File<A_174>& fs, void*& address) {
     uint16_t size;
     x1C<version> inst;

@@ -963,8 +963,8 @@ void print_x10(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (fs->x12_map.count(inst->ptr2) > 0) {
-            print_struct((const void *)&fs->x12_map.at(inst->ptr2), fs, d + 2);
+        if (fs->is_type(inst->ptr2, 0x12)) {
+            print_struct((const void *)fs->ptrs[inst->ptr2], fs, d + 2);
         } else {
             printf_d(d + 2, "ptr2 unrecognized: 0x%08X\n", ntohl(inst->ptr2));
             exit(0);
@@ -1040,12 +1040,12 @@ void print_x11(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x12(const void *untyped_inst, File<version> *fs, const int d) {
-    const x12 *inst = (const x12 *)untyped_inst;
+    const x12<version> *inst = (const x12<version> *)untyped_inst;
     printf_d(d, "x12: t=0x%08X k=0x%08X\n", ntohl(inst->t), ntohl(inst->k));
 
     printf_d(d + 1, "ptr1:\n");
-    if (HAS_ENTRY(x12_map, inst->ptr1)) {
-        PRINT(x12_map, inst->ptr1, d + 2);
+    if (fs->is_type(inst->ptr1, 0x12)) {
+        print_struct((const void *)fs->ptrs[inst->ptr1], fs, d + 2);
     } else if (fs->is_type(inst->ptr1, 0x10)) {
         print_struct((const void *)fs->ptrs[inst->ptr1], fs, d + 2);
     } else {
@@ -1069,12 +1069,10 @@ void print_x12(const void *untyped_inst, File<version> *fs, const int d) {
         exit(0);
     }
 
-    for (int i = 0; i < 2; i++) {
-        if (inst->un[i] != 0) {
-            printf_d(d + 1, "un[%d] expected to be 0, but is actually 0x%08X\n",
-                     i, ntohl(inst->un[i]));
-            exit(0);
-        }
+    if (inst->un0 != 0) {
+        printf_d(d + 1, "un0 expected to be 0, but is actually 0x%08X\n",
+                 ntohl(inst->un0));
+        exit(0);
     }
 }
 
@@ -2459,8 +2457,8 @@ void print_x32(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY(x12_map, inst->ptr6)) {
-            PRINT(x12_map, inst->ptr6, d + 2);
+        if (fs->is_type(inst->ptr6, 0x12)) {
+            print_struct((const void *)fs->ptrs[inst->ptr6], fs, d + 2);
         } else {
             printf_d(d + 2, "ptr6 unrecognized: 0x%08X\n", ntohl(inst->ptr6));
             exit(0);
