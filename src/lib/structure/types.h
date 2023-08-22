@@ -1560,6 +1560,9 @@ class File {
     header *hdr;
     std::vector<std::tuple<uint32_t, uint32_t>> layers;
 
+    // `unordered_flat_map` provides a very significant performance improvement
+    // in large designs. Current runtime for a 700 MB file improves from ~1.2s
+    // to ~0.5s.
 #if BOOST_VERSION >= 108100
     boost::unordered_flat_map<uint32_t, void *> ptrs;
 #else
