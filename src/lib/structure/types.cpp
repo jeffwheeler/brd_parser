@@ -975,15 +975,7 @@ template File<A_174>::File(mapped_region region);
 
 template <>
 void File<A_174>::prepare() {
-    // FIXME: What's a reasonable number?
-    this->ptrs.reserve(1000000);
-    // this->x01_map.reserve(10000000);
-    // this->x14_map.reserve(10000000);
-    // this->x15_map.reserve(10000000);
-    // this->x16_map.reserve(10000000);
-    // this->x17_map.reserve(10000000);
-    // this->x1B_map.reserve(10000000);
-
+    this->ptrs.reserve(this->hdr->object_count);
     cache_upgrade_funcs();
 }
 

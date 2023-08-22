@@ -97,7 +97,9 @@ struct ll_ptrs {
 
 struct header {
     uint32_t magic;
-    uint32_t un1[14];
+    uint32_t un1[4];
+    uint32_t object_count;
+    uint32_t un2[9];
     ll_ptrs ll_x04;
     ll_ptrs ll_x06;
     ll_ptrs ll_x0C_2;
