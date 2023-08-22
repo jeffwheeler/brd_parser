@@ -127,17 +127,16 @@ std::vector<std::pair<std::string, uint32_t>> layer_list(File<version> &fs_x) {
 
 template <AllegroVersion version>
 std::optional<std::string> x0D_pin_name(const uint32_t k, File<version> *fs) {
-    if (!HAS_ENTRY(x0D_map, k)) {
+    if (!fs->is_type(k, 0x0D)) {
         return std::optional<std::string>();
     }
 
-    const x0D<version> *inst = (const x0D<version> *)&fs->x0D_map.at(k);
-    if (inst == nullptr || inst->str_ptr == 0 ||
-        !HAS_ENTRY(strings, inst->str_ptr)) {
+    const x0D<version> &inst = fs->get_x0D(k);
+    if (inst.str_ptr == 0 || !HAS_ENTRY(strings, inst.str_ptr)) {
         return std::optional<std::string>();
     }
 
-    return fs->strings.at(inst->str_ptr);
+    return fs->strings.at(inst.str_ptr);
 }
 
 template <AllegroVersion version>

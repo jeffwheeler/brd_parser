@@ -500,8 +500,8 @@ void BrdView::drawX32(const x32<A_174> *inst, QPen *pen,
     */
 
     // Try to draw pad shape
-    const x0D<A_174> *x0D_inst = &fs->x0D_map.at(inst->ptr5);
-    const x1C<A_174> *x1C_inst = &fs->x1C_map.at(x0D_inst->pad_ptr);
+    const x0D<A_174> &x0D_inst = fs->get_x0D(inst->ptr5);
+    const x1C<A_174> *x1C_inst = &fs->x1C_map.at(x0D_inst.pad_ptr);
 
     QPointF center = QPointF((inst->coords[0] + inst->coords[2]) / 2. / factor,
                              (inst->coords[1] + inst->coords[3]) / 2. / factor);
@@ -511,7 +511,7 @@ void BrdView::drawX32(const x32<A_174> *inst, QPen *pen,
     QGraphicsItem *pad;
     QTransform t = QTransform()
                        .translate(center.x(), center.y())
-                       .rotate((x0D_inst->rotation + sym_rotation) / 1000.);
+                       .rotate((x0D_inst.rotation + sym_rotation) / 1000.);
     switch (first_part->t) {
         case 2:
             pad = scene->addEllipse(
