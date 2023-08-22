@@ -996,6 +996,7 @@ void File<version>::cache_upgrade_funcs() {
             this->x01_upgrade = new_upgrade<A_160, A_174, x01>;
             this->x03_upgrade = new_upgrade<A_160, A_174, x03>;
             this->x04_upgrade = new_upgrade<A_160, A_174, x04>;
+            this->x05_upgrade = new_upgrade<A_160, A_174, x05>;
             this->x06_upgrade = new_upgrade<A_160, A_174, x06>;
             this->x07_upgrade = new_upgrade<A_160, A_174, x07>;
             this->x08_upgrade = new_upgrade<A_160, A_174, x08>;
@@ -1024,6 +1025,7 @@ void File<version>::cache_upgrade_funcs() {
             this->x01_upgrade = new_upgrade<A_162, A_174, x01>;
             this->x03_upgrade = new_upgrade<A_162, A_174, x03>;
             this->x04_upgrade = new_upgrade<A_162, A_174, x04>;
+            this->x05_upgrade = new_upgrade<A_162, A_174, x05>;
             this->x06_upgrade = new_upgrade<A_162, A_174, x06>;
             this->x07_upgrade = new_upgrade<A_162, A_174, x07>;
             this->x08_upgrade = new_upgrade<A_162, A_174, x08>;
@@ -1052,6 +1054,7 @@ void File<version>::cache_upgrade_funcs() {
             this->x01_upgrade = new_upgrade<A_164, A_174, x01>;
             this->x03_upgrade = new_upgrade<A_164, A_174, x03>;
             this->x04_upgrade = new_upgrade<A_164, A_174, x04>;
+            this->x05_upgrade = new_upgrade<A_164, A_174, x05>;
             this->x06_upgrade = new_upgrade<A_164, A_174, x06>;
             this->x07_upgrade = new_upgrade<A_164, A_174, x07>;
             this->x08_upgrade = new_upgrade<A_164, A_174, x08>;
@@ -1080,6 +1083,7 @@ void File<version>::cache_upgrade_funcs() {
             this->x01_upgrade = new_upgrade<A_165, A_174, x01>;
             this->x03_upgrade = new_upgrade<A_165, A_174, x03>;
             this->x04_upgrade = new_upgrade<A_165, A_174, x04>;
+            this->x05_upgrade = new_upgrade<A_165, A_174, x05>;
             this->x06_upgrade = new_upgrade<A_165, A_174, x06>;
             this->x07_upgrade = new_upgrade<A_165, A_174, x07>;
             this->x08_upgrade = new_upgrade<A_165, A_174, x08>;
@@ -1109,6 +1113,7 @@ void File<version>::cache_upgrade_funcs() {
             this->x01_upgrade = new_upgrade<A_166, A_174, x01>;
             this->x03_upgrade = new_upgrade<A_166, A_174, x03>;
             this->x04_upgrade = new_upgrade<A_166, A_174, x04>;
+            this->x05_upgrade = new_upgrade<A_166, A_174, x05>;
             this->x06_upgrade = new_upgrade<A_166, A_174, x06>;
             this->x07_upgrade = new_upgrade<A_166, A_174, x07>;
             this->x08_upgrade = new_upgrade<A_166, A_174, x08>;
@@ -1140,6 +1145,7 @@ void File<version>::cache_upgrade_funcs() {
             this->x01_upgrade = new_upgrade<A_172, A_174, x01>;
             this->x03_upgrade = new_upgrade<A_172, A_174, x03>;
             this->x04_upgrade = new_upgrade<A_172, A_174, x04>;
+            this->x05_upgrade = new_upgrade<A_172, A_174, x05>;
             this->x06_upgrade = new_upgrade<A_172, A_174, x06>;
             this->x07_upgrade = new_upgrade<A_172, A_174, x07>;
             this->x08_upgrade = new_upgrade<A_172, A_174, x08>;
@@ -1171,6 +1177,7 @@ void File<version>::cache_upgrade_funcs() {
             this->x01_upgrade = new_upgrade<A_174, A_174, x01>;
             this->x03_upgrade = new_upgrade<A_174, A_174, x03>;
             this->x04_upgrade = new_upgrade<A_174, A_174, x04>;
+            this->x05_upgrade = new_upgrade<A_174, A_174, x05>;
             this->x06_upgrade = new_upgrade<A_174, A_174, x06>;
             this->x07_upgrade = new_upgrade<A_174, A_174, x07>;
             this->x08_upgrade = new_upgrade<A_174, A_174, x08>;
@@ -1263,6 +1270,11 @@ const x03<A_174> File<A_174>::get_x03(uint32_t k) {
 template <>
 const x04<A_174> File<A_174>::get_x04(uint32_t k) {
     return this->x04_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x05<A_174> File<A_174>::get_x05(uint32_t k) {
+    return this->x05_upgrade(this->ptrs[k]);
 }
 
 template <>

@@ -113,8 +113,8 @@ int main(int argc, char* argv[]) {
             auto& i = parsed_file->get_x06(k);
             printf("Found x06 w/ key = 0x %08X\n", ntohl(k));
             k = i.next;
-        } else if (parsed_file->x05_map.count(k) > 0) {
-            auto& i = parsed_file->x05_map[k];
+        } else if (parsed_file->is_type(k, 0x05)) {
+            auto& i = parsed_file->get_x05(k);
             printf("Found x05 w/ key = 0x %08X\n", ntohl(k));
             k = i.ptr0;
         } else if (parsed_file->is_type(k, 0x04)) {

@@ -1556,7 +1556,6 @@ class File {
     std::unordered_map<uint32_t, void *> ptrs;
 
     std::map<uint32_t, char *> strings;
-    std::map<uint32_t, x05<version>> x05_map;
     std::map<uint32_t, x0C<version>> x0C_map;
     std::map<uint32_t, x0D<version>> x0D_map;
     std::map<uint32_t, x0E<version>> x0E_map;
@@ -1587,6 +1586,7 @@ class File {
     x01<A_174> get_x01(uint32_t k);
     const x03<A_174> get_x03(uint32_t k);
     const x04<A_174> get_x04(uint32_t k);
+    const x05<A_174> get_x05(uint32_t k);
     const x06<A_174> get_x06(uint32_t k);
     const x07<A_174> get_x07(uint32_t k);
     const x08<A_174> get_x08(uint32_t k);
@@ -1786,6 +1786,7 @@ class File {
     x01<A_174> (*x01_upgrade)(void *);
     x03<A_174> (*x03_upgrade)(void *);
     x04<A_174> (*x04_upgrade)(void *);
+    x05<A_174> (*x05_upgrade)(void *);
     x06<A_174> (*x06_upgrade)(void *);
     x07<A_174> (*x07_upgrade)(void *);
     x08<A_174> (*x08_upgrade)(void *);

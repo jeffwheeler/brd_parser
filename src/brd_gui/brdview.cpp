@@ -651,10 +651,10 @@ void BrdView::drawShape(const uint32_t ptr, QPen *pen) {
         // drawX01(inst, pen);
         // drawShape(inst->ptr1, darkerPen);
         // drawShape(inst->ptr2, darkerPen);
-    } else if (fs->x05_map.count(ptr) > 0) {
+    } else if (fs->is_type(ptr, 0x05)) {
         // std::printf("Trying to draw x05\n");
-        const x05<A_174> *inst = (const x05<A_174> *)&fs->x05_map.at(ptr);
-        drawX05(inst, pen);
+        const x05<A_174> inst = fs->get_x05(ptr);
+        drawX05(&inst, pen);
     } else if (fs->is_type(ptr, 0x10)) {
         const x10<A_174> inst = fs->get_x10(ptr);
         drawShape(inst.ptr1, darkerPen);
@@ -767,8 +767,8 @@ void BrdView::drawFile() {
                 } else if (fs->x0E_map.count(k) > 0) {
                     auto &x = fs->x0E_map[k];
                     k = x.un[0];
-                } else if (fs->x05_map.count(k) > 0) {
-                    auto &x = fs->x05_map[k];
+                } else if (fs->is_type(k, 0x05)) {
+                    auto &x = fs->get_x05(k);
                     drawShape(x.k, pen3);
                     k = x.ptr0;
                 } else if (fs->is_type(k, 0x04)) {
@@ -889,9 +889,9 @@ void BrdView::drawFile() {
 };
 
 QColor BrdView::customPenColor(uint32_t x05_k, QColor default_) {
-    if (fs->x05_map.count(x05_k) > 0) {
-        const x05<A_174> *inst = (const x05<A_174> *)&fs->x05_map.at(x05_k);
-        if (onSelectedLayer(inst->subtype, inst->layer)) {
+    if (fs->is_type(x05_k, 0x05)) {
+        const x05<A_174> inst = fs->get_x05(x05_k);
+        if (onSelectedLayer(inst.subtype, inst.layer)) {
             return QColorConstants::Svg::palevioletred;
         } else {
             return QColorConstants::Svg::darkseagreen;
