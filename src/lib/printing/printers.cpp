@@ -702,8 +702,8 @@ void print_x08(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (fs->x11_map.count(inst->ptr3) > 0) {
-            print_struct((const void *)&fs->x11_map.at(inst->ptr3), fs, d + 2);
+        if (fs->is_type(inst->ptr3, 0x11)) {
+            print_struct((const void *)fs->ptrs[inst->ptr3], fs, d + 2);
         } else {
             printf_d(d + 2, "ptr3 unrecognized: 0x%08X\n", ntohl(inst->ptr3));
             exit(0);
@@ -929,8 +929,8 @@ void print_x0F(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (fs->x11_map.count(inst->ptr3) > 0) {
-            print_struct((const void *)&fs->x11_map.at(inst->ptr3), fs, d + 2);
+        if (fs->is_type(inst->ptr3, 0x11)) {
+            print_struct((const void *)fs->ptrs[inst->ptr3], fs, d + 2);
         } else {
             printf_d(d + 2, "ptr3 unrecognized: 0x%08X\n", ntohl(inst->ptr3));
             exit(0);
@@ -1015,8 +1015,8 @@ void print_x11(const void *untyped_inst, File<version> *fs, const int d) {
 
     printf_d(d + 1,
              "ptr2 \x1b[3m(next pin, or footprint if last pin)\x1b[0m:\n");
-    if (fs->x11_map.count(inst->ptr2) > 0) {
-        print_struct((const void *)&fs->x11_map.at(inst->ptr2), fs, d + 2);
+    if (fs->is_type(inst->ptr2, 0x11)) {
+        print_struct((const void *)fs->ptrs[inst->ptr2], fs, d + 2);
     } else if (fs->x0F_map.count(inst->ptr2) > 0) {
         print_struct((const void *)&fs->x0F_map.at(inst->ptr2), fs, d + 2);
     } else {
@@ -1054,8 +1054,8 @@ void print_x12(const void *untyped_inst, File<version> *fs, const int d) {
     }
 
     printf_d(d + 1, "ptr2:\n");
-    if (HAS_ENTRY(x11_map, inst->ptr2)) {
-        PRINT(x11_map, inst->ptr2, d + 2);
+    if (fs->is_type(inst->ptr2, 0x11)) {
+        print_struct((const void *)fs->ptrs[inst->ptr2], fs, d + 2);
     } else {
         printf_d(d + 2, "ptr2 unrecognized: 0x%08X\n", ntohl(inst->ptr2));
         exit(0);
