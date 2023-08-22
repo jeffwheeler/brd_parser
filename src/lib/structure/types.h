@@ -1575,7 +1575,6 @@ class File {
 #endif
 
     std::map<uint32_t, char *> strings;
-    std::map<uint32_t, x0C<version>> x0C_map;
     std::map<uint32_t, x0D<version>> x0D_map;
     std::map<uint32_t, x0E<version>> x0E_map;
     std::map<uint32_t, x0F<version>> x0F_map;
@@ -1610,6 +1609,7 @@ class File {
     const x08<A_174> get_x08(uint32_t k);
     const x09<A_174> get_x09(uint32_t k);
     const x0A<A_174> get_x0A(uint32_t k);
+    const x0C<A_174> get_x0C(uint32_t k);
     const x10<A_174> get_x10(uint32_t k);
     const x14<A_174> get_x14(uint32_t k);
     x15<A_174> get_x15(uint32_t k);
@@ -1712,6 +1712,19 @@ class File {
                                &File::get_x0A));
     };
 
+    IterBase<x0C<version>> iter_x0C() {
+        return IterBase<x0C<version>>(
+            Iter<x0C<version>>(*this, this->hdr->ll_x0C.head, &File::get_x0C),
+            Iter<x0C<version>>(*this, this->hdr->ll_x0C.tail, &File::get_x0C));
+    };
+
+    IterBase<x0C<version>> iter_x0C_2() {
+        return IterBase<x0C<version>>(
+            Iter<x0C<version>>(*this, this->hdr->ll_x0C_2.head, &File::get_x0C),
+            Iter<x0C<version>>(*this, this->hdr->ll_x0C_2.tail,
+                               &File::get_x0C));
+    };
+
     IterBase<x14<version>> iter_x14() {
         return IterBase<x14<version>>(
             Iter<x14<version>>(*this, this->hdr->ll_x14.head, &File::get_x14),
@@ -1810,6 +1823,7 @@ class File {
     x08<A_174> (*x08_upgrade)(void *);
     x09<A_174> (*x09_upgrade)(void *);
     x0A<A_174> (*x0A_upgrade)(void *);
+    x0C<A_174> (*x0C_upgrade)(void *);
     x10<A_174> (*x10_upgrade)(void *);
     x14<A_174> (*x14_upgrade)(void *);
     x15<A_174> (*x15_upgrade)(void *);

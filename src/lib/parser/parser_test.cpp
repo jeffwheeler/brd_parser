@@ -37,10 +37,7 @@ void check_header_values(File<version>& fs) {
     }
 
     if (fs.hdr->ll_x0C_2.head != 0) {
-        auto& x = fs.x0C_map.at(fs.hdr->ll_x0C_2.head);
-        while (x.next != fs.hdr->ll_x0C_2.tail) {
-            EXPECT_TRUE(fs.x0C_map.count(x.next) > 0);
-            x = fs.x0C_map.at(x.next);
+        for (auto& i : fs.iter_x0C_2()) {
         }
     }
     if (fs.hdr->ll_x0E_x28.head != 0) {
@@ -94,10 +91,7 @@ void check_header_values(File<version>& fs) {
         }
     }
     if (fs.hdr->ll_x0C.head != 0) {
-        auto& x = fs.x0C_map.at(fs.hdr->ll_x0C.head);
-        while (x.next != fs.hdr->ll_x0C.tail) {
-            EXPECT_TRUE(fs.x0C_map.count(x.next) > 0);
-            x = fs.x0C_map.at(x.next);
+        for (auto& i : fs.iter_x0C()) {
         }
     }
     /*
