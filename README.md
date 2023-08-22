@@ -8,7 +8,13 @@ The main goal of this library is to write an example decoder that can eventually
 
 ### Prerequisites
 
-The only dependency is [Qt6][qt6], which is used in the GUI viewer only. Qt6 is only required when running `cmake` with `-DBUILD_GUI=ON`.
+The only required dependency is [Boost][boost], at least version 1.71.
+
+* On Mac, Boost can be installed using Brew: `brew install boost`
+* On Ubuntu, Boost can be installed using Apt: `sudo apt install libboost-dev`
+* On Windows, Boost can be installed in a variety of ways, but one option is with [Chocolatey][chocolatey]: `choco install boost-msvc-14.3`
+
+[Qt6][qt6] is an optional dependency, used in the GUI viewer only. Qt6 is only required when running `cmake` with `-DBUILD_GUI=ON`.
 
 * On Mac, Qt6 can be installed using Brew: `brew install qt6`
 * On Ubuntu, Qt6 can be installed using Apt: `sudo apt install qt6-base-dev libgl1-mesa-dev`
@@ -55,6 +61,8 @@ This is the output of hundreds of hours of staring at the binary data in a hex e
 [^1]: Cadence and Allegro are trademarks of Cadence Design Systems, Inc.
 
 [cadence-allegro]: https://www.cadence.com/en_US/home/tools/pcb-design-and-analysis/pcb-layout/allegro-pcb-designer.html
+[boost]: https://www.boost.org
+[chocolatey]: https://chocolatey.org/
 [qt6]: https://www.qt.io/product/qt6
 [bb-ai]: https://github.com/beagleboard/beaglebone-ai
 [bb-ai-license]: https://github.com/beagleboard/beaglebone-ai/blob/master/LICENSE
