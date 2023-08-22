@@ -14,9 +14,10 @@ int main(int argc, char* argv[]) {
     std::string fname = argv[1];
     auto parsed_file = parse_file(argv[1]);
     if (parsed_file.has_value()) {
-        // stream_file(fname, *parsed_file);
+        stream_file(fname, *parsed_file);
     }
 
+    /*
     ll_ptrs pts = parsed_file->hdr->ll_x03_x30;
     uint32_t k = pts.head;
     // k = ntohl(0x2FA3AD00);
@@ -133,4 +134,5 @@ int main(int argc, char* argv[]) {
             break;
         }
     }
+    */
 }

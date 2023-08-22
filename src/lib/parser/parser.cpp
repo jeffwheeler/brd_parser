@@ -602,7 +602,7 @@ File<A_174> parse_file_raw(mapped_region region) {
         }
     }
 
-    log(base_addr_glb, cur_addr, "Magic = %08X\n", fs.hdr->magic);
+    // log(base_addr_glb, cur_addr, "Magic = %08X\n", fs.hdr->magic);
     fs.layer_count = layer_count(&fs);
 
     return fs;
@@ -625,7 +625,6 @@ std::optional<File<A_174>> parse_file(const std::string& filepath) {
     std::size_t size = region.get_size();
     uint32_t magic = *((uint32_t*)address);
 
-    printf("Comparing magic 0x%08X\n", magic);
     switch (magic) {
         case 0x00130000:
         case 0x00130200:
