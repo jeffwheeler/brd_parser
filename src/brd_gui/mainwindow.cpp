@@ -5,7 +5,7 @@
 #include "lib/structure/utils.h"
 #include "moc_mainwindow.cpp"
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), fs(nullptr) {
+MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     qDebug() << "MainWindow constructor";
     brdView = new BrdView(this);
     setCentralWidget(brdView);
@@ -42,9 +42,8 @@ void MainWindow::dropEvent(QDropEvent* event) {
 void MainWindow::loadFile(std::string path) {
     auto parsed_file = parse_file(path);
     if (parsed_file) {
-        fs = new File<A_174>;
-        *fs = parsed_file.value();
-        brdView->loadFile(fs);
+        fs = std::move(parsed_file);
+        brdView->loadFile(&fs.value());
         loadFilms();
     } else {
         qDebug() << "Failed to parse file";
@@ -83,7 +82,8 @@ void MainWindow::loadFilms() {
     layer_cache.clear();
     tree->clear();
 
-    std::vector<std::pair<std::string, uint32_t>> layers = layer_list(fs);
+    std::vector<std::pair<std::string, uint32_t>> layers =
+        layer_list(fs.value());
     for (const auto& pair : layers) {
         layer_cache[pair.first] = pair.second;
         tree->insertTopLevelItem(
@@ -555,7 +555,7 @@ void MainWindow::selectFilm() {
         const x38<A_174>* x38_inst = (const x38<A_174>*)&fs->x38_map.at(x38_k);
         const x39<A_174>* x39_inst =
             (const x39<A_174>*)&fs->x39_map.at(x38_inst->ptr1);
-        for (const auto& layer : x39_layers(*x39_inst, fs)) {
+        for (const auto& layer : x39_layers(*x39_inst, fs.value())) {
             layers.push_back(layerPair(layer.first, layer.second));
         }
     }

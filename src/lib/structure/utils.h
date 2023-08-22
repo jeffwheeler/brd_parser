@@ -9,6 +9,15 @@ std::pair<double, double> x01_center(const x01<A_174> *inst);
 const std::vector<stackup_material> ordered_stackup_materials(File<A_174> &f);
 
 template <AllegroVersion version>
+char *str_lookup(uint32_t id, File<version> &fs) {
+    if (fs.strings.count(id) > 0) {
+        return fs.strings[id];
+    } else {
+        return nullptr;
+    }
+}
+
+template <AllegroVersion version>
 std::optional<std::string> x2B_footprint(const x2B<version> *inst,
                                          File<version> *fs) {
     if (fs->strings.count(inst->footprint_string_ref) > 0) {
@@ -25,31 +34,30 @@ std::string inst_refdes(const x07<version> *inst, File<version> *fs) {
 
 template <AllegroVersion version>
 std::optional<std::string> x2B_refdes(const uint32_t k, File<version> *fs) {
-    if (!HAS_ENTRY(x2B_map, k)) {
+    if (!fs->is_type(k, 0x2B)) {
         return std::optional<std::string>();
     }
 
-    const x2B<version> *inst = (const x2B<version> *)&fs->x2B_map.at(k);
-    return x2D_refdes(inst->ptr2, fs);
+    const x2B<version> &inst = fs->get_x2B(k);
+    return x2D_refdes(inst.ptr2, fs);
 }
 
 template <AllegroVersion version>
 std::optional<std::string> x2D_refdes(const uint32_t k, File<version> *fs) {
-    if (!HAS_ENTRY(x2D_map, k)) {
+    if (!fs->is_type(k, 0x2D)) {
         return std::optional<std::string>();
     }
 
-    const x2D<version> *inst = (const x2D<version> *)&fs->x2D_map.at(k);
-    if constexpr (std::is_same_v<decltype(inst->inst_ref), std::monostate>) {
+    const x2D<version> &inst = fs->get_x2D(k);
+    if constexpr (std::is_same_v<decltype(inst.inst_ref), std::monostate>) {
         return std::optional<std::string>();
     } else {
-        if (inst == nullptr || inst->inst_ref == 0 ||
-            !HAS_ENTRY(x07_map, inst->inst_ref)) {
+        if (inst.inst_ref == 0 || !fs->is_type(inst.inst_ref, 0x07)) {
             return std::optional<std::string>();
         }
 
-        const x07<version> *x07_inst = &fs->x07_map.at(inst->inst_ref);
-        return inst_refdes(x07_inst, fs);
+        const x07<version> x07_inst = fs->get_x07(inst.inst_ref);
+        return inst_refdes(&x07_inst, fs);
     }
 }
 
@@ -66,10 +74,10 @@ std::optional<std::string> x2B_or_x2D_refdes(const uint32_t k,
 
 template <AllegroVersion version>
 std::optional<std::string> x32_pin_name(const uint32_t k, File<version> *fs) {
-    if (HAS_ENTRY(x32_map, k)) {
-        const x32<version> *inst = &fs->x32_map.at(k);
-        return x2B_or_x2D_refdes(inst->ptr3, fs).value_or(std::string("?")) +
-               "." + x0D_pin_name(inst->ptr5, fs).value_or(std::string("?"));
+    if (fs->is_type(k, 0x32)) {
+        const x32<version> &inst = fs->get_x32(k);
+        return x2B_or_x2D_refdes(inst.ptr3, fs).value_or(std::string("?")) +
+               "." + x0D_pin_name(inst.ptr5, fs).value_or(std::string("?"));
     } else {
         return std::optional<std::string>();
     }
@@ -91,8 +99,9 @@ std::string x38_layer_name(const x38<version> &inst, File<version> *fs) {
 
 template <AllegroVersion version>
 std::vector<std::pair<uint8_t, uint8_t>> x39_layers(const x39<version> &inst,
-                                                    File<version> *fs) {
+                                                    File<version> &fs_x) {
     std::vector<std::pair<uint8_t, uint8_t>> layers;
+    File<version> *fs = &fs_x;
 
     uint32_t next_key = inst.ptr1;
     while (HAS_ENTRY(x3A_map, next_key)) {
@@ -106,8 +115,10 @@ std::vector<std::pair<uint8_t, uint8_t>> x39_layers(const x39<version> &inst,
 }
 
 template <AllegroVersion version>
-std::vector<std::pair<std::string, uint32_t>> layer_list(File<version> *fs) {
+std::vector<std::pair<std::string, uint32_t>> layer_list(File<version> &fs_x) {
     std::vector<std::pair<std::string, uint32_t>> list;
+    File<version> *fs = &fs_x;
+
     for (const auto &[k, x38_inst] : fs->x38_map) {
         list.push_back(std::make_pair(x38_layer_name(x38_inst, fs), k));
     }
@@ -116,44 +127,43 @@ std::vector<std::pair<std::string, uint32_t>> layer_list(File<version> *fs) {
 
 template <AllegroVersion version>
 std::optional<std::string> x0D_pin_name(const uint32_t k, File<version> *fs) {
-    if (!HAS_ENTRY(x0D_map, k)) {
+    if (!fs->is_type(k, 0x0D)) {
         return std::optional<std::string>();
     }
 
-    const x0D<version> *inst = (const x0D<version> *)&fs->x0D_map.at(k);
-    if (inst == nullptr || inst->str_ptr == 0 ||
-        !HAS_ENTRY(strings, inst->str_ptr)) {
+    const x0D<version> &inst = fs->get_x0D(k);
+    if (inst.str_ptr == 0 || !HAS_ENTRY(strings, inst.str_ptr)) {
         return std::optional<std::string>();
     }
 
-    return fs->strings.at(inst->str_ptr);
+    return fs->strings.at(inst.str_ptr);
 }
 
 template <AllegroVersion version>
 std::optional<uint8_t> x14_layer(const uint32_t k, File<version> *fs) {
-    if (HAS_ENTRY(x14_map, k)) {
-        const x14<version> *inst = &fs->x14_map.at(k);
-        return inst->layer;
+    if (fs->is_type(k, 0x14)) {
+        const x14<version> inst = fs->get_x14(k);
+        return inst.layer;
     } else {
         return std::optional<uint8_t>();
     }
 }
 
 template <AllegroVersion version>
-std::optional<std::string> x1B_net_name(const uint32_t k, File<version> *fs) {
-    if (HAS_ENTRY(x1B_map, k)) {
-        const x1B<version> *inst = &fs->x1B_map.at(k);
-        return fs->strings.at(inst->net_name);
+char *x1B_net_name(const uint32_t k, File<version> *fs) {
+    if (fs->is_type(k, 0x1B)) {
+        const x1B<version> inst = fs->get_x1B(k);
+        return str_lookup(inst.net_name, *fs);
     } else {
-        return std::optional<std::string>();
+        return nullptr;
     }
 }
 
 template <AllegroVersion version>
 std::optional<uint8_t> x2D_layer(const uint32_t k, File<version> *fs) {
-    if (HAS_ENTRY(x2D_map, k)) {
-        const x2D<version> *inst = &fs->x2D_map.at(k);
-        return x14_layer(inst->ptr1, fs);
+    if (fs->is_type(k, 0x2D)) {
+        const x2D<version> &inst = fs->get_x2D(k);
+        return x14_layer(inst.ptr1, fs);
     } else {
         return std::optional<uint8_t>();
     }
@@ -191,9 +201,10 @@ int8_t read_layer(File<version> &fs, uint32_t k) {
 
 template <typename T, AllegroVersion version>
 constexpr std::map<uint32_t, T> *find_map(File<version> &fs) {
-    if constexpr (std::is_same_v<T, x01<version>>) {
+    /* if constexpr (std::is_same_v<T, x01<version>>) {
         return &fs.x01_map;
-    } else if constexpr (std::is_same_v<T, x03<version>>) {
+    } else */
+    if constexpr (std::is_same_v<T, x03<version>>) {
         return &fs.x03_map;
     } else if constexpr (std::is_same_v<T, x04<version>>) {
         return &fs.x04_map;
@@ -201,14 +212,10 @@ constexpr std::map<uint32_t, T> *find_map(File<version> &fs) {
         return &fs.x05_map;
     } else if constexpr (std::is_same_v<T, x06<version>>) {
         return &fs.x06_map;
-    } else if constexpr (std::is_same_v<T, x07<version>>) {
-        return &fs.x07_map;
     } else if constexpr (std::is_same_v<T, x08<version>>) {
         return &fs.x08_map;
     } else if constexpr (std::is_same_v<T, x09<version>>) {
         return &fs.x09_map;
-    } else if constexpr (std::is_same_v<T, x0A<version>>) {
-        return &fs.x0A_map;
     } else if constexpr (std::is_same_v<T, x0C<version>>) {
         return &fs.x0C_map;
     } else if constexpr (std::is_same_v<T, x0D<version>>) {
@@ -217,12 +224,8 @@ constexpr std::map<uint32_t, T> *find_map(File<version> &fs) {
         return &fs.x0E_map;
     } else if constexpr (std::is_same_v<T, x0F<version>>) {
         return &fs.x0F_map;
-    } else if constexpr (std::is_same_v<T, x10<version>>) {
-        return &fs.x10_map;
     } else if constexpr (std::is_same_v<T, x11<version>>) {
         return &fs.x11_map;
-    } else if constexpr (std::is_same_v<T, x14<version>>) {
-        return &fs.x14_map;
     } else if constexpr (std::is_same_v<T, x15<version>>) {
         return &fs.x15_map;
     } else if constexpr (std::is_same_v<T, x16<version>>) {
@@ -279,5 +282,25 @@ constexpr std::map<uint32_t, T> *find_map(File<version> &fs) {
         return &fs.x3C_map;
     }
 }
+
+/*
+template <typename T, AllegroVersion version>
+constexpr std::unordered_map<uint32_t, void *> &new_find_map(
+    File<version> &fs) {
+    if constexpr (std::is_same_v<T, x01<version>>) {
+        return fs.x01_map;
+    } else if constexpr (std::is_same_v<T, x14<version>>) {
+        return fs.x14_map;
+    } else if constexpr (std::is_same_v<T, x15<version>>) {
+        return fs.x15_map;
+    } else if constexpr (std::is_same_v<T, x16<version>>) {
+        return fs.x16_map;
+    } else if constexpr (std::is_same_v<T, x17<version>>) {
+        return fs.x17_map;
+    } else if constexpr (std::is_same_v<T, x1B<version>>) {
+        return fs.x1B_map;
+    }
+}
+*/
 
 #endif

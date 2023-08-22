@@ -2,16 +2,25 @@
 #define TYPES_H
 
 #include <array>
+#include <boost/interprocess/mapped_region.hpp>
+#include <boost/version.hpp>
+#if BOOST_VERSION >= 108100
+#include <boost/unordered/unordered_flat_map.hpp>
+#else
+#include <unordered_map>
+#endif
 #include <cstddef>
+#include <iterator>
 #include <map>
 #include <optional>
-#include <set>
 #include <string>
 #include <type_traits>
 #include <variant>
 #include <vector>
 
 #include "cadence_fp.h"
+
+using namespace boost::interprocess;
 
 #define HAS_ENTRY(MAP, KEY) (fs->MAP.count(KEY) > 0)
 
@@ -34,6 +43,13 @@ enum AllegroVersion {
     A_174 = 0x00140900
 };
 
+// This alternative to `sizeof` is used where conditional fields are at the end
+// of a `struct`. Without a `uint32_t TAIL` at the end, the size is incorrect.
+template <typename T>
+constexpr size_t sizeof_until_tail() {
+    return offsetof(T, TAIL);
+}
+
 template <AllegroVersion start, AllegroVersion end,
           template <AllegroVersion> class T>
 constexpr T<end> upgrade(const T<start> &a) {
@@ -52,11 +68,29 @@ constexpr T<end> upgrade(const T<start> &a) {
     return *reinterpret_cast<const T<end> *>(&a);
 }
 
-// This alternative to `sizeof` is used where conditional fields are at the end
-// of a `struct`. Without a `uint32_t TAIL` at the end, the size is incorrect.
-template <typename T>
-constexpr size_t sizeof_until_tail() {
-    return offsetof(T, TAIL);
+template <AllegroVersion start, AllegroVersion end,
+          template <AllegroVersion> class T>
+constexpr T<end> new_upgrade(void *x) {
+    T<start> &a = *static_cast<T<start> *>(x);
+    T<end> t;
+    constexpr uint8_t n = sizeof(T<start>::versions) / sizeof(AllegroVersion);
+    if constexpr (n >= 1 && start < T<start>::versions[0]) {
+        // Reinterpret the element as T<A_160> so we can use the explicitly-
+        // defined conversion function.
+        t = *reinterpret_cast<const T<A_160> *>(&a);
+        return t;
+    }
+    if constexpr (n >= 2 && start < T<start>::versions[1]) {
+        t = *reinterpret_cast<const T<T<start>::versions[0]> *>(&a);
+        return t;
+    }
+    if constexpr (n >= 3 && start < T<start>::versions[2]) {
+        t = *reinterpret_cast<const T<T<start>::versions[1]> *>(&a);
+        return t;
+    }
+
+    memcpy(&t, x, sizeof_until_tail<T<end>>());
+    return t;
 }
 
 // Linked list
@@ -67,7 +101,9 @@ struct ll_ptrs {
 
 struct header {
     uint32_t magic;
-    uint32_t un1[14];
+    uint32_t un1[4];
+    uint32_t object_count;
+    uint32_t un2[9];
     ll_ptrs ll_x04;
     ll_ptrs ll_x06;
     ll_ptrs ll_x0C_2;
@@ -78,7 +114,7 @@ struct header {
     ll_ptrs ll_x24_x28;
     ll_ptrs ll_unused_1;
     ll_ptrs ll_x2B;
-    ll_ptrs ll_x03;
+    ll_ptrs ll_x03_x30;
     ll_ptrs ll_x0A_2;
     ll_ptrs ll_x1D_x1E_x1F;
     ll_ptrs ll_unused_2;
@@ -97,6 +133,9 @@ struct header {
     ll_ptrs ll_x0A;
     uint32_t un5;
     char allegro_version[60];
+    uint32_t un6;
+    uint32_t max_key;
+    uint32_t un7[13];
 };
 
 // BOOST_FUSION_ADAPT_STRUCT(header, magic, un1, allegro_version);
@@ -522,6 +561,7 @@ struct x11 {
     static constexpr AllegroVersion versions[1] = {A_174};
 };
 
+template <AllegroVersion version>
 struct x12 {
     uint32_t t;
     uint32_t k;
@@ -535,7 +575,13 @@ struct x12 {
     // x32
     uint32_t ptr3;
 
-    uint32_t un[2];
+    uint32_t un0;
+    COND_FIELD(version >= A_165, uint32_t, un1);
+    COND_FIELD(version >= A_174, uint32_t, un2);
+
+    uint32_t TAIL;
+    operator x12<A_174>() const;
+    static constexpr AllegroVersion versions[2] = {A_165, A_174};
 };
 
 template <AllegroVersion version>
@@ -733,7 +779,7 @@ struct t13 {
 static_assert(sizeof(t13<A_160>) == 28);
 static_assert(sizeof(t13<A_174>) == 36);
 
-// x1C shows how to draw pads
+// x1 shows how to draw pads
 template <AllegroVersion version>
 struct x1C {
     x1C_header<version> hdr;
@@ -909,7 +955,6 @@ struct x26 {
 
 struct x27 {
     uint32_t t;
-    std::set<uint32_t> keys;
 };
 
 // Shape
@@ -1080,7 +1125,7 @@ struct x2D {
     uint8_t un0;
 
     uint32_t k;
-    uint32_t un1;  // Points to x2B or x2D
+    uint32_t next;  // Points to x2B or x2D
 
     // Points to x2B?
     COND_FIELD(version >= A_172, uint32_t, un4);
@@ -1305,7 +1350,7 @@ struct x34 {
     uint8_t layer;
 
     uint32_t k;
-    uint32_t un1;
+    uint32_t next;
 
     uint32_t ptr1;  // x28
     COND_FIELD(version >= A_172, uint32_t, un2);
@@ -1515,53 +1560,29 @@ struct x3C {
 template <AllegroVersion version>
 class File {
    public:
+    File(mapped_region input_region);
+
     header *hdr;
     std::vector<std::tuple<uint32_t, uint32_t>> layers;
 
-    std::map<uint32_t, std::string> strings;
-    std::map<uint32_t, x01<version>> x01_map;
-    std::map<uint32_t, x03<version>> x03_map;
-    std::map<uint32_t, x04<version>> x04_map;
-    std::map<uint32_t, x05<version>> x05_map;
-    std::map<uint32_t, x06<version>> x06_map;
-    std::map<uint32_t, x07<version>> x07_map;
-    std::map<uint32_t, x08<version>> x08_map;
-    std::map<uint32_t, x09<version>> x09_map;
-    std::map<uint32_t, x0A<version>> x0A_map;
-    std::map<uint32_t, x0C<version>> x0C_map;
-    std::map<uint32_t, x0D<version>> x0D_map;
-    std::map<uint32_t, x0E<version>> x0E_map;
+    // `unordered_flat_map` provides a very significant performance improvement
+    // in large designs. Current runtime for a 700 MB file improves from ~1.2s
+    // to ~0.5s.
+#if BOOST_VERSION >= 108100
+    boost::unordered_flat_map<uint32_t, void *> ptrs;
+#else
+    std::unordered_map<uint32_t, void *> ptrs;
+#endif
+
+    std::map<uint32_t, char *> strings;
     std::map<uint32_t, x0F<version>> x0F_map;
-    std::map<uint32_t, x10<version>> x10_map;
-    std::map<uint32_t, x11<version>> x11_map;
-    std::map<uint32_t, x12> x12_map;
-    std::map<uint32_t, x14<version>> x14_map;
-    std::map<uint32_t, x15<version>> x15_map;
-    std::map<uint32_t, x16<version>> x16_map;
-    std::map<uint32_t, x17<version>> x17_map;
-    std::map<uint32_t, x1B<version>> x1B_map;
     std::map<uint32_t, x1C<version>> x1C_map;
     std::map<uint32_t, x1D<version>> x1D_map;
     std::map<uint32_t, x1E> x1E_map;
     std::map<uint32_t, x1F<version>> x1F_map;
-    std::map<uint32_t, x20<version>> x20_map;
-    std::map<uint32_t, x22<version>> x22_map;
-    std::map<uint32_t, x23<version>> x23_map;
-    std::map<uint32_t, x24<version>> x24_map;
-    std::map<uint32_t, x26<version>> x26_map;
     x27 x27_db;
-    std::map<uint32_t, x28<version>> x28_map;
     std::map<uint32_t, x2A> x2A_map;
-    std::map<uint32_t, x2B<version>> x2B_map;
-    std::map<uint32_t, x2C<version>> x2C_map;
-    std::map<uint32_t, x2D<version>> x2D_map;
-    std::map<uint32_t, x2E<version>> x2E_map;
-    std::map<uint32_t, x2F<version>> x2F_map;
-    std::map<uint32_t, x30<version>> x30_map;
     std::map<uint32_t, x31<version>> x31_map;
-    std::map<uint32_t, x32<version>> x32_map;
-    std::map<uint32_t, x33<version>> x33_map;
-    std::map<uint32_t, x34<version>> x34_map;
     std::map<uint32_t, x36<version>> x36_map;
     std::map<uint32_t, x37<version>> x37_map;
     std::map<uint32_t, x38<version>> x38_map;
@@ -1576,7 +1597,252 @@ class File {
     uint8_t layer_count = 0;
     uint32_t x27_end_pos;
 
+    x01<A_174> get_x01(uint32_t k);
+    const x03<A_174> get_x03(uint32_t k);
+    const x04<A_174> get_x04(uint32_t k);
+    const x05<A_174> get_x05(uint32_t k);
+    const x06<A_174> get_x06(uint32_t k);
+    const x07<A_174> get_x07(uint32_t k);
+    const x08<A_174> get_x08(uint32_t k);
+    const x09<A_174> get_x09(uint32_t k);
+    const x0A<A_174> get_x0A(uint32_t k);
+    const x0C<A_174> get_x0C(uint32_t k);
+    const x0D<A_174> get_x0D(uint32_t k);
+    const x0E<A_174> get_x0E(uint32_t k);
+    const x10<A_174> get_x10(uint32_t k);
+    const x14<A_174> get_x14(uint32_t k);
+    x15<A_174> get_x15(uint32_t k);
+    x16<A_174> get_x16(uint32_t k);
+    x17<A_174> get_x17(uint32_t k);
+    const x1B<A_174> get_x1B(uint32_t k);
+    const x23<A_174> get_x23(uint32_t k);
+    const x24<A_174> get_x24(uint32_t k);
+    const x26<A_174> get_x26(uint32_t k);
+    const x28<A_174> get_x28(uint32_t k);
+    const x2B<A_174> get_x2B(uint32_t k);
+    const x2C<A_174> get_x2C(uint32_t k);
+    const x2D<A_174> get_x2D(uint32_t k);
+    const x2E<A_174> get_x2E(uint32_t k);
+    const x30<A_174> get_x30(uint32_t k);
+    const x32<A_174> get_x32(uint32_t k);
+    const x33<A_174> get_x33(uint32_t k);
+    const x34<A_174> get_x34(uint32_t k);
+
+    bool is_type(uint32_t k, uint8_t t);
+
+    // This is not done in the constructor because the header hasn't been set
+    // yet, so we can't read what magic we are.
+    void prepare();
+
     operator File<A_174>() const;
+
+    template <typename T>
+    struct Iter {
+       public:
+        using iterator_category = std::forward_iterator_tag;
+        using value_type = const T;
+        using pointer = uint32_t;
+        using reference = const T &;
+
+        Iter(File &f, const pointer k,
+             value_type (File<version>::*func)(pointer))
+            : f(f), k(k), func(func){};
+        Iter &operator++() {
+            reference inst = (f.*func)(k);
+            k = inst.next;
+            return *this;
+        }
+        bool operator==(Iter other) const { return k == other.k; }
+        bool operator!=(Iter other) const { return !(*this == other); }
+        value_type operator*() const { return (f.*func)(k); }
+
+       private:
+        File &f;
+        value_type (File<version>::*func)(pointer);
+        pointer k;
+    };
+
+    template <typename T>
+    class IterBase {
+       public:
+        IterBase(Iter<T> begin, Iter<T> end) : _begin(begin), _end(end){};
+        Iter<T> begin() { return _begin; }
+        Iter<T> end() { return _end; }
+
+       private:
+        Iter<T> _begin, _end;
+    };
+
+    IterBase<x04<version>> iter_x04() {
+        return IterBase<x04<version>>(
+            Iter<x04<version>>(*this, this->hdr->ll_x04.head, &File::get_x04),
+            Iter<x04<version>>(*this, this->hdr->ll_x04.tail, &File::get_x04));
+    };
+
+    IterBase<x04<version>> iter_x04(uint32_t i_x1B) {
+        auto &i = this->get_x1B(i_x1B);
+        if (i.ptr1 == 0) {
+            return IterBase<x04<version>>(
+                Iter<x04<version>>(*this, i.next, &File::get_x04),
+                Iter<x04<version>>(*this, i.next, &File::get_x04));
+        } else {
+            return IterBase<x04<version>>(
+                Iter<x04<version>>(*this, i.ptr1, &File::get_x04),
+                Iter<x04<version>>(*this, i.k, &File::get_x04));
+        }
+    };
+
+    IterBase<x06<version>> iter_x06() {
+        return IterBase<x06<version>>(
+            Iter<x06<version>>(*this, this->hdr->ll_x06.head, &File::get_x06),
+            Iter<x06<version>>(*this, this->hdr->ll_x06.tail, &File::get_x06));
+    };
+
+    IterBase<x0A<version>> iter_x0A() {
+        return IterBase<x0A<version>>(
+            Iter<x0A<version>>(*this, this->hdr->ll_x0A.head, &File::get_x0A),
+            Iter<x0A<version>>(*this, this->hdr->ll_x0A.tail, &File::get_x0A));
+    };
+
+    IterBase<x0A<version>> iter_x0A_2() {
+        return IterBase<x0A<version>>(
+            Iter<x0A<version>>(*this, this->hdr->ll_x0A_2.head, &File::get_x0A),
+            Iter<x0A<version>>(*this, this->hdr->ll_x0A_2.tail,
+                               &File::get_x0A));
+    };
+
+    IterBase<x0C<version>> iter_x0C() {
+        return IterBase<x0C<version>>(
+            Iter<x0C<version>>(*this, this->hdr->ll_x0C.head, &File::get_x0C),
+            Iter<x0C<version>>(*this, this->hdr->ll_x0C.tail, &File::get_x0C));
+    };
+
+    IterBase<x0C<version>> iter_x0C_2() {
+        return IterBase<x0C<version>>(
+            Iter<x0C<version>>(*this, this->hdr->ll_x0C_2.head, &File::get_x0C),
+            Iter<x0C<version>>(*this, this->hdr->ll_x0C_2.tail,
+                               &File::get_x0C));
+    };
+
+    IterBase<x14<version>> iter_x14() {
+        return IterBase<x14<version>>(
+            Iter<x14<version>>(*this, this->hdr->ll_x14.head, &File::get_x14),
+            Iter<x14<version>>(*this, this->hdr->ll_x14.tail, &File::get_x14));
+    };
+
+    IterBase<x1B<version>> iter_x1B() {
+        return IterBase<x1B<version>>(
+            Iter<x1B<version>>(*this, this->hdr->ll_x1B.head, &File::get_x1B),
+            Iter<x1B<version>>(*this, this->hdr->ll_x1B.tail, &File::get_x1B));
+    };
+
+    IterBase<x2B<version>> iter_x2B() {
+        return IterBase<x2B<version>>(
+            Iter<x2B<version>>(*this, this->hdr->ll_x2B.head, &File::get_x2B),
+            Iter<x2B<version>>(*this, this->hdr->ll_x2B.tail, &File::get_x2B));
+    };
+
+    IterBase<x2C<version>> iter_x2C() {
+        return IterBase<x2C<version>>(
+            Iter<x2C<version>>(*this, this->hdr->ll_x2C.head, &File::get_x2C),
+            Iter<x2C<version>>(*this, this->hdr->ll_x2C.tail, &File::get_x2C));
+    };
+
+    IterBase<x2D<version>> iter_x2D(uint32_t i_x2B) {
+        auto &i = this->get_x2B(i_x2B);
+        if (i.ptr2 == 0) {
+            return IterBase<x2D<version>>(
+                Iter<x2D<version>>(*this, i.k, &File::get_x2D),
+                Iter<x2D<version>>(*this, i.k, &File::get_x2D));
+        } else {
+            return IterBase<x2D<version>>(
+                Iter<x2D<version>>(*this, i.ptr2, &File::get_x2D),
+                Iter<x2D<version>>(*this, i.k, &File::get_x2D));
+        }
+    };
+
+    IterBase<x30<version>> iter_x30(uint32_t i_x2D) {
+        auto &i = this->get_x2D(i_x2D);
+        if (i.first_pad_ptr == 0) {
+            return IterBase<x30<version>>(
+                Iter<x30<version>>(*this, i.k, &File::get_x30),
+                Iter<x30<version>>(*this, i.k, &File::get_x30));
+        } else {
+            return IterBase<x30<version>>(
+                Iter<x30<version>>(*this, i.ptr3, &File::get_x30),
+                Iter<x30<version>>(*this, i.k, &File::get_x30));
+        }
+    };
+
+    IterBase<x30<version>> iter_x30() {
+        return IterBase<x30<version>>(
+            Iter<x30<version>>(*this, this->hdr->ll_x03_x30.head,
+                               &File::get_x30),
+            Iter<x30<version>>(*this, this->hdr->ll_x03_x30.tail,
+                               &File::get_x30));
+    };
+
+    IterBase<x32<version>> iter_x32(uint32_t i_x2D) {
+        auto &i = this->get_x2D(i_x2D);
+        if (i.first_pad_ptr == 0) {
+            return IterBase<x32<version>>(
+                Iter<x32<version>>(*this, i.k, &File::get_x32),
+                Iter<x32<version>>(*this, i.k, &File::get_x32));
+        } else {
+            return IterBase<x32<version>>(
+                Iter<x32<version>>(*this, i.first_pad_ptr, &File::get_x32),
+                Iter<x32<version>>(*this, i.k, &File::get_x32));
+        }
+    };
+
+    IterBase<x34<version>> iter_x34(uint32_t i_x28) {
+        auto &i = this->get_x28(i_x28);
+        if (i.ptr4 == 0) {
+            return IterBase<x34<version>>(
+                Iter<x34<version>>(*this, i.k, &File::get_x34),
+                Iter<x34<version>>(*this, i.k, &File::get_x34));
+        } else {
+            return IterBase<x34<version>>(
+                Iter<x34<version>>(*this, i.ptr4, &File::get_x34),
+                Iter<x34<version>>(*this, i.k, &File::get_x34));
+        }
+    };
+
+   private:
+    mapped_region region;
+
+    void cache_upgrade_funcs();
+
+    x01<A_174> (*x01_upgrade)(void *);
+    x03<A_174> (*x03_upgrade)(void *);
+    x04<A_174> (*x04_upgrade)(void *);
+    x05<A_174> (*x05_upgrade)(void *);
+    x06<A_174> (*x06_upgrade)(void *);
+    x07<A_174> (*x07_upgrade)(void *);
+    x08<A_174> (*x08_upgrade)(void *);
+    x09<A_174> (*x09_upgrade)(void *);
+    x0A<A_174> (*x0A_upgrade)(void *);
+    x0C<A_174> (*x0C_upgrade)(void *);
+    x0D<A_174> (*x0D_upgrade)(void *);
+    x0E<A_174> (*x0E_upgrade)(void *);
+    x10<A_174> (*x10_upgrade)(void *);
+    x14<A_174> (*x14_upgrade)(void *);
+    x15<A_174> (*x15_upgrade)(void *);
+    x16<A_174> (*x16_upgrade)(void *);
+    x17<A_174> (*x17_upgrade)(void *);
+    x1B<A_174> (*x1B_upgrade)(void *);
+    x23<A_174> (*x23_upgrade)(void *);
+    x24<A_174> (*x24_upgrade)(void *);
+    x26<A_174> (*x26_upgrade)(void *);
+    x28<A_174> (*x28_upgrade)(void *);
+    x2B<A_174> (*x2B_upgrade)(void *);
+    x2C<A_174> (*x2C_upgrade)(void *);
+    x2D<A_174> (*x2D_upgrade)(void *);
+    x2E<A_174> (*x2E_upgrade)(void *);
+    x30<A_174> (*x30_upgrade)(void *);
+    x32<A_174> (*x32_upgrade)(void *);
+    x33<A_174> (*x33_upgrade)(void *);
+    x34<A_174> (*x34_upgrade)(void *);
 };
 
 #endif

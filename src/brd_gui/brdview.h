@@ -55,7 +55,7 @@ class BrdView : public QGraphicsView {
     std::optional<QPointF> startingPoint(uint32_t k);
     std::optional<QPointF> endingPoint(uint32_t k);
     bool onSelectedLayer(uint8_t subtype, uint16_t layer);
-    std::optional<std::string *> netName(uint32_t k);
+    char *netName(uint32_t k);
 
     void updatePathWidth(QPainterPath *path, QPen **pen, QPen *base_pen,
                          uint32_t *prev_width, uint32_t new_width);

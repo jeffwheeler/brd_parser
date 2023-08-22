@@ -31,7 +31,7 @@ x03<A_160>::operator x03<A_174>() const {
     new_inst.next = this->next;
     new_inst.subtype = this->subtype;
     new_inst.has_str = this->has_str;
-    new_inst.s = this->s;
+    // new_inst.s = this->s;
     new_inst.ptr = this->ptr;
     return new_inst;
 }
@@ -497,7 +497,7 @@ template <>
 x1C<A_160>::operator x1C<A_174>() const {
     x1C<A_174> new_inst;
     new_inst.hdr = this->hdr;
-    for (const auto& v : this->parts) new_inst.parts.push_back(v);
+    for (const auto &v : this->parts) new_inst.parts.push_back(v);
     return new_inst;
 }
 
@@ -505,8 +505,8 @@ template <>
 x1C<A_165>::operator x1C<A_174>() const {
     x1C<A_174> new_inst;
     new_inst.hdr = this->hdr;
-    for (const auto& v : this->parts)
-        new_inst.parts.push_back(*reinterpret_cast<const t13<A_160>*>(&v));
+    for (const auto &v : this->parts)
+        new_inst.parts.push_back(*reinterpret_cast<const t13<A_160> *>(&v));
     return new_inst;
 }
 
@@ -524,17 +524,17 @@ x22<A_160>::operator x22<A_174>() const {
 
 template <>
 x23<A_160>::operator x23<A_174>() const {
-    return *reinterpret_cast<const x23<A_174>*>(this);
+    return *reinterpret_cast<const x23<A_174> *>(this);
 }
 
 template <>
 x23<A_164>::operator x23<A_174>() const {
-    return *reinterpret_cast<const x23<A_174>*>(this);
+    return *reinterpret_cast<const x23<A_174> *>(this);
 }
 
 template <>
 x24<A_160>::operator x24<A_174>() const {
-    return *reinterpret_cast<const x24<A_174>*>(this);
+    return *reinterpret_cast<const x24<A_174> *>(this);
 }
 
 template <>
@@ -651,7 +651,7 @@ x2D<A_160>::operator x2D<A_174>() const {
     new_inst.layer = this->layer;
     new_inst.un0 = this->un0;
     new_inst.k = this->k;
-    new_inst.un1 = this->un1;
+    new_inst.next = this->next;
     new_inst.inst_ref = this->inst_ref_16x;
     new_inst.un2 = this->un2;
     new_inst.un3 = this->un3;
@@ -671,7 +671,7 @@ x2D<A_160>::operator x2D<A_174>() const {
 
 template <>
 x2E<A_160>::operator x2E<A_174>() const {
-    return *reinterpret_cast<const x2E<A_174>*>(this);
+    return *reinterpret_cast<const x2E<A_174> *>(this);
 }
 
 template <>
@@ -803,7 +803,7 @@ x34<A_160>::operator x34<A_174>() const {
 
     new_inst.k = this->k;
 
-    new_inst.un1 = this->un1;
+    new_inst.next = this->next;
     new_inst.ptr1 = this->ptr1;
     new_inst.bitmask1 = this->bitmask1;
     new_inst.ptr2 = this->ptr2;
@@ -850,11 +850,11 @@ x36<A_160>::operator x36<A_174>() const {
     new_inst.last_idx = this->last_idx;
     new_inst.un3 = this->un3;
     new_inst.un2 = 0;
-    for (const auto& x08_inst : this->x08s) {
+    for (const auto &x08_inst : this->x08s) {
         new_inst.x08s.push_back(upgrade<A_160, A_174>(x08_inst));
     }
-    for (const auto& x0F_inst : this->x0Fs) {
-        x36_x0F i = *reinterpret_cast<const x36_x0F<A_174>*>(&x0F_inst);
+    for (const auto &x0F_inst : this->x0Fs) {
+        x36_x0F i = *reinterpret_cast<const x36_x0F<A_174> *>(&x0F_inst);
         new_inst.x0Fs.push_back(i);
     }
     return new_inst;
@@ -873,11 +873,11 @@ x36<A_172>::operator x36<A_174>() const {
     new_inst.last_idx = this->last_idx;
     new_inst.un3 = this->un3;
     new_inst.un2 = 0;
-    for (const auto& x08_inst : this->x08s) {
+    for (const auto &x08_inst : this->x08s) {
         new_inst.x08s.push_back(upgrade<A_172, A_174>(x08_inst));
     }
-    for (const auto& x0F_inst : this->x0Fs) {
-        x36_x0F i = *reinterpret_cast<const x36_x0F<A_174>*>(&x0F_inst);
+    for (const auto &x0F_inst : this->x0Fs) {
+        x36_x0F i = *reinterpret_cast<const x36_x0F<A_174> *>(&x0F_inst);
         new_inst.x0Fs.push_back(i);
     }
     return new_inst;
@@ -930,12 +930,12 @@ x38<A_166>::operator x38<A_174>() const {
 
 template <>
 x39<A_160>::operator x39<A_174>() const {
-    return *reinterpret_cast<const x39<A_174>*>(this);
+    return *reinterpret_cast<const x39<A_174> *>(this);
 }
 
 template <>
 x3A<A_160>::operator x3A<A_174>() const {
-    return *reinterpret_cast<const x3A<A_174>*>(this);
+    return *reinterpret_cast<const x3A<A_174> *>(this);
 }
 
 template <>
@@ -964,6 +964,465 @@ x3C<A_160>::operator x3C<A_174>() const {
     new_inst.size = this->size;
     new_inst.ptrs = this->ptrs;
     return new_inst;
+}
+
+template <AllegroVersion version>
+File<version>::File(mapped_region input_region)
+    : region(std::move(input_region)) {}
+
+// Explicit instantiation
+template File<A_174>::File(mapped_region region);
+
+template <>
+void File<A_174>::prepare() {
+    this->ptrs.reserve(this->hdr->object_count);
+    cache_upgrade_funcs();
+}
+
+template <AllegroVersion version>
+void File<version>::cache_upgrade_funcs() {
+    // Need to lookup true version, because it's not A_174
+    switch (this->hdr->magic) {
+        case 0x00130000:
+        case 0x00130200:
+            this->x01_upgrade = new_upgrade<A_160, A_174, x01>;
+            this->x03_upgrade = new_upgrade<A_160, A_174, x03>;
+            this->x04_upgrade = new_upgrade<A_160, A_174, x04>;
+            this->x05_upgrade = new_upgrade<A_160, A_174, x05>;
+            this->x06_upgrade = new_upgrade<A_160, A_174, x06>;
+            this->x07_upgrade = new_upgrade<A_160, A_174, x07>;
+            this->x08_upgrade = new_upgrade<A_160, A_174, x08>;
+            this->x09_upgrade = new_upgrade<A_160, A_174, x09>;
+            this->x0A_upgrade = new_upgrade<A_160, A_174, x0A>;
+            this->x0C_upgrade = new_upgrade<A_160, A_174, x0C>;
+            this->x0D_upgrade = new_upgrade<A_160, A_174, x0D>;
+            this->x0E_upgrade = new_upgrade<A_160, A_174, x0E>;
+            this->x10_upgrade = new_upgrade<A_160, A_174, x10>;
+            this->x14_upgrade = new_upgrade<A_160, A_174, x14>;
+            this->x15_upgrade = new_upgrade<A_160, A_174, x15>;
+            this->x16_upgrade = new_upgrade<A_160, A_174, x16>;
+            this->x17_upgrade = new_upgrade<A_160, A_174, x17>;
+            this->x1B_upgrade = new_upgrade<A_160, A_174, x1B>;
+            this->x23_upgrade = new_upgrade<A_160, A_174, x23>;
+            this->x24_upgrade = new_upgrade<A_160, A_174, x24>;
+            this->x26_upgrade = new_upgrade<A_160, A_174, x26>;
+            this->x28_upgrade = new_upgrade<A_160, A_174, x28>;
+            this->x2B_upgrade = new_upgrade<A_160, A_174, x2B>;
+            this->x2C_upgrade = new_upgrade<A_160, A_174, x2C>;
+            this->x2D_upgrade = new_upgrade<A_160, A_174, x2D>;
+            this->x2E_upgrade = new_upgrade<A_160, A_174, x2E>;
+            this->x30_upgrade = new_upgrade<A_160, A_174, x30>;
+            this->x32_upgrade = new_upgrade<A_160, A_174, x32>;
+            this->x33_upgrade = new_upgrade<A_160, A_174, x33>;
+            this->x34_upgrade = new_upgrade<A_160, A_174, x34>;
+            break;
+        case 0x00130402:
+            this->x01_upgrade = new_upgrade<A_162, A_174, x01>;
+            this->x03_upgrade = new_upgrade<A_162, A_174, x03>;
+            this->x04_upgrade = new_upgrade<A_162, A_174, x04>;
+            this->x05_upgrade = new_upgrade<A_162, A_174, x05>;
+            this->x06_upgrade = new_upgrade<A_162, A_174, x06>;
+            this->x07_upgrade = new_upgrade<A_162, A_174, x07>;
+            this->x08_upgrade = new_upgrade<A_162, A_174, x08>;
+            this->x09_upgrade = new_upgrade<A_162, A_174, x09>;
+            this->x0A_upgrade = new_upgrade<A_162, A_174, x0A>;
+            this->x0C_upgrade = new_upgrade<A_162, A_174, x0C>;
+            this->x0D_upgrade = new_upgrade<A_162, A_174, x0D>;
+            this->x0E_upgrade = new_upgrade<A_162, A_174, x0E>;
+            this->x10_upgrade = new_upgrade<A_162, A_174, x10>;
+            this->x14_upgrade = new_upgrade<A_162, A_174, x14>;
+            this->x15_upgrade = new_upgrade<A_162, A_174, x15>;
+            this->x16_upgrade = new_upgrade<A_162, A_174, x16>;
+            this->x17_upgrade = new_upgrade<A_162, A_174, x17>;
+            this->x1B_upgrade = new_upgrade<A_162, A_174, x1B>;
+            this->x23_upgrade = new_upgrade<A_162, A_174, x23>;
+            this->x24_upgrade = new_upgrade<A_162, A_174, x24>;
+            this->x26_upgrade = new_upgrade<A_162, A_174, x26>;
+            this->x28_upgrade = new_upgrade<A_162, A_174, x28>;
+            this->x2B_upgrade = new_upgrade<A_162, A_174, x2B>;
+            this->x2C_upgrade = new_upgrade<A_162, A_174, x2C>;
+            this->x2D_upgrade = new_upgrade<A_162, A_174, x2D>;
+            this->x2E_upgrade = new_upgrade<A_162, A_174, x2E>;
+            this->x30_upgrade = new_upgrade<A_162, A_174, x30>;
+            this->x32_upgrade = new_upgrade<A_162, A_174, x32>;
+            this->x33_upgrade = new_upgrade<A_162, A_174, x33>;
+            this->x34_upgrade = new_upgrade<A_162, A_174, x34>;
+            break;
+        case 0x00130C03:
+            this->x01_upgrade = new_upgrade<A_164, A_174, x01>;
+            this->x03_upgrade = new_upgrade<A_164, A_174, x03>;
+            this->x04_upgrade = new_upgrade<A_164, A_174, x04>;
+            this->x05_upgrade = new_upgrade<A_164, A_174, x05>;
+            this->x06_upgrade = new_upgrade<A_164, A_174, x06>;
+            this->x07_upgrade = new_upgrade<A_164, A_174, x07>;
+            this->x08_upgrade = new_upgrade<A_164, A_174, x08>;
+            this->x09_upgrade = new_upgrade<A_164, A_174, x09>;
+            this->x0A_upgrade = new_upgrade<A_164, A_174, x0A>;
+            this->x0C_upgrade = new_upgrade<A_164, A_174, x0C>;
+            this->x0D_upgrade = new_upgrade<A_164, A_174, x0D>;
+            this->x0E_upgrade = new_upgrade<A_164, A_174, x0E>;
+            this->x10_upgrade = new_upgrade<A_164, A_174, x10>;
+            this->x14_upgrade = new_upgrade<A_164, A_174, x14>;
+            this->x15_upgrade = new_upgrade<A_164, A_174, x15>;
+            this->x16_upgrade = new_upgrade<A_164, A_174, x16>;
+            this->x17_upgrade = new_upgrade<A_164, A_174, x17>;
+            this->x1B_upgrade = new_upgrade<A_164, A_174, x1B>;
+            this->x23_upgrade = new_upgrade<A_164, A_174, x23>;
+            this->x24_upgrade = new_upgrade<A_164, A_174, x24>;
+            this->x26_upgrade = new_upgrade<A_164, A_174, x26>;
+            this->x28_upgrade = new_upgrade<A_164, A_174, x28>;
+            this->x2B_upgrade = new_upgrade<A_164, A_174, x2B>;
+            this->x2C_upgrade = new_upgrade<A_164, A_174, x2C>;
+            this->x2D_upgrade = new_upgrade<A_164, A_174, x2D>;
+            this->x2E_upgrade = new_upgrade<A_164, A_174, x2E>;
+            this->x30_upgrade = new_upgrade<A_164, A_174, x30>;
+            this->x32_upgrade = new_upgrade<A_164, A_174, x32>;
+            this->x33_upgrade = new_upgrade<A_164, A_174, x33>;
+            this->x34_upgrade = new_upgrade<A_164, A_174, x34>;
+            break;
+        case 0x00131003:
+            this->x01_upgrade = new_upgrade<A_165, A_174, x01>;
+            this->x03_upgrade = new_upgrade<A_165, A_174, x03>;
+            this->x04_upgrade = new_upgrade<A_165, A_174, x04>;
+            this->x05_upgrade = new_upgrade<A_165, A_174, x05>;
+            this->x06_upgrade = new_upgrade<A_165, A_174, x06>;
+            this->x07_upgrade = new_upgrade<A_165, A_174, x07>;
+            this->x08_upgrade = new_upgrade<A_165, A_174, x08>;
+            this->x09_upgrade = new_upgrade<A_165, A_174, x09>;
+            this->x0A_upgrade = new_upgrade<A_165, A_174, x0A>;
+            this->x0C_upgrade = new_upgrade<A_165, A_174, x0C>;
+            this->x0D_upgrade = new_upgrade<A_165, A_174, x0D>;
+            this->x0E_upgrade = new_upgrade<A_165, A_174, x0E>;
+            this->x10_upgrade = new_upgrade<A_165, A_174, x10>;
+            this->x14_upgrade = new_upgrade<A_165, A_174, x14>;
+            this->x15_upgrade = new_upgrade<A_165, A_174, x15>;
+            this->x16_upgrade = new_upgrade<A_165, A_174, x16>;
+            this->x17_upgrade = new_upgrade<A_165, A_174, x17>;
+            this->x1B_upgrade = new_upgrade<A_165, A_174, x1B>;
+            this->x23_upgrade = new_upgrade<A_165, A_174, x23>;
+            this->x24_upgrade = new_upgrade<A_165, A_174, x24>;
+            this->x26_upgrade = new_upgrade<A_165, A_174, x26>;
+            this->x28_upgrade = new_upgrade<A_165, A_174, x28>;
+            this->x2B_upgrade = new_upgrade<A_165, A_174, x2B>;
+            this->x2C_upgrade = new_upgrade<A_165, A_174, x2C>;
+            this->x2D_upgrade = new_upgrade<A_165, A_174, x2D>;
+            this->x2E_upgrade = new_upgrade<A_165, A_174, x2E>;
+            this->x30_upgrade = new_upgrade<A_165, A_174, x30>;
+            this->x32_upgrade = new_upgrade<A_165, A_174, x32>;
+            this->x33_upgrade = new_upgrade<A_165, A_174, x33>;
+            this->x34_upgrade = new_upgrade<A_165, A_174, x34>;
+            break;
+        case 0x00131503:
+        case 0x00131504:
+            this->x01_upgrade = new_upgrade<A_166, A_174, x01>;
+            this->x03_upgrade = new_upgrade<A_166, A_174, x03>;
+            this->x04_upgrade = new_upgrade<A_166, A_174, x04>;
+            this->x05_upgrade = new_upgrade<A_166, A_174, x05>;
+            this->x06_upgrade = new_upgrade<A_166, A_174, x06>;
+            this->x07_upgrade = new_upgrade<A_166, A_174, x07>;
+            this->x08_upgrade = new_upgrade<A_166, A_174, x08>;
+            this->x09_upgrade = new_upgrade<A_166, A_174, x09>;
+            this->x0A_upgrade = new_upgrade<A_166, A_174, x0A>;
+            this->x0C_upgrade = new_upgrade<A_166, A_174, x0C>;
+            this->x0D_upgrade = new_upgrade<A_166, A_174, x0D>;
+            this->x0E_upgrade = new_upgrade<A_166, A_174, x0E>;
+            this->x10_upgrade = new_upgrade<A_166, A_174, x10>;
+            this->x14_upgrade = new_upgrade<A_166, A_174, x14>;
+            this->x15_upgrade = new_upgrade<A_166, A_174, x15>;
+            this->x16_upgrade = new_upgrade<A_166, A_174, x16>;
+            this->x17_upgrade = new_upgrade<A_166, A_174, x17>;
+            this->x1B_upgrade = new_upgrade<A_166, A_174, x1B>;
+            this->x23_upgrade = new_upgrade<A_166, A_174, x23>;
+            this->x24_upgrade = new_upgrade<A_166, A_174, x24>;
+            this->x26_upgrade = new_upgrade<A_166, A_174, x26>;
+            this->x28_upgrade = new_upgrade<A_166, A_174, x28>;
+            this->x2B_upgrade = new_upgrade<A_166, A_174, x2B>;
+            this->x2C_upgrade = new_upgrade<A_166, A_174, x2C>;
+            this->x2D_upgrade = new_upgrade<A_166, A_174, x2D>;
+            this->x2E_upgrade = new_upgrade<A_166, A_174, x2E>;
+            this->x30_upgrade = new_upgrade<A_166, A_174, x30>;
+            this->x32_upgrade = new_upgrade<A_166, A_174, x32>;
+            this->x33_upgrade = new_upgrade<A_166, A_174, x33>;
+            this->x34_upgrade = new_upgrade<A_166, A_174, x34>;
+            break;
+        case 0x00140400:
+        case 0x00140500:
+        case 0x00140600:
+        case 0x00140700:
+            this->x01_upgrade = new_upgrade<A_172, A_174, x01>;
+            this->x03_upgrade = new_upgrade<A_172, A_174, x03>;
+            this->x04_upgrade = new_upgrade<A_172, A_174, x04>;
+            this->x05_upgrade = new_upgrade<A_172, A_174, x05>;
+            this->x06_upgrade = new_upgrade<A_172, A_174, x06>;
+            this->x07_upgrade = new_upgrade<A_172, A_174, x07>;
+            this->x08_upgrade = new_upgrade<A_172, A_174, x08>;
+            this->x09_upgrade = new_upgrade<A_172, A_174, x09>;
+            this->x0A_upgrade = new_upgrade<A_172, A_174, x0A>;
+            this->x0C_upgrade = new_upgrade<A_172, A_174, x0C>;
+            this->x0D_upgrade = new_upgrade<A_172, A_174, x0D>;
+            this->x0E_upgrade = new_upgrade<A_172, A_174, x0E>;
+            this->x10_upgrade = new_upgrade<A_172, A_174, x10>;
+            this->x14_upgrade = new_upgrade<A_172, A_174, x14>;
+            this->x15_upgrade = new_upgrade<A_172, A_174, x15>;
+            this->x16_upgrade = new_upgrade<A_172, A_174, x16>;
+            this->x17_upgrade = new_upgrade<A_172, A_174, x17>;
+            this->x1B_upgrade = new_upgrade<A_172, A_174, x1B>;
+            this->x23_upgrade = new_upgrade<A_172, A_174, x23>;
+            this->x24_upgrade = new_upgrade<A_172, A_174, x24>;
+            this->x26_upgrade = new_upgrade<A_172, A_174, x26>;
+            this->x28_upgrade = new_upgrade<A_172, A_174, x28>;
+            this->x2B_upgrade = new_upgrade<A_172, A_174, x2B>;
+            this->x2C_upgrade = new_upgrade<A_172, A_174, x2C>;
+            this->x2D_upgrade = new_upgrade<A_172, A_174, x2D>;
+            this->x2E_upgrade = new_upgrade<A_172, A_174, x2E>;
+            this->x30_upgrade = new_upgrade<A_172, A_174, x30>;
+            this->x32_upgrade = new_upgrade<A_172, A_174, x32>;
+            this->x33_upgrade = new_upgrade<A_172, A_174, x33>;
+            this->x34_upgrade = new_upgrade<A_172, A_174, x34>;
+            break;
+        case 0x00140900:
+        case 0x00140901:
+        case 0x00140902:
+        case 0x00140E00:
+            this->x01_upgrade = new_upgrade<A_174, A_174, x01>;
+            this->x03_upgrade = new_upgrade<A_174, A_174, x03>;
+            this->x04_upgrade = new_upgrade<A_174, A_174, x04>;
+            this->x05_upgrade = new_upgrade<A_174, A_174, x05>;
+            this->x06_upgrade = new_upgrade<A_174, A_174, x06>;
+            this->x07_upgrade = new_upgrade<A_174, A_174, x07>;
+            this->x08_upgrade = new_upgrade<A_174, A_174, x08>;
+            this->x09_upgrade = new_upgrade<A_174, A_174, x09>;
+            this->x0A_upgrade = new_upgrade<A_174, A_174, x0A>;
+            this->x0C_upgrade = new_upgrade<A_174, A_174, x0C>;
+            this->x0D_upgrade = new_upgrade<A_174, A_174, x0D>;
+            this->x0E_upgrade = new_upgrade<A_174, A_174, x0E>;
+            this->x10_upgrade = new_upgrade<A_174, A_174, x10>;
+            this->x14_upgrade = new_upgrade<A_174, A_174, x14>;
+            this->x15_upgrade = new_upgrade<A_174, A_174, x15>;
+            this->x16_upgrade = new_upgrade<A_174, A_174, x16>;
+            this->x17_upgrade = new_upgrade<A_174, A_174, x17>;
+            this->x1B_upgrade = new_upgrade<A_174, A_174, x1B>;
+            this->x23_upgrade = new_upgrade<A_174, A_174, x23>;
+            this->x24_upgrade = new_upgrade<A_174, A_174, x24>;
+            this->x26_upgrade = new_upgrade<A_174, A_174, x26>;
+            this->x28_upgrade = new_upgrade<A_174, A_174, x28>;
+            this->x2B_upgrade = new_upgrade<A_174, A_174, x2B>;
+            this->x2C_upgrade = new_upgrade<A_174, A_174, x2C>;
+            this->x2D_upgrade = new_upgrade<A_174, A_174, x2D>;
+            this->x2E_upgrade = new_upgrade<A_174, A_174, x2E>;
+            this->x30_upgrade = new_upgrade<A_174, A_174, x30>;
+            this->x32_upgrade = new_upgrade<A_174, A_174, x32>;
+            this->x33_upgrade = new_upgrade<A_174, A_174, x33>;
+            this->x34_upgrade = new_upgrade<A_174, A_174, x34>;
+            break;
+    }
+}
+
+template <>
+x01<A_174> File<A_174>::get_x01(uint32_t k) {
+    return this->x01_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x03<A_174> File<A_174>::get_x03(uint32_t k) {
+    size_t size;
+    switch (this->hdr->magic) {
+        case 0x00130000:
+        case 0x00130200:
+            size = sizeof_until_tail<x03<A_160>>();
+            break;
+        case 0x00130402:
+            size = sizeof_until_tail<x03<A_162>>();
+            break;
+        case 0x00130C03:
+            size = sizeof_until_tail<x03<A_164>>();
+            break;
+        case 0x00131003:
+            size = sizeof_until_tail<x03<A_165>>();
+            break;
+        case 0x00131503:
+        case 0x00131504:
+            size = sizeof_until_tail<x03<A_166>>();
+            break;
+        case 0x00140400:
+        case 0x00140500:
+        case 0x00140600:
+        case 0x00140700:
+            size = sizeof_until_tail<x03<A_172>>();
+            break;
+        case 0x00140900:
+        case 0x00140901:
+        case 0x00140902:
+        case 0x00140E00:
+            size = sizeof_until_tail<x03<A_174>>();
+            break;
+    }
+
+    void *p = this->ptrs[k];
+    x03<A_174> i = this->x03_upgrade(p);
+    void *next_ptr = ((char *)p) + size;
+    switch (i.subtype.t & 0xFF) {
+        case 0x64:
+        case 0x66:
+        case 0x67:
+        case 0x6A:
+            i.ptr = *static_cast<uint32_t *>(next_ptr);
+        case 0x6D:
+        case 0x6E:
+        case 0x6F:
+        case 0x68:
+        case 0x6B:
+        case 0x71:
+        case 0x73:
+        case 0x78:
+            i.s = std::string(static_cast<char *>(next_ptr));
+    }
+    return i;
+}
+
+template <>
+const x04<A_174> File<A_174>::get_x04(uint32_t k) {
+    return this->x04_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x05<A_174> File<A_174>::get_x05(uint32_t k) {
+    return this->x05_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x06<A_174> File<A_174>::get_x06(uint32_t k) {
+    return this->x06_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x07<A_174> File<A_174>::get_x07(uint32_t k) {
+    return this->x07_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x08<A_174> File<A_174>::get_x08(uint32_t k) {
+    return this->x08_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x09<A_174> File<A_174>::get_x09(uint32_t k) {
+    return this->x09_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x0A<A_174> File<A_174>::get_x0A(uint32_t k) {
+    return this->x0A_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x0C<A_174> File<A_174>::get_x0C(uint32_t k) {
+    return this->x0C_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x0D<A_174> File<A_174>::get_x0D(uint32_t k) {
+    return this->x0D_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x0E<A_174> File<A_174>::get_x0E(uint32_t k) {
+    return this->x0E_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x10<A_174> File<A_174>::get_x10(uint32_t k) {
+    return this->x10_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x14<A_174> File<A_174>::get_x14(uint32_t k) {
+    return this->x14_upgrade(this->ptrs[k]);
+}
+
+template <>
+x15<A_174> File<A_174>::get_x15(uint32_t k) {
+    return this->x15_upgrade(this->ptrs[k]);
+}
+
+template <>
+x16<A_174> File<A_174>::get_x16(uint32_t k) {
+    return this->x16_upgrade(this->ptrs[k]);
+}
+
+template <>
+x17<A_174> File<A_174>::get_x17(uint32_t k) {
+    return this->x17_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x1B<A_174> File<A_174>::get_x1B(uint32_t k) {
+    return this->x1B_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x23<A_174> File<A_174>::get_x23(uint32_t k) {
+    return this->x23_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x24<A_174> File<A_174>::get_x24(uint32_t k) {
+    return this->x24_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x26<A_174> File<A_174>::get_x26(uint32_t k) {
+    return this->x26_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x28<A_174> File<A_174>::get_x28(uint32_t k) {
+    return this->x28_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x2B<A_174> File<A_174>::get_x2B(uint32_t k) {
+    return this->x2B_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x2C<A_174> File<A_174>::get_x2C(uint32_t k) {
+    return this->x2C_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x2D<A_174> File<A_174>::get_x2D(uint32_t k) {
+    return this->x2D_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x2E<A_174> File<A_174>::get_x2E(uint32_t k) {
+    return this->x2E_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x30<A_174> File<A_174>::get_x30(uint32_t k) {
+    return this->x30_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x32<A_174> File<A_174>::get_x32(uint32_t k) {
+    return this->x32_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x33<A_174> File<A_174>::get_x33(uint32_t k) {
+    return this->x33_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x34<A_174> File<A_174>::get_x34(uint32_t k) {
+    return this->x34_upgrade(this->ptrs[k]);
+}
+
+template <>
+bool File<A_174>::is_type(uint32_t k, uint8_t t) {
+    return (this->ptrs.count(k) > 0) && (*(uint8_t *)this->ptrs[k] == t);
 }
 
 /*
