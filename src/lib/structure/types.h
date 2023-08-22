@@ -3,13 +3,18 @@
 
 #include <array>
 #include <boost/interprocess/mapped_region.hpp>
+#include <boost/version.hpp>
+#if BOOST_VERSION >= 108100
+#include <boost/unordered/unordered_flat_map.hpp>
+#else
+#include <unordered_map>
+#endif
 #include <cstddef>
 #include <iterator>
 #include <map>
 #include <optional>
 #include <string>
 #include <type_traits>
-#include <unordered_map>
 #include <unordered_set>
 #include <variant>
 #include <vector>
@@ -1555,7 +1560,11 @@ class File {
     header *hdr;
     std::vector<std::tuple<uint32_t, uint32_t>> layers;
 
+#if BOOST_VERSION >= 108100
+    boost::unordered_flat_map<uint32_t, void *> ptrs;
+#else
     std::unordered_map<uint32_t, void *> ptrs;
+#endif
 
     std::map<uint32_t, char *> strings;
     std::map<uint32_t, x0C<version>> x0C_map;
