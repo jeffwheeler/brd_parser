@@ -764,8 +764,8 @@ void BrdView::drawFile() {
                     k = x.un1;
                 } else if (fs->is_type(k, 0x1B)) {
                     break;
-                } else if (fs->x0E_map.count(k) > 0) {
-                    auto &x = fs->x0E_map[k];
+                } else if (fs->is_type(k, 0x0E)) {
+                    auto &x = fs->get_x0E(k);
                     k = x.un[0];
                 } else if (fs->is_type(k, 0x05)) {
                     auto &x = fs->get_x05(k);

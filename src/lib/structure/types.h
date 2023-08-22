@@ -1575,7 +1575,6 @@ class File {
 #endif
 
     std::map<uint32_t, char *> strings;
-    std::map<uint32_t, x0E<version>> x0E_map;
     std::map<uint32_t, x0F<version>> x0F_map;
     std::map<uint32_t, x11<version>> x11_map;
     std::map<uint32_t, x1C<version>> x1C_map;
@@ -1610,6 +1609,7 @@ class File {
     const x0A<A_174> get_x0A(uint32_t k);
     const x0C<A_174> get_x0C(uint32_t k);
     const x0D<A_174> get_x0D(uint32_t k);
+    const x0E<A_174> get_x0E(uint32_t k);
     const x10<A_174> get_x10(uint32_t k);
     const x14<A_174> get_x14(uint32_t k);
     x15<A_174> get_x15(uint32_t k);
@@ -1825,6 +1825,7 @@ class File {
     x0A<A_174> (*x0A_upgrade)(void *);
     x0C<A_174> (*x0C_upgrade)(void *);
     x0D<A_174> (*x0D_upgrade)(void *);
+    x0E<A_174> (*x0E_upgrade)(void *);
     x10<A_174> (*x10_upgrade)(void *);
     x14<A_174> (*x14_upgrade)(void *);
     x15<A_174> (*x15_upgrade)(void *);
