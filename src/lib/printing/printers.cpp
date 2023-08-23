@@ -203,8 +203,8 @@ void print_struct(const uint32_t k, File<version> &fs, const int d) {
         print_struct((const void *)fs.ptrs[k], &fs, d);
     } else if (fs.is_type(k, 0x38)) {
         print_struct((const void *)fs.ptrs[k], &fs, d);
-    } else if (fs.x39_map.count(k) > 0) {
-        print_struct((const void *)&fs.x39_map.at(k), &fs, d);
+    } else if (fs.is_type(k, 0x39)) {
+        print_struct((const void *)fs.ptrs[k], &fs, d);
     } else if (fs.x3C_map.count(k) > 0) {
         print_struct((const void *)&fs.x3A_map.at(k), &fs, d);
     } else if (fs.x3A_map.count(k) > 0) {
@@ -2842,8 +2842,8 @@ void print_x38(const void *untyped_inst, File<version> *fs, const int d) {
     }
     */
 
-    if (HAS_ENTRY(x39_map, inst->ptr1)) {
-        PRINT(x39_map, inst->ptr1, d + 1);
+    if (fs->is_type(inst->ptr1, 0x39)) {
+        print_struct((const void *)fs->ptrs[inst->ptr1], fs, d + 2);
     } else {
         printf_d(d + 1, "ptr1 unrecognized: 0x%08X\n", ntohl(inst->ptr1));
         exit(0);
@@ -2897,8 +2897,8 @@ void print_x3A(const void *untyped_inst, File<version> *fs, const int d) {
 
     if (HAS_ENTRY(x3A_map, inst->next)) {
         PRINT(x3A_map, inst->next, d + 1);
-    } else if (HAS_ENTRY(x39_map, inst->next)) {
-        PRINT(x39_map, inst->next, d + 1);
+    } else if (fs->is_type(inst->next, 0x39)) {
+        print_struct((const void *)fs->ptrs[inst->next], fs, d + 2);
     } else {
         printf_d(d + 1, "next unrecognized: 0x%08X\n", ntohl(inst->next));
         exit(0);
