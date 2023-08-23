@@ -1575,7 +1575,6 @@ class File {
 #endif
 
     std::map<uint32_t, char *> strings;
-    std::map<uint32_t, x0F<version>> x0F_map;
     std::map<uint32_t, x1C<version>> x1C_map;
     std::map<uint32_t, x1D<version>> x1D_map;
     std::map<uint32_t, x1E> x1E_map;

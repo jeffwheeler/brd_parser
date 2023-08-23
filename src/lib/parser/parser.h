@@ -89,7 +89,7 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x0E
     {&new_default_parser<x0E, version>},
     // 0x0F
-    {&default_parser<x0F, version>},
+    {&new_default_parser<x0F, version>},
     // 0x10
     {&new_default_parser<x10, version>},
     // 0x11
