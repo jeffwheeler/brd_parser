@@ -1581,7 +1581,6 @@ class File {
     std::map<uint32_t, x2A> x2A_map;
     std::map<uint32_t, x36<version>> x36_map;
     std::map<uint32_t, x3B<version>> x3B_map;
-    std::map<uint32_t, x3C<version>> x3C_map;
 
     std::map<uint32_t, stackup_material> stackup_materials;
     std::optional<meta_netlist_path> netlist_path;
@@ -1626,6 +1625,7 @@ class File {
     const x38<A_174> get_x38(uint32_t k);
     const x39<A_174> get_x39(uint32_t k);
     const x3A<A_174> get_x3A(uint32_t k);
+    const x3C<A_174> get_x3C(uint32_t k);
 
     bool is_type(uint32_t k, uint8_t t);
 
@@ -1855,6 +1855,7 @@ class File {
     x38<A_174> (*x38_upgrade)(void *);
     x39<A_174> (*x39_upgrade)(void *);
     x3A<A_174> (*x3A_upgrade)(void *);
+    x3C<A_174> (*x3C_upgrade)(void *);
 };
 
 #endif

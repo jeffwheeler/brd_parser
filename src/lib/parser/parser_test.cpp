@@ -151,9 +151,9 @@ TEST(ParseFile, Parallella) {
     EXPECT_EQ(x1C_inst->parts[0].w, 2600);
     EXPECT_EQ(x1C_inst->parts[0].h, 2600);
 
-    const x3C<A_174>* x3C_inst = &fs.x3C_map.at(0x0ACF9230);
-    EXPECT_EQ(x3C_inst->ptrs.size(), 2);
-    EXPECT_EQ(x3C_inst->ptrs.at(0), 0x0ACCDAC8);
+    const x3C<A_174>& x3C_inst = fs.get_x3C(0x0ACF9230);
+    EXPECT_EQ(x3C_inst.ptrs.size(), 2);
+    EXPECT_EQ(x3C_inst.ptrs.at(0), 0x0ACCDAC8);
 
     const auto x30_inst = fs.get_x30(0x0AD336C0);
     const auto x36_x08_inst = font_lookup(x30_inst.font.key, fs);

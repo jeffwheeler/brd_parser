@@ -324,11 +324,11 @@ uint32_t parse_x2A(File<A_174>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x31(File<A_174>& fs, void*& address) {
+    x31<version>* i = (x31<version>*)address;
     uint32_t k = new_default_parser<x31, version>(fs, address);
-    const auto& inst = fs.get_x31(k);
 
-    if (inst.len > 0) {
-        uint32_t len = round_to_word(inst.len);
+    if (i->len > 0) {
+        uint32_t len = round_to_word(i->len);
         skip(address, len);
     }
 
@@ -487,16 +487,9 @@ uint32_t parse_x3B(File<A_174>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x3C(File<A_174>& fs, void*& address) {
-    uint32_t k = default_parser<x3C, version>(fs, address);
-    auto& inst = fs.x3C_map[k];
-
-    for (uint32_t i = 0; i < inst.size; i++) {
-        uint32_t ptr = *static_cast<uint32_t*>(address);
-        skip(address, 4);
-        // f.read((char*)&ptr, sizeof(ptr));
-        inst.ptrs.push_back(ptr);
-    }
-
+    x3C<version>* i = (x3C<version>*)address;
+    uint32_t k = new_default_parser<x3C, version>(fs, address);
+    skip(address, i->size * 4);
     return 0;
 }
 

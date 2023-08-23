@@ -676,7 +676,6 @@ x2E<A_160>::operator x2E<A_174>() const {
 
 template <>
 x30<A_160>::operator x30<A_174>() const {
-    printf("A\n");
     x30<A_174> new_inst;
     new_inst.type = this->type;
     new_inst.subtype = this->subtype;
@@ -963,7 +962,6 @@ x3C<A_160>::operator x3C<A_174>() const {
     new_inst.k = this->k;
     new_inst.un = 0;
     new_inst.size = this->size;
-    new_inst.ptrs = this->ptrs;
     return new_inst;
 }
 
@@ -1023,6 +1021,7 @@ void File<version>::cache_upgrade_funcs() {
             this->x38_upgrade = new_upgrade<A_160, A_174, x38>;
             this->x39_upgrade = new_upgrade<A_160, A_174, x39>;
             this->x3A_upgrade = new_upgrade<A_160, A_174, x3A>;
+            this->x3C_upgrade = new_upgrade<A_160, A_174, x3C>;
             break;
         case 0x00130402:
             this->x01_upgrade = new_upgrade<A_162, A_174, x01>;
@@ -1062,6 +1061,7 @@ void File<version>::cache_upgrade_funcs() {
             this->x38_upgrade = new_upgrade<A_162, A_174, x38>;
             this->x39_upgrade = new_upgrade<A_162, A_174, x39>;
             this->x3A_upgrade = new_upgrade<A_162, A_174, x3A>;
+            this->x3C_upgrade = new_upgrade<A_162, A_174, x3C>;
             break;
         case 0x00130C03:
             this->x01_upgrade = new_upgrade<A_164, A_174, x01>;
@@ -1101,6 +1101,7 @@ void File<version>::cache_upgrade_funcs() {
             this->x38_upgrade = new_upgrade<A_164, A_174, x38>;
             this->x39_upgrade = new_upgrade<A_164, A_174, x39>;
             this->x3A_upgrade = new_upgrade<A_164, A_174, x3A>;
+            this->x3C_upgrade = new_upgrade<A_164, A_174, x3C>;
             break;
         case 0x00131003:
             this->x01_upgrade = new_upgrade<A_165, A_174, x01>;
@@ -1140,6 +1141,7 @@ void File<version>::cache_upgrade_funcs() {
             this->x38_upgrade = new_upgrade<A_165, A_174, x38>;
             this->x39_upgrade = new_upgrade<A_165, A_174, x39>;
             this->x3A_upgrade = new_upgrade<A_165, A_174, x3A>;
+            this->x3C_upgrade = new_upgrade<A_165, A_174, x3C>;
             break;
         case 0x00131503:
         case 0x00131504:
@@ -1180,6 +1182,7 @@ void File<version>::cache_upgrade_funcs() {
             this->x38_upgrade = new_upgrade<A_166, A_174, x38>;
             this->x39_upgrade = new_upgrade<A_166, A_174, x39>;
             this->x3A_upgrade = new_upgrade<A_166, A_174, x3A>;
+            this->x3C_upgrade = new_upgrade<A_166, A_174, x3C>;
             break;
         case 0x00140400:
         case 0x00140500:
@@ -1222,6 +1225,7 @@ void File<version>::cache_upgrade_funcs() {
             this->x38_upgrade = new_upgrade<A_172, A_174, x38>;
             this->x39_upgrade = new_upgrade<A_172, A_174, x39>;
             this->x3A_upgrade = new_upgrade<A_172, A_174, x3A>;
+            this->x3C_upgrade = new_upgrade<A_172, A_174, x3C>;
             break;
         case 0x00140900:
         case 0x00140901:
@@ -1264,6 +1268,7 @@ void File<version>::cache_upgrade_funcs() {
             this->x38_upgrade = new_upgrade<A_174, A_174, x38>;
             this->x39_upgrade = new_upgrade<A_174, A_174, x39>;
             this->x3A_upgrade = new_upgrade<A_174, A_174, x3A>;
+            this->x3C_upgrade = new_upgrade<A_174, A_174, x3C>;
             break;
     }
 }
@@ -1513,6 +1518,24 @@ const x39<A_174> File<A_174>::get_x39(uint32_t k) {
 template <>
 const x3A<A_174> File<A_174>::get_x3A(uint32_t k) {
     return this->x3A_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x3C<A_174> File<A_174>::get_x3C(uint32_t k) {
+    void *p = this->ptrs[k];
+    x3C<A_174> inst = this->x3C_upgrade(p);
+    uint32_t size;
+    if (this->hdr->magic < A_174) {
+        size = sizeof_until_tail<x3C<A_160>>();
+    } else {
+        size = sizeof_until_tail<x3C<A_174>>();
+    }
+    uint32_t *next_ptr = (uint32_t *)(((char *)p) + size);
+    for (uint32_t i = 0; i < inst.size; i++) {
+        inst.ptrs.push_back(*next_ptr);
+        next_ptr++;
+    }
+    return inst;
 }
 
 template <>

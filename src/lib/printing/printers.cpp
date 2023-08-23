@@ -207,8 +207,8 @@ void print_struct(const uint32_t k, File<version> &fs, const int d) {
         print_struct((const void *)fs.ptrs[k], &fs, d);
     } else if (fs.is_type(k, 0x3A)) {
         print_struct((const void *)fs.ptrs[k], &fs, d);
-    } else if (fs.x3C_map.count(k) > 0) {
-        print_struct((const void *)&fs.x3C_map.at(k), &fs, d);
+    } else if (fs.is_type(k, 0x3C)) {
+        print_struct((const void *)fs.ptrs[k], &fs, d);
     } else {
         printf_d(d, "Did not find key 0x%08X\n", ntohl(k));
     }
@@ -2027,8 +2027,8 @@ void print_x2C(const void *untyped_inst, File<version> *fs, const int d) {
         printf(" \x1b[2mnull\x1b[0m\n");
     } else {
         std::printf("\n");
-        if (HAS_ENTRY(x3C_map, inst->ptr1)) {
-            PRINT(x3C_map, inst->ptr1, d + 2);
+        if (fs->is_type(inst->ptr1, 0x3C)) {
+            print_struct((const void *)fs->ptrs[inst->ptr1], fs, d + 2);
         } else if (fs->is_type(inst->ptr1, 0x37)) {
             print_struct((const void *)fs->ptrs[inst->ptr1], fs, d + 2);
         } else {
