@@ -64,7 +64,13 @@ void check_header_values(File<version>& fs) {
                     fs.is_type(fs.hdr->ll_x24_x28.head, 0x28));
     }
     if (fs.hdr->ll_x2B.head != 0) {
-        for (auto& i : fs.iter_x2B()) {
+        for (auto& i_x2B : fs.iter_x2B()) {
+            for (auto& i_x2D : fs.iter_x2D(i_x2B.k)) {
+                for (auto& i_x30 : fs.iter_x30(i_x2D.k)) {
+                }
+                for (auto& i_x32 : fs.iter_x32(i_x2D.k)) {
+                }
+            }
         }
     }
     if (fs.hdr->ll_x03_x30.head != 0) {
