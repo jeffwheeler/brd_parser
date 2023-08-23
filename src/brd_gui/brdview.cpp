@@ -708,9 +708,9 @@ void BrdView::drawShape(const uint32_t ptr, QPen *pen) {
     } else if (fs->is_type(ptr, 0x34)) {
         const x34<A_174> &inst = fs->get_x34(ptr);
         drawX34(&inst, pen);
-    } else if (fs->x37_map.count(ptr) > 0) {
-        const x37<A_174> *inst = (const x37<A_174> *)&fs->x37_map.at(ptr);
-        drawShape(inst->ptr1, darkerPen);
+    } else if (fs->is_type(ptr, 0x37)) {
+        const x37<A_174> &inst = fs->get_x37(ptr);
+        drawShape(inst.ptr1, darkerPen);
         // for (uint8_t i; i<inst->count; i++) {
         // for (uint8_t i=0; i<inst->capacity; i++) {
         //    drawShape(inst->ptrs[i], pen);

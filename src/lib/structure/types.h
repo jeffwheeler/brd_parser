@@ -1584,7 +1584,6 @@ class File {
     std::map<uint32_t, x2A> x2A_map;
     std::map<uint32_t, x31<version>> x31_map;
     std::map<uint32_t, x36<version>> x36_map;
-    std::map<uint32_t, x37<version>> x37_map;
     std::map<uint32_t, x38<version>> x38_map;
     std::map<uint32_t, x39<version>> x39_map;
     std::map<uint32_t, x3A<version>> x3A_map;
@@ -1627,6 +1626,7 @@ class File {
     const x32<A_174> get_x32(uint32_t k);
     const x33<A_174> get_x33(uint32_t k);
     const x34<A_174> get_x34(uint32_t k);
+    const x37<A_174> get_x37(uint32_t k);
 
     bool is_type(uint32_t k, uint8_t t);
 
@@ -1843,6 +1843,7 @@ class File {
     x32<A_174> (*x32_upgrade)(void *);
     x33<A_174> (*x33_upgrade)(void *);
     x34<A_174> (*x34_upgrade)(void *);
+    x37<A_174> (*x37_upgrade)(void *);
 };
 
 #endif
