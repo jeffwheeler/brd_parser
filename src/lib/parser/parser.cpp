@@ -173,8 +173,8 @@ uint32_t parse_x1C(File<A_174>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x1D(File<A_174>& fs, void*& address) {
-    uint32_t k = default_parser<x1D, version>(fs, address);
-    auto& inst = fs.x1D_map[k];
+    uint32_t k = new_default_parser<x1D, version>(fs, address);
+    const auto& inst = fs.get_x1D(k);
 
     // log(&f, "size_a = %d, size_b = %d\n", size_a, size_b);
     skip(address, inst.size_b * (version >= A_162 ? 56 : 48));
