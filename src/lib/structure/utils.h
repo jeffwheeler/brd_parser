@@ -104,11 +104,10 @@ std::vector<std::pair<uint8_t, uint8_t>> x39_layers(const x39<version> &inst,
     File<version> *fs = &fs_x;
 
     uint32_t next_key = inst.ptr1;
-    while (HAS_ENTRY(x3A_map, next_key)) {
-        const x3A<version> *x3A_inst =
-            (const x3A<version> *)&fs->x3A_map.at(next_key);
-        layers.push_back(std::make_pair(x3A_inst->subtype, x3A_inst->layer));
-        next_key = x3A_inst->next;
+    while (fs->is_type(next_key, 0x3A)) {
+        const x3A<version> &x3A_inst = fs->get_x3A(next_key);
+        layers.push_back(std::make_pair(x3A_inst.subtype, x3A_inst.layer));
+        next_key = x3A_inst.next;
     }
 
     return layers;
@@ -119,8 +118,9 @@ std::vector<std::pair<std::string, uint32_t>> layer_list(File<version> &fs_x) {
     std::vector<std::pair<std::string, uint32_t>> list;
     File<version> *fs = &fs_x;
 
-    for (const auto &[k, x38_inst] : fs->x38_map) {
-        list.push_back(std::make_pair(x38_layer_name(x38_inst, fs), k));
+    for (auto &x38_inst : fs->iter_x38()) {
+        list.push_back(
+            std::make_pair(x38_layer_name(x38_inst, fs), x38_inst.k));
     }
     return list;
 }

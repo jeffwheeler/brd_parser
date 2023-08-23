@@ -416,8 +416,7 @@ void BrdView::drawX30(const x30<A_174> *inst, QPen *pen) {
     }
     */
 
-    const x31<A_174> *str_graphic =
-        (const x31<A_174> *)&fs->x31_map.at(inst->str_graphic_ptr);
+    const x31<A_174> &str_graphic = fs->get_x31(inst->str_graphic_ptr);
 
     QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
     font.setFixedPitch(true);
@@ -440,9 +439,9 @@ void BrdView::drawX30(const x30<A_174> *inst, QPen *pen) {
         font.setPixelSize(factor);
     }
 
-    if (!str_graphic->s.empty()) {
-        qreal x = str_graphic->coords[0] / 1000.;
-        qreal y = str_graphic->coords[1] / 1000.;
+    if (!str_graphic.s.empty()) {
+        qreal x = str_graphic.coords[0] / 1000.;
+        qreal y = str_graphic.coords[1] / 1000.;
         QTransform t =
             QTransform()
                 .translate(x, y)
@@ -450,7 +449,7 @@ void BrdView::drawX30(const x30<A_174> *inst, QPen *pen) {
                 .scale(inst->font.reversed == TextReversed ? -1 : 1, -1);
 
         QGraphicsTextItem *text =
-            scene->addText(QString::fromStdString(str_graphic->s), font);
+            scene->addText(QString::fromStdString(str_graphic.s), font);
         QRectF boundingBox = text->boundingRect();
         if (x36_x08_inst != nullptr) {
             if ((inst->font.align) == TextAlignRight) {
@@ -708,9 +707,9 @@ void BrdView::drawShape(const uint32_t ptr, QPen *pen) {
     } else if (fs->is_type(ptr, 0x34)) {
         const x34<A_174> &inst = fs->get_x34(ptr);
         drawX34(&inst, pen);
-    } else if (fs->x37_map.count(ptr) > 0) {
-        const x37<A_174> *inst = (const x37<A_174> *)&fs->x37_map.at(ptr);
-        drawShape(inst->ptr1, darkerPen);
+    } else if (fs->is_type(ptr, 0x37)) {
+        const x37<A_174> &inst = fs->get_x37(ptr);
+        drawShape(inst.ptr1, darkerPen);
         // for (uint8_t i; i<inst->count; i++) {
         // for (uint8_t i=0; i<inst->capacity; i++) {
         //    drawShape(inst->ptrs[i], pen);

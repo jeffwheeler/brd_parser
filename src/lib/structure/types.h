@@ -1575,21 +1575,12 @@ class File {
 #endif
 
     std::map<uint32_t, char *> strings;
-    std::map<uint32_t, x0F<version>> x0F_map;
     std::map<uint32_t, x1C<version>> x1C_map;
-    std::map<uint32_t, x1D<version>> x1D_map;
     std::map<uint32_t, x1E> x1E_map;
-    std::map<uint32_t, x1F<version>> x1F_map;
     x27 x27_db;
     std::map<uint32_t, x2A> x2A_map;
-    std::map<uint32_t, x31<version>> x31_map;
     std::map<uint32_t, x36<version>> x36_map;
-    std::map<uint32_t, x37<version>> x37_map;
-    std::map<uint32_t, x38<version>> x38_map;
-    std::map<uint32_t, x39<version>> x39_map;
-    std::map<uint32_t, x3A<version>> x3A_map;
     std::map<uint32_t, x3B<version>> x3B_map;
-    std::map<uint32_t, x3C<version>> x3C_map;
 
     std::map<uint32_t, stackup_material> stackup_materials;
     std::optional<meta_netlist_path> netlist_path;
@@ -1615,6 +1606,8 @@ class File {
     x16<A_174> get_x16(uint32_t k);
     x17<A_174> get_x17(uint32_t k);
     const x1B<A_174> get_x1B(uint32_t k);
+    const x1D<A_174> get_x1D(uint32_t k);
+    const x1F<A_174> get_x1F(uint32_t k);
     const x23<A_174> get_x23(uint32_t k);
     const x24<A_174> get_x24(uint32_t k);
     const x26<A_174> get_x26(uint32_t k);
@@ -1624,9 +1617,15 @@ class File {
     const x2D<A_174> get_x2D(uint32_t k);
     const x2E<A_174> get_x2E(uint32_t k);
     const x30<A_174> get_x30(uint32_t k);
+    const x31<A_174> get_x31(uint32_t k);
     const x32<A_174> get_x32(uint32_t k);
     const x33<A_174> get_x33(uint32_t k);
     const x34<A_174> get_x34(uint32_t k);
+    const x37<A_174> get_x37(uint32_t k);
+    const x38<A_174> get_x38(uint32_t k);
+    const x39<A_174> get_x39(uint32_t k);
+    const x3A<A_174> get_x3A(uint32_t k);
+    const x3C<A_174> get_x3C(uint32_t k);
 
     bool is_type(uint32_t k, uint8_t t);
 
@@ -1763,7 +1762,7 @@ class File {
 
     IterBase<x30<version>> iter_x30(uint32_t i_x2D) {
         auto &i = this->get_x2D(i_x2D);
-        if (i.first_pad_ptr == 0) {
+        if (i.ptr3 == 0) {
             return IterBase<x30<version>>(
                 Iter<x30<version>>(*this, i.k, &File::get_x30),
                 Iter<x30<version>>(*this, i.k, &File::get_x30));
@@ -1808,6 +1807,12 @@ class File {
         }
     };
 
+    IterBase<x38<version>> iter_x38() {
+        return IterBase<x38<version>>(
+            Iter<x38<version>>(*this, this->hdr->ll_x38.head, &File::get_x38),
+            Iter<x38<version>>(*this, this->hdr->ll_x38.tail, &File::get_x38));
+    };
+
    private:
     mapped_region region;
 
@@ -1831,6 +1836,8 @@ class File {
     x16<A_174> (*x16_upgrade)(void *);
     x17<A_174> (*x17_upgrade)(void *);
     x1B<A_174> (*x1B_upgrade)(void *);
+    x1D<A_174> (*x1D_upgrade)(void *);
+    x1F<A_174> (*x1F_upgrade)(void *);
     x23<A_174> (*x23_upgrade)(void *);
     x24<A_174> (*x24_upgrade)(void *);
     x26<A_174> (*x26_upgrade)(void *);
@@ -1840,9 +1847,15 @@ class File {
     x2D<A_174> (*x2D_upgrade)(void *);
     x2E<A_174> (*x2E_upgrade)(void *);
     x30<A_174> (*x30_upgrade)(void *);
+    x31<A_174> (*x31_upgrade)(void *);
     x32<A_174> (*x32_upgrade)(void *);
     x33<A_174> (*x33_upgrade)(void *);
     x34<A_174> (*x34_upgrade)(void *);
+    x37<A_174> (*x37_upgrade)(void *);
+    x38<A_174> (*x38_upgrade)(void *);
+    x39<A_174> (*x39_upgrade)(void *);
+    x3A<A_174> (*x3A_upgrade)(void *);
+    x3C<A_174> (*x3C_upgrade)(void *);
 };
 
 #endif

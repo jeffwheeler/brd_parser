@@ -64,7 +64,13 @@ void check_header_values(File<version>& fs) {
                     fs.is_type(fs.hdr->ll_x24_x28.head, 0x28));
     }
     if (fs.hdr->ll_x2B.head != 0) {
-        for (auto& i : fs.iter_x2B()) {
+        for (auto& i_x2B : fs.iter_x2B()) {
+            for (auto& i_x2D : fs.iter_x2D(i_x2B.k)) {
+                for (auto& i_x30 : fs.iter_x30(i_x2D.k)) {
+                }
+                for (auto& i_x32 : fs.iter_x32(i_x2D.k)) {
+                }
+            }
         }
     }
     if (fs.hdr->ll_x03_x30.head != 0) {
@@ -75,15 +81,12 @@ void check_header_values(File<version>& fs) {
         }
     }
     if (fs.hdr->ll_x1D_x1E_x1F.head != 0) {
-        EXPECT_TRUE(fs.x1D_map.count(fs.hdr->ll_x1D_x1E_x1F.head) > 0 ||
+        EXPECT_TRUE(fs.is_type(fs.hdr->ll_x1D_x1E_x1F.head, 0x1D) ||
                     fs.x1E_map.count(fs.hdr->ll_x1D_x1E_x1F.head) > 0 ||
-                    fs.x1F_map.count(fs.hdr->ll_x1D_x1E_x1F.head) > 0);
+                    fs.is_type(fs.hdr->ll_x1D_x1E_x1F.head, 0x1F));
     }
     if (fs.hdr->ll_x38.head != 0) {
-        auto& x = fs.x38_map.at(fs.hdr->ll_x38.head);
-        while (x.next != fs.hdr->ll_x38.tail) {
-            EXPECT_TRUE(fs.x38_map.count(x.next) > 0);
-            x = fs.x38_map.at(x.next);
+        for (auto& i : fs.iter_x38()) {
         }
     }
     if (fs.hdr->ll_x2C.head != 0) {
@@ -148,9 +151,9 @@ TEST(ParseFile, Parallella) {
     EXPECT_EQ(x1C_inst->parts[0].w, 2600);
     EXPECT_EQ(x1C_inst->parts[0].h, 2600);
 
-    const x3C<A_174>* x3C_inst = &fs.x3C_map.at(0x0ACF9230);
-    EXPECT_EQ(x3C_inst->ptrs.size(), 2);
-    EXPECT_EQ(x3C_inst->ptrs.at(0), 0x0ACCDAC8);
+    const x3C<A_174>& x3C_inst = fs.get_x3C(0x0ACF9230);
+    EXPECT_EQ(x3C_inst.ptrs.size(), 2);
+    EXPECT_EQ(x3C_inst.ptrs.at(0), 0x0ACCDAC8);
 
     const auto x30_inst = fs.get_x30(0x0AD336C0);
     const auto x36_x08_inst = font_lookup(x30_inst.font.key, fs);
