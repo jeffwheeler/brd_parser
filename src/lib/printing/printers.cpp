@@ -201,8 +201,8 @@ void print_struct(const uint32_t k, File<version> &fs, const int d) {
         print_struct((const void *)fs.ptrs[k], &fs, d);
     } else if (fs.is_type(k, 0x37)) {
         print_struct((const void *)fs.ptrs[k], &fs, d);
-    } else if (fs.x38_map.count(k) > 0) {
-        print_struct((const void *)&fs.x38_map.at(k), &fs, d);
+    } else if (fs.is_type(k, 0x38)) {
+        print_struct((const void *)fs.ptrs[k], &fs, d);
     } else if (fs.x39_map.count(k) > 0) {
         print_struct((const void *)&fs.x39_map.at(k), &fs, d);
     } else if (fs.x3C_map.count(k) > 0) {

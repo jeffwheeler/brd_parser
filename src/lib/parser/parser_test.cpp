@@ -80,10 +80,7 @@ void check_header_values(File<version>& fs) {
                     fs.x1F_map.count(fs.hdr->ll_x1D_x1E_x1F.head) > 0);
     }
     if (fs.hdr->ll_x38.head != 0) {
-        auto& x = fs.x38_map.at(fs.hdr->ll_x38.head);
-        while (x.next != fs.hdr->ll_x38.tail) {
-            EXPECT_TRUE(fs.x38_map.count(x.next) > 0);
-            x = fs.x38_map.at(x.next);
+        for (auto& i : fs.iter_x38()) {
         }
     }
     if (fs.hdr->ll_x2C.head != 0) {

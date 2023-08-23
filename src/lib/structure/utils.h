@@ -119,8 +119,9 @@ std::vector<std::pair<std::string, uint32_t>> layer_list(File<version> &fs_x) {
     std::vector<std::pair<std::string, uint32_t>> list;
     File<version> *fs = &fs_x;
 
-    for (const auto &[k, x38_inst] : fs->x38_map) {
-        list.push_back(std::make_pair(x38_layer_name(x38_inst, fs), k));
+    for (auto &x38_inst : fs->iter_x38()) {
+        list.push_back(
+            std::make_pair(x38_layer_name(x38_inst, fs), x38_inst.k));
     }
     return list;
 }

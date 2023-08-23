@@ -552,9 +552,9 @@ void MainWindow::selectFilm() {
 
         // Lookup layers associated with this film
         uint32_t x38_k = layer_cache[t.toStdString()];
-        const x38<A_174>* x38_inst = (const x38<A_174>*)&fs->x38_map.at(x38_k);
+        const x38<A_174>& x38_inst = fs->get_x38(x38_k);
         const x39<A_174>* x39_inst =
-            (const x39<A_174>*)&fs->x39_map.at(x38_inst->ptr1);
+            (const x39<A_174>*)&fs->x39_map.at(x38_inst.ptr1);
         for (const auto& layer : x39_layers(*x39_inst, fs.value())) {
             layers.push_back(layerPair(layer.first, layer.second));
         }

@@ -1584,7 +1584,6 @@ class File {
     std::map<uint32_t, x2A> x2A_map;
     std::map<uint32_t, x31<version>> x31_map;
     std::map<uint32_t, x36<version>> x36_map;
-    std::map<uint32_t, x38<version>> x38_map;
     std::map<uint32_t, x39<version>> x39_map;
     std::map<uint32_t, x3A<version>> x3A_map;
     std::map<uint32_t, x3B<version>> x3B_map;
@@ -1627,6 +1626,7 @@ class File {
     const x33<A_174> get_x33(uint32_t k);
     const x34<A_174> get_x34(uint32_t k);
     const x37<A_174> get_x37(uint32_t k);
+    const x38<A_174> get_x38(uint32_t k);
 
     bool is_type(uint32_t k, uint8_t t);
 
@@ -1808,6 +1808,12 @@ class File {
         }
     };
 
+    IterBase<x38<version>> iter_x38() {
+        return IterBase<x38<version>>(
+            Iter<x38<version>>(*this, this->hdr->ll_x38.head, &File::get_x38),
+            Iter<x38<version>>(*this, this->hdr->ll_x38.tail, &File::get_x38));
+    };
+
    private:
     mapped_region region;
 
@@ -1844,6 +1850,7 @@ class File {
     x33<A_174> (*x33_upgrade)(void *);
     x34<A_174> (*x34_upgrade)(void *);
     x37<A_174> (*x37_upgrade)(void *);
+    x38<A_174> (*x38_upgrade)(void *);
 };
 
 #endif
