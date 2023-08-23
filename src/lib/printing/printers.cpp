@@ -205,9 +205,9 @@ void print_struct(const uint32_t k, File<version> &fs, const int d) {
         print_struct((const void *)fs.ptrs[k], &fs, d);
     } else if (fs.is_type(k, 0x39)) {
         print_struct((const void *)fs.ptrs[k], &fs, d);
+    } else if (fs.is_type(k, 0x3A)) {
+        print_struct((const void *)fs.ptrs[k], &fs, d);
     } else if (fs.x3C_map.count(k) > 0) {
-        print_struct((const void *)&fs.x3A_map.at(k), &fs, d);
-    } else if (fs.x3A_map.count(k) > 0) {
         print_struct((const void *)&fs.x3C_map.at(k), &fs, d);
     } else {
         printf_d(d, "Did not find key 0x%08X\n", ntohl(k));
@@ -2879,7 +2879,7 @@ void print_x39(const void *untyped_inst, File<version> *fs, const int d) {
     std::printf("]\n");
 
     /*
-    if (HAS_ENTRY(x3A_map, inst->ptr1)) {
+    if (fs->is_type(inst->ptr1, 0x3A)) {
         PRINT(x3A_map, inst->ptr1, d+1);
     } else {
         printf_d(d+1, "ptr1 unrecognized: 0x%08X\n", ntohl(inst->ptr1));
@@ -2895,8 +2895,8 @@ void print_x3A(const void *untyped_inst, File<version> *fs, const int d) {
              ntohl(inst->t), inst->subtype, inst->layer, ntohl(inst->k),
              inst->un);
 
-    if (HAS_ENTRY(x3A_map, inst->next)) {
-        PRINT(x3A_map, inst->next, d + 1);
+    if (fs->is_type(inst->next, 0x3A)) {
+        print_struct((const void *)fs->ptrs[inst->next], fs, d + 2);
     } else if (fs->is_type(inst->next, 0x39)) {
         print_struct((const void *)fs->ptrs[inst->next], fs, d + 2);
     } else {
