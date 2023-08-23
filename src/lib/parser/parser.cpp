@@ -203,8 +203,8 @@ uint32_t parse_x1E(File<A_174>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x1F(File<A_174>& fs, void*& address) {
-    uint32_t k = default_parser<x1F, version>(fs, address);
-    auto& inst = fs.x1F_map[k];
+    uint32_t k = new_default_parser<x1F, version>(fs, address);
+    const auto& inst = fs.get_x1F(k);
 
     if constexpr (version >= A_172) {
         skip(address, inst.size * 280 + 8);
