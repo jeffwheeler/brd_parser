@@ -924,7 +924,7 @@ x38<A_166>::operator x38<A_174>() const {
     new_inst.ptr = this->ptr;
     new_inst.un2 = this->un2;
     new_inst.un3 = 0;
-    new_inst.s = this->s;
+    new_inst.s = std::string("Mystery layer name?");
     return new_inst;
 }
 
