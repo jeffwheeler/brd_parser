@@ -324,14 +324,12 @@ uint32_t parse_x2A(File<A_174>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x31(File<A_174>& fs, void*& address) {
-    uint32_t k = default_parser<x31, version>(fs, address);
-    auto& inst = fs.x31_map[k];
+    uint32_t k = new_default_parser<x31, version>(fs, address);
+    const auto& inst = fs.get_x31(k);
 
     if (inst.len > 0) {
         uint32_t len = round_to_word(inst.len);
-        char* s = static_cast<char*>(address);
         skip(address, len);
-        inst.s = std::string(s);
     }
 
     return 0;

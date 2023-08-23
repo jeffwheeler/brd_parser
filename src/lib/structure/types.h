@@ -1579,7 +1579,6 @@ class File {
     std::map<uint32_t, x1E> x1E_map;
     x27 x27_db;
     std::map<uint32_t, x2A> x2A_map;
-    std::map<uint32_t, x31<version>> x31_map;
     std::map<uint32_t, x36<version>> x36_map;
     std::map<uint32_t, x3B<version>> x3B_map;
     std::map<uint32_t, x3C<version>> x3C_map;
@@ -1619,6 +1618,7 @@ class File {
     const x2D<A_174> get_x2D(uint32_t k);
     const x2E<A_174> get_x2E(uint32_t k);
     const x30<A_174> get_x30(uint32_t k);
+    const x31<A_174> get_x31(uint32_t k);
     const x32<A_174> get_x32(uint32_t k);
     const x33<A_174> get_x33(uint32_t k);
     const x34<A_174> get_x34(uint32_t k);
@@ -1762,7 +1762,7 @@ class File {
 
     IterBase<x30<version>> iter_x30(uint32_t i_x2D) {
         auto &i = this->get_x2D(i_x2D);
-        if (i.first_pad_ptr == 0) {
+        if (i.ptr3 == 0) {
             return IterBase<x30<version>>(
                 Iter<x30<version>>(*this, i.k, &File::get_x30),
                 Iter<x30<version>>(*this, i.k, &File::get_x30));
@@ -1847,6 +1847,7 @@ class File {
     x2D<A_174> (*x2D_upgrade)(void *);
     x2E<A_174> (*x2E_upgrade)(void *);
     x30<A_174> (*x30_upgrade)(void *);
+    x31<A_174> (*x31_upgrade)(void *);
     x32<A_174> (*x32_upgrade)(void *);
     x33<A_174> (*x33_upgrade)(void *);
     x34<A_174> (*x34_upgrade)(void *);

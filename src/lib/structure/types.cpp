@@ -676,6 +676,7 @@ x2E<A_160>::operator x2E<A_174>() const {
 
 template <>
 x30<A_160>::operator x30<A_174>() const {
+    printf("A\n");
     x30<A_174> new_inst;
     new_inst.type = this->type;
     new_inst.subtype = this->subtype;
@@ -1014,6 +1015,7 @@ void File<version>::cache_upgrade_funcs() {
             this->x2D_upgrade = new_upgrade<A_160, A_174, x2D>;
             this->x2E_upgrade = new_upgrade<A_160, A_174, x2E>;
             this->x30_upgrade = new_upgrade<A_160, A_174, x30>;
+            this->x31_upgrade = new_upgrade<A_160, A_174, x31>;
             this->x32_upgrade = new_upgrade<A_160, A_174, x32>;
             this->x33_upgrade = new_upgrade<A_160, A_174, x33>;
             this->x34_upgrade = new_upgrade<A_160, A_174, x34>;
@@ -1052,6 +1054,7 @@ void File<version>::cache_upgrade_funcs() {
             this->x2D_upgrade = new_upgrade<A_162, A_174, x2D>;
             this->x2E_upgrade = new_upgrade<A_162, A_174, x2E>;
             this->x30_upgrade = new_upgrade<A_162, A_174, x30>;
+            this->x31_upgrade = new_upgrade<A_162, A_174, x31>;
             this->x32_upgrade = new_upgrade<A_162, A_174, x32>;
             this->x33_upgrade = new_upgrade<A_162, A_174, x33>;
             this->x34_upgrade = new_upgrade<A_162, A_174, x34>;
@@ -1090,6 +1093,7 @@ void File<version>::cache_upgrade_funcs() {
             this->x2D_upgrade = new_upgrade<A_164, A_174, x2D>;
             this->x2E_upgrade = new_upgrade<A_164, A_174, x2E>;
             this->x30_upgrade = new_upgrade<A_164, A_174, x30>;
+            this->x31_upgrade = new_upgrade<A_164, A_174, x31>;
             this->x32_upgrade = new_upgrade<A_164, A_174, x32>;
             this->x33_upgrade = new_upgrade<A_164, A_174, x33>;
             this->x34_upgrade = new_upgrade<A_164, A_174, x34>;
@@ -1128,6 +1132,7 @@ void File<version>::cache_upgrade_funcs() {
             this->x2D_upgrade = new_upgrade<A_165, A_174, x2D>;
             this->x2E_upgrade = new_upgrade<A_165, A_174, x2E>;
             this->x30_upgrade = new_upgrade<A_165, A_174, x30>;
+            this->x31_upgrade = new_upgrade<A_165, A_174, x31>;
             this->x32_upgrade = new_upgrade<A_165, A_174, x32>;
             this->x33_upgrade = new_upgrade<A_165, A_174, x33>;
             this->x34_upgrade = new_upgrade<A_165, A_174, x34>;
@@ -1167,6 +1172,7 @@ void File<version>::cache_upgrade_funcs() {
             this->x2D_upgrade = new_upgrade<A_166, A_174, x2D>;
             this->x2E_upgrade = new_upgrade<A_166, A_174, x2E>;
             this->x30_upgrade = new_upgrade<A_166, A_174, x30>;
+            this->x31_upgrade = new_upgrade<A_166, A_174, x31>;
             this->x32_upgrade = new_upgrade<A_166, A_174, x32>;
             this->x33_upgrade = new_upgrade<A_166, A_174, x33>;
             this->x34_upgrade = new_upgrade<A_166, A_174, x34>;
@@ -1208,6 +1214,7 @@ void File<version>::cache_upgrade_funcs() {
             this->x2D_upgrade = new_upgrade<A_172, A_174, x2D>;
             this->x2E_upgrade = new_upgrade<A_172, A_174, x2E>;
             this->x30_upgrade = new_upgrade<A_172, A_174, x30>;
+            this->x31_upgrade = new_upgrade<A_172, A_174, x31>;
             this->x32_upgrade = new_upgrade<A_172, A_174, x32>;
             this->x33_upgrade = new_upgrade<A_172, A_174, x33>;
             this->x34_upgrade = new_upgrade<A_172, A_174, x34>;
@@ -1249,6 +1256,7 @@ void File<version>::cache_upgrade_funcs() {
             this->x2D_upgrade = new_upgrade<A_174, A_174, x2D>;
             this->x2E_upgrade = new_upgrade<A_174, A_174, x2E>;
             this->x30_upgrade = new_upgrade<A_174, A_174, x30>;
+            this->x31_upgrade = new_upgrade<A_174, A_174, x31>;
             this->x32_upgrade = new_upgrade<A_174, A_174, x32>;
             this->x33_upgrade = new_upgrade<A_174, A_174, x33>;
             this->x34_upgrade = new_upgrade<A_174, A_174, x34>;
@@ -1455,6 +1463,21 @@ const x2E<A_174> File<A_174>::get_x2E(uint32_t k) {
 template <>
 const x30<A_174> File<A_174>::get_x30(uint32_t k) {
     return this->x30_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x31<A_174> File<A_174>::get_x31(uint32_t k) {
+    void *p = this->ptrs[k];
+    x31<A_174> i = this->x31_upgrade(p);
+    uint32_t size;
+    if (this->hdr->magic < A_174) {
+        size = sizeof_until_tail<x31<A_160>>();
+    } else {
+        size = sizeof_until_tail<x31<A_174>>();
+    }
+    void *next_ptr = ((char *)p) + size;
+    i.s = std::string(static_cast<char *>(next_ptr));
+    return i;
 }
 
 template <>
