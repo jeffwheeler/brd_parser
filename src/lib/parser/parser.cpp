@@ -50,22 +50,6 @@ uint8_t layer_count(File<version>* fs) {
 
 template <template <AllegroVersion> typename T, AllegroVersion version>
 uint32_t default_parser(File<A_174>& fs, void*& address) {
-    T<version> inst;
-    memcpy(&inst, address, sizeof_until_tail<T<version>>());
-    std::map<uint32_t, T<A_174>>* m = find_map<T<A_174>>(fs);
-    // if (m->count(inst.k) > 0) {
-    //     log(&f, "- Already seen this key! = 0x %08X\n", ntohl(inst.k));
-    //     exit(1);
-    // }
-    (*m)[inst.k] = upgrade<version, A_174>(inst);
-    size_t size = sizeof_until_tail<T<version>>();
-    skip(address, sizeof_until_tail<T<version>>());
-    // address = (void*)((char*)address)+sizeof_until_tail<T<version>>();
-    return inst.k;
-}
-
-template <template <AllegroVersion> typename T, AllegroVersion version>
-uint32_t new_default_parser(File<A_174>& fs, void*& address) {
     T<version>* inst = static_cast<T<version>*>(address);
     // fs.ptrs[inst->k] = address;
     // new_find_map<T<A_174>>(fs)[inst->k] = address;
@@ -77,7 +61,7 @@ uint32_t new_default_parser(File<A_174>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x03(File<A_174>& fs, void*& address) {
-    uint32_t k = new_default_parser<x03, version>(fs, address);
+    uint32_t k = default_parser<x03, version>(fs, address);
     const auto& inst = fs.get_x03(k);
 
     char* buf;
@@ -173,7 +157,7 @@ uint32_t parse_x1C(File<A_174>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x1D(File<A_174>& fs, void*& address) {
-    uint32_t k = new_default_parser<x1D, version>(fs, address);
+    uint32_t k = default_parser<x1D, version>(fs, address);
     const auto& inst = fs.get_x1D(k);
 
     // log(&f, "size_a = %d, size_b = %d\n", size_a, size_b);
@@ -203,7 +187,7 @@ uint32_t parse_x1E(File<A_174>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x1F(File<A_174>& fs, void*& address) {
-    uint32_t k = new_default_parser<x1F, version>(fs, address);
+    uint32_t k = default_parser<x1F, version>(fs, address);
     const auto& inst = fs.get_x1F(k);
 
     if constexpr (version >= A_172) {
@@ -325,7 +309,7 @@ uint32_t parse_x2A(File<A_174>& fs, void*& address) {
 template <AllegroVersion version>
 uint32_t parse_x31(File<A_174>& fs, void*& address) {
     x31<version>* i = (x31<version>*)address;
-    uint32_t k = new_default_parser<x31, version>(fs, address);
+    uint32_t k = default_parser<x31, version>(fs, address);
 
     if (i->len > 0) {
         uint32_t len = round_to_word(i->len);
@@ -488,7 +472,7 @@ uint32_t parse_x3B(File<A_174>& fs, void*& address) {
 template <AllegroVersion version>
 uint32_t parse_x3C(File<A_174>& fs, void*& address) {
     x3C<version>* i = (x3C<version>*)address;
-    uint32_t k = new_default_parser<x3C, version>(fs, address);
+    uint32_t k = default_parser<x3C, version>(fs, address);
     skip(address, i->size * 4);
     return 0;
 }
