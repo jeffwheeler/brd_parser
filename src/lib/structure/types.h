@@ -1731,8 +1731,6 @@ class File {
     };
 
     IterBase<x1C<version>> iter_x1C() {
-        printf("head = %08X\ntail = %08X\n", ntohl(this->hdr->ll_x1C.head),
-               ntohl(this->hdr->ll_x1C.tail));
         return IterBase<x1C<version>>(
             Iter<x1C<version>>(*this, this->hdr->ll_x1C.head, &File::get_x1C),
             Iter<x1C<version>>(*this, this->hdr->ll_x1C.tail, &File::get_x1C));
