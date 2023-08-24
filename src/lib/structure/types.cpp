@@ -421,64 +421,6 @@ x1B<A_160>::operator x1B<A_174>() const {
 }
 
 template <>
-x1C_header<A_160>::operator x1C_header<A_174>() const {
-    x1C_header<A_174> new_inst;
-    new_inst.t = this->t;
-    new_inst.n = this->n;
-    new_inst.un9 = this->un9;
-    new_inst.k = this->k;
-    new_inst.next = this->next;
-    new_inst.pad_str = this->pad_str;
-    new_inst.un0_0 = this->un0_0;
-    new_inst.un0_1 = this->un0_1;
-    new_inst.pad_path = this->pad_path;
-    new_inst.un0_3 = this->un0_3;
-    new_inst.un0_4 = this->un0_4;
-    new_inst.un0_5 = this->un0_5;
-    new_inst.un1 = this->un1;
-    new_inst.un2_0 = this->un2_0;
-    new_inst.un2_1 = this->un2_1;
-    new_inst.un3 = this->un3;
-    new_inst.size_hint = this->size_hint;
-    for (int i = 0; i < 4; i++) {
-        new_inst.coords2[i] = this->coords2[i];
-    }
-    new_inst.un4 = this->un4;
-    new_inst.un5 = this->un5;
-    new_inst.un6 = this->un6;
-    return new_inst;
-}
-
-template <>
-x1C_header<A_165>::operator x1C_header<A_174>() const {
-    x1C_header<A_174> new_inst;
-    new_inst.t = this->t;
-    new_inst.n = this->n;
-    new_inst.un9 = this->un9;
-    new_inst.k = this->k;
-    new_inst.next = this->next;
-    new_inst.pad_str = this->pad_str;
-    new_inst.un0_0 = this->un0_0;
-    new_inst.un0_1 = this->un0_1;
-    new_inst.pad_path = this->pad_path;
-    new_inst.un0_3 = this->un0_3;
-    new_inst.un0_4 = this->un0_4;
-    new_inst.un0_5 = this->un0_5;
-    new_inst.un1 = this->un1;
-    new_inst.un2_0 = this->un2_0;
-    new_inst.un2_1 = this->un2_1;
-    new_inst.un3 = this->un3;
-    new_inst.size_hint = this->size_hint;
-    for (int i = 0; i < 4; i++) {
-        new_inst.coords2[i] = this->coords2[i];
-    }
-    new_inst.un4 = this->un4;
-    new_inst.un5 = this->un5;
-    new_inst.un6 = this->un6;
-    return new_inst;
-}
-
-template <>
 t13<A_160>::operator t13<A_174>() const {
     t13<A_174> new_inst;
     new_inst.str_ptr = this->str_ptr;
@@ -496,17 +438,58 @@ t13<A_160>::operator t13<A_174>() const {
 template <>
 x1C<A_160>::operator x1C<A_174>() const {
     x1C<A_174> new_inst;
-    new_inst.hdr = this->hdr;
-    for (const auto &v : this->parts) new_inst.parts.push_back(v);
+    new_inst.t = this->t;
+    new_inst.n = this->n;
+    new_inst.un9 = this->un9;
+    new_inst.k = this->k;
+    new_inst.next = this->next;
+    new_inst.pad_str = this->pad_str;
+    new_inst.un0_0 = this->un0_0;
+    new_inst.un0_1 = this->un0_1;
+    new_inst.pad_path = this->pad_path;
+    new_inst.un0_3 = this->un0_3;
+    new_inst.un0_4 = this->un0_4;
+    new_inst.un0_5 = this->un0_5;
+    new_inst.un1 = this->un1;
+    new_inst.un2_0 = this->un2_0;
+    new_inst.un2_1 = this->un2_1;
+    new_inst.un3 = this->un3;
+    new_inst.size_hint = this->size_hint;
+    for (int i = 0; i < 4; i++) {
+        new_inst.coords2[i] = this->coords2[i];
+    }
+    new_inst.un4 = this->un4;
+    new_inst.un5 = this->un5;
+    new_inst.un6 = this->un6;
     return new_inst;
 }
 
 template <>
 x1C<A_165>::operator x1C<A_174>() const {
     x1C<A_174> new_inst;
-    new_inst.hdr = this->hdr;
-    for (const auto &v : this->parts)
-        new_inst.parts.push_back(*reinterpret_cast<const t13<A_160> *>(&v));
+    new_inst.t = this->t;
+    new_inst.n = this->n;
+    new_inst.un9 = this->un9;
+    new_inst.k = this->k;
+    new_inst.next = this->next;
+    new_inst.pad_str = this->pad_str;
+    new_inst.un0_0 = this->un0_0;
+    new_inst.un0_1 = this->un0_1;
+    new_inst.pad_path = this->pad_path;
+    new_inst.un0_3 = this->un0_3;
+    new_inst.un0_4 = this->un0_4;
+    new_inst.un0_5 = this->un0_5;
+    new_inst.un1 = this->un1;
+    new_inst.un2_0 = this->un2_0;
+    new_inst.un2_1 = this->un2_1;
+    new_inst.un3 = this->un3;
+    new_inst.size_hint = this->size_hint;
+    for (int i = 0; i < 4; i++) {
+        new_inst.coords2[i] = this->coords2[i];
+    }
+    new_inst.un4 = this->un4;
+    new_inst.un5 = this->un5;
+    new_inst.un6 = this->un6;
     return new_inst;
 }
 
@@ -1002,6 +985,8 @@ void File<version>::cache_upgrade_funcs() {
             this->x16_upgrade = new_upgrade<A_160, A_174, x16>;
             this->x17_upgrade = new_upgrade<A_160, A_174, x17>;
             this->x1B_upgrade = new_upgrade<A_160, A_174, x1B>;
+            this->x1C_upgrade = new_upgrade<A_160, A_174, x1C>;
+            this->t13_upgrade = new_upgrade<A_160, A_174, t13>;
             this->x1D_upgrade = new_upgrade<A_160, A_174, x1D>;
             this->x1F_upgrade = new_upgrade<A_160, A_174, x1F>;
             this->x23_upgrade = new_upgrade<A_160, A_174, x23>;
@@ -1042,6 +1027,8 @@ void File<version>::cache_upgrade_funcs() {
             this->x16_upgrade = new_upgrade<A_162, A_174, x16>;
             this->x17_upgrade = new_upgrade<A_162, A_174, x17>;
             this->x1B_upgrade = new_upgrade<A_162, A_174, x1B>;
+            this->x1C_upgrade = new_upgrade<A_162, A_174, x1C>;
+            this->t13_upgrade = new_upgrade<A_162, A_174, t13>;
             this->x1D_upgrade = new_upgrade<A_162, A_174, x1D>;
             this->x1F_upgrade = new_upgrade<A_162, A_174, x1F>;
             this->x23_upgrade = new_upgrade<A_162, A_174, x23>;
@@ -1082,6 +1069,8 @@ void File<version>::cache_upgrade_funcs() {
             this->x16_upgrade = new_upgrade<A_164, A_174, x16>;
             this->x17_upgrade = new_upgrade<A_164, A_174, x17>;
             this->x1B_upgrade = new_upgrade<A_164, A_174, x1B>;
+            this->x1C_upgrade = new_upgrade<A_164, A_174, x1C>;
+            this->t13_upgrade = new_upgrade<A_164, A_174, t13>;
             this->x1D_upgrade = new_upgrade<A_164, A_174, x1D>;
             this->x1F_upgrade = new_upgrade<A_164, A_174, x1F>;
             this->x23_upgrade = new_upgrade<A_164, A_174, x23>;
@@ -1122,6 +1111,8 @@ void File<version>::cache_upgrade_funcs() {
             this->x16_upgrade = new_upgrade<A_165, A_174, x16>;
             this->x17_upgrade = new_upgrade<A_165, A_174, x17>;
             this->x1B_upgrade = new_upgrade<A_165, A_174, x1B>;
+            this->x1C_upgrade = new_upgrade<A_165, A_174, x1C>;
+            this->t13_upgrade = new_upgrade<A_165, A_174, t13>;
             this->x1D_upgrade = new_upgrade<A_165, A_174, x1D>;
             this->x1F_upgrade = new_upgrade<A_165, A_174, x1F>;
             this->x23_upgrade = new_upgrade<A_165, A_174, x23>;
@@ -1163,6 +1154,8 @@ void File<version>::cache_upgrade_funcs() {
             this->x16_upgrade = new_upgrade<A_166, A_174, x16>;
             this->x17_upgrade = new_upgrade<A_166, A_174, x17>;
             this->x1B_upgrade = new_upgrade<A_166, A_174, x1B>;
+            this->x1C_upgrade = new_upgrade<A_166, A_174, x1C>;
+            this->t13_upgrade = new_upgrade<A_166, A_174, t13>;
             this->x1D_upgrade = new_upgrade<A_166, A_174, x1D>;
             this->x1F_upgrade = new_upgrade<A_166, A_174, x1F>;
             this->x23_upgrade = new_upgrade<A_166, A_174, x23>;
@@ -1206,6 +1199,8 @@ void File<version>::cache_upgrade_funcs() {
             this->x16_upgrade = new_upgrade<A_172, A_174, x16>;
             this->x17_upgrade = new_upgrade<A_172, A_174, x17>;
             this->x1B_upgrade = new_upgrade<A_172, A_174, x1B>;
+            this->x1C_upgrade = new_upgrade<A_172, A_174, x1C>;
+            this->t13_upgrade = new_upgrade<A_172, A_174, t13>;
             this->x1D_upgrade = new_upgrade<A_172, A_174, x1D>;
             this->x1F_upgrade = new_upgrade<A_172, A_174, x1F>;
             this->x23_upgrade = new_upgrade<A_172, A_174, x23>;
@@ -1249,6 +1244,8 @@ void File<version>::cache_upgrade_funcs() {
             this->x16_upgrade = new_upgrade<A_174, A_174, x16>;
             this->x17_upgrade = new_upgrade<A_174, A_174, x17>;
             this->x1B_upgrade = new_upgrade<A_174, A_174, x1B>;
+            this->x1C_upgrade = new_upgrade<A_174, A_174, x1C>;
+            this->t13_upgrade = new_upgrade<A_174, A_174, t13>;
             this->x1D_upgrade = new_upgrade<A_174, A_174, x1D>;
             this->x1F_upgrade = new_upgrade<A_174, A_174, x1F>;
             this->x23_upgrade = new_upgrade<A_174, A_174, x23>;
@@ -1413,6 +1410,40 @@ x17<A_174> File<A_174>::get_x17(uint32_t k) {
 template <>
 const x1B<A_174> File<A_174>::get_x1B(uint32_t k) {
     return this->x1B_upgrade(this->ptrs[k]);
+}
+
+template <>
+const x1C<A_174> File<A_174>::get_x1C(uint32_t k) {
+    void *p = this->ptrs[k];
+    x1C<A_174> i = this->x1C_upgrade(this->ptrs[k]);
+
+    uint32_t obj_size, t13_size;
+    if (this->hdr->magic < A_165) {
+        obj_size = sizeof_until_tail<x1C<A_160>>();
+        t13_size = sizeof_until_tail<t13<A_160>>();
+    } else if (this->hdr->magic < A_172) {
+        obj_size = sizeof_until_tail<x1C<A_165>>();
+        t13_size = sizeof_until_tail<t13<A_165>>();
+    } else {
+        obj_size = sizeof_until_tail<x1C<A_172>>();
+        t13_size = sizeof_until_tail<t13<A_172>>();
+    }
+
+    uint32_t count;
+    if (this->hdr->magic < A_172) {
+        count = 10 + i.size_hint * 3;
+    } else {
+        count = 21 + i.un2_0 * 4;
+    }
+
+    void *next_ptr = ((char *)p) + obj_size;
+    for (int j = 0; j < count; j++) {
+        t13<A_174> t13_inst = this->t13_upgrade(next_ptr);
+        i.parts.push_back(t13_inst);
+        next_ptr = ((char *)p) + t13_size;
+    }
+
+    return i;
 }
 
 template <>
