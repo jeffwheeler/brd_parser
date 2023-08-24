@@ -227,24 +227,7 @@ uint32_t parse_x21(File<A_174>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x27(File<A_174>& fs, void*& address) {
-    if (PRINT_ALL_ITEMS) {
-        // log(&f, "- Expecting to read until 0x%08X\n", fs.x27_end_pos - 1);
-    }
-    // f.read((char*)&fs.x27_db.t, 4);
-    fs.x27_db.t = *static_cast<uint32_t*>(address);
-    skip(address, 4);
-
-    // uint32_t pos = f.tellg();
-    // uint32_t size =
-    //     fs.x27_end_pos - 1 - ((char*)address - (char*)base_addr_glb);
-    // uint32_t size = fs.x27_end_pos - 1;
-    // std::vector<uint32_t> xs(size / 4);
-    // f.read((char*)&xs[0], size);
-    // memcpy(&xs[0], address, size);
-    // fs.x27_db.keys = std::unordered_set<uint32_t>(xs.begin(), xs.end());
-
     address = (char*)base_addr_glb + fs.x27_end_pos - 1;
-
     return 0;
 }
 
