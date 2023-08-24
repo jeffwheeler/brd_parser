@@ -469,31 +469,18 @@ File<A_174> parse_file_raw(mapped_region region) {
     // This must be done after reading the header
     fs.prepare();
 
-    /*
-    if (PRINT_ALL_ITEMS) {
-        log(&f, "Looking at un19\n");
-    }
-    */
     uint32_t* un19 = static_cast<uint32_t*>((void*)cur_addr);
     fs.x27_end_pos = un19[7];
 
-    /*
-    // Skip to layers
-    if (PRINT_ALL_ITEMS) {
-        log(&f, "Looking at layer map\n");
-    }
-    */
+    // Layer map
     cur_addr = (char*)base_addr + 0x430;
     for (uint8_t i = 0; i < 25; i++) {
-        uint32_t xs[2];
-        xs[0] = *((uint32_t*)(cur_addr));
-        skip(cur_addr, 4);
-        xs[1] = *((uint32_t*)(cur_addr));
-        skip(cur_addr, 4);
+        uint32_t xs[2] = {*((uint32_t*)cur_addr), *(((uint32_t*)cur_addr) + 1)};
+        skip(cur_addr, sizeof(xs));
         fs.layers.push_back(std::make_tuple(xs[0], xs[1]));
     }
 
-    // Skip `unknown20`
+    // Strings map
     if (PRINT_ALL_ITEMS) {
         log(base_addr, cur_addr, "Looking at strings, un19[9] = %d\n", un19[9]);
     }
@@ -510,30 +497,7 @@ File<A_174> parse_file_raw(mapped_region region) {
         skip(cur_addr, round_to_word(len + 1));
     }
 
-    /*
-    // If we peek a `0x00`, we may be at the end of the file, but have extra
-    // empty bytes appended.
-    while (f.peek() != EOF && f.peek() != 0x00) {
-        uint8_t t = f.peek() & 0xFF;
-        if (PRINT_ALL_ITEMS) {
-            log(&f, "Handling t=0x%02X: ", t);
-            log_n_words(&f, 4);
-            skip(&f, -4 * 4);
-        }
-
-        const parser_t parser = PARSER_TABLE<version>[t];
-        if (t < 0x3E && parser.parse != 0) {
-            parser.parse(fs, f);
-        } else {
-            log(&f, "\x1b[31m- Unrecognized type\x1b[0m\n");
-            log(&f, "- Next words:");
-            log_n_words(&f, 6);
-            exit(1);
-        }
-    }
-
-    */
-
+    // All other objects
     while (cur_addr < (char*)base_addr + size &&
            *static_cast<uint8_t*>(cur_addr) != 0x00) {
         uint8_t t = *static_cast<uint8_t*>(cur_addr);
