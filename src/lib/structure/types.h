@@ -724,7 +724,34 @@ struct x1B {
 };
 
 template <AllegroVersion version>
-struct x1C_header {
+struct t13 {
+    uint32_t str_ptr;  // Often null
+    uint32_t t;
+
+    COND_FIELD(version >= A_172, uint32_t, z0);
+
+    int32_t w;
+    int32_t h;
+    int32_t x2;
+    int32_t x3;
+
+    // This should be _after_ `x4`, but conditional fields at the end of
+    // the struct are flakey?
+    COND_FIELD(version >= A_172, uint32_t, z);
+
+    int32_t x4;
+
+    uint32_t TAIL;
+    operator t13<A_174>() const;
+    static constexpr AllegroVersion versions[1] = {A_172};
+};
+
+static_assert(sizeof_until_tail<t13<A_160>>() == 28);
+static_assert(sizeof_until_tail<t13<A_174>>() == 36);
+
+// x1 shows how to draw pads
+template <AllegroVersion version>
+struct x1C {
     uint16_t t;
     uint8_t n;
     uint8_t un9;
@@ -748,45 +775,13 @@ struct x1C_header {
     COND_FIELD(version >= A_172, uint32_t, un7);
     uint32_t un6;
     COND_FIELD(version == A_165 || version == A_166, uint32_t[8], un8);
+    COND_FIELD(version >= A_172, uint32_t[26], un10);
 
     uint32_t TAIL;
-    operator x1C_header<A_174>() const;
-    static constexpr AllegroVersion versions[2] = {A_165, A_172};
-};
-
-template <AllegroVersion version>
-struct t13 {
-    uint32_t str_ptr;  // Often null
-    uint32_t t;
-
-    COND_FIELD(version >= A_172, uint32_t, z0);
-
-    int32_t w;
-    int32_t h;
-    int32_t x2;
-    int32_t x3;
-
-    // This should be _after_ `x4`, but conditional fields at the end of
-    // the struct are flakey?
-    COND_FIELD(version >= A_172, uint32_t, z);
-
-    int32_t x4;
-
-    operator t13<A_174>() const;
-    static constexpr AllegroVersion versions[1] = {A_172};
-};
-
-static_assert(sizeof(t13<A_160>) == 28);
-static_assert(sizeof(t13<A_174>) == 36);
-
-// x1 shows how to draw pads
-template <AllegroVersion version>
-struct x1C {
-    x1C_header<version> hdr;
-    std::vector<t13<version>> parts;
-
     operator x1C<A_174>() const;
     static constexpr AllegroVersion versions[2] = {A_165, A_172};
+
+    std::vector<t13<version>> parts;
 };
 
 template <AllegroVersion version>
@@ -1575,7 +1570,6 @@ class File {
 #endif
 
     std::map<uint32_t, char *> strings;
-    std::map<uint32_t, x1C<version>> x1C_map;
     std::map<uint32_t, x1E> x1E_map;
     x27 x27_db;
     std::map<uint32_t, x2A> x2A_map;
@@ -1606,6 +1600,7 @@ class File {
     x16<A_174> get_x16(uint32_t k);
     x17<A_174> get_x17(uint32_t k);
     const x1B<A_174> get_x1B(uint32_t k);
+    const x1C<A_174> get_x1C(uint32_t k);
     const x1D<A_174> get_x1D(uint32_t k);
     const x1F<A_174> get_x1F(uint32_t k);
     const x23<A_174> get_x23(uint32_t k);
@@ -1735,6 +1730,14 @@ class File {
             Iter<x1B<version>>(*this, this->hdr->ll_x1B.tail, &File::get_x1B));
     };
 
+    IterBase<x1C<version>> iter_x1C() {
+        printf("head = %08X\ntail = %08X\n", ntohl(this->hdr->ll_x1C.head),
+               ntohl(this->hdr->ll_x1C.tail));
+        return IterBase<x1C<version>>(
+            Iter<x1C<version>>(*this, this->hdr->ll_x1C.head, &File::get_x1C),
+            Iter<x1C<version>>(*this, this->hdr->ll_x1C.tail, &File::get_x1C));
+    };
+
     IterBase<x2B<version>> iter_x2B() {
         return IterBase<x2B<version>>(
             Iter<x2B<version>>(*this, this->hdr->ll_x2B.head, &File::get_x2B),
@@ -1836,6 +1839,8 @@ class File {
     x16<A_174> (*x16_upgrade)(void *);
     x17<A_174> (*x17_upgrade)(void *);
     x1B<A_174> (*x1B_upgrade)(void *);
+    x1C<A_174> (*x1C_upgrade)(void *);
+    t13<A_174> (*t13_upgrade)(void *);
     x1D<A_174> (*x1D_upgrade)(void *);
     x1F<A_174> (*x1F_upgrade)(void *);
     x23<A_174> (*x23_upgrade)(void *);

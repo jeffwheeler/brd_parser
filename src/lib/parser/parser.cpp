@@ -118,41 +118,29 @@ uint32_t parse_x03(File<A_174>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x1C(File<A_174>& fs, void*& address) {
+    x1C<version>* i = (x1C<version>*)address;
+    uint32_t k = default_parser<x1C, version>(fs, address);
+
     uint16_t size;
-    x1C<version> inst;
-    memcpy(&inst.hdr, address, sizeof_until_tail<x1C_header<version>>());
-    skip(address, sizeof_until_tail<x1C_header<version>>());
-    // f.read((char*)&x1C_inst->hdr, sizeof_until_tail<x1C_header<version>>());
-    if (version < A_172) {
-        size = 10 + inst.hdr.size_hint * 3;
+    if constexpr (version < A_172) {
+        size = 10 + i->size_hint * 3;
     } else {
-        size = 21 + inst.hdr.un2_0 * 4;
-        skip(address, 104);
+        size = 21 + i->un2_0 * 4;
     }
 
-    for (int i = 0; i < size; i++) {
-        // log(base_addr_glb, address, "- - Next words:");
-        // log_n_words(address, 8);
-        // skip(address, -4 * 8);
+    skip(address, size * sizeof_until_tail<t13<version>>());
 
-        t13<version> t13_inst = *static_cast<t13<version>*>(address);
-        skip(address, sizeof(t13<version>));
-        // f.read((char*)&t13_inst, sizeof(t13<version>));
-        inst.parts.push_back(t13_inst);
-    }
-
-    if (version >= A_172) {
+    if constexpr (version >= A_172) {
         skip(address, 4);
     }
 
     if constexpr (version >= A_172) {
-        skip(address, inst.hdr.n * 40);
+        skip(address, i->n * 40);
     } else {
-        skip(address, inst.hdr.n * 32);
+        skip(address, i->n * 32);
     }
 
-    (fs.x1C_map)[inst.hdr.k] = upgrade<version, A_174>(inst);
-    return 0;
+    return k;
 }
 
 template <AllegroVersion version>

@@ -53,10 +53,7 @@ void check_header_values(File<version>& fs) {
         }
     }
     if (fs.hdr->ll_x1C.head != 0) {
-        auto& x = fs.x1C_map.at(fs.hdr->ll_x1C.head);
-        while (x.hdr.next != fs.hdr->ll_x1C.tail) {
-            EXPECT_TRUE(fs.x1C_map.count(x.hdr.next) > 0);
-            x = fs.x1C_map.at(x.hdr.next);
+        for (auto& i : fs.iter_x1C()) {
         }
     }
     if (fs.hdr->ll_x24_x28.head != 0) {
@@ -147,9 +144,9 @@ TEST(ParseFile, Parallella) {
     EXPECT_FALSE(check_overlapping_ids(fs));
     check_header_values(fs);
 
-    const x1C<A_174>* x1C_inst = &fs.x1C_map.at(0x0ACD3EE0);
-    EXPECT_EQ(x1C_inst->parts[0].w, 2600);
-    EXPECT_EQ(x1C_inst->parts[0].h, 2600);
+    const x1C<A_174>& x1C_inst = fs.get_x1C(0x0ACD3EE0);
+    EXPECT_EQ(x1C_inst.parts[0].w, 2600);
+    EXPECT_EQ(x1C_inst.parts[0].h, 2600);
 
     const x3C<A_174>& x3C_inst = fs.get_x3C(0x0ACF9230);
     EXPECT_EQ(x3C_inst.ptrs.size(), 2);
@@ -274,9 +271,9 @@ TEST(ParseFile, BeagleBoneAIParsed) {
     EXPECT_FALSE(check_overlapping_ids(fs));
     check_header_values(fs);
 
-    const x1C<A_174>* x1C_inst = &fs.x1C_map.at(0x00002010);
-    EXPECT_EQ(x1C_inst->parts[0].w, 23000);
-    EXPECT_EQ(x1C_inst->parts[0].h, 43000);
+    const x1C<A_174>& x1C_inst = fs.get_x1C(0x00002010);
+    EXPECT_EQ(x1C_inst.parts[0].w, 23000);
+    EXPECT_EQ(x1C_inst.parts[0].h, 43000);
 
     const x01<A_174> x01_inst = fs.get_x01(0x000278DE);
     EXPECT_EQ(x01_inst.coords[0], -575000);

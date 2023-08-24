@@ -842,8 +842,8 @@ void print_x0D(const void *untyped_inst, File<version> *fs, const int d) {
     */
 
     printf_d(d + 1, "pad_ptr:\n");
-    if (fs->x1C_map.count(inst->pad_ptr) > 0) {
-        print_struct((const void *)&fs->x1C_map.at(inst->pad_ptr), fs, d + 2);
+    if (fs->is_type(inst->pad_ptr, 0x1C)) {
+        print_struct(inst->pad_ptr, *fs, d + 2);
     } else {
         printf_d(d + 2, "pad_ptr unrecognized: 0x%08X\n", ntohl(inst->pad_ptr));
         exit(0);
@@ -1415,24 +1415,23 @@ void print_x1C(const void *untyped_inst, File<version> *fs, const int d) {
              " \x1b[34m\"%s\"\x1b[0m"
              " \x1b[2m(%d, %d, %d, %d, %d, %d)\x1b[0m"
              " \x1b[2m(%d, %d, %d, %d)\x1b[0m\n",
-             ntohl(inst->hdr.t), ntohl(inst->hdr.k),
-             str_lookup(inst->hdr.pad_str, *fs), inst->hdr.un0_0,
-             inst->hdr.un0_1, inst->hdr.pad_path, inst->hdr.un0_3,
-             inst->hdr.un0_4, inst->hdr.un0_5, inst->hdr.coords2[0],
-             inst->hdr.coords2[1], inst->hdr.coords2[2], inst->hdr.coords2[3]);
+             ntohl(inst->t), ntohl(inst->k), str_lookup(inst->pad_str, *fs),
+             inst->un0_0, inst->un0_1, inst->pad_path, inst->un0_3, inst->un0_4,
+             inst->un0_5, inst->coords2[0], inst->coords2[1], inst->coords2[2],
+             inst->coords2[3]);
     uint32_t un7;
-    if constexpr (std::is_same_v<decltype(inst->hdr.un7), std::monostate>) {
+    if constexpr (std::is_same_v<decltype(inst->un7), std::monostate>) {
         un7 = 0;
     } else {
-        un7 = inst->hdr.un7;
+        un7 = inst->un7;
     }
     printf_d(d + 1,
              "un1=%08X un2=%04X %08X un3=%04X size_hint=%d un4=%08X "
              "un5=%08X un6=%08X un7=%08X len(parts)=%d\n",
-             ntohl(inst->hdr.un1), ntohs(inst->hdr.un2_0),
-             ntohs(inst->hdr.un2_1), ntohl(inst->hdr.un3), inst->hdr.size_hint,
-             ntohl(inst->hdr.un4), ntohl(inst->hdr.un5), ntohl(inst->hdr.un6),
-             ntohl(un7), inst->parts.size());
+             ntohl(inst->un1), ntohs(inst->un2_0), ntohs(inst->un2_1),
+             ntohl(inst->un3), inst->size_hint, ntohl(inst->un4),
+             ntohl(inst->un5), ntohl(inst->un6), ntohl(un7),
+             inst->parts.size());
 
     uint8_t i = 0;
     for (const t13<version> &t13_inst : inst->parts) {
@@ -2570,8 +2569,8 @@ void print_x33(const void *untyped_inst, File<version> *fs, const int d) {
         std::printf("\n");
         if (fs->is_type(inst->ptr4, 0x2E)) {
             print_struct(inst->ptr4, *fs, d + 2);
-        } else if (fs->x1C_map.count(inst->ptr4) > 0) {
-            print_struct((const void *)&fs->x1C_map.at(inst->ptr4), fs, d + 2);
+        } else if (fs->is_type(inst->ptr4, 0x1C)) {
+            print_struct(inst->ptr4, *fs, d + 2);
         } else {
             printf_d(d + 2, "ptr4 unrecognized: 0x%08X\n", ntohl(inst->ptr4));
             exit(0);

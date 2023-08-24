@@ -500,13 +500,13 @@ void BrdView::drawX32(const x32<A_174> *inst, QPen *pen,
 
     // Try to draw pad shape
     const x0D<A_174> &x0D_inst = fs->get_x0D(inst->ptr5);
-    const x1C<A_174> *x1C_inst = &fs->x1C_map.at(x0D_inst.pad_ptr);
+    const x1C<A_174> &x1C_inst = fs->get_x1C(x0D_inst.pad_ptr);
 
     QPointF center = QPointF((inst->coords[0] + inst->coords[2]) / 2. / factor,
                              (inst->coords[1] + inst->coords[3]) / 2. / factor);
 
     // Just draw the first part
-    const t13<A_174> *first_part = &x1C_inst->parts[0];
+    const t13<A_174> *first_part = &x1C_inst.parts[0];
     QGraphicsItem *pad;
     QTransform t = QTransform()
                        .translate(center.x(), center.y())
@@ -557,18 +557,18 @@ void BrdView::drawX33(const x33<A_174> *inst, QPen *pen) {
     item->setData(0, inst->k);
     */
 
-    if (fs->x1C_map.count(inst->ptr4) == 0) {
+    if (fs->is_type(inst->ptr4, 0x1C)) {
         printf("Drawing x33, but didn't find x1C; is it an x2F?\n");
         return;
     }
 
-    const x1C<A_174> *x1C_inst = &fs->x1C_map.at(inst->ptr4);
+    const x1C<A_174> &x1C_inst = fs->get_x1C(inst->ptr4);
 
     QPointF center =
         QPointF((inst->coords[0]) / factor, (inst->coords[1]) / factor);
 
     // Just draw the first part
-    const t13<A_174> *first_part = &x1C_inst->parts[4];
+    const t13<A_174> *first_part = &x1C_inst.parts[4];
     QGraphicsItem *pad;
     QTransform t = QTransform().translate(center.x(), center.y());
     switch (first_part->t) {
@@ -585,7 +585,7 @@ void BrdView::drawX33(const x33<A_174> *inst, QPen *pen) {
 
     // drawShape(inst->ptr10, pen2);
 
-    first_part = &x1C_inst->parts[0];
+    first_part = &x1C_inst.parts[0];
     switch (first_part->t) {
         case 2:
         case 6:
