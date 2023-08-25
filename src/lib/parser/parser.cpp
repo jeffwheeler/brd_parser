@@ -420,13 +420,10 @@ uint32_t parse_x36(File<A_174>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x3B(File<A_174>& fs, void*& address) {
-    x3B<version> x3B_inst;
-    memcpy(&x3B_inst, address, sizeof_until_tail<x3B<version>>());
-    skip(address, sizeof_until_tail<x3B<version>>());
+    x3B<version>* i = (x3B<version>*)address;
 
-    uint32_t len = round_to_word(x3B_inst.len);
-    x3B_inst.model_str = std::string((char*)address);
-    skip(address, len);
+    skip(address, sizeof_until_tail<x3B<version>>());
+    skip(address, round_to_word(i->len));
 
     return 0;
 }
