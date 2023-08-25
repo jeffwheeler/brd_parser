@@ -1809,9 +1809,9 @@ class File {
             Iter<x38<version>>(*this, this->hdr->ll_x38.tail, &File::get_x38));
     };
 
-   private:
     mapped_region region;
 
+   private:
     void cache_upgrade_funcs();
 
     x01<A_174> (*x01_upgrade)(void *);

@@ -9,8 +9,6 @@
 
 using namespace boost::interprocess;
 
-void* base_addr_glb;
-
 void skip(void*& address, std::size_t n) {
     address = (void*)(((char*)address) + n);
     // f->seekg(n, std::ios_base::cur);
@@ -101,8 +99,8 @@ uint32_t parse_x03(File<A_174>& fs, void*& address) {
             skip(address, 80);
             break;
         default:
-            log(base_addr_glb, address, "- Unexpected value subtype=0x%02X\n",
-                inst.subtype.t);
+            log(fs.region.get_address(), address,
+                "- Unexpected value subtype=0x%02X\n", inst.subtype.t);
             exit(1);
     };
 
@@ -220,7 +218,7 @@ uint32_t parse_x21(File<A_174>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x27(File<A_174>& fs, void*& address) {
-    address = (char*)base_addr_glb + fs.x27_end_pos - 1;
+    address = (char*)fs.region.get_address() + fs.x27_end_pos - 1;
     return 0;
 }
 
@@ -411,8 +409,8 @@ uint32_t parse_x36(File<A_174>& fs, void*& address) {
             // }
             break;
         default:
-            log(base_addr_glb, address, "- Don\'t know how to handle c=%X\n",
-                inst.c);
+            log(fs.region.get_address(), address,
+                "- Don\'t know how to handle c=%X\n", inst.c);
             exit(1);
     }
 
@@ -523,7 +521,6 @@ std::optional<File<A_174>> parse_file(const std::string& filepath) {
     */
 
     void* address = region.get_address();
-    base_addr_glb = address;
 
     uint32_t magic = *((uint32_t*)address);
     switch (magic) {
