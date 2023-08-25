@@ -1308,6 +1308,8 @@ const x03<A_174> File<A_174>::get_x03(uint32_t k) {
         case 0x00140E00:
             size = sizeof_until_tail<x03<A_174>>();
             break;
+        default:
+            size = 0;
     }
 
     void *p = this->ptrs[k];
