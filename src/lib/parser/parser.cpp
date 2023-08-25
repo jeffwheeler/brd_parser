@@ -14,13 +14,6 @@ void skip(void*& address, std::size_t n) {
     // f->seekg(n, std::ios_base::cur);
 }
 
-void skip_and_pad(std::ifstream* f, std::ifstream::pos_type n) {
-    f->seekg(n, std::ios_base::cur);
-    if (f->tellg() % 4 != 0) {
-        f->seekg(f->tellg() / 4 * 4 + 4);
-    }
-}
-
 uint32_t round_to_word(uint32_t len) {
     if (len % 4 != 0) {
         return len / 4 * 4 + 4;
