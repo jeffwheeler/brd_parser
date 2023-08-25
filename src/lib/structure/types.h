@@ -948,10 +948,6 @@ struct x26 {
     static constexpr AllegroVersion versions[2] = {A_172, A_174};
 };
 
-struct x27 {
-    uint32_t t;
-};
-
 // Shape
 template <AllegroVersion version>
 struct x28 {
@@ -1571,7 +1567,6 @@ class File {
 
     std::map<uint32_t, char *> strings;
     std::map<uint32_t, x1E> x1E_map;
-    x27 x27_db;
     std::map<uint32_t, x2A> x2A_map;
     std::map<uint32_t, x36<version>> x36_map;
     std::map<uint32_t, x3B<version>> x3B_map;
