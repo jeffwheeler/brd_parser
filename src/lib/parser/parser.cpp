@@ -532,9 +532,7 @@ std::optional<File<A_174>> parse_file(const std::string& filepath) {
     void* address = region.get_address();
     base_addr_glb = address;
 
-    std::size_t size = region.get_size();
     uint32_t magic = *((uint32_t*)address);
-
     switch (magic) {
         case 0x00130000:
         case 0x00130200:
