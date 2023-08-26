@@ -83,7 +83,7 @@ void MainWindow::loadFilms() {
     tree->clear();
 
     std::vector<std::pair<std::string, uint32_t>> layers =
-        layer_list(fs.value());
+        film_list(fs.value());
     for (const auto& pair : layers) {
         layer_cache[pair.first] = pair.second;
         tree->insertTopLevelItem(
@@ -552,10 +552,11 @@ void MainWindow::selectFilm() {
 
         // Lookup layers associated with this film
         uint32_t x38_k = layer_cache[t.toStdString()];
-        const x38<A_174>& x38_inst = fs->get_x38(x38_k);
-        const x39<A_174>& x39_inst = fs->get_x39(x38_inst.ptr1);
-        for (const auto& layer : x39_layers(x39_inst, fs.value())) {
-            layers.push_back(layerPair(layer.first, layer.second));
+        const t38_film<A_174>& film = fs->get_x38(x38_k);
+        const t39_film_layer_list<A_174>& layer_list =
+            fs->get_x39(film.layer_list);
+        for (const auto& layer : x39_layers(layer_list, fs.value())) {
+            layers.push_back(layer);
         }
     }
     qDebug("Redrawing");

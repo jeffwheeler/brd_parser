@@ -168,11 +168,11 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x37
     {&default_parser<x37, version>},
     // 0x38
-    {&default_parser<x38, version>},
+    {&default_parser<t38_film, version>},
     // 0x39
-    {&default_parser<x39, version>},
+    {&default_parser<t39_film_layer_list, version>},
     // 0x3A
-    {&default_parser<x3A, version>},
+    {&default_parser<t3A_film_layer_list_node, version>},
     // 0x3B
     {&parse_x3B<version>},
     // 0x3C

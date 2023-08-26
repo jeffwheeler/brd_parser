@@ -2763,7 +2763,7 @@ void print_x37(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x38(const void *untyped_inst, File<version> *fs, const int d) {
-    const x38<version> *inst = (const x38<version> *)untyped_inst;
+    const t38_film<version> *inst = (const t38_film<version> *)untyped_inst;
     printf_d(d,
              "x38: \x1b[36;3mFilm\x1b[0m"
              " t=0x%08X k=0x%08X un1=%3d"
@@ -2784,17 +2784,19 @@ void print_x38(const void *untyped_inst, File<version> *fs, const int d) {
     }
     */
 
-    if (fs->is_type(inst->ptr1, 0x39)) {
-        print_struct(inst->ptr1, *fs, d + 2);
+    if (fs->is_type(inst->layer_list, 0x39)) {
+        print_struct(inst->layer_list, *fs, d + 2);
     } else {
-        printf_d(d + 1, "ptr1 unrecognized: 0x%08X\n", ntohl(inst->ptr1));
+        printf_d(d + 1, "layer_list unrecognized: 0x%08X\n",
+                 ntohl(inst->layer_list));
         exit(0);
     }
 }
 
 template <AllegroVersion version>
 void print_x39(const void *untyped_inst, File<version> *fs, const int d) {
-    const x39<version> *inst = (const x39<version> *)untyped_inst;
+    const t39_film_layer_list<version> *inst =
+        (const t39_film_layer_list<version> *)untyped_inst;
     printf_d(d,
              "x39: t=0x%08X k=0x%08X"
              " x=\x1b[2m{%3d %3d %3d %3d %3d %3d %3d %3d %3d %3d %3d"
@@ -2832,7 +2834,8 @@ void print_x39(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x3A(const void *untyped_inst, File<version> *fs, const int d) {
-    const x3A<version> *inst = (const x3A<version> *)untyped_inst;
+    const t3A_film_layer_list_node<version> *inst =
+        (const t3A_film_layer_list_node<version> *)untyped_inst;
     printf_d(d, "x3A: t=0x%04X subtype=%02X layer=%d k=0x%08X un=%d\n",
              ntohl(inst->t), inst->subtype, inst->layer, ntohl(inst->k),
              inst->un);

@@ -84,12 +84,13 @@ std::optional<std::string> x32_pin_name(const uint32_t k, File<version> *fs) {
 }
 
 template <AllegroVersion version>
-std::string x38_layer_name(const x38<version> &inst, File<version> *fs) {
-    if constexpr (!std::is_same_v<decltype(inst.ptr), std::monostate>) {
-        if (inst.ptr == 0) {
+std::string x38_layer_name(const t38_film<version> &inst, File<version> *fs) {
+    if constexpr (!std::is_same_v<decltype(inst.layer_name_str),
+                                  std::monostate>) {
+        if (inst.layer_name_str == 0) {
             return inst.s;
         } else {
-            std::string s = fs->strings.at(inst.ptr);
+            std::string s = fs->strings.at(inst.layer_name_str);
             return s;
         }
     } else {
@@ -98,14 +99,14 @@ std::string x38_layer_name(const x38<version> &inst, File<version> *fs) {
 }
 
 template <AllegroVersion version>
-std::vector<std::pair<uint8_t, uint8_t>> x39_layers(const x39<version> &inst,
-                                                    File<version> &fs_x) {
+std::vector<std::pair<uint8_t, uint8_t>> x39_layers(
+    const t39_film_layer_list<version> &inst, File<version> &fs) {
     std::vector<std::pair<uint8_t, uint8_t>> layers;
-    File<version> *fs = &fs_x;
 
-    uint32_t next_key = inst.ptr1;
-    while (fs->is_type(next_key, 0x3A)) {
-        const x3A<version> &x3A_inst = fs->get_x3A(next_key);
+    uint32_t next_key = inst.head;
+    while (fs.is_type(next_key, 0x3A)) {
+        const t3A_film_layer_list_node<version> &x3A_inst =
+            fs.get_x3A(next_key);
         layers.push_back(std::make_pair(x3A_inst.subtype, x3A_inst.layer));
         next_key = x3A_inst.next;
     }
@@ -114,7 +115,7 @@ std::vector<std::pair<uint8_t, uint8_t>> x39_layers(const x39<version> &inst,
 }
 
 template <AllegroVersion version>
-std::vector<std::pair<std::string, uint32_t>> layer_list(File<version> &fs_x) {
+std::vector<std::pair<std::string, uint32_t>> film_list(File<version> &fs_x) {
     std::vector<std::pair<std::string, uint32_t>> list;
     File<version> *fs = &fs_x;
 
@@ -272,11 +273,11 @@ constexpr std::map<uint32_t, T> *find_map(File<version> &fs) {
         return &fs.x34_map;
     } else if constexpr (std::is_same_v<T, x37<version>>) {
         return &fs.x37_map;
-    } else if constexpr (std::is_same_v<T, x38<version>>) {
+    } else if constexpr (std::is_same_v<T, t38_film<version>>) {
         return &fs.x38_map;
-    } else if constexpr (std::is_same_v<T, x39<version>>) {
+    } else if constexpr (std::is_same_v<T, t39_film_layer_list<version>>) {
         return &fs.x39_map;
-    } else if constexpr (std::is_same_v<T, x3A<version>>) {
+    } else if constexpr (std::is_same_v<T, t3A_film_layer_list_node<version>>) {
         return &fs.x3A_map;
     } else if constexpr (std::is_same_v<T, x3C<version>>) {
         return &fs.x3C_map;
