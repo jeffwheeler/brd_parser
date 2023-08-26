@@ -172,7 +172,7 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x39
     {&default_parser<t39_film_layer_list, version>},
     // 0x3A
-    {&default_parser<x3A, version>},
+    {&default_parser<t3A_film_layer_list_node, version>},
     // 0x3B
     {&parse_x3B<version>},
     // 0x3C

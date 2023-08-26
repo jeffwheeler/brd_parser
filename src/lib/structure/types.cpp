@@ -917,8 +917,9 @@ t39_film_layer_list<A_160>::operator t39_film_layer_list<A_174>() const {
 }
 
 template <>
-x3A<A_160>::operator x3A<A_174>() const {
-    return *reinterpret_cast<const x3A<A_174> *>(this);
+t3A_film_layer_list_node<A_160>::operator t3A_film_layer_list_node<A_174>()
+    const {
+    return *reinterpret_cast<const t3A_film_layer_list_node<A_174> *>(this);
 }
 
 template <>
@@ -1005,7 +1006,8 @@ void File<version>::cache_upgrade_funcs() {
             this->x37_upgrade = new_upgrade<A_160, A_174, x37>;
             this->x38_upgrade = new_upgrade<A_160, A_174, t38_film>;
             this->x39_upgrade = new_upgrade<A_160, A_174, t39_film_layer_list>;
-            this->x3A_upgrade = new_upgrade<A_160, A_174, x3A>;
+            this->x3A_upgrade =
+                new_upgrade<A_160, A_174, t3A_film_layer_list_node>;
             this->x3C_upgrade = new_upgrade<A_160, A_174, x3C>;
             break;
         case 0x00130402:
@@ -1047,7 +1049,8 @@ void File<version>::cache_upgrade_funcs() {
             this->x37_upgrade = new_upgrade<A_162, A_174, x37>;
             this->x38_upgrade = new_upgrade<A_162, A_174, t38_film>;
             this->x39_upgrade = new_upgrade<A_162, A_174, t39_film_layer_list>;
-            this->x3A_upgrade = new_upgrade<A_162, A_174, x3A>;
+            this->x3A_upgrade =
+                new_upgrade<A_162, A_174, t3A_film_layer_list_node>;
             this->x3C_upgrade = new_upgrade<A_162, A_174, x3C>;
             break;
         case 0x00130C03:
@@ -1089,7 +1092,8 @@ void File<version>::cache_upgrade_funcs() {
             this->x37_upgrade = new_upgrade<A_164, A_174, x37>;
             this->x38_upgrade = new_upgrade<A_164, A_174, t38_film>;
             this->x39_upgrade = new_upgrade<A_164, A_174, t39_film_layer_list>;
-            this->x3A_upgrade = new_upgrade<A_164, A_174, x3A>;
+            this->x3A_upgrade =
+                new_upgrade<A_164, A_174, t3A_film_layer_list_node>;
             this->x3C_upgrade = new_upgrade<A_164, A_174, x3C>;
             break;
         case 0x00131003:
@@ -1131,7 +1135,8 @@ void File<version>::cache_upgrade_funcs() {
             this->x37_upgrade = new_upgrade<A_165, A_174, x37>;
             this->x38_upgrade = new_upgrade<A_165, A_174, t38_film>;
             this->x39_upgrade = new_upgrade<A_165, A_174, t39_film_layer_list>;
-            this->x3A_upgrade = new_upgrade<A_165, A_174, x3A>;
+            this->x3A_upgrade =
+                new_upgrade<A_165, A_174, t3A_film_layer_list_node>;
             this->x3C_upgrade = new_upgrade<A_165, A_174, x3C>;
             break;
         case 0x00131503:
@@ -1174,7 +1179,8 @@ void File<version>::cache_upgrade_funcs() {
             this->x37_upgrade = new_upgrade<A_166, A_174, x37>;
             this->x38_upgrade = new_upgrade<A_166, A_174, t38_film>;
             this->x39_upgrade = new_upgrade<A_166, A_174, t39_film_layer_list>;
-            this->x3A_upgrade = new_upgrade<A_166, A_174, x3A>;
+            this->x3A_upgrade =
+                new_upgrade<A_166, A_174, t3A_film_layer_list_node>;
             this->x3C_upgrade = new_upgrade<A_166, A_174, x3C>;
             break;
         case 0x00140400:
@@ -1219,7 +1225,8 @@ void File<version>::cache_upgrade_funcs() {
             this->x37_upgrade = new_upgrade<A_172, A_174, x37>;
             this->x38_upgrade = new_upgrade<A_172, A_174, t38_film>;
             this->x39_upgrade = new_upgrade<A_172, A_174, t39_film_layer_list>;
-            this->x3A_upgrade = new_upgrade<A_172, A_174, x3A>;
+            this->x3A_upgrade =
+                new_upgrade<A_172, A_174, t3A_film_layer_list_node>;
             this->x3C_upgrade = new_upgrade<A_172, A_174, x3C>;
             break;
         case 0x00140900:
@@ -1264,7 +1271,8 @@ void File<version>::cache_upgrade_funcs() {
             this->x37_upgrade = new_upgrade<A_174, A_174, x37>;
             this->x38_upgrade = new_upgrade<A_174, A_174, t38_film>;
             this->x39_upgrade = new_upgrade<A_174, A_174, t39_film_layer_list>;
-            this->x3A_upgrade = new_upgrade<A_174, A_174, x3A>;
+            this->x3A_upgrade =
+                new_upgrade<A_174, A_174, t3A_film_layer_list_node>;
             this->x3C_upgrade = new_upgrade<A_174, A_174, x3C>;
             break;
     }
@@ -1549,7 +1557,7 @@ const t39_film_layer_list<A_174> File<A_174>::get_x39(uint32_t k) {
 }
 
 template <>
-const x3A<A_174> File<A_174>::get_x3A(uint32_t k) {
+const t3A_film_layer_list_node<A_174> File<A_174>::get_x3A(uint32_t k) {
     return this->x3A_upgrade(this->ptrs[k]);
 }
 

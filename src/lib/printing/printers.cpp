@@ -2833,7 +2833,8 @@ void print_x39(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x3A(const void *untyped_inst, File<version> *fs, const int d) {
-    const x3A<version> *inst = (const x3A<version> *)untyped_inst;
+    const t3A_film_layer_list_node<version> *inst =
+        (const t3A_film_layer_list_node<version> *)untyped_inst;
     printf_d(d, "x3A: t=0x%04X subtype=%02X layer=%d k=0x%08X un=%d\n",
              ntohl(inst->t), inst->subtype, inst->layer, ntohl(inst->k),
              inst->un);

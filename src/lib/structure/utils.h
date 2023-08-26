@@ -105,7 +105,8 @@ std::vector<std::pair<uint8_t, uint8_t>> x39_layers(
 
     uint32_t next_key = inst.ptr1;
     while (fs->is_type(next_key, 0x3A)) {
-        const x3A<version> &x3A_inst = fs->get_x3A(next_key);
+        const t3A_film_layer_list_node<version> &x3A_inst =
+            fs->get_x3A(next_key);
         layers.push_back(std::make_pair(x3A_inst.subtype, x3A_inst.layer));
         next_key = x3A_inst.next;
     }
@@ -276,7 +277,7 @@ constexpr std::map<uint32_t, T> *find_map(File<version> &fs) {
         return &fs.x38_map;
     } else if constexpr (std::is_same_v<T, t39_film_layer_list<version>>) {
         return &fs.x39_map;
-    } else if constexpr (std::is_same_v<T, x3A<version>>) {
+    } else if constexpr (std::is_same_v<T, t3A_film_layer_list_node<version>>) {
         return &fs.x3A_map;
     } else if constexpr (std::is_same_v<T, x3C<version>>) {
         return &fs.x3C_map;

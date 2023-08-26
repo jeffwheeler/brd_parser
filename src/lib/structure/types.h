@@ -1497,7 +1497,7 @@ struct t39_film_layer_list {
 };
 
 template <AllegroVersion version>
-struct x3A {
+struct t3A_film_layer_list_node {
     uint16_t t;
     uint8_t subtype;
     uint8_t layer;
@@ -1510,7 +1510,7 @@ struct x3A {
     COND_FIELD(version >= A_174, uint32_t, un1);
 
     uint32_t TAIL;
-    operator x3A<A_174>() const;
+    operator t3A_film_layer_list_node<A_174>() const;
     static constexpr AllegroVersion versions[1] = {A_174};
 };
 
@@ -1615,7 +1615,7 @@ class File {
     const x37<A_174> get_x37(uint32_t k);
     const t38_film<A_174> get_x38(uint32_t k);
     const t39_film_layer_list<A_174> get_x39(uint32_t k);
-    const x3A<A_174> get_x3A(uint32_t k);
+    const t3A_film_layer_list_node<A_174> get_x3A(uint32_t k);
     const x3C<A_174> get_x3C(uint32_t k);
 
     bool is_type(uint32_t k, uint8_t t);
@@ -1855,7 +1855,7 @@ class File {
     x37<A_174> (*x37_upgrade)(void *);
     t38_film<A_174> (*x38_upgrade)(void *);
     t39_film_layer_list<A_174> (*x39_upgrade)(void *);
-    x3A<A_174> (*x3A_upgrade)(void *);
+    t3A_film_layer_list_node<A_174> (*x3A_upgrade)(void *);
     x3C<A_174> (*x3C_upgrade)(void *);
 };
 
