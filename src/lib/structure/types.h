@@ -88,7 +88,6 @@ constexpr T<end> new_upgrade(void *x) {
         t = *reinterpret_cast<const T<T<start>::versions[1]> *>(&a);
         return t;
     }
-
     memcpy(&t, x, sizeof_until_tail<T<end>>());
     return t;
 }
@@ -1719,9 +1718,17 @@ class File {
     };
 
     IterBase<x1B<version>> iter_x1B() {
-        return IterBase<x1B<version>>(
-            Iter<x1B<version>>(*this, this->hdr->ll_x1B.head, &File::get_x1B),
-            Iter<x1B<version>>(*this, this->hdr->ll_x1B.tail, &File::get_x1B));
+        if (this->hdr->ll_x1B.head == 0) {
+            return IterBase<x1B<version>>(
+                Iter<x1B<version>>(*this, 0, &File::get_x1B),
+                Iter<x1B<version>>(*this, 0, &File::get_x1B));
+        } else {
+            return IterBase<x1B<version>>(
+                Iter<x1B<version>>(*this, this->hdr->ll_x1B.head,
+                                   &File::get_x1B),
+                Iter<x1B<version>>(*this, this->hdr->ll_x1B.tail,
+                                   &File::get_x1B));
+        }
     };
 
     IterBase<x1C<version>> iter_x1C() {
@@ -1731,9 +1738,17 @@ class File {
     };
 
     IterBase<x2B<version>> iter_x2B() {
-        return IterBase<x2B<version>>(
-            Iter<x2B<version>>(*this, this->hdr->ll_x2B.head, &File::get_x2B),
-            Iter<x2B<version>>(*this, this->hdr->ll_x2B.tail, &File::get_x2B));
+        if (this->hdr->ll_x2B.head == 0) {
+            return IterBase<x2B<version>>(
+                Iter<x2B<version>>(*this, 0, &File::get_x2B),
+                Iter<x2B<version>>(*this, 0, &File::get_x2B));
+        } else {
+            return IterBase<x2B<version>>(
+                Iter<x2B<version>>(*this, this->hdr->ll_x2B.head,
+                                   &File::get_x2B),
+                Iter<x2B<version>>(*this, this->hdr->ll_x2B.tail,
+                                   &File::get_x2B));
+        }
     };
 
     IterBase<x2C<version>> iter_x2C() {
@@ -1803,11 +1818,17 @@ class File {
     };
 
     IterBase<t38_film<version>> iter_x38() {
-        return IterBase<t38_film<version>>(
-            Iter<t38_film<version>>(*this, this->hdr->ll_x38.head,
-                                    &File::get_x38),
-            Iter<t38_film<version>>(*this, this->hdr->ll_x38.tail,
-                                    &File::get_x38));
+        if (this->hdr->ll_x38.head == 0) {
+            return IterBase<t38_film<version>>(
+                Iter<t38_film<version>>(*this, 0, &File::get_x38),
+                Iter<t38_film<version>>(*this, 0, &File::get_x38));
+        } else {
+            return IterBase<t38_film<version>>(
+                Iter<t38_film<version>>(*this, this->hdr->ll_x38.head,
+                                        &File::get_x38),
+                Iter<t38_film<version>>(*this, this->hdr->ll_x38.tail,
+                                        &File::get_x38));
+        }
     };
 
     mapped_region region;
