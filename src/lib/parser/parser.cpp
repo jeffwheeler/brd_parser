@@ -11,7 +11,6 @@ using namespace boost::interprocess;
 
 void skip(void*& address, std::size_t n) {
     address = (void*)(((char*)address) + n);
-    // f->seekg(n, std::ios_base::cur);
 }
 
 uint32_t round_to_word(uint32_t len) {
@@ -218,7 +217,7 @@ uint32_t parse_x21(File<A_174>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x27(File<A_174>& fs, void*& address) {
-    address = (char*)fs.region.get_address() + fs.x27_end_pos - 1;
+    address = (char*)fs.region.get_address() + fs.hdr->x27_end_offset - 1;
     return 0;
 }
 
@@ -457,11 +456,7 @@ File<A_174> parse_file_raw(mapped_region region) {
     // This must be done after reading the header
     fs.prepare();
 
-    uint32_t* un19 = static_cast<uint32_t*>((void*)cur_addr);
-    fs.x27_end_pos = un19[7];
-
     // Layer map
-    cur_addr = (char*)base_addr + 0x430;
     for (uint8_t i = 0; i < 25; i++) {
         uint32_t xs[2] = {*((uint32_t*)cur_addr), *(((uint32_t*)cur_addr) + 1)};
         skip(cur_addr, sizeof(xs));
@@ -469,11 +464,8 @@ File<A_174> parse_file_raw(mapped_region region) {
     }
 
     // Strings map
-    if (PRINT_ALL_ITEMS) {
-        log(base_addr, cur_addr, "Looking at strings, un19[9] = %d\n", un19[9]);
-    }
     cur_addr = (char*)base_addr + 0x1200;
-    for (uint32_t i = 0; i < un19[9]; i++) {
+    for (uint32_t i = 0; i < fs.hdr->strings_count; i++) {
         uint32_t id = *((uint32_t*)(cur_addr));
         skip(cur_addr, 4);
 
