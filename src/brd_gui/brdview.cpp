@@ -557,7 +557,7 @@ void BrdView::drawX33(const x33<A_174> *inst, QPen *pen) {
     item->setData(0, inst->k);
     */
 
-    if (fs->is_type(inst->ptr4, 0x1C)) {
+    if (!fs->is_type(inst->ptr4, 0x1C)) {
         printf("Drawing x33, but didn't find x1C; is it an x2F?\n");
         return;
     }
