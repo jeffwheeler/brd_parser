@@ -2784,10 +2784,11 @@ void print_x38(const void *untyped_inst, File<version> *fs, const int d) {
     }
     */
 
-    if (fs->is_type(inst->ptr1, 0x39)) {
-        print_struct(inst->ptr1, *fs, d + 2);
+    if (fs->is_type(inst->layer_list, 0x39)) {
+        print_struct(inst->layer_list, *fs, d + 2);
     } else {
-        printf_d(d + 1, "ptr1 unrecognized: 0x%08X\n", ntohl(inst->ptr1));
+        printf_d(d + 1, "layer_list unrecognized: 0x%08X\n",
+                 ntohl(inst->layer_list));
         exit(0);
     }
 }

@@ -889,8 +889,8 @@ t38_film<A_160>::operator t38_film<A_174>() const {
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.next = this->next;
-    new_inst.ptr1 = this->ptr1;
-    new_inst.ptr = 0;
+    new_inst.layer_list = this->layer_list;
+    new_inst.layer_name_str = 0;
     new_inst.un2 = 0;
     new_inst.un3 = 0;
     new_inst.s = std::string(this->film_name);
@@ -903,8 +903,8 @@ t38_film<A_166>::operator t38_film<A_174>() const {
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.next = this->next;
-    new_inst.ptr1 = this->ptr1;
-    new_inst.ptr = this->ptr;
+    new_inst.layer_list = this->layer_list;
+    new_inst.layer_name_str = this->layer_name_str;
     new_inst.un2 = this->un2;
     new_inst.un3 = 0;
     new_inst.s = std::string("Mystery film name?");

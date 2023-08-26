@@ -1465,9 +1465,9 @@ struct t38_film {
     uint32_t t;
     uint32_t k;
     uint32_t next;
-    uint32_t ptr1;
+    uint32_t layer_list;
     COND_FIELD(version < A_166, char[20], film_name);
-    COND_FIELD(version >= A_166, uint32_t, ptr);
+    COND_FIELD(version >= A_166, uint32_t, layer_name_str);
     COND_FIELD(version >= A_166, uint32_t, un2);
     uint32_t un1[7];
     COND_FIELD(version >= A_174, uint32_t, un3);
@@ -1488,7 +1488,7 @@ struct t39_film_layer_list {
     uint32_t t;
     uint32_t k;
     uint32_t parent;
-    uint32_t ptr1;
+    uint32_t head;
     uint16_t x[22];
 
     uint32_t TAIL;
