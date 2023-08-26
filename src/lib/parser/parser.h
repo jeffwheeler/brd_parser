@@ -9,9 +9,6 @@
 
 #include "lib/structure/types.h"
 
-template <AllegroVersion version>
-int8_t read_layer(File<version>& fs, uint32_t k);
-
 template <template <AllegroVersion> typename T, AllegroVersion version>
 uint32_t default_parser(File<A_174>& fs, void*& address);
 
