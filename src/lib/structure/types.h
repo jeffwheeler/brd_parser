@@ -135,10 +135,12 @@ struct header {
     char allegro_version[60];
     uint32_t un6;
     uint32_t max_key;
-    uint32_t un7[13];
+    uint32_t un7[20];
+    uint32_t x27_end_offset;
+    uint32_t un8;
+    uint32_t strings_count;
+    uint32_t un9[166];
 };
-
-// BOOST_FUSION_ADAPT_STRUCT(header, magic, un1, allegro_version);
 
 // Instance
 template <AllegroVersion version>
@@ -1575,7 +1577,6 @@ class File {
     std::optional<meta_netlist_path> netlist_path;
 
     uint8_t layer_count = 0;
-    uint32_t x27_end_pos;
 
     x01<A_174> get_x01(uint32_t k);
     const x03<A_174> get_x03(uint32_t k);
