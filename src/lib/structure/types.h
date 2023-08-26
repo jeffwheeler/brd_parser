@@ -1461,30 +1461,30 @@ struct x37 {
 };
 
 template <AllegroVersion version>
-struct x38 {
+struct t38_film {
     uint32_t t;
     uint32_t k;
     uint32_t next;
     uint32_t ptr1;
-    COND_FIELD(version < A_166, char[20], layer_name);
+    COND_FIELD(version < A_166, char[20], film_name);
     COND_FIELD(version >= A_166, uint32_t, ptr);
     COND_FIELD(version >= A_166, uint32_t, un2);
     uint32_t un1[7];
     COND_FIELD(version >= A_174, uint32_t, un3);
 
     uint32_t TAIL;
-    operator x38<A_174>() const;
+    operator t38_film<A_174>() const;
     static constexpr AllegroVersion versions[2] = {A_166, A_174};
 
     std::string s;
 };
 
-static_assert(sizeof_until_tail<x38<A_160>>() == 64);
-static_assert(sizeof_until_tail<x38<A_165>>() == 64);
-static_assert(sizeof_until_tail<x38<A_166>>() == 52);
+static_assert(sizeof_until_tail<t38_film<A_160>>() == 64);
+static_assert(sizeof_until_tail<t38_film<A_165>>() == 64);
+static_assert(sizeof_until_tail<t38_film<A_166>>() == 52);
 
 template <AllegroVersion version>
-struct x39 {
+struct t39_film_layer_list {
     uint32_t t;
     uint32_t k;
     uint32_t parent;
@@ -1492,7 +1492,7 @@ struct x39 {
     uint16_t x[22];
 
     uint32_t TAIL;
-    operator x39<A_174>() const;
+    operator t39_film_layer_list<A_174>() const;
     static constexpr AllegroVersion versions[1] = {A_160};
 };
 
@@ -1613,8 +1613,8 @@ class File {
     const x33<A_174> get_x33(uint32_t k);
     const x34<A_174> get_x34(uint32_t k);
     const x37<A_174> get_x37(uint32_t k);
-    const x38<A_174> get_x38(uint32_t k);
-    const x39<A_174> get_x39(uint32_t k);
+    const t38_film<A_174> get_x38(uint32_t k);
+    const t39_film_layer_list<A_174> get_x39(uint32_t k);
     const x3A<A_174> get_x3A(uint32_t k);
     const x3C<A_174> get_x3C(uint32_t k);
 
@@ -1804,10 +1804,12 @@ class File {
         }
     };
 
-    IterBase<x38<version>> iter_x38() {
-        return IterBase<x38<version>>(
-            Iter<x38<version>>(*this, this->hdr->ll_x38.head, &File::get_x38),
-            Iter<x38<version>>(*this, this->hdr->ll_x38.tail, &File::get_x38));
+    IterBase<t38_film<version>> iter_x38() {
+        return IterBase<t38_film<version>>(
+            Iter<t38_film<version>>(*this, this->hdr->ll_x38.head,
+                                    &File::get_x38),
+            Iter<t38_film<version>>(*this, this->hdr->ll_x38.tail,
+                                    &File::get_x38));
     };
 
     mapped_region region;
@@ -1851,8 +1853,8 @@ class File {
     x33<A_174> (*x33_upgrade)(void *);
     x34<A_174> (*x34_upgrade)(void *);
     x37<A_174> (*x37_upgrade)(void *);
-    x38<A_174> (*x38_upgrade)(void *);
-    x39<A_174> (*x39_upgrade)(void *);
+    t38_film<A_174> (*x38_upgrade)(void *);
+    t39_film_layer_list<A_174> (*x39_upgrade)(void *);
     x3A<A_174> (*x3A_upgrade)(void *);
     x3C<A_174> (*x3C_upgrade)(void *);
 };

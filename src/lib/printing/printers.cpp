@@ -2763,7 +2763,7 @@ void print_x37(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x38(const void *untyped_inst, File<version> *fs, const int d) {
-    const x38<version> *inst = (const x38<version> *)untyped_inst;
+    const t38_film<version> *inst = (const t38_film<version> *)untyped_inst;
     printf_d(d,
              "x38: \x1b[36;3mFilm\x1b[0m"
              " t=0x%08X k=0x%08X un1=%3d"
@@ -2794,7 +2794,8 @@ void print_x38(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x39(const void *untyped_inst, File<version> *fs, const int d) {
-    const x39<version> *inst = (const x39<version> *)untyped_inst;
+    const t39_film_layer_list<version> *inst =
+        (const t39_film_layer_list<version> *)untyped_inst;
     printf_d(d,
              "x39: t=0x%08X k=0x%08X"
              " x=\x1b[2m{%3d %3d %3d %3d %3d %3d %3d %3d %3d %3d %3d"
