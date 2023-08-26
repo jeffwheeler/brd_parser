@@ -889,9 +889,7 @@ struct x23 {
     uint8_t layer;
 
     uint32_t k;
-
-    // Another `x23`
-    uint32_t ptr0;
+    uint32_t next;
 
     uint32_t bitmask[2];
 
