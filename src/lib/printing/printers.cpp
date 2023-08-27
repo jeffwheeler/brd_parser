@@ -1781,6 +1781,37 @@ void print_x28(const void *untyped_inst, File<version> *fs, const int d) {
     }
 }
 
+void print_x2A_entry_details(uint32_t x) {
+    if ((x & 0x01) == 0x1) {
+        printf(" HAS_BELOW");
+    }
+    if ((x & 0x02) == 0x2) {
+        printf(" HAS_ABOVE");
+    }
+    if ((x & 0x8000) == 0x8000) {
+        printf(" IS_SIGNAL");
+    }
+    if ((x & 0x0800) == 0x0800) {
+        printf(" IS_PWR");
+    }
+    if ((x & 0x0100) == 0x0100) {
+        printf(" IS_PWR2");
+    }
+    if ((x & 0x0200) == 0x0200) {
+        printf(" IS_INNER");
+    }
+    if ((x & 0x0400) == 0x0400) {
+        printf(" IS_INNER2");
+    }
+    if ((x & 0x080000) == 0x080000) {
+        printf(" IS_TOP");
+    }
+    if ((x & 0x100000) == 0x100000) {
+        printf(" IS_BOT");
+    }
+    printf("\n");
+}
+
 template <AllegroVersion version>
 void print_x2A(const void *untyped_inst, File<version> *fs, const int d) {
     const x2A *inst = (const x2A *)untyped_inst;
@@ -1791,13 +1822,15 @@ void print_x2A(const void *untyped_inst, File<version> *fs, const int d) {
 
     if (inst->references) {
         for (const auto &entry : inst->reference_entries) {
-            printf_d(d + 1, "%08X \x1b[34m\"%s\"\x1b[0m\n", ntohl(entry.suffix),
+            printf_d(d + 1, "%08X \x1b[34m\"%s\"\x1b[0m", ntohl(entry.suffix),
                      str_lookup(entry.ptr, *fs));
+            print_x2A_entry_details(entry.suffix);
         }
     } else {
         for (const auto &entry : inst->local_entries) {
-            printf_d(d + 1, "%08X \x1b[34m\"%s\"\x1b[0m\n", ntohl(entry.suffix),
+            printf_d(d + 1, "%08X \x1b[34m\"%s\"\x1b[0m", ntohl(entry.suffix),
                      entry.s.c_str());
+            print_x2A_entry_details(entry.suffix);
         }
     }
 }
