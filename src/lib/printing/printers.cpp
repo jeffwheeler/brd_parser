@@ -1781,33 +1781,33 @@ void print_x28(const void *untyped_inst, File<version> *fs, const int d) {
     }
 }
 
-void print_x2A_entry_details(uint32_t x) {
-    if ((x & 0x01) == 0x1) {
-        printf(" HAS_BELOW");
+void print_x2A_entry_details(const x2A_layer_properties &properties) {
+    if (properties.is_top) {
+        printf(" \x1b[30;43mTOP\x1b[0m");
     }
-    if ((x & 0x02) == 0x2) {
-        printf(" HAS_ABOVE");
+    if (properties.is_bot) {
+        printf(" \x1b[30;43mBOT\x1b[0m");
     }
-    if ((x & 0x8000) == 0x8000) {
-        printf(" IS_SIGNAL");
+    if (properties.is_signal) {
+        printf(" \x1b[33mIS_SIGNAL\x1b[0m");
     }
-    if ((x & 0x0800) == 0x0800) {
-        printf(" IS_PWR");
+    if (properties.is_power) {
+        printf(" \x1b[35mIS_PWR\x1b[0m");
     }
-    if ((x & 0x0100) == 0x0100) {
-        printf(" IS_PWR2");
+    if (properties.is_power2) {
+        printf(" \x1b[35mIS_PWR2\x1b[0m");
     }
-    if ((x & 0x0200) == 0x0200) {
+    if (properties.is_inner) {
         printf(" IS_INNER");
     }
-    if ((x & 0x0400) == 0x0400) {
+    if (properties.is_inner2) {
         printf(" IS_INNER2");
     }
-    if ((x & 0x080000) == 0x080000) {
-        printf(" IS_TOP");
+    if (properties.has_bot_reference) {
+        printf(" HAS_BELOW");
     }
-    if ((x & 0x100000) == 0x100000) {
-        printf(" IS_BOT");
+    if (properties.has_top_reference) {
+        printf(" HAS_ABOVE");
     }
     printf("\n");
 }
@@ -1822,15 +1822,14 @@ void print_x2A(const void *untyped_inst, File<version> *fs, const int d) {
 
     if (inst->references) {
         for (const auto &entry : inst->reference_entries) {
-            printf_d(d + 1, "%08X \x1b[34m\"%s\"\x1b[0m", ntohl(entry.suffix),
+            printf_d(d + 1, "\x1b[34m\"%s\"\x1b[0m",
                      str_lookup(entry.ptr, *fs));
-            print_x2A_entry_details(entry.suffix);
+            print_x2A_entry_details(entry.properties);
         }
     } else {
         for (const auto &entry : inst->local_entries) {
-            printf_d(d + 1, "%08X \x1b[34m\"%s\"\x1b[0m", ntohl(entry.suffix),
-                     entry.s.c_str());
-            print_x2A_entry_details(entry.suffix);
+            printf_d(d + 1, "\x1b[34m\"%s\"\x1b[0m", entry.s.c_str());
+            print_x2A_entry_details(entry.properties);
         }
     }
 }

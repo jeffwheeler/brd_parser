@@ -1005,14 +1005,33 @@ struct x2A_hdr {
     // uint32_t k;
 };
 
+struct x2A_layer_properties {
+    uint8_t has_bot_reference : 1;
+    uint8_t has_top_reference : 1;
+    uint8_t : 0;  // Skips to next byte
+    uint8_t is_power : 1;
+    uint8_t is_inner : 1;
+    uint8_t is_inner2 : 1;
+    uint8_t is_power2 : 1;
+    uint8_t : 3;
+    uint8_t is_signal : 1;
+    uint8_t : 3;
+    uint8_t is_top : 1;
+    uint8_t is_bot : 1;
+    uint8_t : 0;
+    uint8_t empty;
+};
+
+static_assert(sizeof(x2A_layer_properties) == 4);
+
 struct x2A_local_entry {
     std::string s;
-    uint32_t suffix;
+    x2A_layer_properties properties;
 };
 
 struct x2A_reference_entry {
     uint32_t ptr;
-    uint32_t suffix;
+    x2A_layer_properties properties;
 
     // Always null?
     uint32_t un1;
