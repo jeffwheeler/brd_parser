@@ -239,7 +239,7 @@ uint32_t parse_x2A(File<A_174>& fs, void*& address) {
             // f.read((char*)buf, 36);
             memcpy(buf, address, 36);
             skip(address, 36);
-            uint32_t suffix = *((uint32_t*)&buf[32]);
+            x2A_layer_properties suffix = *((x2A_layer_properties*)&buf[32]);
             x2A_local_entry entry = x2A_local_entry{std::string(buf), suffix};
             x2A_inst.local_entries.push_back(entry);
         }

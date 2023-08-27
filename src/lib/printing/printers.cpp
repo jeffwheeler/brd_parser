@@ -1781,6 +1781,37 @@ void print_x28(const void *untyped_inst, File<version> *fs, const int d) {
     }
 }
 
+void print_x2A_entry_details(const x2A_layer_properties &properties) {
+    if (properties.is_top) {
+        printf(" \x1b[30;43mTOP\x1b[0m");
+    }
+    if (properties.is_bot) {
+        printf(" \x1b[30;43mBOT\x1b[0m");
+    }
+    if (properties.is_signal) {
+        printf(" \x1b[33mIS_SIGNAL\x1b[0m");
+    }
+    if (properties.is_power) {
+        printf(" \x1b[35mIS_PWR\x1b[0m");
+    }
+    if (properties.is_power2) {
+        printf(" \x1b[35mIS_PWR2\x1b[0m");
+    }
+    if (properties.is_inner) {
+        printf(" IS_INNER");
+    }
+    if (properties.is_inner2) {
+        printf(" IS_INNER2");
+    }
+    if (properties.has_bot_reference) {
+        printf(" HAS_BELOW");
+    }
+    if (properties.has_top_reference) {
+        printf(" HAS_ABOVE");
+    }
+    printf("\n");
+}
+
 template <AllegroVersion version>
 void print_x2A(const void *untyped_inst, File<version> *fs, const int d) {
     const x2A *inst = (const x2A *)untyped_inst;
@@ -1791,13 +1822,14 @@ void print_x2A(const void *untyped_inst, File<version> *fs, const int d) {
 
     if (inst->references) {
         for (const auto &entry : inst->reference_entries) {
-            printf_d(d + 1, "%08X \x1b[34m\"%s\"\x1b[0m\n", ntohl(entry.suffix),
+            printf_d(d + 1, "\x1b[34m\"%s\"\x1b[0m",
                      str_lookup(entry.ptr, *fs));
+            print_x2A_entry_details(entry.properties);
         }
     } else {
         for (const auto &entry : inst->local_entries) {
-            printf_d(d + 1, "%08X \x1b[34m\"%s\"\x1b[0m\n", ntohl(entry.suffix),
-                     entry.s.c_str());
+            printf_d(d + 1, "\x1b[34m\"%s\"\x1b[0m", entry.s.c_str());
+            print_x2A_entry_details(entry.properties);
         }
     }
 }
