@@ -37,8 +37,6 @@ uint32_t parse_x35(File<A_174>& fs, void*& address);
 template <AllegroVersion version>
 uint32_t parse_x36(File<A_174>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x38(File<A_174>& fs, void*& address);
-template <AllegroVersion version>
 uint32_t parse_x3A(File<A_174>& fs, void*& address);
 template <AllegroVersion version>
 uint32_t parse_x3B(File<A_174>& fs, void*& address);
@@ -177,16 +175,6 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x3D
     {},
 };
-
-/*
-template const parser_t<A_160>[62] PARSER_TABLE<A_160>;
-template const parser_t<A_162>[62] PARSER_TABLE<A_162>;
-template const parser_t<A_164>[62] PARSER_TABLE<A_164>;
-template const parser_t<A_165>[62] PARSER_TABLE<A_165>;
-template const parser_t<A_166>[62] PARSER_TABLE<A_166>;
-template const parser_t<A_172>[62] PARSER_TABLE<A_172>;
-template const parser_t<A_174>[62] PARSER_TABLE<A_174>;
-*/
 
 void skip(std::ifstream* f, std::ifstream::pos_type n);
 void skip_and_pad(std::ifstream* f, std::ifstream::pos_type n);

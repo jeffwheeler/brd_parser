@@ -2763,13 +2763,14 @@ void print_x37(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x38(const void *untyped_inst, File<version> *fs, const int d) {
-    const t38_film<version> *inst = (const t38_film<version> *)untyped_inst;
+    const uint32_t k = ((const t38_film<version> *)untyped_inst)->k;
+    t38_film<version> inst = fs->get_x38(k);
     printf_d(d,
              "x38: \x1b[36;3mFilm\x1b[0m"
              " t=0x%08X k=0x%08X un1=%3d"
              " \x1b[34m\"%s\"\x1b[0m\n",
-             ntohl(inst->t), ntohl(inst->k), inst->un1,
-             x38_layer_name(*inst, fs).c_str());
+             ntohl(inst.t), ntohl(inst.k), inst.un1,
+             x38_layer_name(inst, fs).c_str());
 
     // `next` is not interesting
     /*
@@ -2784,11 +2785,11 @@ void print_x38(const void *untyped_inst, File<version> *fs, const int d) {
     }
     */
 
-    if (fs->is_type(inst->layer_list, 0x39)) {
-        print_struct(inst->layer_list, *fs, d + 2);
+    if (fs->is_type(inst.layer_list, 0x39)) {
+        print_struct(inst.layer_list, *fs, d + 2);
     } else {
         printf_d(d + 1, "layer_list unrecognized: 0x%08X\n",
-                 ntohl(inst->layer_list));
+                 ntohl(inst.layer_list));
         exit(0);
     }
 }
