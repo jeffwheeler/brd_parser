@@ -7,12 +7,10 @@ void check_header_values(File<version>& fs) {
         for (auto& i : fs.iter_x04()) {
         }
     }
-
     if (fs.hdr->ll_x06.head != 0) {
         for (auto& i : fs.iter_x06()) {
         }
     }
-
     if (fs.hdr->ll_x0C_2.head != 0) {
         for (auto& i : fs.iter_x0C_2()) {
         }

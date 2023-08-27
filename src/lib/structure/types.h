@@ -835,8 +835,10 @@ struct x20 {
     uint32_t ptr1;
     uint32_t un[7];
 
+    COND_FIELD(version >= A_172, uint32_t[10], un1);
+
     uint32_t TAIL;
-    static constexpr AllegroVersion versions[1] = {A_160};
+    static constexpr AllegroVersion versions[2] = {A_160, A_172};
 };
 
 struct x21_header {
