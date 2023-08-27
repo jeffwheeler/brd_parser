@@ -1817,18 +1817,20 @@ void print_x2A(const void *untyped_inst, File<version> *fs, const int d) {
     const x2A *inst = (const x2A *)untyped_inst;
     printf_d(d,
              "x2A: \x1b[36;3mLayer Name List\x1b[0m"
-             " t=0x%04X size=0x%04X k=0x%08X\n",
-             ntohs(inst->hdr.t), ntohs(inst->hdr.size), ntohl(inst->k));
+             " t=0x%04X size=%d k=0x%08X\n",
+             ntohs(inst->hdr.t), inst->hdr.size, ntohl(inst->k));
 
     if (inst->references) {
         for (const auto &entry : inst->reference_entries) {
-            printf_d(d + 1, "\x1b[34m\"%s\"\x1b[0m",
+            printf_d(d + 1, "%08X \x1b[34m\"%s\"\x1b[0m",
+                     ntohl(*(uint32_t *)&entry.properties),
                      str_lookup(entry.ptr, *fs));
             print_x2A_entry_details(entry.properties);
         }
     } else {
         for (const auto &entry : inst->local_entries) {
-            printf_d(d + 1, "\x1b[34m\"%s\"\x1b[0m", entry.s.c_str());
+            printf_d(d + 1, "%08X \x1b[34m\"%s\"\x1b[0m",
+                     ntohl(*(uint32_t *)&entry.properties), entry.s.c_str());
             print_x2A_entry_details(entry.properties);
         }
     }

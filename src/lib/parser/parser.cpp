@@ -51,15 +51,15 @@ uint32_t default_parser(File<A_174>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x03(File<A_174>& fs, void*& address) {
+    x03<version>* i = static_cast<x03<version>*>(address);
     uint32_t k = default_parser<x03, version>(fs, address);
-    const auto& inst = fs.get_x03(k);
 
     char* buf;
     // inst.has_str = false;
     uint32_t size;
 
-    // log(base_addr_glb, address, "- Subtype.t = 0x%02X\n", inst.subtype.t);
-    switch (inst.subtype.t & 0xFF) {
+    // log(base_addr_glb, address, "- Subtype.t = 0x%02X\n", i->subtype.t);
+    switch (i->subtype.t & 0xFF) {
         case 0x65:
             break;
         case 0x64:
@@ -76,7 +76,7 @@ uint32_t parse_x03(File<A_174>& fs, void*& address) {
         case 0x71:
         case 0x73:
         case 0x78:
-            skip(address, round_to_word(inst.subtype.size));
+            skip(address, round_to_word(i->subtype.size));
             break;
         case 0x69:
             skip(address, 8);
@@ -99,7 +99,7 @@ uint32_t parse_x03(File<A_174>& fs, void*& address) {
             break;
         default:
             log(fs.region.get_address(), address,
-                "- Unexpected value subtype=0x%02X\n", inst.subtype.t);
+                "- Unexpected value subtype=0x%02X\n", i->subtype.t);
             exit(1);
     };
 
@@ -108,7 +108,7 @@ uint32_t parse_x03(File<A_174>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x1C(File<A_174>& fs, void*& address) {
-    x1C<version>* i = (x1C<version>*)address;
+    x1C<version>* i = static_cast<x1C<version>*>(address);
     uint32_t k = default_parser<x1C, version>(fs, address);
 
     uint16_t size;
@@ -135,12 +135,12 @@ uint32_t parse_x1C(File<A_174>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x1D(File<A_174>& fs, void*& address) {
+    x1D<version>* i = static_cast<x1D<version>*>(address);
     uint32_t k = default_parser<x1D, version>(fs, address);
-    const auto& inst = fs.get_x1D(k);
 
     // log(&f, "size_a = %d, size_b = %d\n", size_a, size_b);
-    skip(address, inst.size_b * (version >= A_162 ? 56 : 48));
-    skip(address, inst.size_a * 256);
+    skip(address, i->size_b * (version >= A_162 ? 56 : 48));
+    skip(address, i->size_a * 256);
     if (version >= A_172) {
         skip(address, 4);
     }
@@ -165,15 +165,15 @@ uint32_t parse_x1E(File<A_174>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x1F(File<A_174>& fs, void*& address) {
+    x1F<version>* i = static_cast<x1F<version>*>(address);
     uint32_t k = default_parser<x1F, version>(fs, address);
-    const auto& inst = fs.get_x1F(k);
 
     if constexpr (version >= A_172) {
-        skip(address, inst.size * 280 + 8);
+        skip(address, i->size * 280 + 8);
     } else if constexpr (version >= A_162) {
-        skip(address, inst.size * 280 + 4);
+        skip(address, i->size * 280 + 4);
     } else {
-        skip(address, inst.size * 240 + 4);
+        skip(address, i->size * 240 + 4);
     }
 
     return k;
@@ -527,6 +527,7 @@ std::optional<File<A_174>> parse_file(const std::string& filepath) {
             return parse_file_raw<A_166>(std::move(region));
         case 0x00140400:
         case 0x00140500:
+        case 0x00140502:
         case 0x00140600:
         case 0x00140700:
             return parse_file_raw<A_172>(std::move(region));
