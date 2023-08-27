@@ -489,6 +489,9 @@ File<A_174> parse_file_raw(mapped_region region) {
         const parser_t parser = PARSER_TABLE<version>[t];
         if (t < 0x3E && parser.parse != 0) {
             parser.parse(fs, cur_addr);
+        } else {
+            log(base_addr, cur_addr, "Stuck here at t=0x%02X\n", t);
+            break;
         }
     }
 
