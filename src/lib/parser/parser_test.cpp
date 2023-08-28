@@ -24,6 +24,11 @@ bool check_overlapping_ids(File<version>& fs) {
     return false;
 }
 
+TEST(ParseFile, MissingFile) {
+    auto fs = parse_file("file_does_not_exist.brd");
+    EXPECT_FALSE(fs.has_value());
+}
+
 // Magic is 0x00130200
 // Allegro 16.0 P006
 TEST(ParseFile, Slugs) {
