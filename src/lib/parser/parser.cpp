@@ -530,6 +530,7 @@ std::optional<File<A_174>> parse_file(const std::string& filepath) {
             return parse_file_raw<A_166>(std::move(region));
         case 0x00140400:
         case 0x00140500:
+        case 0x00140501:
         case 0x00140502:
         case 0x00140600:
         case 0x00140700:

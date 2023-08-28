@@ -1185,6 +1185,7 @@ void File<version>::cache_upgrade_funcs() {
             break;
         case 0x00140400:
         case 0x00140500:
+        case 0x00140501:
         case 0x00140502:
         case 0x00140600:
         case 0x00140700:
