@@ -1405,17 +1405,17 @@ const x14<A_174> File<A_174>::get_x14(uint32_t k) {
 }
 
 template <>
-x15<A_174> File<A_174>::get_x15(uint32_t k) {
+const x15<A_174> File<A_174>::get_x15(uint32_t k) {
     return this->x15_upgrade(this->ptrs[k]);
 }
 
 template <>
-x16<A_174> File<A_174>::get_x16(uint32_t k) {
+const x16<A_174> File<A_174>::get_x16(uint32_t k) {
     return this->x16_upgrade(this->ptrs[k]);
 }
 
 template <>
-x17<A_174> File<A_174>::get_x17(uint32_t k) {
+const x17<A_174> File<A_174>::get_x17(uint32_t k) {
     return this->x17_upgrade(this->ptrs[k]);
 }
 
