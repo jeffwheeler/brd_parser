@@ -502,7 +502,13 @@ File<A_174> parse_file_raw(mapped_region region) {
 }
 
 std::optional<File<A_174>> parse_file(const std::string& filepath) {
-    file_mapping mapped_file(filepath.c_str(), read_only);
+    file_mapping mapped_file;
+    try {
+        mapped_file = file_mapping(filepath.c_str(), read_only);
+    } catch (const boost::interprocess::interprocess_exception& e) {
+        printf("Unable to open file. Exception: %s.\n", e.what());
+        return {};
+    }
     mapped_region region(mapped_file, read_only);
 
     /*
