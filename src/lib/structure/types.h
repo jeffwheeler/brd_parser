@@ -1610,9 +1610,9 @@ class File {
     const x0E<A_174> get_x0E(uint32_t k);
     const x10<A_174> get_x10(uint32_t k);
     const x14<A_174> get_x14(uint32_t k);
-    x15<A_174> get_x15(uint32_t k);
-    x16<A_174> get_x16(uint32_t k);
-    x17<A_174> get_x17(uint32_t k);
+    const x15<A_174> get_x15(uint32_t k);
+    const x16<A_174> get_x16(uint32_t k);
+    const x17<A_174> get_x17(uint32_t k);
     const x1B<A_174> get_x1B(uint32_t k);
     const x1C<A_174> get_x1C(uint32_t k);
     const x1D<A_174> get_x1D(uint32_t k);
