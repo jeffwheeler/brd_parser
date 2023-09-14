@@ -451,10 +451,10 @@ x1C<A_160>::operator x1C<A_174>() const {
     new_inst.un0_4 = this->un0_4;
     new_inst.un0_5 = this->un0_5;
     new_inst.un1 = this->un1;
-    new_inst.un2_0 = this->un2_0;
+    new_inst.layer_count = this->layer_count;
     new_inst.un2_1 = this->un2_1;
     new_inst.un3 = this->un3;
-    new_inst.size_hint = this->size_hint;
+    new_inst.layer_count_16x = this->layer_count_16x;
     for (int i = 0; i < 4; i++) {
         new_inst.coords2[i] = this->coords2[i];
     }
@@ -480,10 +480,10 @@ x1C<A_165>::operator x1C<A_174>() const {
     new_inst.un0_4 = this->un0_4;
     new_inst.un0_5 = this->un0_5;
     new_inst.un1 = this->un1;
-    new_inst.un2_0 = this->un2_0;
+    new_inst.layer_count = this->layer_count;
     new_inst.un2_1 = this->un2_1;
     new_inst.un3 = this->un3;
-    new_inst.size_hint = this->size_hint;
+    new_inst.layer_count_16x = this->layer_count_16x;
     for (int i = 0; i < 4; i++) {
         new_inst.coords2[i] = this->coords2[i];
     }
@@ -1448,9 +1448,9 @@ const x1C<A_174> File<A_174>::get_x1C(uint32_t k) {
 
     uint32_t count;
     if (this->hdr->magic < A_172) {
-        count = 10 + i.size_hint * 3;
+        count = 10 + i.layer_count_16x * 3;
     } else {
-        count = 21 + i.un2_0 * 4;
+        count = 21 + i.layer_count * 4;
     }
 
     void *next_ptr = ((char *)p) + obj_size;

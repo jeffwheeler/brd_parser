@@ -113,9 +113,9 @@ uint32_t parse_x1C(File<A_174>& fs, void*& address) {
 
     uint16_t size;
     if constexpr (version < A_172) {
-        size = 10 + i->size_hint * 3;
+        size = 10 + i->layer_count_16x * 3;
     } else {
-        size = 21 + i->un2_0 * 4;
+        size = 21 + i->layer_count * 4;
     }
 
     skip(address, size * sizeof_until_tail<t13<version>>());

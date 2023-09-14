@@ -1371,9 +1371,8 @@ void print_x1B(const void *untyped_inst, File<version> *fs, const int d) {
 }
 
 template <AllegroVersion version>
-void print_t13(const t13<version> &t13_inst, File<version> *fs, const int d,
-               const int i) {
-    printf_d(d, "\x1b[2mparts[\x1b[0m%2d\x1b[2m] =\x1b[0m", i);
+void print_t13(const t13<version> &t13_inst, File<version> *fs, const int d) {
+    printf_d(d, "\x1b[2mpart =\x1b[0m");
     switch (t13_inst.t) {
         case 2:
         case 5:
@@ -1415,12 +1414,13 @@ void print_x1C(const void *untyped_inst, File<version> *fs, const int d) {
     printf_d(d,
              "x1C: \x1b[36;3mPad\x1b[0m t=0x%08X k=0x%08X"
              " \x1b[34m\"%s\"\x1b[0m"
-             " \x1b[2m(%d, %d, %d, %d, %d, %d)\x1b[0m"
-             " \x1b[2m(%d, %d, %d, %d)\x1b[0m\n",
+             " \x1b[2m(%08X, %08X, %04X, %08X, %08X)\x1b[0m"
+             " \x1b[2m(%08X, %08X, %08X, %08X)\x1b[0m\n",
              ntohl(inst.t), ntohl(inst.k), str_lookup(inst.pad_str, *fs),
-             inst.un0_0, inst.un0_1, inst.pad_path, inst.un0_3, inst.un0_4,
-             inst.un0_5, inst.coords2[0], inst.coords2[1], inst.coords2[2],
-             inst.coords2[3]);
+             ntohl(inst.un0_0), ntohl(inst.un0_1), ntohs(inst.un0_3),
+             ntohl(inst.un0_4), ntohl(inst.un0_5), ntohl(inst.coords2[0]),
+             ntohl(inst.coords2[1]), ntohl(inst.coords2[2]),
+             ntohl(inst.coords2[3]));
     uint32_t un7;
     if constexpr (std::is_same_v<decltype(inst.un7), std::monostate>) {
         un7 = 0;
@@ -1428,15 +1428,40 @@ void print_x1C(const void *untyped_inst, File<version> *fs, const int d) {
         un7 = inst.un7;
     }
     printf_d(d + 1,
-             "un1=%08X un2=%04X %08X un3=%04X size_hint=%d un4=%08X "
+             "un1=%08X layer_count=%d un2_1=%04X un3=%04X layer_count_16x=%d "
+             "un4=%08X "
              "un5=%08X un6=%08X un7=%08X len(parts)=%d\n",
-             ntohl(inst.un1), ntohs(inst.un2_0), ntohs(inst.un2_1),
-             ntohl(inst.un3), inst.size_hint, ntohl(inst.un4), ntohl(inst.un5),
-             ntohl(inst.un6), ntohl(un7), inst.parts.size());
+             ntohl(inst.un1), inst.layer_count, ntohs(inst.un2_1),
+             ntohl(inst.un3), inst.layer_count_16x, ntohl(inst.un4),
+             ntohl(inst.un5), ntohl(inst.un6), ntohl(un7), inst.parts.size());
 
-    uint8_t i = 0;
+    printf_d(d + 1, "pad_path:");
+    if (inst.pad_path == 0) {
+        printf(" \x1b[2mnull\x1b[0m\n");
+    } else {
+        std::printf("\n");
+        if (fs->is_type(inst.pad_path, 0x03)) {
+            print_struct(inst.pad_path, *fs, d + 2);
+        } else {
+            printf_d(d + 2, "pad_path unrecognized: 0x%08X\n",
+                     ntohl(inst.pad_path));
+            exit(0);
+        }
+    }
+    uint8_t fixed_cnt = 21, per_layer = 4;
+    if (fs->hdr->magic < A_172) {
+        fixed_cnt = 10;
+        per_layer = 3;
+    }
+
+    uint32_t i = 0;
+    printf_d(d + 1, "Fixed parts\n");
     for (const t13<version> &t13_inst : inst.parts) {
-        print_t13(t13_inst, fs, d + 1, i++);
+        if ((i >= fixed_cnt) && ((i - fixed_cnt) % per_layer == 0)) {
+            printf_d(d + 1, "Layer group %d\n", (i - fixed_cnt) / per_layer);
+        }
+        print_t13(t13_inst, fs, d + 2);
+        i++;
     }
 }
 

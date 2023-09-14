@@ -766,10 +766,10 @@ struct x1C {
     uint32_t un0_4;
     uint32_t un0_5;
     uint32_t un1;
-    uint16_t un2_0;
+    uint16_t layer_count;
     uint16_t un2_1;
     uint16_t un3;
-    uint16_t size_hint;
+    uint16_t layer_count_16x;
     std::array<int32_t, 4> coords2;
     uint32_t un4;
     uint32_t un5;
