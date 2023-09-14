@@ -1281,6 +1281,11 @@ void File<version>::cache_upgrade_funcs() {
 }
 
 template <>
+std::ptrdiff_t File<A_174>::offset(void* p) {
+    return (char*)p - (char*)region.get_address();
+}
+
+template <>
 x01<A_174> File<A_174>::get_x01(uint32_t k) {
     return this->x01_upgrade(this->ptrs[k]);
 }
@@ -1452,7 +1457,7 @@ const x1C<A_174> File<A_174>::get_x1C(uint32_t k) {
     for (int j = 0; j < count; j++) {
         t13<A_174> t13_inst = this->t13_upgrade(next_ptr);
         i.parts.push_back(t13_inst);
-        next_ptr = ((char *)p) + t13_size;
+        next_ptr = ((char *)next_ptr) + t13_size;
     }
 
     return i;

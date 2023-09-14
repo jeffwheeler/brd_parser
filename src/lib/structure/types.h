@@ -1856,6 +1856,7 @@ class File {
 
    private:
     void cache_upgrade_funcs();
+    std::ptrdiff_t offset(void*);
 
     x01<A_174> (*x01_upgrade)(void *);
     x03<A_174> (*x03_upgrade)(void *);
