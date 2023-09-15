@@ -17,12 +17,18 @@ int main(int argc, char* argv[]) {
         // stream_file(fname, *parsed_file);
     }
 
+    /*
     for (auto& [a, b] : parsed_file->layers) {
         printf("0x %08X - 0x %08X\n", ntohl(a), ntohl(b));
         if (parsed_file->x2A_map.count(b) > 0) {
             x2A* i = &parsed_file->x2A_map[b];
             print_struct((void*)i, &*parsed_file, 1);
         }
+    }
+    */
+
+    for (auto& i : parsed_file->iter_x1C()) {
+        print_struct((void*)&i, &*parsed_file, 0);
     }
 
     /*

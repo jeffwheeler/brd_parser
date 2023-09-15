@@ -751,6 +751,8 @@ static_assert(sizeof_until_tail<t13<A_160>>() == 28);
 static_assert(sizeof_until_tail<t13<A_174>>() == 36);
 
 // x1 shows how to draw pads
+enum PadType : uint8_t { ThroughVia = 0, Via = 1, SmtPin = 2, Slot = 4 };
+
 template <AllegroVersion version>
 struct x1C {
     uint16_t t;
@@ -762,7 +764,9 @@ struct x1C {
     uint32_t un0_0;
     uint32_t un0_1;
     uint32_t pad_path;  // x03
-    uint16_t un0_3;
+    PadType pad_type : 4;
+    uint8_t un0_2 : 4;
+    uint8_t un0_3;
     uint32_t un0_4;
     uint32_t un0_5;
     uint32_t un1;
@@ -1856,7 +1860,7 @@ class File {
 
    private:
     void cache_upgrade_funcs();
-    std::ptrdiff_t offset(void*);
+    std::ptrdiff_t offset(void *);
 
     x01<A_174> (*x01_upgrade)(void *);
     x03<A_174> (*x03_upgrade)(void *);

@@ -57,7 +57,7 @@ void BrdView::mouseMoveEvent(QMouseEvent *event) {
 
 void BrdView::mouseReleaseEvent(QMouseEvent *event) {
     const QPointF pos = mapToScene(event->pos());
-    const qreal r = 0.3;
+    const qreal r = 0.1;
     QList<QGraphicsItem *> clickedItems =
         scene->items(QRectF(pos.x() - r, pos.y() - r, 2 * r, 2 * r),
                      Qt::IntersectsItemShape, Qt::AscendingOrder);

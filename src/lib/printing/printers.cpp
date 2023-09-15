@@ -1413,14 +1413,16 @@ void print_x1C(const void *untyped_inst, File<version> *fs, const int d) {
     // const x1C<version> *inst = (const x1C<version> *)untyped_inst;
     printf_d(d,
              "x1C: \x1b[36;3mPad\x1b[0m t=0x%08X k=0x%08X"
-             " \x1b[34m\"%s\"\x1b[0m"
-             " \x1b[2m(%08X, %08X, %04X, %08X, %08X)\x1b[0m"
+             " \x1b[34m\"%s\"\x1b[0m\n",
+             ntohl(inst.t), ntohl(inst.k), str_lookup(inst.pad_str, *fs));
+    printf_d(d,
+             " \x1b[2m(%08X, %08X, %s=%X, %02X, %02X, %08X, %08X)\x1b[0m"
              " \x1b[2m(%08X, %08X, %08X, %08X)\x1b[0m\n",
-             ntohl(inst.t), ntohl(inst.k), str_lookup(inst.pad_str, *fs),
-             ntohl(inst.un0_0), ntohl(inst.un0_1), ntohs(inst.un0_3),
-             ntohl(inst.un0_4), ntohl(inst.un0_5), ntohl(inst.coords2[0]),
-             ntohl(inst.coords2[1]), ntohl(inst.coords2[2]),
-             ntohl(inst.coords2[3]));
+             ntohl(inst.un0_0), ntohl(inst.un0_1),
+             padtype(inst.pad_type).c_str(), inst.pad_type, inst.un0_2,
+             inst.un0_3, ntohl(inst.un0_4), ntohl(inst.un0_5),
+             ntohl(inst.coords2[0]), ntohl(inst.coords2[1]),
+             ntohl(inst.coords2[2]), ntohl(inst.coords2[3]));
     uint32_t un7;
     if constexpr (std::is_same_v<decltype(inst.un7), std::monostate>) {
         un7 = 0;
@@ -1445,7 +1447,6 @@ void print_x1C(const void *untyped_inst, File<version> *fs, const int d) {
         } else {
             printf_d(d + 2, "pad_path unrecognized: 0x%08X\n",
                      ntohl(inst.pad_path));
-            exit(0);
         }
     }
     uint8_t fixed_cnt = 21, per_layer = 4;
