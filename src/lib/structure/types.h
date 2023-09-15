@@ -770,10 +770,13 @@ struct x1C {
     uint32_t un0_4;
     uint32_t un0_5;
     uint32_t un1;
+    COND_FIELD(version < A_172, uint16_t, un2_0);
+    COND_FIELD(version < A_172, uint16_t, un2_2);
+    COND_FIELD(version < A_172, uint16_t, un2_5);
     uint16_t layer_count;
-    uint16_t un2_1;
-    uint16_t un3;
-    uint16_t layer_count_16x;
+    COND_FIELD(version >= A_172, uint16_t, un2_3);
+    COND_FIELD(version >= A_172, uint16_t, un2_4);
+    COND_FIELD(version >= A_172, uint16_t, un2_6);
     std::array<int32_t, 4> coords2;
     uint32_t un4;
     uint32_t un5;
@@ -788,6 +791,10 @@ struct x1C {
 
     std::vector<t13<version>> parts;
 };
+
+static_assert(sizeof(x1C<A_164>) == 28 * 4);
+static_assert(sizeof(x1C<A_165>) == 36 * 4);
+static_assert(sizeof(x1C<A_172>) == 54 * 4);
 
 template <AllegroVersion version>
 struct x1D {

@@ -113,7 +113,8 @@ uint32_t parse_x1C(File<A_174>& fs, void*& address) {
 
     uint16_t size;
     if constexpr (version < A_172) {
-        size = 10 + i->layer_count_16x * 3;
+        printf("layer count %d\n", i->layer_count);
+        size = 10 + i->layer_count * 3;
     } else {
         size = 21 + i->layer_count * 4;
     }

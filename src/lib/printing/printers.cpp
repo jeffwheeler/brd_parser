@@ -1430,11 +1430,11 @@ void print_x1C(const void *untyped_inst, File<version> *fs, const int d) {
         un7 = inst.un7;
     }
     printf_d(d + 1,
-             "un1=%08X layer_count=%d un2_1=%04X un3=%04X layer_count_16x=%d "
-             "un4=%08X "
+             "un1=%08X layer_count=%d "
+             "un2_3=%04X un2_4=%04X un2_6=%04X un4=%08X "
              "un5=%08X un6=%08X un7=%08X len(parts)=%d\n",
-             ntohl(inst.un1), inst.layer_count, ntohs(inst.un2_1),
-             ntohl(inst.un3), inst.layer_count_16x, ntohl(inst.un4),
+             ntohl(inst.un1), inst.layer_count, ntohs(inst.un2_3),
+             ntohs(inst.un2_4), ntohs(inst.un2_6), ntohl(inst.un4),
              ntohl(inst.un5), ntohl(inst.un6), ntohl(un7), inst.parts.size());
 
     printf_d(d + 1, "pad_path:");
