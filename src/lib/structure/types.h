@@ -750,8 +750,14 @@ struct t13 {
 static_assert(sizeof_until_tail<t13<A_160>>() == 28);
 static_assert(sizeof_until_tail<t13<A_174>>() == 36);
 
-// x1 shows how to draw pads
+// x1C shows how to draw pads
 enum PadType : uint8_t { ThroughVia = 0, Via = 1, SmtPin = 2, Slot = 4 };
+
+struct PadInfo {
+    PadType pad_type : 4;
+    uint8_t un0_2 : 4;
+    uint8_t un0_3;
+};
 
 template <AllegroVersion version>
 struct x1C {
@@ -764,14 +770,12 @@ struct x1C {
     uint32_t un0_0;
     uint32_t un0_1;
     uint32_t pad_path;  // x03
-    PadType pad_type : 4;
-    uint8_t un0_2 : 4;
-    uint8_t un0_3;
+    PadInfo pad_info;
     uint32_t un0_4;
     uint32_t un0_5;
-    uint32_t un1;
     COND_FIELD(version < A_172, uint16_t, un2_0);
     COND_FIELD(version < A_172, uint16_t, un2_2);
+    uint32_t un1;
     COND_FIELD(version < A_172, uint16_t, un2_5);
     uint16_t layer_count;
     COND_FIELD(version >= A_172, uint16_t, un2_3);
@@ -795,6 +799,8 @@ struct x1C {
 static_assert(sizeof(x1C<A_164>) == 28 * 4);
 static_assert(sizeof(x1C<A_165>) == 36 * 4);
 static_assert(sizeof(x1C<A_172>) == 54 * 4);
+
+static_assert(offsetof(x1C<A_172>, pad_info) == 28);
 
 template <AllegroVersion version>
 struct x1D {

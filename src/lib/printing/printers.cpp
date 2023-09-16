@@ -1419,8 +1419,8 @@ void print_x1C(const void *untyped_inst, File<version> *fs, const int d) {
              " \x1b[2m(%08X, %08X, %s=%X, %02X, %02X, %08X, %08X)\x1b[0m"
              " \x1b[2m(%08X, %08X, %08X, %08X)\x1b[0m\n",
              ntohl(inst.un0_0), ntohl(inst.un0_1),
-             padtype(inst.pad_type).c_str(), inst.pad_type, inst.un0_2,
-             inst.un0_3, ntohl(inst.un0_4), ntohl(inst.un0_5),
+             padtype(inst.pad_info.pad_type).c_str(), inst.pad_info.pad_type,
+             inst.pad_info.un0_2, inst.pad_info.un0_3, ntohl(0), ntohl(0),
              ntohl(inst.coords2[0]), ntohl(inst.coords2[1]),
              ntohl(inst.coords2[2]), ntohl(inst.coords2[3]));
     uint32_t un7;

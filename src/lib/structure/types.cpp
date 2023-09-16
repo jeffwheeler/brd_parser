@@ -447,10 +447,9 @@ x1C<A_160>::operator x1C<A_174>() const {
     new_inst.un0_0 = this->un0_0;
     new_inst.un0_1 = this->un0_1;
     new_inst.pad_path = this->pad_path;
-    new_inst.pad_type = this->pad_type;
-    new_inst.un0_3 = this->un0_3;
-    new_inst.un0_4 = this->un0_4;
-    new_inst.un0_5 = this->un0_5;
+    new_inst.pad_info = this->pad_info;
+    // new_inst.un0_4 = this->un0_4;
+    // new_inst.un0_5 = this->un0_5;
     new_inst.un1 = this->un1;
     new_inst.layer_count = this->layer_count;
     new_inst.un2_3 = this->un2_0;
@@ -477,10 +476,9 @@ x1C<A_165>::operator x1C<A_174>() const {
     new_inst.un0_0 = this->un0_0;
     new_inst.un0_1 = this->un0_1;
     new_inst.pad_path = this->pad_path;
-    new_inst.pad_type = this->pad_type;
-    new_inst.un0_3 = this->un0_3;
-    new_inst.un0_4 = this->un0_4;
-    new_inst.un0_5 = this->un0_5;
+    new_inst.pad_info = this->pad_info;
+    // new_inst.un0_4 = this->un0_4;
+    // new_inst.un0_5 = this->un0_5;
     new_inst.un1 = this->un1;
     new_inst.layer_count = this->layer_count;
     new_inst.un2_3 = this->un2_0;
