@@ -440,27 +440,21 @@ x1C<A_160>::operator x1C<A_174>() const {
     x1C<A_174> new_inst;
     new_inst.t = this->t;
     new_inst.n = this->n;
-    new_inst.un9 = this->un9;
     new_inst.k = this->k;
     new_inst.next = this->next;
     new_inst.pad_str = this->pad_str;
-    new_inst.un0_0 = this->un0_0;
-    new_inst.un0_1 = this->un0_1;
     new_inst.pad_path = this->pad_path;
     new_inst.pad_info = this->pad_info;
-    // new_inst.un0_4 = this->un0_4;
-    // new_inst.un0_5 = this->un0_5;
-    new_inst.un1 = this->un1;
     new_inst.layer_count = this->layer_count;
-    new_inst.un2_3 = this->un2_0;
-    new_inst.un2_4 = this->un2_2;
-    new_inst.un2_6 = this->un2_5;
-    for (int i = 0; i < 4; i++) {
-        new_inst.coords2[i] = this->coords2[i];
-    }
-    new_inst.un4 = this->un4;
+    new_inst.un1 = this->un1;
+    new_inst.un2 = this->un2;
+    new_inst.un3 = this->un3;
     new_inst.un5 = this->un5;
     new_inst.un6 = this->un6;
+    new_inst.un7 = this->un7;
+    for (uint8_t i = 0; i < 7; i++) {
+        new_inst.un10[i] = this->un10[i];
+    }
     return new_inst;
 }
 
@@ -469,27 +463,21 @@ x1C<A_165>::operator x1C<A_174>() const {
     x1C<A_174> new_inst;
     new_inst.t = this->t;
     new_inst.n = this->n;
-    new_inst.un9 = this->un9;
     new_inst.k = this->k;
     new_inst.next = this->next;
     new_inst.pad_str = this->pad_str;
-    new_inst.un0_0 = this->un0_0;
-    new_inst.un0_1 = this->un0_1;
     new_inst.pad_path = this->pad_path;
     new_inst.pad_info = this->pad_info;
-    // new_inst.un0_4 = this->un0_4;
-    // new_inst.un0_5 = this->un0_5;
-    new_inst.un1 = this->un1;
     new_inst.layer_count = this->layer_count;
-    new_inst.un2_3 = this->un2_0;
-    new_inst.un2_4 = this->un2_2;
-    new_inst.un2_6 = this->un2_5;
-    for (int i = 0; i < 4; i++) {
-        new_inst.coords2[i] = this->coords2[i];
-    }
-    new_inst.un4 = this->un4;
+    new_inst.un1 = this->un1;
+    new_inst.un2 = this->un2;
+    new_inst.un3 = this->un3;
     new_inst.un5 = this->un5;
     new_inst.un6 = this->un6;
+    new_inst.un7 = this->un7;
+    for (uint8_t i = 0; i < 7; i++) {
+        new_inst.un10[i] = this->un10[i];
+    }
     return new_inst;
 }
 

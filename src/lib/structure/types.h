@@ -761,33 +761,26 @@ struct PadInfo {
 
 template <AllegroVersion version>
 struct x1C {
-    uint16_t t;
+    uint16_t t;  // 1
     uint8_t n;
-    uint8_t un9;
-    uint32_t k;
-    uint32_t next;
-    uint32_t pad_str;
-    uint32_t un0_0;
-    uint32_t un0_1;
-    uint32_t pad_path;  // x03
-    PadInfo pad_info;
-    uint32_t un0_4;
-    uint32_t un0_5;
-    COND_FIELD(version < A_172, uint16_t, un2_0);
-    COND_FIELD(version < A_172, uint16_t, un2_2);
-    uint32_t un1;
-    COND_FIELD(version < A_172, uint16_t, un2_5);
-    uint16_t layer_count;
-    COND_FIELD(version >= A_172, uint16_t, un2_3);
-    COND_FIELD(version >= A_172, uint16_t, un2_4);
-    COND_FIELD(version >= A_172, uint16_t, un2_6);
-    std::array<int32_t, 4> coords2;
-    uint32_t un4;
-    uint32_t un5;
-    COND_FIELD(version >= A_172, uint32_t, un7);
-    uint32_t un6;
-    COND_FIELD(version == A_165 || version == A_166, uint32_t[8], un8);
-    COND_FIELD(version >= A_172, uint32_t[26], un10);
+    uint8_t un1;
+    uint32_t k;         // 2
+    uint32_t next;      // 3
+    uint32_t pad_str;   // 4
+    uint32_t un2;       // 5
+    uint32_t un3;       // 6
+    uint32_t pad_path;  // 7 // x03
+    COND_FIELD(version < A_172, uint32_t, un4);
+    PadInfo pad_info;  // 8
+    uint32_t un5;      // 9
+    uint32_t un6;      // 10
+    uint32_t un7;      // 11
+    COND_FIELD(version < A_172, uint16_t, un8);
+    uint16_t layer_count;  // 12
+    COND_FIELD(version >= A_172, uint16_t, un9);
+    uint32_t un10[7];
+    COND_FIELD(version >= A_172, uint32_t[28], un11);
+    COND_FIELD(version == A_165 || version == A_166, uint32_t[8], un12);
 
     uint32_t TAIL;
     operator x1C<A_174>() const;
@@ -796,10 +789,13 @@ struct x1C {
     std::vector<t13<version>> parts;
 };
 
-static_assert(sizeof(x1C<A_164>) == 28 * 4);
-static_assert(sizeof(x1C<A_165>) == 36 * 4);
-static_assert(sizeof(x1C<A_172>) == 54 * 4);
+static_assert(sizeof_until_tail<x1C<A_164>>() == 20 * 4);
+static_assert(sizeof_until_tail<x1C<A_165>>() == 28 * 4);
+static_assert(sizeof_until_tail<x1C<A_172>>() == 47 * 4);
 
+static_assert(offsetof(x1C<A_164>, layer_count) == 50);
+static_assert(offsetof(x1C<A_172>, layer_count) == 44);
+// static_assert(offsetof(x1C<A_164>, pad_info) == 44);  // Want 44
 static_assert(offsetof(x1C<A_172>, pad_info) == 28);
 
 template <AllegroVersion version>

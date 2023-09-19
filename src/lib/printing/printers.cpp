@@ -1415,27 +1415,16 @@ void print_x1C(const void *untyped_inst, File<version> *fs, const int d) {
              "x1C: \x1b[36;3mPad\x1b[0m t=0x%08X k=0x%08X"
              " \x1b[34m\"%s\"\x1b[0m\n",
              ntohl(inst.t), ntohl(inst.k), str_lookup(inst.pad_str, *fs));
-    printf_d(d,
-             " \x1b[2m(%08X, %08X, %s=%X, %02X, %02X, %08X, %08X)\x1b[0m"
-             " \x1b[2m(%08X, %08X, %08X, %08X)\x1b[0m\n",
-             ntohl(inst.un0_0), ntohl(inst.un0_1),
-             padtype(inst.pad_info.pad_type).c_str(), inst.pad_info.pad_type,
-             inst.pad_info.un0_2, inst.pad_info.un0_3, ntohl(0), ntohl(0),
-             ntohl(inst.coords2[0]), ntohl(inst.coords2[1]),
-             ntohl(inst.coords2[2]), ntohl(inst.coords2[3]));
+    printf_d(d, " %s=%d\n", padtype(inst.pad_info.pad_type).c_str(),
+             inst.pad_info.pad_type);
     uint32_t un7;
     if constexpr (std::is_same_v<decltype(inst.un7), std::monostate>) {
         un7 = 0;
     } else {
         un7 = inst.un7;
     }
-    printf_d(d + 1,
-             "un1=%08X layer_count=%d "
-             "un2_3=%04X un2_4=%04X un2_6=%04X un4=%08X "
-             "un5=%08X un6=%08X un7=%08X len(parts)=%d\n",
-             ntohl(inst.un1), inst.layer_count, ntohs(inst.un2_3),
-             ntohs(inst.un2_4), ntohs(inst.un2_6), ntohl(inst.un4),
-             ntohl(inst.un5), ntohl(inst.un6), ntohl(un7), inst.parts.size());
+    printf_d(d + 1, "layer_count=%d len(parts)=%d\n", inst.layer_count,
+             inst.parts.size());
 
     printf_d(d + 1, "pad_path:");
     if (inst.pad_path == 0) {
