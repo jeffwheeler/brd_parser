@@ -449,12 +449,6 @@ x1C<A_160>::operator x1C<A_174>() const {
     new_inst.un1 = this->un1;
     new_inst.un2 = this->un2;
     new_inst.un3 = this->un3;
-    new_inst.un5 = this->un5;
-    new_inst.un6 = this->un6;
-    new_inst.un7 = this->un7;
-    for (uint8_t i = 0; i < 7; i++) {
-        new_inst.un10[i] = this->un10[i];
-    }
     return new_inst;
 }
 
@@ -472,12 +466,6 @@ x1C<A_165>::operator x1C<A_174>() const {
     new_inst.un1 = this->un1;
     new_inst.un2 = this->un2;
     new_inst.un3 = this->un3;
-    new_inst.un5 = this->un5;
-    new_inst.un6 = this->un6;
-    new_inst.un7 = this->un7;
-    for (uint8_t i = 0; i < 7; i++) {
-        new_inst.un10[i] = this->un10[i];
-    }
     return new_inst;
 }
 

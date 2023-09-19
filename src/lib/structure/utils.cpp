@@ -29,6 +29,10 @@ std::string padtype(PadType padtype) {
             return "SmtPin";
         case PadType::Slot:
             return "Slot";
+        case PadType::HoleA:
+            return "HoleA";
+        case PadType::HoleB:
+            return "HoleB";
         default:
             return "PadTypeUnrecognized";
     }

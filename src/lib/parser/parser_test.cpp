@@ -28,15 +28,16 @@ TEST(ParseFile, Slugs) {
     const auto x30_inst = fs.get_x30(0x065BD3E8);
     const auto x36_x08_inst = font_lookup(x30_inst.font.key, fs);
     EXPECT_EQ(x36_x08_inst->char_height, 5000);
+
+    const auto pad = fs.get_x1C(0x064FE1D8);
+    EXPECT_EQ(pad.pad_info.pad_type, PadType::SmtPin);
 }
 
 // Magic is 0x00130C03
 // Allegro 16.3 S021
 TEST(ParseFile, Parallella) {
-    printf("Parallella 0\n");
     File<A_174> fs =
         *parse_file("../../test/data/parallella/parallella_layout.brd");
-    printf("Parallella 1\n");
 
     EXPECT_EQ(fs.layer_count, 12);
     // EXPECT_EQ(fs.x17_map.size(), 17053);
@@ -55,6 +56,12 @@ TEST(ParseFile, Parallella) {
     const auto x30_inst = fs.get_x30(0x0AD336C0);
     const auto x36_x08_inst = font_lookup(x30_inst.font.key, fs);
     EXPECT_EQ(x36_x08_inst->char_height, 12500);
+
+    const auto pad = fs.get_x1C(0x0ACD6480);
+    EXPECT_EQ(pad.pad_info.pad_type, PadType::SmtPin);
+
+    const auto via = fs.get_x1C(0x0ACD4F00);
+    EXPECT_EQ(via.pad_info.pad_type, PadType::ThroughVia);
 }
 
 // Magic is 0x00131003
@@ -68,6 +75,12 @@ TEST(ParseFile, SmartPlug) {
     EXPECT_TRUE(fs.is_type(0x0EBB2200, 0x23));
 
     check_header_values(fs);
+
+    const auto pad = fs.get_x1C(0x0EAFC8D0);
+    EXPECT_EQ(pad.pad_info.pad_type, PadType::SmtPin);
+
+    const auto via = fs.get_x1C(0x0EAFBF20);
+    EXPECT_EQ(via.pad_info.pad_type, PadType::ThroughVia);
 }
 
 // Magic is 0x00131503
@@ -80,6 +93,12 @@ TEST(ParseFile, AvalonParsed) {
     EXPECT_TRUE(fs.is_type(0x13E64B30, 0x23));
 
     check_header_values(fs);
+
+    const auto pad = fs.get_x1C(0x13DDE500);
+    EXPECT_EQ(pad.pad_info.pad_type, PadType::SmtPin);
+
+    const auto via = fs.get_x1C(0x13DDD400);
+    EXPECT_EQ(via.pad_info.pad_type, PadType::ThroughVia);
 }
 
 // Magic is 0x00131503
@@ -122,6 +141,12 @@ TEST(ParseFile, OpenCellularGbc) {
     const auto x30_inst = fs.get_x30(0x147E3120);
     const auto x36_x08_inst = font_lookup(x30_inst.font.key, fs);
     EXPECT_EQ(x36_x08_inst->char_height, 75000);
+
+    const auto pad = fs.get_x1C(0x14543CB0);
+    EXPECT_EQ(pad.pad_info.pad_type, PadType::SmtPin);
+
+    const auto via = fs.get_x1C(0x1453A1A0);
+    EXPECT_EQ(via.pad_info.pad_type, PadType::ThroughVia);
 }
 
 // Magic is 0x00131504

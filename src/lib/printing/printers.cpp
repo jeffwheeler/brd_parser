@@ -1412,11 +1412,12 @@ void print_x1C(const void *untyped_inst, File<version> *fs, const int d) {
     x1C<version> inst = fs->get_x1C(k);
     // const x1C<version> *inst = (const x1C<version> *)untyped_inst;
     printf_d(d,
-             "x1C: \x1b[36;3mPad\x1b[0m t=0x%08X k=0x%08X"
-             " \x1b[34m\"%s\"\x1b[0m\n",
-             ntohl(inst.t), ntohl(inst.k), str_lookup(inst.pad_str, *fs));
-    printf_d(d, " %s=%d\n", padtype(inst.pad_info.pad_type).c_str(),
-             inst.pad_info.pad_type);
+             "x1C: \x1b[36;3mPad/Via\x1b[0m t=0x%04X n=%02X un1=%02X k=0x%08X"
+             " \x1b[33m%s\x1b[0m=%d \x1b[34m\"%s\"\x1b[0m\n",
+             ntohs(inst.t), inst.t, inst.un1, ntohl(inst.k),
+             padtype(inst.pad_info.pad_type).c_str(), inst.pad_info.pad_type,
+             str_lookup(inst.pad_str, *fs));
+
     uint32_t un7;
     if constexpr (std::is_same_v<decltype(inst.un7), std::monostate>) {
         un7 = 0;

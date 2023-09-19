@@ -751,12 +751,20 @@ static_assert(sizeof_until_tail<t13<A_160>>() == 28);
 static_assert(sizeof_until_tail<t13<A_174>>() == 36);
 
 // x1C shows how to draw pads
-enum PadType : uint8_t { ThroughVia = 0, Via = 1, SmtPin = 2, Slot = 4 };
+enum PadType : uint8_t {
+    ThroughVia = 0,
+    Via = 1,
+    SmtPin = 2,
+    Slot = 4,
+    HoleA = 8,  // Maybe? Low confidence
+    HoleB = 10  // Maybe?
+};
 
 struct PadInfo {
     PadType pad_type : 4;
     uint8_t un0_2 : 4;
     uint8_t un0_3;
+    uint8_t un0_4;
 };
 
 template <AllegroVersion version>
@@ -770,17 +778,15 @@ struct x1C {
     uint32_t un2;       // 5
     uint32_t un3;       // 6
     uint32_t pad_path;  // 7 // x03
-    COND_FIELD(version < A_172, uint32_t, un4);
+    COND_FIELD(version < A_172, uint32_t[4], un4);
     PadInfo pad_info;  // 8
-    uint32_t un5;      // 9
-    uint32_t un6;      // 10
-    uint32_t un7;      // 11
-    COND_FIELD(version < A_172, uint16_t, un8);
+    COND_FIELD(version >= A_172, uint32_t[3], un5);
+    COND_FIELD(version < A_172, uint16_t, un6);
     uint16_t layer_count;  // 12
-    COND_FIELD(version >= A_172, uint16_t, un9);
-    uint32_t un10[7];
-    COND_FIELD(version >= A_172, uint32_t[28], un11);
-    COND_FIELD(version == A_165 || version == A_166, uint32_t[8], un12);
+    COND_FIELD(version >= A_172, uint16_t, un7);
+    uint32_t un8[7];
+    COND_FIELD(version >= A_172, uint32_t[28], un9);
+    COND_FIELD(version == A_165 || version == A_166, uint32_t[8], un10);
 
     uint32_t TAIL;
     operator x1C<A_174>() const;
@@ -795,7 +801,7 @@ static_assert(sizeof_until_tail<x1C<A_172>>() == 47 * 4);
 
 static_assert(offsetof(x1C<A_164>, layer_count) == 50);
 static_assert(offsetof(x1C<A_172>, layer_count) == 44);
-// static_assert(offsetof(x1C<A_164>, pad_info) == 44);  // Want 44
+static_assert(offsetof(x1C<A_164>, pad_info) == 44);
 static_assert(offsetof(x1C<A_172>, pad_info) == 28);
 
 template <AllegroVersion version>

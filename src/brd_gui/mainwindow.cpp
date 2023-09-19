@@ -13,8 +13,8 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     setAcceptDrops(true);
 
     createToolBar();
-    createDockWidget();
-    // createFilmSelectWidget();
+    // createDockWidget();
+    createFilmSelectWidget();
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent* event) {
@@ -44,7 +44,11 @@ void MainWindow::loadFile(std::string path) {
     if (parsed_file) {
         fs = std::move(parsed_file);
         brdView->loadFile(&fs.value());
-        // loadFilms();
+        loadFilms();
+
+        for (auto& i : fs->iter_x1C()) {
+            print_struct((void*)&i, &*fs, 0);
+        }
 
         for (auto& [a, b] : fs->layers) {
             printf("0x %08X - 0x %08X\n", ntohl(a), ntohl(b));
