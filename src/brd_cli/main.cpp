@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
     std::string fname = argv[1];
     auto parsed_file = parse_file(argv[1]);
     if (parsed_file.has_value()) {
-        // stream_file(fname, *parsed_file);
+        stream_file(fname, *parsed_file);
     }
 
     /*
@@ -25,11 +25,11 @@ int main(int argc, char* argv[]) {
             print_struct((void*)i, &*parsed_file, 1);
         }
     }
-    */
 
     for (auto& i : parsed_file->iter_x1C()) {
         print_struct((void*)&i, &*parsed_file, 0);
     }
+    */
 
     /*
     printf("\n===========================\n");
