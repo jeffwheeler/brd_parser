@@ -563,16 +563,14 @@ void BrdView::drawX33(const x33<A_174> *inst, QPen *pen) {
     }
 
     const x1C<A_174> &x1C_inst = fs->get_x1C(inst->ptr4);
-    char *pad_str = str_lookup(x1C_inst.pad_str, *fs);
-    if (strcmp(pad_str, "VIA22C12P") == 0) {
+    /*
+    if (x1C_inst.pad_info.a == 0) {
         pen = new QPen(QColorConstants::Svg::mediumpurple);
-    } else if (strcmp(pad_str, "VIA20C11P-FILLED") == 0) {
+    } else {
         pen = new QPen(QColorConstants::Svg::olive);
-    } else if (strcmp(pad_str, "TOP-L4") == 0) {
-        pen = new QPen(QColorConstants::Svg::cornflowerblue);
-    } else if (strcmp(pad_str, "TOP-L6") == 0) {
-        pen = new QPen(QColorConstants::Svg::indianred);
     }
+    */
+
 
     QPointF center =
         QPointF((inst->coords[0]) / factor, (inst->coords[1]) / factor);

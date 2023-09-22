@@ -762,9 +762,9 @@ enum PadType : uint8_t {
 
 struct PadInfo {
     PadType pad_type : 4;
-    uint8_t un0_2 : 4;
-    uint8_t un0_3;
-    uint8_t un0_4;
+    uint8_t a : 4;
+    uint8_t b;
+    uint8_t c;
 };
 
 template <AllegroVersion version>

@@ -46,10 +46,13 @@ void MainWindow::loadFile(std::string path) {
         brdView->loadFile(&fs.value());
         loadFilms();
 
+        /*
         for (auto& i : fs->iter_x1C()) {
             print_struct((void*)&i, &*fs, 0);
         }
+        */
 
+        /*
         for (auto& [a, b] : fs->layers) {
             printf("0x %08X - 0x %08X\n", ntohl(a), ntohl(b));
             if (fs->x2A_map.count(b) > 0) {
@@ -57,6 +60,7 @@ void MainWindow::loadFile(std::string path) {
                 print_struct((void*)i, &*fs, 1);
             }
         }
+        */
     } else {
         qDebug() << "Failed to parse file";
     }
