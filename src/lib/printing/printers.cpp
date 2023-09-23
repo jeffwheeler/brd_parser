@@ -1424,11 +1424,11 @@ void print_x1C(const void *untyped_inst, File<version> *fs, const int d) {
     // const x1C<version> *inst = (const x1C<version> *)untyped_inst;
     printf_d(d,
              "x1C: \x1b[36;3mPad/Via\x1b[0m t=0x%04X n=%02X un1=%02X k=0x%08X"
-             " pad_type=(\x1b[33m%s\x1b[0m=%d %02X %02X %02X) "
+             " pad_type=(\x1b[33m%s\x1b[0m=%d %01X %02X %02X %02X) "
              "0x%08X=\x1b[34m\"%s\"\x1b[0m\n",
              ntohs(inst.t), inst.t, inst.un1, ntohl(inst.k),
              padtype(inst.pad_info.pad_type).c_str(), inst.pad_info.pad_type,
-             inst.pad_info.a, inst.pad_info.b, inst.pad_info.c,
+             inst.pad_info.a, inst.pad_info.b, inst.pad_info.c, inst.pad_info.d,
              ntohl(inst.pad_str), str_lookup(inst.pad_str, *fs));
 
     uint32_t un7;

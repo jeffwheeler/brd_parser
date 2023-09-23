@@ -765,6 +765,7 @@ struct PadInfo {
     uint8_t a : 4;
     uint8_t b;
     uint8_t c;
+    uint8_t d;
 };
 
 template <AllegroVersion version>
