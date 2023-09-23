@@ -18,6 +18,31 @@ int main(int argc, char* argv[]) {
     }
 
     /*
+    for (auto& [a, b] : parsed_file->layers) {
+        printf("0x %08X - 0x %08X\n", ntohl(a), ntohl(b));
+        if (parsed_file->x2A_map.count(b) > 0) {
+            x2A* i = &parsed_file->x2A_map[b];
+            print_struct((void*)i, &*parsed_file, 1);
+        }
+    }
+
+    for (auto& i : parsed_file->iter_x1C()) {
+        print_struct((void*)&i, &*parsed_file, 0);
+    }
+    */
+
+    /*
+    printf("\n===========================\n");
+    printf("========== FILMS ==========\n");
+    printf("===========================\n\n");
+    printf("head = 0x %08X\n", parsed_file->hdr->ll_x38.head);
+    for (auto& i : parsed_file->iter_x38()) {
+        printf("x38 k=0x %08X\n", ntohl(i.k));
+        print_struct(i.k, *parsed_file, 1);
+    }
+    */
+
+    /*
     ll_ptrs pts = parsed_file->hdr->ll_x03_x30;
     uint32_t k = pts.head;
     // k = ntohl(0x2FA3AD00);

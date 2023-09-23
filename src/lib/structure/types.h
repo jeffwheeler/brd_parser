@@ -750,33 +750,44 @@ struct t13 {
 static_assert(sizeof_until_tail<t13<A_160>>() == 28);
 static_assert(sizeof_until_tail<t13<A_174>>() == 36);
 
-// x1 shows how to draw pads
+// x1C shows how to draw pads
+enum PadType : uint8_t {
+    ThroughVia = 0,
+    Via = 1,
+    SmtPin = 2,
+    Slot = 4,
+    HoleA = 8,  // Maybe? Low confidence
+    HoleB = 10  // Maybe?
+};
+
+struct PadInfo {
+    PadType pad_type : 4;
+    uint8_t a : 4;
+    uint8_t b;
+    uint8_t c;
+    uint8_t d;
+};
+
 template <AllegroVersion version>
 struct x1C {
-    uint16_t t;
+    uint16_t t;  // 1
     uint8_t n;
-    uint8_t un9;
-    uint32_t k;
-    uint32_t next;
-    uint32_t pad_str;
-    uint32_t un0_0;
-    uint32_t un0_1;
-    uint32_t pad_path;  // x03
-    uint16_t un0_3;
-    uint32_t un0_4;
-    uint32_t un0_5;
-    uint32_t un1;
-    uint16_t un2_0;
-    uint16_t un2_1;
-    uint16_t un3;
-    uint16_t size_hint;
-    std::array<int32_t, 4> coords2;
-    uint32_t un4;
-    uint32_t un5;
-    COND_FIELD(version >= A_172, uint32_t, un7);
-    uint32_t un6;
-    COND_FIELD(version == A_165 || version == A_166, uint32_t[8], un8);
-    COND_FIELD(version >= A_172, uint32_t[26], un10);
+    uint8_t un1;
+    uint32_t k;         // 2
+    uint32_t next;      // 3
+    uint32_t pad_str;   // 4
+    uint32_t un2;       // 5
+    uint32_t un3;       // 6
+    uint32_t pad_path;  // 7 // x03
+    COND_FIELD(version < A_172, uint32_t[4], un4);
+    PadInfo pad_info;  // 8
+    COND_FIELD(version >= A_172, uint32_t[3], un5);
+    COND_FIELD(version < A_172, uint16_t, un6);
+    uint16_t layer_count;  // 12
+    COND_FIELD(version >= A_172, uint16_t, un7);
+    uint32_t un8[7];
+    COND_FIELD(version >= A_172, uint32_t[28], un9);
+    COND_FIELD(version == A_165 || version == A_166, uint32_t[8], un10);
 
     uint32_t TAIL;
     operator x1C<A_174>() const;
@@ -784,6 +795,15 @@ struct x1C {
 
     std::vector<t13<version>> parts;
 };
+
+static_assert(sizeof_until_tail<x1C<A_164>>() == 20 * 4);
+static_assert(sizeof_until_tail<x1C<A_165>>() == 28 * 4);
+static_assert(sizeof_until_tail<x1C<A_172>>() == 47 * 4);
+
+static_assert(offsetof(x1C<A_164>, layer_count) == 50);
+static_assert(offsetof(x1C<A_172>, layer_count) == 44);
+static_assert(offsetof(x1C<A_164>, pad_info) == 44);
+static_assert(offsetof(x1C<A_172>, pad_info) == 28);
 
 template <AllegroVersion version>
 struct x1D {
@@ -1856,6 +1876,7 @@ class File {
 
    private:
     void cache_upgrade_funcs();
+    std::ptrdiff_t offset(void *);
 
     x01<A_174> (*x01_upgrade)(void *);
     x03<A_174> (*x03_upgrade)(void *);

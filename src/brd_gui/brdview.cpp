@@ -57,7 +57,7 @@ void BrdView::mouseMoveEvent(QMouseEvent *event) {
 
 void BrdView::mouseReleaseEvent(QMouseEvent *event) {
     const QPointF pos = mapToScene(event->pos());
-    const qreal r = 0.3;
+    const qreal r = 0.1;
     QList<QGraphicsItem *> clickedItems =
         scene->items(QRectF(pos.x() - r, pos.y() - r, 2 * r, 2 * r),
                      Qt::IntersectsItemShape, Qt::AscendingOrder);
@@ -563,6 +563,14 @@ void BrdView::drawX33(const x33<A_174> *inst, QPen *pen) {
     }
 
     const x1C<A_174> &x1C_inst = fs->get_x1C(inst->ptr4);
+    /*
+    if (x1C_inst.pad_info.a == 0) {
+        pen = new QPen(QColorConstants::Svg::mediumpurple);
+    } else {
+        pen = new QPen(QColorConstants::Svg::olive);
+    }
+    */
+
 
     QPointF center =
         QPointF((inst->coords[0]) / factor, (inst->coords[1]) / factor);
@@ -591,10 +599,12 @@ void BrdView::drawX33(const x33<A_174> *inst, QPen *pen) {
         case 6:
             pad = scene->addEllipse(
                 -0.5 * first_part->w / factor, -0.5 * first_part->h / factor,
-                first_part->w / factor, first_part->h / factor,
-                QPen(pen->color(), 0, Qt::DotLine));
+                first_part->w / factor, first_part->h / factor, QPen(Qt::NoPen),
+                QBrush(pen->color()));
             pad->setTransform(t);
     }
+
+    pad->setData(0, inst->k);
 }
 
 void BrdView::drawX34(const x34<A_174> *inst, QPen *pen) {

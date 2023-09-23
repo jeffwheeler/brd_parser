@@ -440,27 +440,15 @@ x1C<A_160>::operator x1C<A_174>() const {
     x1C<A_174> new_inst;
     new_inst.t = this->t;
     new_inst.n = this->n;
-    new_inst.un9 = this->un9;
     new_inst.k = this->k;
     new_inst.next = this->next;
     new_inst.pad_str = this->pad_str;
-    new_inst.un0_0 = this->un0_0;
-    new_inst.un0_1 = this->un0_1;
     new_inst.pad_path = this->pad_path;
-    new_inst.un0_3 = this->un0_3;
-    new_inst.un0_4 = this->un0_4;
-    new_inst.un0_5 = this->un0_5;
+    new_inst.pad_info = this->pad_info;
+    new_inst.layer_count = this->layer_count;
     new_inst.un1 = this->un1;
-    new_inst.un2_0 = this->un2_0;
-    new_inst.un2_1 = this->un2_1;
+    new_inst.un2 = this->un2;
     new_inst.un3 = this->un3;
-    new_inst.size_hint = this->size_hint;
-    for (int i = 0; i < 4; i++) {
-        new_inst.coords2[i] = this->coords2[i];
-    }
-    new_inst.un4 = this->un4;
-    new_inst.un5 = this->un5;
-    new_inst.un6 = this->un6;
     return new_inst;
 }
 
@@ -469,27 +457,15 @@ x1C<A_165>::operator x1C<A_174>() const {
     x1C<A_174> new_inst;
     new_inst.t = this->t;
     new_inst.n = this->n;
-    new_inst.un9 = this->un9;
     new_inst.k = this->k;
     new_inst.next = this->next;
     new_inst.pad_str = this->pad_str;
-    new_inst.un0_0 = this->un0_0;
-    new_inst.un0_1 = this->un0_1;
     new_inst.pad_path = this->pad_path;
-    new_inst.un0_3 = this->un0_3;
-    new_inst.un0_4 = this->un0_4;
-    new_inst.un0_5 = this->un0_5;
+    new_inst.pad_info = this->pad_info;
+    new_inst.layer_count = this->layer_count;
     new_inst.un1 = this->un1;
-    new_inst.un2_0 = this->un2_0;
-    new_inst.un2_1 = this->un2_1;
+    new_inst.un2 = this->un2;
     new_inst.un3 = this->un3;
-    new_inst.size_hint = this->size_hint;
-    for (int i = 0; i < 4; i++) {
-        new_inst.coords2[i] = this->coords2[i];
-    }
-    new_inst.un4 = this->un4;
-    new_inst.un5 = this->un5;
-    new_inst.un6 = this->un6;
     return new_inst;
 }
 
@@ -1281,6 +1257,11 @@ void File<version>::cache_upgrade_funcs() {
 }
 
 template <>
+std::ptrdiff_t File<A_174>::offset(void *p) {
+    return (char *)p - (char *)region.get_address();
+}
+
+template <>
 x01<A_174> File<A_174>::get_x01(uint32_t k) {
     return this->x01_upgrade(this->ptrs[k]);
 }
@@ -1443,16 +1424,16 @@ const x1C<A_174> File<A_174>::get_x1C(uint32_t k) {
 
     uint32_t count;
     if (this->hdr->magic < A_172) {
-        count = 10 + i.size_hint * 3;
+        count = 10 + i.layer_count * 3;
     } else {
-        count = 21 + i.un2_0 * 4;
+        count = 21 + i.layer_count * 4;
     }
 
     void *next_ptr = ((char *)p) + obj_size;
     for (int j = 0; j < count; j++) {
         t13<A_174> t13_inst = this->t13_upgrade(next_ptr);
         i.parts.push_back(t13_inst);
-        next_ptr = ((char *)p) + t13_size;
+        next_ptr = ((char *)next_ptr) + t13_size;
     }
 
     return i;

@@ -113,12 +113,19 @@ uint32_t parse_x1C(File<A_174>& fs, void*& address) {
 
     uint16_t size;
     if constexpr (version < A_172) {
-        size = 10 + i->size_hint * 3;
+        // printf("layer count 1 %d\n", i->layer_count);
+        size = 10 + i->layer_count * 3;
     } else {
-        size = 21 + i->un2_0 * 4;
+        // printf("layer count 2 %d\n", i->layer_count);
+        size = 21 + i->layer_count * 4;
     }
 
-    skip(address, size * sizeof_until_tail<t13<version>>());
+    for (uint32_t i = 0; i < size; i++) {
+        // log(fs.region.get_address(), address, "- Skipping t13 %d\n", i);
+        // log_n_words(address, 4);
+        skip(address, sizeof_until_tail<t13<version>>());
+    }
+    // skip(address, size * sizeof_until_tail<t13<version>>());
 
     if constexpr (version >= A_172) {
         skip(address, 4);

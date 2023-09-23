@@ -45,6 +45,22 @@ void MainWindow::loadFile(std::string path) {
         fs = std::move(parsed_file);
         brdView->loadFile(&fs.value());
         loadFilms();
+
+        /*
+        for (auto& i : fs->iter_x1C()) {
+            print_struct((void*)&i, &*fs, 0);
+        }
+        */
+
+        /*
+        for (auto& [a, b] : fs->layers) {
+            printf("0x %08X - 0x %08X\n", ntohl(a), ntohl(b));
+            if (fs->x2A_map.count(b) > 0) {
+                x2A* i = &fs->x2A_map[b];
+                print_struct((void*)i, &*fs, 1);
+            }
+        }
+        */
     } else {
         qDebug() << "Failed to parse file";
     }
@@ -213,7 +229,14 @@ void MainWindow::createDockWidget() {
     addLayer(st06, QString("6 - All"));
     addLayer(st07, QString("7 - 1"));
     addLayer(st07, QString("7 - 4"));
+    addLayer(st07, QString("7 - 5"));
+    addLayer(st07, QString("7 - 12"));
     addLayer(st07, QString("7 - 18"));
+    addLayer(st07, QString("7 - 20"));
+    addLayer(st07, QString("7 - 21"));
+    addLayer(st07, QString("7 - 24"));
+    addLayer(st07, QString("7 - 26"));
+    addLayer(st07, QString("7 - 27"));
     addLayer(st07, QString("7 - 241"));
     addLayer(st07, QString("7 - 242"));
     addLayer(st07, QString("7 - 243"));
@@ -417,8 +440,22 @@ void MainWindow::selectLayer() {
             layers.push_back(layerPair(7, 1));
         } else if (t == "7 - 4") {
             layers.push_back(layerPair(7, 4));
+        } else if (t == "7 - 5") {
+            layers.push_back(layerPair(7, 5));
+        } else if (t == "7 - 12") {
+            layers.push_back(layerPair(7, 12));
         } else if (t == "7 - 18") {
             layers.push_back(layerPair(7, 18));
+        } else if (t == "7 - 20") {
+            layers.push_back(layerPair(7, 20));
+        } else if (t == "7 - 21") {
+            layers.push_back(layerPair(7, 21));
+        } else if (t == "7 - 24") {
+            layers.push_back(layerPair(7, 24));
+        } else if (t == "7 - 26") {
+            layers.push_back(layerPair(7, 26));
+        } else if (t == "7 - 27") {
+            layers.push_back(layerPair(7, 27));
         } else if (t == "7 - 241") {
             layers.push_back(layerPair(7, 241));
         } else if (t == "7 - 242") {

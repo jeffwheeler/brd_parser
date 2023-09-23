@@ -18,3 +18,22 @@ const std::vector<stackup_material> ordered_stackup_materials(File<A_174>& f) {
 
     return arr;
 }
+
+std::string padtype(PadType padtype) {
+    switch (padtype) {
+        case PadType::ThroughVia:
+            return "ThroughVia";
+        case PadType::Via:
+            return "Via";
+        case PadType::SmtPin:
+            return "SmtPin";
+        case PadType::Slot:
+            return "Slot";
+        case PadType::HoleA:
+            return "HoleA";
+        case PadType::HoleB:
+            return "HoleB";
+        default:
+            return "PadTypeUnrecognized";
+    }
+}

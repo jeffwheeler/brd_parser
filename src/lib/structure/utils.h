@@ -7,6 +7,7 @@
 
 std::pair<double, double> x01_center(const x01<A_174> *inst);
 const std::vector<stackup_material> ordered_stackup_materials(File<A_174> &f);
+std::string padtype(PadType padtype);
 
 template <AllegroVersion version>
 char *str_lookup(uint32_t id, File<version> &fs) {
