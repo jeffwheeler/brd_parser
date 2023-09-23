@@ -770,20 +770,20 @@ struct PadInfo {
 
 template <AllegroVersion version>
 struct x1C {
-    uint16_t t;  // 1
+    uint16_t t;
     uint8_t n;
     uint8_t un1;
-    uint32_t k;         // 2
-    uint32_t next;      // 3
-    uint32_t pad_str;   // 4
-    uint32_t un2;       // 5
-    uint32_t un3;       // 6
-    uint32_t pad_path;  // 7 // x03
+    uint32_t k;
+    uint32_t next;
+    uint32_t pad_str;
+    uint32_t un2;
+    uint32_t un3;
+    uint32_t pad_path;
     COND_FIELD(version < A_172, uint32_t[4], un4);
-    PadInfo pad_info;  // 8
+    PadInfo pad_info;
     COND_FIELD(version >= A_172, uint32_t[3], un5);
     COND_FIELD(version < A_172, uint16_t, un6);
-    uint16_t layer_count;  // 12
+    uint16_t layer_count;
     COND_FIELD(version >= A_172, uint16_t, un7);
     uint32_t un8[7];
     COND_FIELD(version >= A_172, uint32_t[28], un9);
