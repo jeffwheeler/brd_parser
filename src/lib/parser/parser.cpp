@@ -43,6 +43,10 @@ uint32_t default_parser(File<A_174>& fs, void*& address) {
     T<version>* inst = static_cast<T<version>*>(address);
     // fs.ptrs[inst->k] = address;
     // new_find_map<T<A_174>>(fs)[inst->k] = address;
+    if (*(((uint16_t*)inst) + 1) == 0xF709) {
+        log(fs.region.get_address(), address, "Found result\n");
+        fs.silk_objs.insert(inst->k);
+    }
     fs.ptrs[inst->k] = address;
     size_t size = sizeof_until_tail<T<version>>();
     skip(address, size);

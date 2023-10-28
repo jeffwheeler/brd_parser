@@ -430,8 +430,8 @@ t13<A_160>::operator t13<A_174>() const {
     new_inst.h = this->h;
     new_inst.x2 = this->x2;
     new_inst.x3 = this->x3;
-    new_inst.z = this->x4;
-    new_inst.x4 = 0;
+    new_inst.x4 = this->x4;
+    new_inst.z = 0;
     return new_inst;
 }
 
@@ -526,7 +526,7 @@ x28<A_160>::operator x28<A_174>() const {
     new_inst.layer = this->layer;
 
     new_inst.k = this->k;
-    new_inst.un1 = this->un1;
+    new_inst.ptr5 = this->ptr5;
     new_inst.ptr1 = this->ptr1;
     new_inst.un2 = this->un2;
     new_inst.next = this->next;

@@ -13,6 +13,7 @@
 #include <iterator>
 #include <map>
 #include <optional>
+#include <set>
 #include <string>
 #include <type_traits>
 #include <variant>
@@ -728,19 +729,13 @@ template <AllegroVersion version>
 struct t13 {
     uint32_t str_ptr;  // Often null
     uint32_t t;
-
     COND_FIELD(version >= A_172, uint32_t, z0);
-
     int32_t w;
     int32_t h;
     int32_t x2;
     int32_t x3;
-
-    // This should be _after_ `x4`, but conditional fields at the end of
-    // the struct are flakey?
-    COND_FIELD(version >= A_172, uint32_t, z);
-
     int32_t x4;
+    COND_FIELD(version >= A_172, uint32_t, z);
 
     uint32_t TAIL;
     operator t13<A_174>() const;
@@ -749,7 +744,6 @@ struct t13 {
 
 static_assert(sizeof_until_tail<t13<A_160>>() == 28);
 static_assert(sizeof_until_tail<t13<A_174>>() == 36);
-
 // x1C shows how to draw pads
 enum PadType : uint8_t {
     ThroughVia = 0,
@@ -977,7 +971,7 @@ struct x28 {
     uint8_t layer;
 
     uint32_t k;
-    uint32_t un1;
+    uint32_t ptr5;
 
     // Points to one of: header value, `x04`, `x2B`, `x2D`
     uint32_t ptr1;
@@ -1605,6 +1599,8 @@ class File {
     std::unordered_map<uint32_t, void *> ptrs;
 #endif
 
+    std::set<uint32_t> silk_objs;
+
     std::map<uint32_t, char *> strings;
     std::map<uint32_t, x1E> x1E_map;
     std::map<uint32_t, x2A> x2A_map;
@@ -1702,9 +1698,17 @@ class File {
     };
 
     IterBase<x04<version>> iter_x04() {
-        return IterBase<x04<version>>(
-            Iter<x04<version>>(*this, this->hdr->ll_x04.head, &File::get_x04),
-            Iter<x04<version>>(*this, this->hdr->ll_x04.tail, &File::get_x04));
+        if (this->hdr->ll_x04.head == 0) {
+            return IterBase<x04<version>>(
+                Iter<x04<version>>(*this, 0, &File::get_x04),
+                Iter<x04<version>>(*this, 0, &File::get_x04));
+        } else {
+            return IterBase<x04<version>>(
+                Iter<x04<version>>(*this, this->hdr->ll_x04.head,
+                                   &File::get_x04),
+                Iter<x04<version>>(*this, this->hdr->ll_x04.tail,
+                                   &File::get_x04));
+        }
     };
 
     IterBase<x04<version>> iter_x04(uint32_t i_x1B) {
