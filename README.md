@@ -49,7 +49,7 @@ $ ./brd_cli/brd_cli (.brd filename) > out.html
 ### Run tests
 
 ```shell
-ctest -j10 --output-on-failure
+$ ctest -j10 --output-on-failure
 ```
 
 ## Decoding Methodology
