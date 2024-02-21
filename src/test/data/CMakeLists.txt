@@ -35,9 +35,9 @@ download_brd(parallella
     URL_HASH MD5=ed1b43d589c25d37572a9768a9c60172
 )
 
-# License: GPL 3 (https://github.com/xxxlzjxxx/MBED-TOOLS/blob/e043ff43e65f6e347aad80c0fe905da2e212300d/LICENSE)
+# License: GPL 3 (https://github.com/5H3LL3H5/MBED-TOOLS/blob/e043ff43e65f6e347aad80c0fe905da2e212300d/LICENSE)
 download_brd(jtag_to_dc3
-    URL https://github.com/xxxlzjxxx/MBED-TOOLS/raw/e043ff43e65f6e347aad80c0fe905da2e212300d/HARDWARE/JTAG_TO_DC3-10P_V10_220511/PCB/JTAG_TO_DC3-10P_V10_220511.brd
+    URL https://github.com/5H3LL3H5/MBED-TOOLS/raw/e043ff43e65f6e347aad80c0fe905da2e212300d/HARDWARE/JTAG_TO_DC3-10P_V10_220511/PCB/JTAG_TO_DC3-10P_V10_220511.brd
     URL_HASH MD5=9157ae1659657cc44b04e571615fe1ad
 )
 
