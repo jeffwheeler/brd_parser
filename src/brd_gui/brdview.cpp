@@ -170,10 +170,9 @@ void BrdView::drawX05(const x05<A_174> *inst, QPen *pen_) {
 }
 
 void BrdView::drawX14(const x14<A_174> *inst, QPen *pen_) {
-    if (!onSelectedLayer(inst->subtype, inst->layer) ||
-        fs->is_type(inst->ptr1, 0x2B)) {
+    if (fs->is_type(inst->ptr1, 0x2B)) return;
+    if (inst->layer != 0 && !onSelectedLayer(inst->subtype, inst->layer))
         return;
-    }
 
     uint32_t k = inst->ptr2;
 
@@ -262,10 +261,12 @@ void BrdView::drawX23(const x23<A_174> *inst, QPen *pen) {
 
 // Shapes
 void BrdView::drawX28(const x28<A_174> *inst, QPen *pen) {
-    if (!onSelectedLayer(inst->subtype, inst->layer) ||
-        fs->is_type(inst->ptr1, 0x2B)) {
+    if (fs->is_type(inst->ptr1, 0x2B)) return;
+    if (inst->layer != 0 && !onSelectedLayer(inst->subtype, inst->layer))
         return;
-    }
+
+    // printf("Drawing x28, subtype = 0x%02X, layer = %02X\n", inst->subtype,
+    //        inst->layer);
 
     char *name = netName(inst->k);
 
@@ -379,8 +380,24 @@ void BrdView::drawX2D(const x2D<A_174> *inst, QPen *pen) {
     //     return;
     // }
 
+    QPen pen_red = QPen(Qt::red, 1);
+    uint32_t k = inst->ptr1;
+    while (1) {
+        if (fs->is_type(k, 0x14)) {
+            printf("Drawing ptr1 t=0x14\n");
+            const x14<A_174> inst = fs->get_x14(k);
+            drawX14(&inst, &pen_red);
+            k = inst.next;
+        } else if (fs->is_type(k, 0x2D)) {
+            printf("ptr1 loop done\n");
+            break;
+        } else {
+            printf("ptr1 type unknown, k = 0x %08X\n", ntohl(k));
+            break;
+        }
+    }
+
     /*
-    QPen pen_red  = QPen(Qt::red, 1);
     QPen pen_blue = QPen(Qt::blue, 1);
     if (x14_layer(inst->ptr1, &fs).value_or(-1) % 2 == 0) {
         pen = &pen_red;
@@ -390,7 +407,23 @@ void BrdView::drawX2D(const x2D<A_174> *inst, QPen *pen) {
     */
 
     drawShape(inst->ptr4[0], pen);
-    drawShape(inst->ptr4[1], pen);
+
+    k = inst->ptr4[1];
+    while (1) {
+        if (fs->is_type(k, 0x28)) {
+            // printf("Drawing ptr4[1] t=0x28\n");
+            const x28<A_174> inst = fs->get_x28(k);
+            drawX28(&inst, pen);
+            k = inst.ptr5;
+        } else if (fs->is_type(k, 0x0E)) {
+            // printf("ptr4[1] t=0x0E\n");
+            break;
+        } else {
+            // printf("ptr4[1] type unknown, k = 0x %08X\n", ntohl(k));
+            break;
+        }
+    }
+
     drawShape(inst->ptr4[2], pen);
     // return;
 
@@ -417,6 +450,7 @@ void BrdView::drawX30(const x30<A_174> *inst, QPen *pen) {
     */
 
     const x31<A_174> &str_graphic = fs->get_x31(inst->str_graphic_ptr);
+    print_struct(str_graphic.k, *fs, 0);
 
     QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
     font.setFixedPitch(true);
@@ -571,7 +605,6 @@ void BrdView::drawX33(const x33<A_174> *inst, QPen *pen) {
     }
     */
 
-
     QPointF center =
         QPointF((inst->coords[0]) / factor, (inst->coords[1]) / factor);
 
@@ -671,6 +704,9 @@ void BrdView::drawShape(const uint32_t ptr, QPen *pen) {
         drawShape(inst.ptr3, darkerPen);
     } else if (fs->is_type(ptr, 0x14)) {
         const x14<A_174> inst = fs->get_x14(ptr);
+        if (fs->silk_objs.erase(inst.k) > 0) {
+            printf("Erased\n");
+        }
         drawX14(&inst, pen);
         // } else if (fs->x15_map.count(ptr) > 0) {
         // const x15<A_174> *inst = (const x15<A_174> *)&fs->x15_map.at(ptr);
@@ -770,7 +806,7 @@ void BrdView::drawFile() {
                 } else if (fs->is_type(k, 0x28)) {
                     auto &x = fs->get_x28(k);
                     drawShape(x.k, pen2);
-                    k = x.un1;
+                    k = x.ptr5;
                 } else if (fs->is_type(k, 0x1B)) {
                     break;
                 } else if (fs->is_type(k, 0x0E)) {
@@ -791,6 +827,26 @@ void BrdView::drawFile() {
         }
     }
 
+    /*
+    if (fs->hdr->ll_x24_x28.head != 0) {
+        uint32_t k = fs->hdr->ll_x24_x28.head;
+        uint32_t tail = fs->hdr->ll_x24_x28.tail;
+        while (1) {
+            if (fs->is_type(k, 0x24)) {
+                // Do not know how to process x24
+                // const x24 *i24 = fs->ptrs[k];
+            } else if (fs->is_type(k, 0x28)) {
+            } else {
+                printf(
+                    "- - \x1b[31mUnexpected key\x1b[0m = 0x %08X, expecting "
+                    "x24 or x28 :(\n",
+                    ntohl(k));
+                break;
+            }
+        }
+    }
+    */
+
     // for (const auto& [k, x14_inst] : *fs.x14_map) {
     //     // QPen *p;
     //     // if (fs.x2D_map->count(x14_inst.ptr1) > 0) {
@@ -806,20 +862,18 @@ void BrdView::drawFile() {
     //         ? pen1 : pen2);
     // }
 
-    /*
-    for (const auto &[k, x14_inst] : fs->x14_map) {
-        drawShape(k, pen3);
+    for (auto &x14_inst : fs->iter_x14()) {
+        drawShape(x14_inst.k, pen3);
     }
-    */
 
-    if (fs->hdr->ll_x14.head != 0) {
-        auto x = fs->get_x14(fs->hdr->ll_x14.head);
-        drawShape(x.k, pen3);
-        while (x.next != fs->hdr->ll_x14.tail) {
-            x = fs->get_x14(x.next);
-            drawShape(x.k, pen3);
-        }
-    }
+    // if (fs->hdr->ll_x14.head != 0) {
+    //     auto x = fs->get_x14(fs->hdr->ll_x14.head);
+    //     drawShape(x.k, pen3);
+    //     while (x.next != fs->hdr->ll_x14.tail) {
+    //         x = fs->get_x14(x.next);
+    //         drawShape(x.k, pen1);
+    //     }
+    // }
 
     // Connectivity (rats)
     // for (const auto& [k, x23_inst] : *fs.x23_map) {
@@ -895,6 +949,10 @@ void BrdView::drawFile() {
     //         *pen2
     //     );
     // }
+
+    for (auto &k : fs->silk_objs) {
+        printf("Remaining silk obj: 0x %08X\n", ntohl(k));
+    }
 };
 
 QColor BrdView::customPenColor(uint32_t x05_k, QColor default_) {

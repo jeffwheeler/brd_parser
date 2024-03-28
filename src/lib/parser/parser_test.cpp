@@ -197,6 +197,17 @@ TEST(ParseFile, BeagleBoneAIParsed) {
     EXPECT_EQ(x01_inst.coords[1], 125000);
 }
 
+// Magic is 0x00141502
+// Allegro 17.4 S032
+TEST(ParseFile, BeagleYParsed) {
+    File<A_174> fs =
+        *parse_file("../../test/data/beagle_y/BeagleY-AI_PCB_V1.0_240105.brd");
+
+    EXPECT_EQ(fs.layer_count, 12);
+
+    check_header_values(fs);
+}
+
 // Magic is 0x00140400
 // Allegro 17.2 S028
 TEST(ParseFile, RFPowerDivider) {

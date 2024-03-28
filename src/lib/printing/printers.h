@@ -12,7 +12,7 @@
 #include "lib/structure/types.h"
 
 #define PRINT_ALL_ITEMS 0
-#define MAX_DEPTH 5
+#define MAX_DEPTH 4
 
 #define PRINT(MAP, KEY, DEPTH) \
     (print_struct((const void *)&fs->MAP.at(KEY), fs, DEPTH))
