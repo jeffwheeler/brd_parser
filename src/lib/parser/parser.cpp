@@ -132,13 +132,9 @@ uint32_t parse_x1C(File<A_174>& fs, void*& address) {
     // skip(address, size * sizeof_until_tail<t13<version>>());
 
     if constexpr (version >= A_172) {
-        skip(address, 4);
-    }
-
-    if constexpr (version >= A_172) {
         skip(address, i->n * 40);
     } else {
-        skip(address, i->n * 32);
+        skip(address, i->n * 32 - 4);
     }
 
     return k;
@@ -179,7 +175,9 @@ uint32_t parse_x1F(File<A_174>& fs, void*& address) {
     x1F<version>* i = static_cast<x1F<version>*>(address);
     uint32_t k = default_parser<x1F, version>(fs, address);
 
-    if constexpr (version >= A_172) {
+    if constexpr (version >= A_174) {
+        skip(address, i->size * 384 + 8);
+    } else if constexpr (version >= A_172) {
         skip(address, i->size * 280 + 8);
     } else if constexpr (version >= A_162) {
         skip(address, i->size * 280 + 4);
@@ -556,6 +554,7 @@ std::optional<File<A_174>> parse_file(const std::string& filepath) {
         case 0x00140901:
         case 0x00140902:
         case 0x00140E00:
+        case 0x00141502:
             return parse_file_raw<A_174>(std::move(region));
     }
 
