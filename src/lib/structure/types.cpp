@@ -1,8 +1,8 @@
 #include "types.h"
 
 template <>
-x01<A_160>::operator x01<A_174>() const {
-    x01<A_174> new_inst;
+x01<A_160>::operator x01<A_175>() const {
+    x01<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.un0 = this->un0;
     new_inst.subtype = this->subtype;
@@ -24,8 +24,8 @@ x01<A_160>::operator x01<A_174>() const {
 }
 
 template <>
-x03<A_160>::operator x03<A_174>() const {
-    x03<A_174> new_inst;
+x03<A_160>::operator x03<A_175>() const {
+    x03<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.next = this->next;
@@ -37,8 +37,8 @@ x03<A_160>::operator x03<A_174>() const {
 }
 
 template <>
-x04<A_160>::operator x04<A_174>() const {
-    x04<A_174> new_inst;
+x04<A_160>::operator x04<A_175>() const {
+    x04<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.next = this->next;
@@ -48,8 +48,8 @@ x04<A_160>::operator x04<A_174>() const {
 }
 
 template <>
-x05<A_160>::operator x05<A_174>() const {
-    x05<A_174> new_inst;
+x05<A_160>::operator x05<A_175>() const {
+    x05<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.subtype = this->subtype;
     new_inst.layer = this->layer;
@@ -70,8 +70,8 @@ x05<A_160>::operator x05<A_174>() const {
 }
 
 template <>
-x06<A_160>::operator x06<A_174>() const {
-    x06<A_174> new_inst;
+x06<A_160>::operator x06<A_175>() const {
+    x06<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.next = this->next;
@@ -85,8 +85,8 @@ x06<A_160>::operator x06<A_174>() const {
 }
 
 template <>
-x07<A_160>::operator x07<A_174>() const {
-    x07<A_174> new_inst;
+x07<A_160>::operator x07<A_175>() const {
+    x07<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = k;
     new_inst.un1 = this->un1;
@@ -101,8 +101,8 @@ x07<A_160>::operator x07<A_174>() const {
 }
 
 template <>
-x08<A_160>::operator x08<A_174>() const {
-    x08<A_174> new_inst;
+x08<A_160>::operator x08<A_175>() const {
+    x08<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.str_ptr = this->str_ptr_16x;
@@ -115,8 +115,8 @@ x08<A_160>::operator x08<A_174>() const {
 }
 
 template <>
-x09<A_160>::operator x09<A_174>() const {
-    x09<A_174> new_inst;
+x09<A_160>::operator x09<A_175>() const {
+    x09<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     for (uint8_t i = 0; i < 4; i++) {
@@ -131,8 +131,8 @@ x09<A_160>::operator x09<A_174>() const {
 }
 
 template <>
-x09<A_172>::operator x09<A_174>() const {
-    x09<A_174> new_inst;
+x09<A_172>::operator x09<A_175>() const {
+    x09<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     for (uint8_t i = 0; i < 4; i++) {
@@ -147,8 +147,8 @@ x09<A_172>::operator x09<A_174>() const {
 }
 
 template <>
-x0A<A_160>::operator x0A<A_174>() const {
-    x0A<A_174> new_inst;
+x0A<A_160>::operator x0A<A_175>() const {
+    x0A<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.subtype = this->subtype;
     new_inst.layer = this->layer;
@@ -170,8 +170,8 @@ x0A<A_160>::operator x0A<A_174>() const {
 }
 
 template <>
-x0A<A_172>::operator x0A<A_174>() const {
-    x0A<A_174> new_inst;
+x0A<A_172>::operator x0A<A_175>() const {
+    x0A<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.subtype = this->subtype;
     new_inst.layer = this->layer;
@@ -193,8 +193,8 @@ x0A<A_172>::operator x0A<A_174>() const {
 }
 
 template <>
-x0C<A_160>::operator x0C<A_174>() const {
-    x0C<A_174> new_inst;
+x0C<A_160>::operator x0C<A_175>() const {
+    x0C<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.subtype = this->subtype;
     new_inst.layer = this->layer;
@@ -207,8 +207,8 @@ x0C<A_160>::operator x0C<A_174>() const {
 }
 
 template <>
-x0C<A_172>::operator x0C<A_174>() const {
-    x0C<A_174> new_inst;
+x0C<A_172>::operator x0C<A_175>() const {
+    x0C<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.subtype = this->subtype;
     new_inst.layer = this->layer;
@@ -223,8 +223,8 @@ x0C<A_172>::operator x0C<A_174>() const {
 }
 
 template <>
-x0D<A_160>::operator x0D<A_174>() const {
-    x0D<A_174> new_inst;
+x0D<A_160>::operator x0D<A_175>() const {
+    x0D<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.str_ptr = this->str_ptr;
@@ -240,8 +240,8 @@ x0D<A_160>::operator x0D<A_174>() const {
 }
 
 template <>
-x0D<A_172>::operator x0D<A_174>() const {
-    x0D<A_174> new_inst;
+x0D<A_172>::operator x0D<A_175>() const {
+    x0D<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.str_ptr = this->str_ptr;
@@ -258,8 +258,8 @@ x0D<A_172>::operator x0D<A_174>() const {
 }
 
 template <>
-x0E<A_160>::operator x0E<A_174>() const {
-    x0E<A_174> new_inst;
+x0E<A_160>::operator x0E<A_175>() const {
+    x0E<A_175> new_inst;
     new_inst.t = this->t;
     for (int i = 0; i < 13; i++) {
         new_inst.un[i] = this->un[i];
@@ -270,8 +270,8 @@ x0E<A_160>::operator x0E<A_174>() const {
 }
 
 template <>
-x0F<A_160>::operator x0F<A_174>() const {
-    x0F<A_174> new_inst;
+x0F<A_160>::operator x0F<A_175>() const {
+    x0F<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.ptr1 = this->ptr1;
@@ -285,8 +285,8 @@ x0F<A_160>::operator x0F<A_174>() const {
 }
 
 template <>
-x0F<A_172>::operator x0F<A_174>() const {
-    x0F<A_174> new_inst;
+x0F<A_172>::operator x0F<A_175>() const {
+    x0F<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.ptr1 = this->ptr1;
@@ -300,8 +300,8 @@ x0F<A_172>::operator x0F<A_174>() const {
 }
 
 template <>
-x10<A_160>::operator x10<A_174>() const {
-    x10<A_174> new_inst;
+x10<A_160>::operator x10<A_175>() const {
+    x10<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.ptr1 = this->ptr1;
@@ -314,8 +314,8 @@ x10<A_160>::operator x10<A_174>() const {
 }
 
 template <>
-x10<A_172>::operator x10<A_174>() const {
-    x10<A_174> new_inst;
+x10<A_172>::operator x10<A_175>() const {
+    x10<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.ptr1 = this->ptr1;
@@ -328,8 +328,8 @@ x10<A_172>::operator x10<A_174>() const {
 }
 
 template <>
-x11<A_160>::operator x11<A_174>() const {
-    x11<A_174> new_inst;
+x11<A_160>::operator x11<A_175>() const {
+    x11<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.ptr1 = this->ptr1;
@@ -340,8 +340,8 @@ x11<A_160>::operator x11<A_174>() const {
 }
 
 template <>
-x14<A_160>::operator x14<A_174>() const {
-    x14<A_174> new_inst;
+x14<A_160>::operator x14<A_175>() const {
+    x14<A_175> new_inst;
     new_inst.type = this->type;
     new_inst.subtype = this->subtype;
     new_inst.layer = this->layer;
@@ -356,8 +356,8 @@ x14<A_160>::operator x14<A_174>() const {
 }
 
 template <>
-x15<A_160>::operator x15<A_174>() const {
-    x15<A_174> new_inst;
+x15<A_160>::operator x15<A_175>() const {
+    x15<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.next = this->next;
@@ -371,8 +371,8 @@ x15<A_160>::operator x15<A_174>() const {
 }
 
 template <>
-x16<A_160>::operator x16<A_174>() const {
-    x16<A_174> new_inst;
+x16<A_160>::operator x16<A_175>() const {
+    x16<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.next = this->next;
@@ -386,8 +386,8 @@ x16<A_160>::operator x16<A_174>() const {
 }
 
 template <>
-x17<A_160>::operator x17<A_174>() const {
-    x17<A_174> new_inst;
+x17<A_160>::operator x17<A_175>() const {
+    x17<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.next = this->next;
@@ -401,8 +401,8 @@ x17<A_160>::operator x17<A_174>() const {
 }
 
 template <>
-x1B<A_160>::operator x1B<A_174>() const {
-    x1B<A_174> new_inst;
+x1B<A_160>::operator x1B<A_175>() const {
+    x1B<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.next = this->next;
@@ -421,8 +421,8 @@ x1B<A_160>::operator x1B<A_174>() const {
 }
 
 template <>
-t13<A_160>::operator t13<A_174>() const {
-    t13<A_174> new_inst;
+t13<A_160>::operator t13<A_175>() const {
+    t13<A_175> new_inst;
     new_inst.str_ptr = this->str_ptr;
     new_inst.t = this->t;
     new_inst.z0 = 0;
@@ -436,8 +436,8 @@ t13<A_160>::operator t13<A_174>() const {
 }
 
 template <>
-x1C<A_160>::operator x1C<A_174>() const {
-    x1C<A_174> new_inst;
+x1C<A_160>::operator x1C<A_175>() const {
+    x1C<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.n = this->n;
     new_inst.k = this->k;
@@ -453,8 +453,8 @@ x1C<A_160>::operator x1C<A_174>() const {
 }
 
 template <>
-x1C<A_165>::operator x1C<A_174>() const {
-    x1C<A_174> new_inst;
+x1C<A_165>::operator x1C<A_175>() const {
+    x1C<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.n = this->n;
     new_inst.k = this->k;
@@ -470,8 +470,8 @@ x1C<A_165>::operator x1C<A_174>() const {
 }
 
 template <>
-x22<A_160>::operator x22<A_174>() const {
-    x22<A_174> new_inst;
+x22<A_160>::operator x22<A_175>() const {
+    x22<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     for (uint8_t i = 0; i < 8; i++) {
@@ -482,23 +482,23 @@ x22<A_160>::operator x22<A_174>() const {
 }
 
 template <>
-x23<A_160>::operator x23<A_174>() const {
-    return *reinterpret_cast<const x23<A_174> *>(this);
+x23<A_160>::operator x23<A_175>() const {
+    return *reinterpret_cast<const x23<A_175> *>(this);
 }
 
 template <>
-x23<A_164>::operator x23<A_174>() const {
-    return *reinterpret_cast<const x23<A_174> *>(this);
+x23<A_164>::operator x23<A_175>() const {
+    return *reinterpret_cast<const x23<A_175> *>(this);
 }
 
 template <>
-x24<A_160>::operator x24<A_174>() const {
-    return *reinterpret_cast<const x24<A_174> *>(this);
+x24<A_160>::operator x24<A_175>() const {
+    return *reinterpret_cast<const x24<A_175> *>(this);
 }
 
 template <>
-x26<A_160>::operator x26<A_174>() const {
-    x26<A_174> new_inst;
+x26<A_160>::operator x26<A_175>() const {
+    x26<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.member_ptr = this->member_ptr;
@@ -508,8 +508,8 @@ x26<A_160>::operator x26<A_174>() const {
 }
 
 template <>
-x26<A_172>::operator x26<A_174>() const {
-    x26<A_174> new_inst;
+x26<A_172>::operator x26<A_175>() const {
+    x26<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.member_ptr = this->member_ptr;
@@ -519,8 +519,8 @@ x26<A_172>::operator x26<A_174>() const {
 }
 
 template <>
-x28<A_160>::operator x28<A_174>() const {
-    x28<A_174> new_inst;
+x28<A_160>::operator x28<A_175>() const {
+    x28<A_175> new_inst;
     new_inst.type = this->type;
     new_inst.subtype = this->subtype;
     new_inst.layer = this->layer;
@@ -544,8 +544,8 @@ x28<A_160>::operator x28<A_174>() const {
 }
 
 template <>
-x2B<A_160>::operator x2B<A_174>() const {
-    x2B<A_174> new_inst;
+x2B<A_160>::operator x2B<A_175>() const {
+    x2B<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.un1 = this->un1;
@@ -566,8 +566,8 @@ x2B<A_160>::operator x2B<A_174>() const {
 }
 
 template <>
-x2B<A_164>::operator x2B<A_174>() const {
-    x2B<A_174> new_inst;
+x2B<A_164>::operator x2B<A_175>() const {
+    x2B<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.un1 = this->un1;
@@ -589,8 +589,8 @@ x2B<A_164>::operator x2B<A_174>() const {
 }
 
 template <>
-x2C<A_160>::operator x2C<A_174>() const {
-    x2C<A_174> new_inst;
+x2C<A_160>::operator x2C<A_175>() const {
+    x2C<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.next = this->next;
@@ -604,8 +604,8 @@ x2C<A_160>::operator x2C<A_174>() const {
 }
 
 template <>
-x2D<A_160>::operator x2D<A_174>() const {
-    x2D<A_174> new_inst;
+x2D<A_160>::operator x2D<A_175>() const {
+    x2D<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.layer = this->layer;
     new_inst.un0 = this->un0;
@@ -629,13 +629,13 @@ x2D<A_160>::operator x2D<A_174>() const {
 }
 
 template <>
-x2E<A_160>::operator x2E<A_174>() const {
-    return *reinterpret_cast<const x2E<A_174> *>(this);
+x2E<A_160>::operator x2E<A_175>() const {
+    return *reinterpret_cast<const x2E<A_175> *>(this);
 }
 
 template <>
-x30<A_160>::operator x30<A_174>() const {
-    x30<A_174> new_inst;
+x30<A_160>::operator x30<A_175>() const {
+    x30<A_175> new_inst;
     new_inst.type = this->type;
     new_inst.subtype = this->subtype;
     new_inst.layer = this->layer;
@@ -653,8 +653,8 @@ x30<A_160>::operator x30<A_174>() const {
 }
 
 template <>
-x30<A_172>::operator x30<A_174>() const {
-    x30<A_174> new_inst;
+x30<A_172>::operator x30<A_175>() const {
+    x30<A_175> new_inst;
     new_inst.type = this->type;
     new_inst.subtype = this->subtype;
     new_inst.layer = this->layer;
@@ -675,8 +675,8 @@ x30<A_172>::operator x30<A_174>() const {
 }
 
 template <>
-x31<A_160>::operator x31<A_174>() const {
-    x31<A_174> new_inst;
+x31<A_160>::operator x31<A_175>() const {
+    x31<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.subtype = this->subtype;
     new_inst.layer = this->layer;
@@ -690,8 +690,8 @@ x31<A_160>::operator x31<A_174>() const {
 }
 
 template <>
-x32<A_160>::operator x32<A_174>() const {
-    x32<A_174> new_inst;
+x32<A_160>::operator x32<A_175>() const {
+    x32<A_175> new_inst;
     new_inst.type = this->type;
     new_inst.subtype = this->subtype;
     new_inst.layer = this->layer;
@@ -726,8 +726,8 @@ x32<A_160>::operator x32<A_174>() const {
 }
 
 template <>
-x33<A_160>::operator x33<A_174>() const {
-    x33<A_174> new_inst;
+x33<A_160>::operator x33<A_175>() const {
+    x33<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.subtype = this->subtype;
     new_inst.layer = this->layer;
@@ -754,8 +754,8 @@ x33<A_160>::operator x33<A_174>() const {
 }
 
 template <>
-x34<A_160>::operator x34<A_174>() const {
-    x34<A_174> new_inst;
+x34<A_160>::operator x34<A_175>() const {
+    x34<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.subtype = this->subtype;
     new_inst.layer = this->layer;
@@ -771,8 +771,8 @@ x34<A_160>::operator x34<A_174>() const {
 }
 
 template <>
-x36_x08<A_160>::operator x36_x08<A_174>() const {
-    x36_x08<A_174> new_inst;
+x36_x08<A_160>::operator x36_x08<A_175>() const {
+    x36_x08<A_175> new_inst;
     new_inst.a = this->a;
     new_inst.b = this->b;
     new_inst.char_height = this->char_height;
@@ -784,8 +784,8 @@ x36_x08<A_160>::operator x36_x08<A_174>() const {
 }
 
 template <>
-x36_x08<A_172>::operator x36_x08<A_174>() const {
-    x36_x08<A_174> new_inst;
+x36_x08<A_172>::operator x36_x08<A_175>() const {
+    x36_x08<A_175> new_inst;
     new_inst.a = this->a;
     new_inst.b = this->b;
     new_inst.char_height = this->char_height;
@@ -797,8 +797,8 @@ x36_x08<A_172>::operator x36_x08<A_174>() const {
 }
 
 template <>
-x36<A_160>::operator x36<A_174>() const {
-    x36<A_174> new_inst;
+x36<A_160>::operator x36<A_175>() const {
+    x36<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.c = this->c;
     new_inst.k = this->k;
@@ -810,18 +810,18 @@ x36<A_160>::operator x36<A_174>() const {
     new_inst.un3 = this->un3;
     new_inst.un2 = 0;
     for (const auto &x08_inst : this->x08s) {
-        new_inst.x08s.push_back(upgrade<A_160, A_174>(x08_inst));
+        new_inst.x08s.push_back(upgrade<A_160, A_175>(x08_inst));
     }
     for (const auto &x0F_inst : this->x0Fs) {
-        x36_x0F i = *reinterpret_cast<const x36_x0F<A_174> *>(&x0F_inst);
+        x36_x0F i = *reinterpret_cast<const x36_x0F<A_175> *>(&x0F_inst);
         new_inst.x0Fs.push_back(i);
     }
     return new_inst;
 }
 
 template <>
-x36<A_172>::operator x36<A_174>() const {
-    x36<A_174> new_inst;
+x36<A_172>::operator x36<A_175>() const {
+    x36<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.c = this->c;
     new_inst.k = this->k;
@@ -833,18 +833,18 @@ x36<A_172>::operator x36<A_174>() const {
     new_inst.un3 = this->un3;
     new_inst.un2 = 0;
     for (const auto &x08_inst : this->x08s) {
-        new_inst.x08s.push_back(upgrade<A_172, A_174>(x08_inst));
+        new_inst.x08s.push_back(upgrade<A_172, A_175>(x08_inst));
     }
     for (const auto &x0F_inst : this->x0Fs) {
-        x36_x0F i = *reinterpret_cast<const x36_x0F<A_174> *>(&x0F_inst);
+        x36_x0F i = *reinterpret_cast<const x36_x0F<A_175> *>(&x0F_inst);
         new_inst.x0Fs.push_back(i);
     }
     return new_inst;
 }
 
 template <>
-x37<A_160>::operator x37<A_174>() const {
-    x37<A_174> new_inst;
+x37<A_160>::operator x37<A_175>() const {
+    x37<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.ptr1 = this->ptr1;
@@ -860,8 +860,8 @@ x37<A_160>::operator x37<A_174>() const {
 }
 
 template <>
-t38_film<A_160>::operator t38_film<A_174>() const {
-    t38_film<A_174> new_inst;
+t38_film<A_160>::operator t38_film<A_175>() const {
+    t38_film<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.next = this->next;
@@ -874,8 +874,8 @@ t38_film<A_160>::operator t38_film<A_174>() const {
 }
 
 template <>
-t38_film<A_166>::operator t38_film<A_174>() const {
-    t38_film<A_174> new_inst;
+t38_film<A_166>::operator t38_film<A_175>() const {
+    t38_film<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.next = this->next;
@@ -888,19 +888,19 @@ t38_film<A_166>::operator t38_film<A_174>() const {
 }
 
 template <>
-t39_film_layer_list<A_160>::operator t39_film_layer_list<A_174>() const {
-    return *reinterpret_cast<const t39_film_layer_list<A_174> *>(this);
+t39_film_layer_list<A_160>::operator t39_film_layer_list<A_175>() const {
+    return *reinterpret_cast<const t39_film_layer_list<A_175> *>(this);
 }
 
 template <>
-t3A_film_layer_list_node<A_160>::operator t3A_film_layer_list_node<A_174>()
+t3A_film_layer_list_node<A_160>::operator t3A_film_layer_list_node<A_175>()
     const {
-    return *reinterpret_cast<const t3A_film_layer_list_node<A_174> *>(this);
+    return *reinterpret_cast<const t3A_film_layer_list_node<A_175> *>(this);
 }
 
 template <>
-x3B<A_160>::operator x3B<A_174>() const {
-    x3B<A_174> new_inst;
+x3B<A_160>::operator x3B<A_175>() const {
+    x3B<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.subtype = this->subtype;
     new_inst.len = this->len;
@@ -916,8 +916,8 @@ x3B<A_160>::operator x3B<A_174>() const {
 }
 
 template <>
-x3C<A_160>::operator x3C<A_174>() const {
-    x3C<A_174> new_inst;
+x3C<A_160>::operator x3C<A_175>() const {
+    x3C<A_175> new_inst;
     new_inst.t = this->t;
     new_inst.k = this->k;
     new_inst.un = 0;
@@ -930,234 +930,234 @@ File<version>::File(mapped_region input_region)
     : region(std::move(input_region)) {}
 
 // Explicit instantiation
-template File<A_174>::File(mapped_region region);
+template File<A_175>::File(mapped_region region);
 
 template <>
-void File<A_174>::prepare() {
+void File<A_175>::prepare() {
     this->ptrs.reserve(this->hdr->object_count);
     cache_upgrade_funcs();
 }
 
 template <AllegroVersion version>
 void File<version>::cache_upgrade_funcs() {
-    // Need to lookup true version, because it's not A_174
+    // Need to lookup true version, because it's not A_175
     switch (this->hdr->magic) {
         case 0x00130000:
         case 0x00130200:
-            this->x01_upgrade = new_upgrade<A_160, A_174, x01>;
-            this->x03_upgrade = new_upgrade<A_160, A_174, x03>;
-            this->x04_upgrade = new_upgrade<A_160, A_174, x04>;
-            this->x05_upgrade = new_upgrade<A_160, A_174, x05>;
-            this->x06_upgrade = new_upgrade<A_160, A_174, x06>;
-            this->x07_upgrade = new_upgrade<A_160, A_174, x07>;
-            this->x08_upgrade = new_upgrade<A_160, A_174, x08>;
-            this->x09_upgrade = new_upgrade<A_160, A_174, x09>;
-            this->x0A_upgrade = new_upgrade<A_160, A_174, x0A>;
-            this->x0C_upgrade = new_upgrade<A_160, A_174, x0C>;
-            this->x0D_upgrade = new_upgrade<A_160, A_174, x0D>;
-            this->x0E_upgrade = new_upgrade<A_160, A_174, x0E>;
-            this->x10_upgrade = new_upgrade<A_160, A_174, x10>;
-            this->x14_upgrade = new_upgrade<A_160, A_174, x14>;
-            this->x15_upgrade = new_upgrade<A_160, A_174, x15>;
-            this->x16_upgrade = new_upgrade<A_160, A_174, x16>;
-            this->x17_upgrade = new_upgrade<A_160, A_174, x17>;
-            this->x1B_upgrade = new_upgrade<A_160, A_174, x1B>;
-            this->x1C_upgrade = new_upgrade<A_160, A_174, x1C>;
-            this->t13_upgrade = new_upgrade<A_160, A_174, t13>;
-            this->x1D_upgrade = new_upgrade<A_160, A_174, x1D>;
-            this->x1F_upgrade = new_upgrade<A_160, A_174, x1F>;
-            this->x23_upgrade = new_upgrade<A_160, A_174, x23>;
-            this->x24_upgrade = new_upgrade<A_160, A_174, x24>;
-            this->x26_upgrade = new_upgrade<A_160, A_174, x26>;
-            this->x28_upgrade = new_upgrade<A_160, A_174, x28>;
-            this->x2B_upgrade = new_upgrade<A_160, A_174, x2B>;
-            this->x2C_upgrade = new_upgrade<A_160, A_174, x2C>;
-            this->x2D_upgrade = new_upgrade<A_160, A_174, x2D>;
-            this->x2E_upgrade = new_upgrade<A_160, A_174, x2E>;
-            this->x30_upgrade = new_upgrade<A_160, A_174, x30>;
-            this->x31_upgrade = new_upgrade<A_160, A_174, x31>;
-            this->x32_upgrade = new_upgrade<A_160, A_174, x32>;
-            this->x33_upgrade = new_upgrade<A_160, A_174, x33>;
-            this->x34_upgrade = new_upgrade<A_160, A_174, x34>;
-            this->x37_upgrade = new_upgrade<A_160, A_174, x37>;
-            this->x38_upgrade = new_upgrade<A_160, A_174, t38_film>;
-            this->x39_upgrade = new_upgrade<A_160, A_174, t39_film_layer_list>;
+            this->x01_upgrade = new_upgrade<A_160, A_175, x01>;
+            this->x03_upgrade = new_upgrade<A_160, A_175, x03>;
+            this->x04_upgrade = new_upgrade<A_160, A_175, x04>;
+            this->x05_upgrade = new_upgrade<A_160, A_175, x05>;
+            this->x06_upgrade = new_upgrade<A_160, A_175, x06>;
+            this->x07_upgrade = new_upgrade<A_160, A_175, x07>;
+            this->x08_upgrade = new_upgrade<A_160, A_175, x08>;
+            this->x09_upgrade = new_upgrade<A_160, A_175, x09>;
+            this->x0A_upgrade = new_upgrade<A_160, A_175, x0A>;
+            this->x0C_upgrade = new_upgrade<A_160, A_175, x0C>;
+            this->x0D_upgrade = new_upgrade<A_160, A_175, x0D>;
+            this->x0E_upgrade = new_upgrade<A_160, A_175, x0E>;
+            this->x10_upgrade = new_upgrade<A_160, A_175, x10>;
+            this->x14_upgrade = new_upgrade<A_160, A_175, x14>;
+            this->x15_upgrade = new_upgrade<A_160, A_175, x15>;
+            this->x16_upgrade = new_upgrade<A_160, A_175, x16>;
+            this->x17_upgrade = new_upgrade<A_160, A_175, x17>;
+            this->x1B_upgrade = new_upgrade<A_160, A_175, x1B>;
+            this->x1C_upgrade = new_upgrade<A_160, A_175, x1C>;
+            this->t13_upgrade = new_upgrade<A_160, A_175, t13>;
+            this->x1D_upgrade = new_upgrade<A_160, A_175, x1D>;
+            this->x1F_upgrade = new_upgrade<A_160, A_175, x1F>;
+            this->x23_upgrade = new_upgrade<A_160, A_175, x23>;
+            this->x24_upgrade = new_upgrade<A_160, A_175, x24>;
+            this->x26_upgrade = new_upgrade<A_160, A_175, x26>;
+            this->x28_upgrade = new_upgrade<A_160, A_175, x28>;
+            this->x2B_upgrade = new_upgrade<A_160, A_175, x2B>;
+            this->x2C_upgrade = new_upgrade<A_160, A_175, x2C>;
+            this->x2D_upgrade = new_upgrade<A_160, A_175, x2D>;
+            this->x2E_upgrade = new_upgrade<A_160, A_175, x2E>;
+            this->x30_upgrade = new_upgrade<A_160, A_175, x30>;
+            this->x31_upgrade = new_upgrade<A_160, A_175, x31>;
+            this->x32_upgrade = new_upgrade<A_160, A_175, x32>;
+            this->x33_upgrade = new_upgrade<A_160, A_175, x33>;
+            this->x34_upgrade = new_upgrade<A_160, A_175, x34>;
+            this->x37_upgrade = new_upgrade<A_160, A_175, x37>;
+            this->x38_upgrade = new_upgrade<A_160, A_175, t38_film>;
+            this->x39_upgrade = new_upgrade<A_160, A_175, t39_film_layer_list>;
             this->x3A_upgrade =
-                new_upgrade<A_160, A_174, t3A_film_layer_list_node>;
-            this->x3C_upgrade = new_upgrade<A_160, A_174, x3C>;
+                new_upgrade<A_160, A_175, t3A_film_layer_list_node>;
+            this->x3C_upgrade = new_upgrade<A_160, A_175, x3C>;
             break;
         case 0x00130402:
-            this->x01_upgrade = new_upgrade<A_162, A_174, x01>;
-            this->x03_upgrade = new_upgrade<A_162, A_174, x03>;
-            this->x04_upgrade = new_upgrade<A_162, A_174, x04>;
-            this->x05_upgrade = new_upgrade<A_162, A_174, x05>;
-            this->x06_upgrade = new_upgrade<A_162, A_174, x06>;
-            this->x07_upgrade = new_upgrade<A_162, A_174, x07>;
-            this->x08_upgrade = new_upgrade<A_162, A_174, x08>;
-            this->x09_upgrade = new_upgrade<A_162, A_174, x09>;
-            this->x0A_upgrade = new_upgrade<A_162, A_174, x0A>;
-            this->x0C_upgrade = new_upgrade<A_162, A_174, x0C>;
-            this->x0D_upgrade = new_upgrade<A_162, A_174, x0D>;
-            this->x0E_upgrade = new_upgrade<A_162, A_174, x0E>;
-            this->x10_upgrade = new_upgrade<A_162, A_174, x10>;
-            this->x14_upgrade = new_upgrade<A_162, A_174, x14>;
-            this->x15_upgrade = new_upgrade<A_162, A_174, x15>;
-            this->x16_upgrade = new_upgrade<A_162, A_174, x16>;
-            this->x17_upgrade = new_upgrade<A_162, A_174, x17>;
-            this->x1B_upgrade = new_upgrade<A_162, A_174, x1B>;
-            this->x1C_upgrade = new_upgrade<A_162, A_174, x1C>;
-            this->t13_upgrade = new_upgrade<A_162, A_174, t13>;
-            this->x1D_upgrade = new_upgrade<A_162, A_174, x1D>;
-            this->x1F_upgrade = new_upgrade<A_162, A_174, x1F>;
-            this->x23_upgrade = new_upgrade<A_162, A_174, x23>;
-            this->x24_upgrade = new_upgrade<A_162, A_174, x24>;
-            this->x26_upgrade = new_upgrade<A_162, A_174, x26>;
-            this->x28_upgrade = new_upgrade<A_162, A_174, x28>;
-            this->x2B_upgrade = new_upgrade<A_162, A_174, x2B>;
-            this->x2C_upgrade = new_upgrade<A_162, A_174, x2C>;
-            this->x2D_upgrade = new_upgrade<A_162, A_174, x2D>;
-            this->x2E_upgrade = new_upgrade<A_162, A_174, x2E>;
-            this->x30_upgrade = new_upgrade<A_162, A_174, x30>;
-            this->x31_upgrade = new_upgrade<A_162, A_174, x31>;
-            this->x32_upgrade = new_upgrade<A_162, A_174, x32>;
-            this->x33_upgrade = new_upgrade<A_162, A_174, x33>;
-            this->x34_upgrade = new_upgrade<A_162, A_174, x34>;
-            this->x37_upgrade = new_upgrade<A_162, A_174, x37>;
-            this->x38_upgrade = new_upgrade<A_162, A_174, t38_film>;
-            this->x39_upgrade = new_upgrade<A_162, A_174, t39_film_layer_list>;
+            this->x01_upgrade = new_upgrade<A_162, A_175, x01>;
+            this->x03_upgrade = new_upgrade<A_162, A_175, x03>;
+            this->x04_upgrade = new_upgrade<A_162, A_175, x04>;
+            this->x05_upgrade = new_upgrade<A_162, A_175, x05>;
+            this->x06_upgrade = new_upgrade<A_162, A_175, x06>;
+            this->x07_upgrade = new_upgrade<A_162, A_175, x07>;
+            this->x08_upgrade = new_upgrade<A_162, A_175, x08>;
+            this->x09_upgrade = new_upgrade<A_162, A_175, x09>;
+            this->x0A_upgrade = new_upgrade<A_162, A_175, x0A>;
+            this->x0C_upgrade = new_upgrade<A_162, A_175, x0C>;
+            this->x0D_upgrade = new_upgrade<A_162, A_175, x0D>;
+            this->x0E_upgrade = new_upgrade<A_162, A_175, x0E>;
+            this->x10_upgrade = new_upgrade<A_162, A_175, x10>;
+            this->x14_upgrade = new_upgrade<A_162, A_175, x14>;
+            this->x15_upgrade = new_upgrade<A_162, A_175, x15>;
+            this->x16_upgrade = new_upgrade<A_162, A_175, x16>;
+            this->x17_upgrade = new_upgrade<A_162, A_175, x17>;
+            this->x1B_upgrade = new_upgrade<A_162, A_175, x1B>;
+            this->x1C_upgrade = new_upgrade<A_162, A_175, x1C>;
+            this->t13_upgrade = new_upgrade<A_162, A_175, t13>;
+            this->x1D_upgrade = new_upgrade<A_162, A_175, x1D>;
+            this->x1F_upgrade = new_upgrade<A_162, A_175, x1F>;
+            this->x23_upgrade = new_upgrade<A_162, A_175, x23>;
+            this->x24_upgrade = new_upgrade<A_162, A_175, x24>;
+            this->x26_upgrade = new_upgrade<A_162, A_175, x26>;
+            this->x28_upgrade = new_upgrade<A_162, A_175, x28>;
+            this->x2B_upgrade = new_upgrade<A_162, A_175, x2B>;
+            this->x2C_upgrade = new_upgrade<A_162, A_175, x2C>;
+            this->x2D_upgrade = new_upgrade<A_162, A_175, x2D>;
+            this->x2E_upgrade = new_upgrade<A_162, A_175, x2E>;
+            this->x30_upgrade = new_upgrade<A_162, A_175, x30>;
+            this->x31_upgrade = new_upgrade<A_162, A_175, x31>;
+            this->x32_upgrade = new_upgrade<A_162, A_175, x32>;
+            this->x33_upgrade = new_upgrade<A_162, A_175, x33>;
+            this->x34_upgrade = new_upgrade<A_162, A_175, x34>;
+            this->x37_upgrade = new_upgrade<A_162, A_175, x37>;
+            this->x38_upgrade = new_upgrade<A_162, A_175, t38_film>;
+            this->x39_upgrade = new_upgrade<A_162, A_175, t39_film_layer_list>;
             this->x3A_upgrade =
-                new_upgrade<A_162, A_174, t3A_film_layer_list_node>;
-            this->x3C_upgrade = new_upgrade<A_162, A_174, x3C>;
+                new_upgrade<A_162, A_175, t3A_film_layer_list_node>;
+            this->x3C_upgrade = new_upgrade<A_162, A_175, x3C>;
             break;
         case 0x00130C03:
-            this->x01_upgrade = new_upgrade<A_164, A_174, x01>;
-            this->x03_upgrade = new_upgrade<A_164, A_174, x03>;
-            this->x04_upgrade = new_upgrade<A_164, A_174, x04>;
-            this->x05_upgrade = new_upgrade<A_164, A_174, x05>;
-            this->x06_upgrade = new_upgrade<A_164, A_174, x06>;
-            this->x07_upgrade = new_upgrade<A_164, A_174, x07>;
-            this->x08_upgrade = new_upgrade<A_164, A_174, x08>;
-            this->x09_upgrade = new_upgrade<A_164, A_174, x09>;
-            this->x0A_upgrade = new_upgrade<A_164, A_174, x0A>;
-            this->x0C_upgrade = new_upgrade<A_164, A_174, x0C>;
-            this->x0D_upgrade = new_upgrade<A_164, A_174, x0D>;
-            this->x0E_upgrade = new_upgrade<A_164, A_174, x0E>;
-            this->x10_upgrade = new_upgrade<A_164, A_174, x10>;
-            this->x14_upgrade = new_upgrade<A_164, A_174, x14>;
-            this->x15_upgrade = new_upgrade<A_164, A_174, x15>;
-            this->x16_upgrade = new_upgrade<A_164, A_174, x16>;
-            this->x17_upgrade = new_upgrade<A_164, A_174, x17>;
-            this->x1B_upgrade = new_upgrade<A_164, A_174, x1B>;
-            this->x1C_upgrade = new_upgrade<A_164, A_174, x1C>;
-            this->t13_upgrade = new_upgrade<A_164, A_174, t13>;
-            this->x1D_upgrade = new_upgrade<A_164, A_174, x1D>;
-            this->x1F_upgrade = new_upgrade<A_164, A_174, x1F>;
-            this->x23_upgrade = new_upgrade<A_164, A_174, x23>;
-            this->x24_upgrade = new_upgrade<A_164, A_174, x24>;
-            this->x26_upgrade = new_upgrade<A_164, A_174, x26>;
-            this->x28_upgrade = new_upgrade<A_164, A_174, x28>;
-            this->x2B_upgrade = new_upgrade<A_164, A_174, x2B>;
-            this->x2C_upgrade = new_upgrade<A_164, A_174, x2C>;
-            this->x2D_upgrade = new_upgrade<A_164, A_174, x2D>;
-            this->x2E_upgrade = new_upgrade<A_164, A_174, x2E>;
-            this->x30_upgrade = new_upgrade<A_164, A_174, x30>;
-            this->x31_upgrade = new_upgrade<A_164, A_174, x31>;
-            this->x32_upgrade = new_upgrade<A_164, A_174, x32>;
-            this->x33_upgrade = new_upgrade<A_164, A_174, x33>;
-            this->x34_upgrade = new_upgrade<A_164, A_174, x34>;
-            this->x37_upgrade = new_upgrade<A_164, A_174, x37>;
-            this->x38_upgrade = new_upgrade<A_164, A_174, t38_film>;
-            this->x39_upgrade = new_upgrade<A_164, A_174, t39_film_layer_list>;
+            this->x01_upgrade = new_upgrade<A_164, A_175, x01>;
+            this->x03_upgrade = new_upgrade<A_164, A_175, x03>;
+            this->x04_upgrade = new_upgrade<A_164, A_175, x04>;
+            this->x05_upgrade = new_upgrade<A_164, A_175, x05>;
+            this->x06_upgrade = new_upgrade<A_164, A_175, x06>;
+            this->x07_upgrade = new_upgrade<A_164, A_175, x07>;
+            this->x08_upgrade = new_upgrade<A_164, A_175, x08>;
+            this->x09_upgrade = new_upgrade<A_164, A_175, x09>;
+            this->x0A_upgrade = new_upgrade<A_164, A_175, x0A>;
+            this->x0C_upgrade = new_upgrade<A_164, A_175, x0C>;
+            this->x0D_upgrade = new_upgrade<A_164, A_175, x0D>;
+            this->x0E_upgrade = new_upgrade<A_164, A_175, x0E>;
+            this->x10_upgrade = new_upgrade<A_164, A_175, x10>;
+            this->x14_upgrade = new_upgrade<A_164, A_175, x14>;
+            this->x15_upgrade = new_upgrade<A_164, A_175, x15>;
+            this->x16_upgrade = new_upgrade<A_164, A_175, x16>;
+            this->x17_upgrade = new_upgrade<A_164, A_175, x17>;
+            this->x1B_upgrade = new_upgrade<A_164, A_175, x1B>;
+            this->x1C_upgrade = new_upgrade<A_164, A_175, x1C>;
+            this->t13_upgrade = new_upgrade<A_164, A_175, t13>;
+            this->x1D_upgrade = new_upgrade<A_164, A_175, x1D>;
+            this->x1F_upgrade = new_upgrade<A_164, A_175, x1F>;
+            this->x23_upgrade = new_upgrade<A_164, A_175, x23>;
+            this->x24_upgrade = new_upgrade<A_164, A_175, x24>;
+            this->x26_upgrade = new_upgrade<A_164, A_175, x26>;
+            this->x28_upgrade = new_upgrade<A_164, A_175, x28>;
+            this->x2B_upgrade = new_upgrade<A_164, A_175, x2B>;
+            this->x2C_upgrade = new_upgrade<A_164, A_175, x2C>;
+            this->x2D_upgrade = new_upgrade<A_164, A_175, x2D>;
+            this->x2E_upgrade = new_upgrade<A_164, A_175, x2E>;
+            this->x30_upgrade = new_upgrade<A_164, A_175, x30>;
+            this->x31_upgrade = new_upgrade<A_164, A_175, x31>;
+            this->x32_upgrade = new_upgrade<A_164, A_175, x32>;
+            this->x33_upgrade = new_upgrade<A_164, A_175, x33>;
+            this->x34_upgrade = new_upgrade<A_164, A_175, x34>;
+            this->x37_upgrade = new_upgrade<A_164, A_175, x37>;
+            this->x38_upgrade = new_upgrade<A_164, A_175, t38_film>;
+            this->x39_upgrade = new_upgrade<A_164, A_175, t39_film_layer_list>;
             this->x3A_upgrade =
-                new_upgrade<A_164, A_174, t3A_film_layer_list_node>;
-            this->x3C_upgrade = new_upgrade<A_164, A_174, x3C>;
+                new_upgrade<A_164, A_175, t3A_film_layer_list_node>;
+            this->x3C_upgrade = new_upgrade<A_164, A_175, x3C>;
             break;
         case 0x00131003:
-            this->x01_upgrade = new_upgrade<A_165, A_174, x01>;
-            this->x03_upgrade = new_upgrade<A_165, A_174, x03>;
-            this->x04_upgrade = new_upgrade<A_165, A_174, x04>;
-            this->x05_upgrade = new_upgrade<A_165, A_174, x05>;
-            this->x06_upgrade = new_upgrade<A_165, A_174, x06>;
-            this->x07_upgrade = new_upgrade<A_165, A_174, x07>;
-            this->x08_upgrade = new_upgrade<A_165, A_174, x08>;
-            this->x09_upgrade = new_upgrade<A_165, A_174, x09>;
-            this->x0A_upgrade = new_upgrade<A_165, A_174, x0A>;
-            this->x0C_upgrade = new_upgrade<A_165, A_174, x0C>;
-            this->x0D_upgrade = new_upgrade<A_165, A_174, x0D>;
-            this->x0E_upgrade = new_upgrade<A_165, A_174, x0E>;
-            this->x10_upgrade = new_upgrade<A_165, A_174, x10>;
-            this->x14_upgrade = new_upgrade<A_165, A_174, x14>;
-            this->x15_upgrade = new_upgrade<A_165, A_174, x15>;
-            this->x16_upgrade = new_upgrade<A_165, A_174, x16>;
-            this->x17_upgrade = new_upgrade<A_165, A_174, x17>;
-            this->x1B_upgrade = new_upgrade<A_165, A_174, x1B>;
-            this->x1C_upgrade = new_upgrade<A_165, A_174, x1C>;
-            this->t13_upgrade = new_upgrade<A_165, A_174, t13>;
-            this->x1D_upgrade = new_upgrade<A_165, A_174, x1D>;
-            this->x1F_upgrade = new_upgrade<A_165, A_174, x1F>;
-            this->x23_upgrade = new_upgrade<A_165, A_174, x23>;
-            this->x24_upgrade = new_upgrade<A_165, A_174, x24>;
-            this->x26_upgrade = new_upgrade<A_165, A_174, x26>;
-            this->x28_upgrade = new_upgrade<A_165, A_174, x28>;
-            this->x2B_upgrade = new_upgrade<A_165, A_174, x2B>;
-            this->x2C_upgrade = new_upgrade<A_165, A_174, x2C>;
-            this->x2D_upgrade = new_upgrade<A_165, A_174, x2D>;
-            this->x2E_upgrade = new_upgrade<A_165, A_174, x2E>;
-            this->x30_upgrade = new_upgrade<A_165, A_174, x30>;
-            this->x31_upgrade = new_upgrade<A_165, A_174, x31>;
-            this->x32_upgrade = new_upgrade<A_165, A_174, x32>;
-            this->x33_upgrade = new_upgrade<A_165, A_174, x33>;
-            this->x34_upgrade = new_upgrade<A_165, A_174, x34>;
-            this->x37_upgrade = new_upgrade<A_165, A_174, x37>;
-            this->x38_upgrade = new_upgrade<A_165, A_174, t38_film>;
-            this->x39_upgrade = new_upgrade<A_165, A_174, t39_film_layer_list>;
+            this->x01_upgrade = new_upgrade<A_165, A_175, x01>;
+            this->x03_upgrade = new_upgrade<A_165, A_175, x03>;
+            this->x04_upgrade = new_upgrade<A_165, A_175, x04>;
+            this->x05_upgrade = new_upgrade<A_165, A_175, x05>;
+            this->x06_upgrade = new_upgrade<A_165, A_175, x06>;
+            this->x07_upgrade = new_upgrade<A_165, A_175, x07>;
+            this->x08_upgrade = new_upgrade<A_165, A_175, x08>;
+            this->x09_upgrade = new_upgrade<A_165, A_175, x09>;
+            this->x0A_upgrade = new_upgrade<A_165, A_175, x0A>;
+            this->x0C_upgrade = new_upgrade<A_165, A_175, x0C>;
+            this->x0D_upgrade = new_upgrade<A_165, A_175, x0D>;
+            this->x0E_upgrade = new_upgrade<A_165, A_175, x0E>;
+            this->x10_upgrade = new_upgrade<A_165, A_175, x10>;
+            this->x14_upgrade = new_upgrade<A_165, A_175, x14>;
+            this->x15_upgrade = new_upgrade<A_165, A_175, x15>;
+            this->x16_upgrade = new_upgrade<A_165, A_175, x16>;
+            this->x17_upgrade = new_upgrade<A_165, A_175, x17>;
+            this->x1B_upgrade = new_upgrade<A_165, A_175, x1B>;
+            this->x1C_upgrade = new_upgrade<A_165, A_175, x1C>;
+            this->t13_upgrade = new_upgrade<A_165, A_175, t13>;
+            this->x1D_upgrade = new_upgrade<A_165, A_175, x1D>;
+            this->x1F_upgrade = new_upgrade<A_165, A_175, x1F>;
+            this->x23_upgrade = new_upgrade<A_165, A_175, x23>;
+            this->x24_upgrade = new_upgrade<A_165, A_175, x24>;
+            this->x26_upgrade = new_upgrade<A_165, A_175, x26>;
+            this->x28_upgrade = new_upgrade<A_165, A_175, x28>;
+            this->x2B_upgrade = new_upgrade<A_165, A_175, x2B>;
+            this->x2C_upgrade = new_upgrade<A_165, A_175, x2C>;
+            this->x2D_upgrade = new_upgrade<A_165, A_175, x2D>;
+            this->x2E_upgrade = new_upgrade<A_165, A_175, x2E>;
+            this->x30_upgrade = new_upgrade<A_165, A_175, x30>;
+            this->x31_upgrade = new_upgrade<A_165, A_175, x31>;
+            this->x32_upgrade = new_upgrade<A_165, A_175, x32>;
+            this->x33_upgrade = new_upgrade<A_165, A_175, x33>;
+            this->x34_upgrade = new_upgrade<A_165, A_175, x34>;
+            this->x37_upgrade = new_upgrade<A_165, A_175, x37>;
+            this->x38_upgrade = new_upgrade<A_165, A_175, t38_film>;
+            this->x39_upgrade = new_upgrade<A_165, A_175, t39_film_layer_list>;
             this->x3A_upgrade =
-                new_upgrade<A_165, A_174, t3A_film_layer_list_node>;
-            this->x3C_upgrade = new_upgrade<A_165, A_174, x3C>;
+                new_upgrade<A_165, A_175, t3A_film_layer_list_node>;
+            this->x3C_upgrade = new_upgrade<A_165, A_175, x3C>;
             break;
         case 0x00131503:
         case 0x00131504:
-            this->x01_upgrade = new_upgrade<A_166, A_174, x01>;
-            this->x03_upgrade = new_upgrade<A_166, A_174, x03>;
-            this->x04_upgrade = new_upgrade<A_166, A_174, x04>;
-            this->x05_upgrade = new_upgrade<A_166, A_174, x05>;
-            this->x06_upgrade = new_upgrade<A_166, A_174, x06>;
-            this->x07_upgrade = new_upgrade<A_166, A_174, x07>;
-            this->x08_upgrade = new_upgrade<A_166, A_174, x08>;
-            this->x09_upgrade = new_upgrade<A_166, A_174, x09>;
-            this->x0A_upgrade = new_upgrade<A_166, A_174, x0A>;
-            this->x0C_upgrade = new_upgrade<A_166, A_174, x0C>;
-            this->x0D_upgrade = new_upgrade<A_166, A_174, x0D>;
-            this->x0E_upgrade = new_upgrade<A_166, A_174, x0E>;
-            this->x10_upgrade = new_upgrade<A_166, A_174, x10>;
-            this->x14_upgrade = new_upgrade<A_166, A_174, x14>;
-            this->x15_upgrade = new_upgrade<A_166, A_174, x15>;
-            this->x16_upgrade = new_upgrade<A_166, A_174, x16>;
-            this->x17_upgrade = new_upgrade<A_166, A_174, x17>;
-            this->x1B_upgrade = new_upgrade<A_166, A_174, x1B>;
-            this->x1C_upgrade = new_upgrade<A_166, A_174, x1C>;
-            this->t13_upgrade = new_upgrade<A_166, A_174, t13>;
-            this->x1D_upgrade = new_upgrade<A_166, A_174, x1D>;
-            this->x1F_upgrade = new_upgrade<A_166, A_174, x1F>;
-            this->x23_upgrade = new_upgrade<A_166, A_174, x23>;
-            this->x24_upgrade = new_upgrade<A_166, A_174, x24>;
-            this->x26_upgrade = new_upgrade<A_166, A_174, x26>;
-            this->x28_upgrade = new_upgrade<A_166, A_174, x28>;
-            this->x2B_upgrade = new_upgrade<A_166, A_174, x2B>;
-            this->x2C_upgrade = new_upgrade<A_166, A_174, x2C>;
-            this->x2D_upgrade = new_upgrade<A_166, A_174, x2D>;
-            this->x2E_upgrade = new_upgrade<A_166, A_174, x2E>;
-            this->x30_upgrade = new_upgrade<A_166, A_174, x30>;
-            this->x31_upgrade = new_upgrade<A_166, A_174, x31>;
-            this->x32_upgrade = new_upgrade<A_166, A_174, x32>;
-            this->x33_upgrade = new_upgrade<A_166, A_174, x33>;
-            this->x34_upgrade = new_upgrade<A_166, A_174, x34>;
-            this->x37_upgrade = new_upgrade<A_166, A_174, x37>;
-            this->x38_upgrade = new_upgrade<A_166, A_174, t38_film>;
-            this->x39_upgrade = new_upgrade<A_166, A_174, t39_film_layer_list>;
+            this->x01_upgrade = new_upgrade<A_166, A_175, x01>;
+            this->x03_upgrade = new_upgrade<A_166, A_175, x03>;
+            this->x04_upgrade = new_upgrade<A_166, A_175, x04>;
+            this->x05_upgrade = new_upgrade<A_166, A_175, x05>;
+            this->x06_upgrade = new_upgrade<A_166, A_175, x06>;
+            this->x07_upgrade = new_upgrade<A_166, A_175, x07>;
+            this->x08_upgrade = new_upgrade<A_166, A_175, x08>;
+            this->x09_upgrade = new_upgrade<A_166, A_175, x09>;
+            this->x0A_upgrade = new_upgrade<A_166, A_175, x0A>;
+            this->x0C_upgrade = new_upgrade<A_166, A_175, x0C>;
+            this->x0D_upgrade = new_upgrade<A_166, A_175, x0D>;
+            this->x0E_upgrade = new_upgrade<A_166, A_175, x0E>;
+            this->x10_upgrade = new_upgrade<A_166, A_175, x10>;
+            this->x14_upgrade = new_upgrade<A_166, A_175, x14>;
+            this->x15_upgrade = new_upgrade<A_166, A_175, x15>;
+            this->x16_upgrade = new_upgrade<A_166, A_175, x16>;
+            this->x17_upgrade = new_upgrade<A_166, A_175, x17>;
+            this->x1B_upgrade = new_upgrade<A_166, A_175, x1B>;
+            this->x1C_upgrade = new_upgrade<A_166, A_175, x1C>;
+            this->t13_upgrade = new_upgrade<A_166, A_175, t13>;
+            this->x1D_upgrade = new_upgrade<A_166, A_175, x1D>;
+            this->x1F_upgrade = new_upgrade<A_166, A_175, x1F>;
+            this->x23_upgrade = new_upgrade<A_166, A_175, x23>;
+            this->x24_upgrade = new_upgrade<A_166, A_175, x24>;
+            this->x26_upgrade = new_upgrade<A_166, A_175, x26>;
+            this->x28_upgrade = new_upgrade<A_166, A_175, x28>;
+            this->x2B_upgrade = new_upgrade<A_166, A_175, x2B>;
+            this->x2C_upgrade = new_upgrade<A_166, A_175, x2C>;
+            this->x2D_upgrade = new_upgrade<A_166, A_175, x2D>;
+            this->x2E_upgrade = new_upgrade<A_166, A_175, x2E>;
+            this->x30_upgrade = new_upgrade<A_166, A_175, x30>;
+            this->x31_upgrade = new_upgrade<A_166, A_175, x31>;
+            this->x32_upgrade = new_upgrade<A_166, A_175, x32>;
+            this->x33_upgrade = new_upgrade<A_166, A_175, x33>;
+            this->x34_upgrade = new_upgrade<A_166, A_175, x34>;
+            this->x37_upgrade = new_upgrade<A_166, A_175, x37>;
+            this->x38_upgrade = new_upgrade<A_166, A_175, t38_film>;
+            this->x39_upgrade = new_upgrade<A_166, A_175, t39_film_layer_list>;
             this->x3A_upgrade =
-                new_upgrade<A_166, A_174, t3A_film_layer_list_node>;
-            this->x3C_upgrade = new_upgrade<A_166, A_174, x3C>;
+                new_upgrade<A_166, A_175, t3A_film_layer_list_node>;
+            this->x3C_upgrade = new_upgrade<A_166, A_175, x3C>;
             break;
         case 0x00140400:
         case 0x00140500:
@@ -1165,109 +1165,152 @@ void File<version>::cache_upgrade_funcs() {
         case 0x00140502:
         case 0x00140600:
         case 0x00140700:
-            this->x01_upgrade = new_upgrade<A_172, A_174, x01>;
-            this->x03_upgrade = new_upgrade<A_172, A_174, x03>;
-            this->x04_upgrade = new_upgrade<A_172, A_174, x04>;
-            this->x05_upgrade = new_upgrade<A_172, A_174, x05>;
-            this->x06_upgrade = new_upgrade<A_172, A_174, x06>;
-            this->x07_upgrade = new_upgrade<A_172, A_174, x07>;
-            this->x08_upgrade = new_upgrade<A_172, A_174, x08>;
-            this->x09_upgrade = new_upgrade<A_172, A_174, x09>;
-            this->x0A_upgrade = new_upgrade<A_172, A_174, x0A>;
-            this->x0C_upgrade = new_upgrade<A_172, A_174, x0C>;
-            this->x0D_upgrade = new_upgrade<A_172, A_174, x0D>;
-            this->x0E_upgrade = new_upgrade<A_172, A_174, x0E>;
-            this->x10_upgrade = new_upgrade<A_172, A_174, x10>;
-            this->x14_upgrade = new_upgrade<A_172, A_174, x14>;
-            this->x15_upgrade = new_upgrade<A_172, A_174, x15>;
-            this->x16_upgrade = new_upgrade<A_172, A_174, x16>;
-            this->x17_upgrade = new_upgrade<A_172, A_174, x17>;
-            this->x1B_upgrade = new_upgrade<A_172, A_174, x1B>;
-            this->x1C_upgrade = new_upgrade<A_172, A_174, x1C>;
-            this->t13_upgrade = new_upgrade<A_172, A_174, t13>;
-            this->x1D_upgrade = new_upgrade<A_172, A_174, x1D>;
-            this->x1F_upgrade = new_upgrade<A_172, A_174, x1F>;
-            this->x23_upgrade = new_upgrade<A_172, A_174, x23>;
-            this->x24_upgrade = new_upgrade<A_172, A_174, x24>;
-            this->x26_upgrade = new_upgrade<A_172, A_174, x26>;
-            this->x28_upgrade = new_upgrade<A_172, A_174, x28>;
-            this->x2B_upgrade = new_upgrade<A_172, A_174, x2B>;
-            this->x2C_upgrade = new_upgrade<A_172, A_174, x2C>;
-            this->x2D_upgrade = new_upgrade<A_172, A_174, x2D>;
-            this->x2E_upgrade = new_upgrade<A_172, A_174, x2E>;
-            this->x30_upgrade = new_upgrade<A_172, A_174, x30>;
-            this->x31_upgrade = new_upgrade<A_172, A_174, x31>;
-            this->x32_upgrade = new_upgrade<A_172, A_174, x32>;
-            this->x33_upgrade = new_upgrade<A_172, A_174, x33>;
-            this->x34_upgrade = new_upgrade<A_172, A_174, x34>;
-            this->x37_upgrade = new_upgrade<A_172, A_174, x37>;
-            this->x38_upgrade = new_upgrade<A_172, A_174, t38_film>;
-            this->x39_upgrade = new_upgrade<A_172, A_174, t39_film_layer_list>;
+            this->x01_upgrade = new_upgrade<A_172, A_175, x01>;
+            this->x03_upgrade = new_upgrade<A_172, A_175, x03>;
+            this->x04_upgrade = new_upgrade<A_172, A_175, x04>;
+            this->x05_upgrade = new_upgrade<A_172, A_175, x05>;
+            this->x06_upgrade = new_upgrade<A_172, A_175, x06>;
+            this->x07_upgrade = new_upgrade<A_172, A_175, x07>;
+            this->x08_upgrade = new_upgrade<A_172, A_175, x08>;
+            this->x09_upgrade = new_upgrade<A_172, A_175, x09>;
+            this->x0A_upgrade = new_upgrade<A_172, A_175, x0A>;
+            this->x0C_upgrade = new_upgrade<A_172, A_175, x0C>;
+            this->x0D_upgrade = new_upgrade<A_172, A_175, x0D>;
+            this->x0E_upgrade = new_upgrade<A_172, A_175, x0E>;
+            this->x10_upgrade = new_upgrade<A_172, A_175, x10>;
+            this->x14_upgrade = new_upgrade<A_172, A_175, x14>;
+            this->x15_upgrade = new_upgrade<A_172, A_175, x15>;
+            this->x16_upgrade = new_upgrade<A_172, A_175, x16>;
+            this->x17_upgrade = new_upgrade<A_172, A_175, x17>;
+            this->x1B_upgrade = new_upgrade<A_172, A_175, x1B>;
+            this->x1C_upgrade = new_upgrade<A_172, A_175, x1C>;
+            this->t13_upgrade = new_upgrade<A_172, A_175, t13>;
+            this->x1D_upgrade = new_upgrade<A_172, A_175, x1D>;
+            this->x1F_upgrade = new_upgrade<A_172, A_175, x1F>;
+            this->x23_upgrade = new_upgrade<A_172, A_175, x23>;
+            this->x24_upgrade = new_upgrade<A_172, A_175, x24>;
+            this->x26_upgrade = new_upgrade<A_172, A_175, x26>;
+            this->x28_upgrade = new_upgrade<A_172, A_175, x28>;
+            this->x2B_upgrade = new_upgrade<A_172, A_175, x2B>;
+            this->x2C_upgrade = new_upgrade<A_172, A_175, x2C>;
+            this->x2D_upgrade = new_upgrade<A_172, A_175, x2D>;
+            this->x2E_upgrade = new_upgrade<A_172, A_175, x2E>;
+            this->x30_upgrade = new_upgrade<A_172, A_175, x30>;
+            this->x31_upgrade = new_upgrade<A_172, A_175, x31>;
+            this->x32_upgrade = new_upgrade<A_172, A_175, x32>;
+            this->x33_upgrade = new_upgrade<A_172, A_175, x33>;
+            this->x34_upgrade = new_upgrade<A_172, A_175, x34>;
+            this->x37_upgrade = new_upgrade<A_172, A_175, x37>;
+            this->x38_upgrade = new_upgrade<A_172, A_175, t38_film>;
+            this->x39_upgrade = new_upgrade<A_172, A_175, t39_film_layer_list>;
             this->x3A_upgrade =
-                new_upgrade<A_172, A_174, t3A_film_layer_list_node>;
-            this->x3C_upgrade = new_upgrade<A_172, A_174, x3C>;
+                new_upgrade<A_172, A_175, t3A_film_layer_list_node>;
+            this->x3C_upgrade = new_upgrade<A_172, A_175, x3C>;
             break;
         case 0x00140900:
         case 0x00140901:
         case 0x00140902:
         case 0x00140E00:
-            this->x01_upgrade = new_upgrade<A_174, A_174, x01>;
-            this->x03_upgrade = new_upgrade<A_174, A_174, x03>;
-            this->x04_upgrade = new_upgrade<A_174, A_174, x04>;
-            this->x05_upgrade = new_upgrade<A_174, A_174, x05>;
-            this->x06_upgrade = new_upgrade<A_174, A_174, x06>;
-            this->x07_upgrade = new_upgrade<A_174, A_174, x07>;
-            this->x08_upgrade = new_upgrade<A_174, A_174, x08>;
-            this->x09_upgrade = new_upgrade<A_174, A_174, x09>;
-            this->x0A_upgrade = new_upgrade<A_174, A_174, x0A>;
-            this->x0C_upgrade = new_upgrade<A_174, A_174, x0C>;
-            this->x0D_upgrade = new_upgrade<A_174, A_174, x0D>;
-            this->x0E_upgrade = new_upgrade<A_174, A_174, x0E>;
-            this->x10_upgrade = new_upgrade<A_174, A_174, x10>;
-            this->x14_upgrade = new_upgrade<A_174, A_174, x14>;
-            this->x15_upgrade = new_upgrade<A_174, A_174, x15>;
-            this->x16_upgrade = new_upgrade<A_174, A_174, x16>;
-            this->x17_upgrade = new_upgrade<A_174, A_174, x17>;
-            this->x1B_upgrade = new_upgrade<A_174, A_174, x1B>;
-            this->x1C_upgrade = new_upgrade<A_174, A_174, x1C>;
-            this->t13_upgrade = new_upgrade<A_174, A_174, t13>;
-            this->x1D_upgrade = new_upgrade<A_174, A_174, x1D>;
-            this->x1F_upgrade = new_upgrade<A_174, A_174, x1F>;
-            this->x23_upgrade = new_upgrade<A_174, A_174, x23>;
-            this->x24_upgrade = new_upgrade<A_174, A_174, x24>;
-            this->x26_upgrade = new_upgrade<A_174, A_174, x26>;
-            this->x28_upgrade = new_upgrade<A_174, A_174, x28>;
-            this->x2B_upgrade = new_upgrade<A_174, A_174, x2B>;
-            this->x2C_upgrade = new_upgrade<A_174, A_174, x2C>;
-            this->x2D_upgrade = new_upgrade<A_174, A_174, x2D>;
-            this->x2E_upgrade = new_upgrade<A_174, A_174, x2E>;
-            this->x30_upgrade = new_upgrade<A_174, A_174, x30>;
-            this->x31_upgrade = new_upgrade<A_174, A_174, x31>;
-            this->x32_upgrade = new_upgrade<A_174, A_174, x32>;
-            this->x33_upgrade = new_upgrade<A_174, A_174, x33>;
-            this->x34_upgrade = new_upgrade<A_174, A_174, x34>;
-            this->x37_upgrade = new_upgrade<A_174, A_174, x37>;
-            this->x38_upgrade = new_upgrade<A_174, A_174, t38_film>;
-            this->x39_upgrade = new_upgrade<A_174, A_174, t39_film_layer_list>;
+            this->x01_upgrade = new_upgrade<A_174, A_175, x01>;
+            this->x03_upgrade = new_upgrade<A_174, A_175, x03>;
+            this->x04_upgrade = new_upgrade<A_174, A_175, x04>;
+            this->x05_upgrade = new_upgrade<A_174, A_175, x05>;
+            this->x06_upgrade = new_upgrade<A_174, A_175, x06>;
+            this->x07_upgrade = new_upgrade<A_174, A_175, x07>;
+            this->x08_upgrade = new_upgrade<A_174, A_175, x08>;
+            this->x09_upgrade = new_upgrade<A_174, A_175, x09>;
+            this->x0A_upgrade = new_upgrade<A_174, A_175, x0A>;
+            this->x0C_upgrade = new_upgrade<A_174, A_175, x0C>;
+            this->x0D_upgrade = new_upgrade<A_174, A_175, x0D>;
+            this->x0E_upgrade = new_upgrade<A_174, A_175, x0E>;
+            this->x10_upgrade = new_upgrade<A_174, A_175, x10>;
+            this->x14_upgrade = new_upgrade<A_174, A_175, x14>;
+            this->x15_upgrade = new_upgrade<A_174, A_175, x15>;
+            this->x16_upgrade = new_upgrade<A_174, A_175, x16>;
+            this->x17_upgrade = new_upgrade<A_174, A_175, x17>;
+            this->x1B_upgrade = new_upgrade<A_174, A_175, x1B>;
+            this->x1C_upgrade = new_upgrade<A_174, A_175, x1C>;
+            this->t13_upgrade = new_upgrade<A_174, A_175, t13>;
+            this->x1D_upgrade = new_upgrade<A_174, A_175, x1D>;
+            this->x1F_upgrade = new_upgrade<A_174, A_175, x1F>;
+            this->x23_upgrade = new_upgrade<A_174, A_175, x23>;
+            this->x24_upgrade = new_upgrade<A_174, A_175, x24>;
+            this->x26_upgrade = new_upgrade<A_174, A_175, x26>;
+            this->x28_upgrade = new_upgrade<A_174, A_175, x28>;
+            this->x2B_upgrade = new_upgrade<A_174, A_175, x2B>;
+            this->x2C_upgrade = new_upgrade<A_174, A_175, x2C>;
+            this->x2D_upgrade = new_upgrade<A_174, A_175, x2D>;
+            this->x2E_upgrade = new_upgrade<A_174, A_175, x2E>;
+            this->x30_upgrade = new_upgrade<A_174, A_175, x30>;
+            this->x31_upgrade = new_upgrade<A_174, A_175, x31>;
+            this->x32_upgrade = new_upgrade<A_174, A_175, x32>;
+            this->x33_upgrade = new_upgrade<A_174, A_175, x33>;
+            this->x34_upgrade = new_upgrade<A_174, A_175, x34>;
+            this->x37_upgrade = new_upgrade<A_174, A_175, x37>;
+            this->x38_upgrade = new_upgrade<A_174, A_175, t38_film>;
+            this->x39_upgrade = new_upgrade<A_174, A_175, t39_film_layer_list>;
             this->x3A_upgrade =
-                new_upgrade<A_174, A_174, t3A_film_layer_list_node>;
-            this->x3C_upgrade = new_upgrade<A_174, A_174, x3C>;
+                new_upgrade<A_174, A_175, t3A_film_layer_list_node>;
+            this->x3C_upgrade = new_upgrade<A_174, A_175, x3C>;
+            break;
+        case 0x00141502:
+            this->x01_upgrade = new_upgrade<A_175, A_175, x01>;
+            this->x03_upgrade = new_upgrade<A_175, A_175, x03>;
+            this->x04_upgrade = new_upgrade<A_175, A_175, x04>;
+            this->x05_upgrade = new_upgrade<A_175, A_175, x05>;
+            this->x06_upgrade = new_upgrade<A_175, A_175, x06>;
+            this->x07_upgrade = new_upgrade<A_175, A_175, x07>;
+            this->x08_upgrade = new_upgrade<A_175, A_175, x08>;
+            this->x09_upgrade = new_upgrade<A_175, A_175, x09>;
+            this->x0A_upgrade = new_upgrade<A_175, A_175, x0A>;
+            this->x0C_upgrade = new_upgrade<A_175, A_175, x0C>;
+            this->x0D_upgrade = new_upgrade<A_175, A_175, x0D>;
+            this->x0E_upgrade = new_upgrade<A_175, A_175, x0E>;
+            this->x10_upgrade = new_upgrade<A_175, A_175, x10>;
+            this->x14_upgrade = new_upgrade<A_175, A_175, x14>;
+            this->x15_upgrade = new_upgrade<A_175, A_175, x15>;
+            this->x16_upgrade = new_upgrade<A_175, A_175, x16>;
+            this->x17_upgrade = new_upgrade<A_175, A_175, x17>;
+            this->x1B_upgrade = new_upgrade<A_175, A_175, x1B>;
+            this->x1C_upgrade = new_upgrade<A_175, A_175, x1C>;
+            this->t13_upgrade = new_upgrade<A_175, A_175, t13>;
+            this->x1D_upgrade = new_upgrade<A_175, A_175, x1D>;
+            this->x1F_upgrade = new_upgrade<A_175, A_175, x1F>;
+            this->x23_upgrade = new_upgrade<A_175, A_175, x23>;
+            this->x24_upgrade = new_upgrade<A_175, A_175, x24>;
+            this->x26_upgrade = new_upgrade<A_175, A_175, x26>;
+            this->x28_upgrade = new_upgrade<A_175, A_175, x28>;
+            this->x2B_upgrade = new_upgrade<A_175, A_175, x2B>;
+            this->x2C_upgrade = new_upgrade<A_175, A_175, x2C>;
+            this->x2D_upgrade = new_upgrade<A_175, A_175, x2D>;
+            this->x2E_upgrade = new_upgrade<A_175, A_175, x2E>;
+            this->x30_upgrade = new_upgrade<A_175, A_175, x30>;
+            this->x31_upgrade = new_upgrade<A_175, A_175, x31>;
+            this->x32_upgrade = new_upgrade<A_175, A_175, x32>;
+            this->x33_upgrade = new_upgrade<A_175, A_175, x33>;
+            this->x34_upgrade = new_upgrade<A_175, A_175, x34>;
+            this->x37_upgrade = new_upgrade<A_175, A_175, x37>;
+            this->x38_upgrade = new_upgrade<A_175, A_175, t38_film>;
+            this->x39_upgrade = new_upgrade<A_175, A_175, t39_film_layer_list>;
+            this->x3A_upgrade =
+                new_upgrade<A_175, A_175, t3A_film_layer_list_node>;
+            this->x3C_upgrade = new_upgrade<A_175, A_175, x3C>;
             break;
     }
 }
 
 template <>
-std::ptrdiff_t File<A_174>::offset(void *p) {
+std::ptrdiff_t File<A_175>::offset(void *p) {
     return (char *)p - (char *)region.get_address();
 }
 
 template <>
-x01<A_174> File<A_174>::get_x01(uint32_t k) {
+x01<A_175> File<A_175>::get_x01(uint32_t k) {
     return this->x01_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x03<A_174> File<A_174>::get_x03(uint32_t k) {
+const x03<A_175> File<A_175>::get_x03(uint32_t k) {
     size_t size;
     switch (this->hdr->magic) {
         case 0x00130000:
@@ -1297,14 +1340,14 @@ const x03<A_174> File<A_174>::get_x03(uint32_t k) {
         case 0x00140901:
         case 0x00140902:
         case 0x00140E00:
-            size = sizeof_until_tail<x03<A_174>>();
+            size = sizeof_until_tail<x03<A_175>>();
             break;
         default:
             size = 0;
     }
 
     void *p = this->ptrs[k];
-    x03<A_174> i = this->x03_upgrade(p);
+    x03<A_175> i = this->x03_upgrade(p);
     void *next_ptr = ((char *)p) + size;
     switch (i.subtype.t & 0xFF) {
         case 0x64:
@@ -1326,89 +1369,89 @@ const x03<A_174> File<A_174>::get_x03(uint32_t k) {
 }
 
 template <>
-const x04<A_174> File<A_174>::get_x04(uint32_t k) {
+const x04<A_175> File<A_175>::get_x04(uint32_t k) {
     return this->x04_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x05<A_174> File<A_174>::get_x05(uint32_t k) {
+const x05<A_175> File<A_175>::get_x05(uint32_t k) {
     return this->x05_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x06<A_174> File<A_174>::get_x06(uint32_t k) {
+const x06<A_175> File<A_175>::get_x06(uint32_t k) {
     return this->x06_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x07<A_174> File<A_174>::get_x07(uint32_t k) {
+const x07<A_175> File<A_175>::get_x07(uint32_t k) {
     return this->x07_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x08<A_174> File<A_174>::get_x08(uint32_t k) {
+const x08<A_175> File<A_175>::get_x08(uint32_t k) {
     return this->x08_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x09<A_174> File<A_174>::get_x09(uint32_t k) {
+const x09<A_175> File<A_175>::get_x09(uint32_t k) {
     return this->x09_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x0A<A_174> File<A_174>::get_x0A(uint32_t k) {
+const x0A<A_175> File<A_175>::get_x0A(uint32_t k) {
     return this->x0A_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x0C<A_174> File<A_174>::get_x0C(uint32_t k) {
+const x0C<A_175> File<A_175>::get_x0C(uint32_t k) {
     return this->x0C_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x0D<A_174> File<A_174>::get_x0D(uint32_t k) {
+const x0D<A_175> File<A_175>::get_x0D(uint32_t k) {
     return this->x0D_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x0E<A_174> File<A_174>::get_x0E(uint32_t k) {
+const x0E<A_175> File<A_175>::get_x0E(uint32_t k) {
     return this->x0E_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x10<A_174> File<A_174>::get_x10(uint32_t k) {
+const x10<A_175> File<A_175>::get_x10(uint32_t k) {
     return this->x10_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x14<A_174> File<A_174>::get_x14(uint32_t k) {
+const x14<A_175> File<A_175>::get_x14(uint32_t k) {
     return this->x14_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x15<A_174> File<A_174>::get_x15(uint32_t k) {
+const x15<A_175> File<A_175>::get_x15(uint32_t k) {
     return this->x15_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x16<A_174> File<A_174>::get_x16(uint32_t k) {
+const x16<A_175> File<A_175>::get_x16(uint32_t k) {
     return this->x16_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x17<A_174> File<A_174>::get_x17(uint32_t k) {
+const x17<A_175> File<A_175>::get_x17(uint32_t k) {
     return this->x17_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x1B<A_174> File<A_174>::get_x1B(uint32_t k) {
+const x1B<A_175> File<A_175>::get_x1B(uint32_t k) {
     return this->x1B_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x1C<A_174> File<A_174>::get_x1C(uint32_t k) {
+const x1C<A_175> File<A_175>::get_x1C(uint32_t k) {
     void *p = this->ptrs[k];
-    x1C<A_174> i = this->x1C_upgrade(this->ptrs[k]);
+    x1C<A_175> i = this->x1C_upgrade(this->ptrs[k]);
 
     uint32_t obj_size, t13_size;
     if (this->hdr->magic < A_165) {
@@ -1431,7 +1474,7 @@ const x1C<A_174> File<A_174>::get_x1C(uint32_t k) {
 
     void *next_ptr = ((char *)p) + obj_size;
     for (int j = 0; j < count; j++) {
-        t13<A_174> t13_inst = this->t13_upgrade(next_ptr);
+        t13<A_175> t13_inst = this->t13_upgrade(next_ptr);
         i.parts.push_back(t13_inst);
         next_ptr = ((char *)next_ptr) + t13_size;
     }
@@ -1440,64 +1483,64 @@ const x1C<A_174> File<A_174>::get_x1C(uint32_t k) {
 }
 
 template <>
-const x1D<A_174> File<A_174>::get_x1D(uint32_t k) {
+const x1D<A_175> File<A_175>::get_x1D(uint32_t k) {
     return this->x1D_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x1F<A_174> File<A_174>::get_x1F(uint32_t k) {
+const x1F<A_175> File<A_175>::get_x1F(uint32_t k) {
     return this->x1F_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x23<A_174> File<A_174>::get_x23(uint32_t k) {
+const x23<A_175> File<A_175>::get_x23(uint32_t k) {
     return this->x23_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x24<A_174> File<A_174>::get_x24(uint32_t k) {
+const x24<A_175> File<A_175>::get_x24(uint32_t k) {
     return this->x24_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x26<A_174> File<A_174>::get_x26(uint32_t k) {
+const x26<A_175> File<A_175>::get_x26(uint32_t k) {
     return this->x26_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x28<A_174> File<A_174>::get_x28(uint32_t k) {
+const x28<A_175> File<A_175>::get_x28(uint32_t k) {
     return this->x28_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x2B<A_174> File<A_174>::get_x2B(uint32_t k) {
+const x2B<A_175> File<A_175>::get_x2B(uint32_t k) {
     return this->x2B_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x2C<A_174> File<A_174>::get_x2C(uint32_t k) {
+const x2C<A_175> File<A_175>::get_x2C(uint32_t k) {
     return this->x2C_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x2D<A_174> File<A_174>::get_x2D(uint32_t k) {
+const x2D<A_175> File<A_175>::get_x2D(uint32_t k) {
     return this->x2D_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x2E<A_174> File<A_174>::get_x2E(uint32_t k) {
+const x2E<A_175> File<A_175>::get_x2E(uint32_t k) {
     return this->x2E_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x30<A_174> File<A_174>::get_x30(uint32_t k) {
+const x30<A_175> File<A_175>::get_x30(uint32_t k) {
     return this->x30_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x31<A_174> File<A_174>::get_x31(uint32_t k) {
+const x31<A_175> File<A_175>::get_x31(uint32_t k) {
     void *p = this->ptrs[k];
-    x31<A_174> i = this->x31_upgrade(p);
+    x31<A_175> i = this->x31_upgrade(p);
     uint32_t size;
     if (this->hdr->magic < A_174) {
         size = sizeof_until_tail<x31<A_160>>();
@@ -1510,44 +1553,44 @@ const x31<A_174> File<A_174>::get_x31(uint32_t k) {
 }
 
 template <>
-const x32<A_174> File<A_174>::get_x32(uint32_t k) {
+const x32<A_175> File<A_175>::get_x32(uint32_t k) {
     return this->x32_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x33<A_174> File<A_174>::get_x33(uint32_t k) {
+const x33<A_175> File<A_175>::get_x33(uint32_t k) {
     return this->x33_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x34<A_174> File<A_174>::get_x34(uint32_t k) {
+const x34<A_175> File<A_175>::get_x34(uint32_t k) {
     return this->x34_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x37<A_174> File<A_174>::get_x37(uint32_t k) {
+const x37<A_175> File<A_175>::get_x37(uint32_t k) {
     return this->x37_upgrade(this->ptrs[k]);
 }
 
 template <>
-const t38_film<A_174> File<A_174>::get_x38(uint32_t k) {
+const t38_film<A_175> File<A_175>::get_x38(uint32_t k) {
     return this->x38_upgrade(this->ptrs[k]);
 }
 
 template <>
-const t39_film_layer_list<A_174> File<A_174>::get_x39(uint32_t k) {
+const t39_film_layer_list<A_175> File<A_175>::get_x39(uint32_t k) {
     return this->x39_upgrade(this->ptrs[k]);
 }
 
 template <>
-const t3A_film_layer_list_node<A_174> File<A_174>::get_x3A(uint32_t k) {
+const t3A_film_layer_list_node<A_175> File<A_175>::get_x3A(uint32_t k) {
     return this->x3A_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x3C<A_174> File<A_174>::get_x3C(uint32_t k) {
+const x3C<A_175> File<A_175>::get_x3C(uint32_t k) {
     void *p = this->ptrs[k];
-    x3C<A_174> inst = this->x3C_upgrade(p);
+    x3C<A_175> inst = this->x3C_upgrade(p);
     uint32_t size;
     if (this->hdr->magic < A_174) {
         size = sizeof_until_tail<x3C<A_160>>();
@@ -1563,108 +1606,108 @@ const x3C<A_174> File<A_174>::get_x3C(uint32_t k) {
 }
 
 template <>
-bool File<A_174>::is_type(uint32_t k, uint8_t t) {
+bool File<A_175>::is_type(uint32_t k, uint8_t t) {
     return (this->ptrs.count(k) > 0) && (*(uint8_t *)this->ptrs[k] == t);
 }
 
 /*
 template <AllegroVersion version>
-File<version>::operator File<A_174>() const {
-    File<A_174> new_file;
+File<version>::operator File<A_175>() const {
+    File<A_175> new_file;
 
     new_file.hdr = this->hdr;
     new_file.layers = this->layers;
     new_file.strings = this->strings;
     for (const auto& [k, v] : this->x01_map)
-        new_file.x01_map[k] = upgrade<version, A_174>(v);
+        new_file.x01_map[k] = upgrade<version, A_175>(v);
     new_file.x03_map = this->x03_map;
     for (const auto& [k, v] : this->x04_map)
-        new_file.x04_map[k] = upgrade<version, A_174>(v);
+        new_file.x04_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x05_map)
-        new_file.x05_map[k] = upgrade<version, A_174>(v);
+        new_file.x05_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x06_map)
-        new_file.x06_map[k] = upgrade<version, A_174>(v);
+        new_file.x06_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x07_map)
-        new_file.x07_map[k] = upgrade<version, A_174>(v);
+        new_file.x07_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x08_map)
-        new_file.x08_map[k] = upgrade<version, A_174>(v);
+        new_file.x08_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x09_map)
-        new_file.x09_map[k] = upgrade<version, A_174>(v);
+        new_file.x09_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x0A_map)
-        new_file.x0A_map[k] = upgrade<version, A_174>(v);
+        new_file.x0A_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x0C_map)
-        new_file.x0C_map[k] = upgrade<version, A_174>(v);
+        new_file.x0C_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x0D_map)
-        new_file.x0D_map[k] = upgrade<version, A_174>(v);
+        new_file.x0D_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x0E_map)
-        new_file.x0E_map[k] = upgrade<version, A_174>(v);
+        new_file.x0E_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x0F_map)
-        new_file.x0F_map[k] = upgrade<version, A_174>(v);
+        new_file.x0F_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x10_map)
-        new_file.x10_map[k] = upgrade<version, A_174>(v);
+        new_file.x10_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x11_map)
-        new_file.x11_map[k] = upgrade<version, A_174>(v);
+        new_file.x11_map[k] = upgrade<version, A_175>(v);
     new_file.x12_map = this->x12_map;
     for (const auto& [k, v] : this->x14_map)
-        new_file.x14_map[k] = upgrade<version, A_174>(v);
+        new_file.x14_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x15_map)
-        new_file.x15_map[k] = upgrade<version, A_174>(v);
+        new_file.x15_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x16_map)
-        new_file.x16_map[k] = upgrade<version, A_174>(v);
+        new_file.x16_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x17_map)
-        new_file.x17_map[k] = upgrade<version, A_174>(v);
+        new_file.x17_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x1B_map)
-        new_file.x1B_map[k] = upgrade<version, A_174>(v);
+        new_file.x1B_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x1C_map)
-        new_file.x1C_map[k] = upgrade<version, A_174>(v);
+        new_file.x1C_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x1D_map)
-        new_file.x1D_map[k] = upgrade<version, A_174>(v);
+        new_file.x1D_map[k] = upgrade<version, A_175>(v);
     new_file.x1E_map = this->x1E_map;
     for (const auto& [k, v] : this->x1F_map)
-        new_file.x1F_map[k] = upgrade<version, A_174>(v);
+        new_file.x1F_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x22_map)
-        new_file.x22_map[k] = upgrade<version, A_174>(v);
+        new_file.x22_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x23_map)
-        new_file.x23_map[k] = upgrade<version, A_174>(v);
+        new_file.x23_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x24_map)
-        new_file.x24_map[k] = upgrade<version, A_174>(v);
+        new_file.x24_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x26_map)
-        new_file.x26_map[k] = upgrade<version, A_174>(v);
+        new_file.x26_map[k] = upgrade<version, A_175>(v);
     new_file.x27_db = this->x27_db;
     for (const auto& [k, v] : this->x28_map)
-        new_file.x28_map[k] = upgrade<version, A_174>(v);
+        new_file.x28_map[k] = upgrade<version, A_175>(v);
     new_file.x2A_map = this->x2A_map;
     for (const auto& [k, v] : this->x2B_map)
-        new_file.x2B_map[k] = upgrade<version, A_174>(v);
+        new_file.x2B_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x2C_map)
-        new_file.x2C_map[k] = upgrade<version, A_174>(v);
+        new_file.x2C_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x2D_map)
-        new_file.x2D_map[k] = upgrade<version, A_174>(v);
+        new_file.x2D_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x2E_map)
-        new_file.x2E_map[k] = upgrade<version, A_174>(v);
+        new_file.x2E_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x30_map)
-        new_file.x30_map[k] = upgrade<version, A_174>(v);
+        new_file.x30_map[k] = upgrade<version, A_175>(v);
     new_file.x31_map = this->x31_map;
     for (const auto& [k, v] : this->x32_map)
-        new_file.x32_map[k] = upgrade<version, A_174>(v);
+        new_file.x32_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x33_map)
-        new_file.x33_map[k] = upgrade<version, A_174>(v);
+        new_file.x33_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x34_map)
-        new_file.x34_map[k] = upgrade<version, A_174>(v);
+        new_file.x34_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x36_map)
-        new_file.x36_map[k] = upgrade<version, A_174>(v);
+        new_file.x36_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x37_map)
-        new_file.x37_map[k] = upgrade<version, A_174>(v);
+        new_file.x37_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x38_map)
-        new_file.x38_map[k] = upgrade<version, A_174>(v);
+        new_file.x38_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x39_map)
-        new_file.x39_map[k] = upgrade<version, A_174>(v);
+        new_file.x39_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x3A_map)
-        new_file.x3A_map[k] = upgrade<version, A_174>(v);
+        new_file.x3A_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x3B_map)
-        new_file.x3B_map[k] = upgrade<version, A_174>(v);
+        new_file.x3B_map[k] = upgrade<version, A_175>(v);
     for (const auto& [k, v] : this->x3C_map)
-        new_file.x3C_map[k] = upgrade<version, A_174>(v);
+        new_file.x3C_map[k] = upgrade<version, A_175>(v);
     new_file.layer_count = this->layer_count;
     new_file.x27_end_pos = this->x27_end_pos;
 
@@ -1676,10 +1719,10 @@ File<version>::operator File<A_174>() const {
 
 // Explicit instantiations required, because there is nothing to otherwise
 // create them within the library code.
-template File<A_160>::operator File<A_174>() const;
-template File<A_162>::operator File<A_174>() const;
-template File<A_164>::operator File<A_174>() const;
-template File<A_165>::operator File<A_174>() const;
-template File<A_166>::operator File<A_174>() const;
-template File<A_172>::operator File<A_174>() const;
+template File<A_160>::operator File<A_175>() const;
+template File<A_162>::operator File<A_175>() const;
+template File<A_164>::operator File<A_175>() const;
+template File<A_165>::operator File<A_175>() const;
+template File<A_166>::operator File<A_175>() const;
+template File<A_172>::operator File<A_175>() const;
 */

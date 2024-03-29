@@ -17,7 +17,7 @@ TEST(ParseFile, MissingFile) {
 // Magic is 0x00130200
 // Allegro 16.0 P006
 TEST(ParseFile, Slugs) {
-    File<A_174> fs = *parse_file("../../test/data/slugs/slugs_v2_1.brd");
+    File<A_175> fs = *parse_file("../../test/data/slugs/slugs_v2_1.brd");
 
     EXPECT_EQ(fs.layer_count, 4);
     // EXPECT_EQ(fs.x17_map.size(), 2859);
@@ -36,7 +36,7 @@ TEST(ParseFile, Slugs) {
 // Magic is 0x00130C03
 // Allegro 16.3 S021
 TEST(ParseFile, Parallella) {
-    File<A_174> fs =
+    File<A_175> fs =
         *parse_file("../../test/data/parallella/parallella_layout.brd");
 
     EXPECT_EQ(fs.layer_count, 12);
@@ -45,11 +45,11 @@ TEST(ParseFile, Parallella) {
 
     check_header_values(fs);
 
-    const x1C<A_174>& x1C_inst = fs.get_x1C(0x0ACD3EE0);
+    const x1C<A_175>& x1C_inst = fs.get_x1C(0x0ACD3EE0);
     EXPECT_EQ(x1C_inst.parts[0].w, 2600);
     EXPECT_EQ(x1C_inst.parts[0].h, 2600);
 
-    const x3C<A_174>& x3C_inst = fs.get_x3C(0x0ACF9230);
+    const x3C<A_175>& x3C_inst = fs.get_x3C(0x0ACF9230);
     EXPECT_EQ(x3C_inst.ptrs.size(), 2);
     EXPECT_EQ(x3C_inst.ptrs.at(0), 0x0ACCDAC8);
 
@@ -67,7 +67,7 @@ TEST(ParseFile, Parallella) {
 // Magic is 0x00131003
 // Allegro 16.5-P002
 TEST(ParseFile, SmartPlug) {
-    File<A_174> fs =
+    File<A_175> fs =
         *parse_file("../../test/data/smart_plug/wireless_plugmeter_v2_0.brd");
 
     EXPECT_EQ(fs.layer_count, 2);
@@ -86,7 +86,7 @@ TEST(ParseFile, SmartPlug) {
 // Magic is 0x00131503
 // Allegro 16.6 P004
 TEST(ParseFile, AvalonParsed) {
-    File<A_174> fs = *parse_file("../../test/data/avalon/AVALON.brd");
+    File<A_175> fs = *parse_file("../../test/data/avalon/AVALON.brd");
 
     EXPECT_EQ(fs.layer_count, 4);
     // EXPECT_EQ(fs.x17_map.size(), 4079);
@@ -103,7 +103,7 @@ TEST(ParseFile, AvalonParsed) {
 
 // Magic is 0x00131503
 TEST(ParseFile, OpenCellularRf) {
-    File<A_174> fs =
+    File<A_175> fs =
         *parse_file("../../test/data/opencellular_rf/FEMA_RF_Board.brd");
 
     EXPECT_EQ(fs.layer_count, 6);
@@ -116,7 +116,7 @@ TEST(ParseFile, OpenCellularRf) {
 // Magic is 0x00131504
 // Allegro 17.2 S060 (?)
 TEST(ParseFile, EdaV3) {
-    File<A_174> fs = *parse_file("../../test/data/eda_v3/EDA-02319-V3-3.brd");
+    File<A_175> fs = *parse_file("../../test/data/eda_v3/EDA-02319-V3-3.brd");
 
     EXPECT_EQ(fs.layer_count, 4);
     // EXPECT_EQ(fs.x17_map.size(), 3106);
@@ -128,7 +128,7 @@ TEST(ParseFile, EdaV3) {
 // Magic is 0x00131504
 // Allegro 17.2 S015 (?)
 TEST(ParseFile, OpenCellularGbc) {
-    File<A_174> fs = *parse_file(
+    File<A_175> fs = *parse_file(
         "../../test/data/opencellular_gbc/"
         "OpenCellular_Connect-1_GBC_Life-3_Board_v1.1.brd");
 
@@ -152,7 +152,7 @@ TEST(ParseFile, OpenCellularGbc) {
 // Magic is 0x00131504
 // Allegro 17.2 S015 (?)
 TEST(ParseFile, OpenCellularSdr) {
-    File<A_174> fs = *parse_file(
+    File<A_175> fs = *parse_file(
         "../../test/data/opencellular_sdr/"
         "OC_CONNECT_1_SDR_LIFE-3.brd");
 
@@ -165,7 +165,7 @@ TEST(ParseFile, OpenCellularSdr) {
 
 // Magic is 0x00131504
 TEST(ParseFile, EuroAdc) {
-    File<A_174> fs = *parse_file(
+    File<A_175> fs = *parse_file(
         "../../test/data/euro_adc/"
         "pc051c_toplevel_209.brd");
 
@@ -179,7 +179,7 @@ TEST(ParseFile, EuroAdc) {
 // Magic is 0x00140400
 // Allegro 17.2 S049
 TEST(ParseFile, BeagleBoneAIParsed) {
-    File<A_174> fs =
+    File<A_175> fs =
         *parse_file("../../test/data/beaglebone_ai/BeagleBone-AI.brd");
 
     EXPECT_EQ(fs.layer_count, 12);
@@ -188,19 +188,31 @@ TEST(ParseFile, BeagleBoneAIParsed) {
 
     check_header_values(fs);
 
-    const x1C<A_174>& x1C_inst = fs.get_x1C(0x00002010);
+    const x1C<A_175>& x1C_inst = fs.get_x1C(0x00002010);
     EXPECT_EQ(x1C_inst.parts[0].w, 23000);
     EXPECT_EQ(x1C_inst.parts[0].h, 43000);
 
-    const x01<A_174> x01_inst = fs.get_x01(0x000278DE);
+    const x01<A_175> x01_inst = fs.get_x01(0x000278DE);
     EXPECT_EQ(x01_inst.coords[0], -575000);
     EXPECT_EQ(x01_inst.coords[1], 125000);
+}
+
+// Magic is 0x00141502
+// Allegro 17.4 S032
+TEST(ParseFile, BeagleYParsed) {
+    File<A_175> fs =
+        *parse_file("../../test/data/beagle_y/BeagleY-AI_PCB_V1.0_240105.brd");
+
+    EXPECT_EQ(fs.layer_count, 14);
+    EXPECT_TRUE(fs.is_type(0x0006F98F, 0x16));
+
+    check_header_values(fs);
 }
 
 // Magic is 0x00140400
 // Allegro 17.2 S028
 TEST(ParseFile, RFPowerDivider) {
-    File<A_174> fs =
+    File<A_175> fs =
         *parse_file("../../test/data/rf_pwr_div/1-16_Power_Splitter.brd");
 
     EXPECT_EQ(fs.layer_count, 2);
@@ -212,7 +224,7 @@ TEST(ParseFile, RFPowerDivider) {
 
 // Magic is 0x00140400
 TEST(ParseFile, OpenRex) {
-    File<A_174> fs =
+    File<A_175> fs =
         *parse_file("../../test/data/openrex/OpenRex_V1I1_PCB_V172.brd");
 
     EXPECT_EQ(fs.layer_count, 10);
@@ -224,7 +236,7 @@ TEST(ParseFile, OpenRex) {
 
 // Magic is 0x00140400
 TEST(ParseFile, M1K) {
-    File<A_174> fs = *parse_file("../../test/data/m1k/08_037760f.brd");
+    File<A_175> fs = *parse_file("../../test/data/m1k/08_037760f.brd");
 
     EXPECT_EQ(fs.layer_count, 4);
     // EXPECT_EQ(fs.x17_map.size(), 5607);
@@ -235,7 +247,7 @@ TEST(ParseFile, M1K) {
 
 // Magic is 0x00140400
 TEST(ParseFile, CreatableMain) {
-    File<A_174> fs =
+    File<A_175> fs =
         *parse_file("../../test/data/creatable_main/MAINBOARD_02_20181023.brd");
 
     EXPECT_EQ(fs.layer_count, 2);
@@ -248,7 +260,7 @@ TEST(ParseFile, CreatableMain) {
 // Magic is 0x00140400
 // Allegro 17.2 S071
 TEST(ParseFile, JtagToDc3) {
-    File<A_174> fs = *parse_file(
+    File<A_175> fs = *parse_file(
         "../../test/data/jtag_to_dc3/JTAG_TO_DC3-10P_V10_220511.brd");
 
     EXPECT_EQ(fs.layer_count, 2);
@@ -260,7 +272,7 @@ TEST(ParseFile, JtagToDc3) {
 
 // Magic is 0x00140400
 TEST(ParseFile, FmcTlu) {
-    File<A_174> fs = *parse_file("../../test/data/fmc_tlu/fmc_tlu_v1f_38.brd");
+    File<A_175> fs = *parse_file("../../test/data/fmc_tlu/fmc_tlu_v1f_38.brd");
 
     EXPECT_EQ(fs.layer_count, 6);
     // EXPECT_EQ(fs.x17_map.size(), 11249);
@@ -272,7 +284,7 @@ TEST(ParseFile, FmcTlu) {
 // Magic is 0x00140900
 // Allegro -unreleased* -- per the Gerbers...? 17.4 format?
 TEST(ParseFile, MotorEncoderParsed) {
-    File<A_174> fs =
+    File<A_175> fs =
         *parse_file("../../test/data/motor_encoder/motor_encoder_brd.brd");
 
     EXPECT_EQ(fs.layer_count, 2);
@@ -285,7 +297,7 @@ TEST(ParseFile, MotorEncoderParsed) {
 // Magic is 0x00140902
 // Allegro 17.4 S026
 TEST(ParseFile, Pc069A) {
-    File<A_174> fs = *parse_file(
+    File<A_175> fs = *parse_file(
         "../../test/data/pc069a_toplevel/pc069a_toplevel_13_glossed.brd");
 
     EXPECT_EQ(fs.layer_count, 6);
@@ -298,7 +310,7 @@ TEST(ParseFile, Pc069A) {
 // Magic is 0x00140902
 // Allegro 17.4 S033
 TEST(ParseFile, MtcaInterfaceBoard) {
-    File<A_174> fs =
+    File<A_175> fs =
         *parse_file("../../test/data/mtca_interface_board/mib_rev2_v206.brd");
 
     EXPECT_EQ(fs.layer_count, 10);
@@ -315,7 +327,7 @@ TEST(ParseFile, MtcaInterfaceBoard) {
 // Magic is 0x00140E00
 // Allegro 17.4 S017
 TEST(ParseFile, PllFmHw) {
-    File<A_174> fs = *parse_file("../../test/data/pll_fm_hw/FMDEMOD-Long.brd");
+    File<A_175> fs = *parse_file("../../test/data/pll_fm_hw/FMDEMOD-Long.brd");
 
     EXPECT_EQ(fs.layer_count, 10);
     // EXPECT_EQ(fs.x17_map.size(), 20619);

@@ -26,7 +26,7 @@ BrdView::BrdView(MainWindow *parent)
     ((MainWindow *)parent)->updatePosition(QPointF(0, 0));
 };
 
-void BrdView::loadFile(File<A_174> *fs) {
+void BrdView::loadFile(File<A_175> *fs) {
     qDebug() << "BrdView::loadFile";
     this->fs = fs;
     drawFile();
@@ -66,7 +66,7 @@ void BrdView::mouseReleaseEvent(QMouseEvent *event) {
     for (auto &item : clickedItems) {
         const int ptr = item->data(0).toInt();
         if (fs->is_type(ptr, 0x32)) {
-            // const x32<A_174> &inst = fs->get_x32(ptr);
+            // const x32<A_175> &inst = fs->get_x32(ptr);
             print_struct((const uint32_t)ptr, *fs, 0);
             // qDebug("Printing x32->ptr5");
             // print_struct((const uint32_t)inst->ptr5, fs, 0);
@@ -77,7 +77,7 @@ void BrdView::mouseReleaseEvent(QMouseEvent *event) {
     }
 };
 
-void BrdView::drawX01(const x01<A_174> *inst, QPainterPath *path) {
+void BrdView::drawX01(const x01<A_175> *inst, QPainterPath *path) {
     std::pair<int32_t, int32_t> center = x01_center(inst);
     double r = cfp_to_double(inst->r);
 
@@ -127,7 +127,7 @@ void BrdView::updatePathWidth(QPainterPath *path, QPen **pen, QPen *base_pen,
     }
 }
 
-void BrdView::drawX05(const x05<A_174> *inst, QPen *pen_) {
+void BrdView::drawX05(const x05<A_175> *inst, QPen *pen_) {
     if (!onSelectedLayer(inst->subtype, inst->layer)) {
         return;
     }
@@ -141,22 +141,22 @@ void BrdView::drawX05(const x05<A_174> *inst, QPen *pen_) {
 
     while (isLineSegment(k)) {
         if (fs->is_type(k, 0x01)) {
-            const x01<A_174> segment_inst = fs->get_x01(k);
+            const x01<A_175> segment_inst = fs->get_x01(k);
             updatePathWidth(&path, &pen, pen_, &prev_width, segment_inst.width);
             drawX01(&segment_inst, &path);
             k = segment_inst.next;
         } else if (fs->is_type(k, 0x15)) {
-            const x15<A_174> segment_inst = fs->get_x15(k);
+            const x15<A_175> segment_inst = fs->get_x15(k);
             updatePathWidth(&path, &pen, pen_, &prev_width, segment_inst.width);
             drawX15(&segment_inst, &path);
             k = segment_inst.next;
         } else if (fs->is_type(k, 0x16)) {
-            const x16<A_174> segment_inst = fs->get_x16(k);
+            const x16<A_175> segment_inst = fs->get_x16(k);
             updatePathWidth(&path, &pen, pen_, &prev_width, segment_inst.width);
             drawX16(&segment_inst, &path);
             k = segment_inst.next;
         } else if (fs->is_type(k, 0x17)) {
-            const x17<A_174> segment_inst = fs->get_x17(k);
+            const x17<A_175> segment_inst = fs->get_x17(k);
             updatePathWidth(&path, &pen, pen_, &prev_width, segment_inst.width);
             drawX17(&segment_inst, &path);
             k = segment_inst.next;
@@ -169,7 +169,7 @@ void BrdView::drawX05(const x05<A_174> *inst, QPen *pen_) {
     item->setData(0, inst->k);
 }
 
-void BrdView::drawX14(const x14<A_174> *inst, QPen *pen_) {
+void BrdView::drawX14(const x14<A_175> *inst, QPen *pen_) {
     if (!onSelectedLayer(inst->subtype, inst->layer) ||
         fs->is_type(inst->ptr1, 0x2B)) {
         return;
@@ -184,22 +184,22 @@ void BrdView::drawX14(const x14<A_174> *inst, QPen *pen_) {
 
     while (isLineSegment(k)) {
         if (fs->is_type(k, 0x01)) {
-            const x01<A_174> segment_inst = fs->get_x01(k);
+            const x01<A_175> segment_inst = fs->get_x01(k);
             updatePathWidth(&path, &pen, pen_, &prev_width, segment_inst.width);
             drawX01(&segment_inst, &path);
             k = segment_inst.next;
         } else if (fs->is_type(k, 0x15)) {
-            const x15<A_174> segment_inst = fs->get_x15(k);
+            const x15<A_175> segment_inst = fs->get_x15(k);
             updatePathWidth(&path, &pen, pen_, &prev_width, segment_inst.width);
             drawX15(&segment_inst, &path);
             k = segment_inst.next;
         } else if (fs->is_type(k, 0x16)) {
-            const x16<A_174> segment_inst = fs->get_x16(k);
+            const x16<A_175> segment_inst = fs->get_x16(k);
             updatePathWidth(&path, &pen, pen_, &prev_width, segment_inst.width);
             drawX16(&segment_inst, &path);
             k = segment_inst.next;
         } else if (fs->is_type(k, 0x17)) {
-            const x17<A_174> segment_inst = fs->get_x17(k);
+            const x17<A_175> segment_inst = fs->get_x17(k);
             updatePathWidth(&path, &pen, pen_, &prev_width, segment_inst.width);
             drawX17(&segment_inst, &path);
             k = segment_inst.next;
@@ -212,7 +212,7 @@ void BrdView::drawX14(const x14<A_174> *inst, QPen *pen_) {
     item->setData(0, inst->k);
 }
 
-void BrdView::drawX15(const x15<A_174> *inst, QPainterPath *path) {
+void BrdView::drawX15(const x15<A_175> *inst, QPainterPath *path) {
     path->lineTo(inst->coords[2] / factor, inst->coords[3] / factor);
 
     // QGraphicsItem *item = scene->addLine(
@@ -223,7 +223,7 @@ void BrdView::drawX15(const x15<A_174> *inst, QPainterPath *path) {
     // item->setData(0, inst->k);
 };
 
-void BrdView::drawX16(const x16<A_174> *inst, QPainterPath *path) {
+void BrdView::drawX16(const x16<A_175> *inst, QPainterPath *path) {
     path->lineTo(inst->coords[2] / factor, inst->coords[3] / factor);
 
     // QGraphicsItem *item = scene->addLine(
@@ -234,7 +234,7 @@ void BrdView::drawX16(const x16<A_174> *inst, QPainterPath *path) {
     // item->setData(0, inst->k);
 };
 
-void BrdView::drawX17(const x17<A_174> *inst, QPainterPath *path) {
+void BrdView::drawX17(const x17<A_175> *inst, QPainterPath *path) {
     path->lineTo(inst->coords[2] / factor, inst->coords[3] / factor);
 
     // QGraphicsItem *item = scene->addLine(
@@ -246,7 +246,7 @@ void BrdView::drawX17(const x17<A_174> *inst, QPainterPath *path) {
 }
 
 // Connectivity (rat)
-void BrdView::drawX23(const x23<A_174> *inst, QPen *pen) {
+void BrdView::drawX23(const x23<A_175> *inst, QPen *pen) {
     if (!onSelectedLayer(inst->subtype, inst->layer)) {
         return;
     }
@@ -261,7 +261,7 @@ void BrdView::drawX23(const x23<A_174> *inst, QPen *pen) {
 }
 
 // Shapes
-void BrdView::drawX28(const x28<A_174> *inst, QPen *pen) {
+void BrdView::drawX28(const x28<A_175> *inst, QPen *pen) {
     if (!onSelectedLayer(inst->subtype, inst->layer) ||
         fs->is_type(inst->ptr1, 0x2B)) {
         return;
@@ -282,19 +282,19 @@ void BrdView::drawX28(const x28<A_174> *inst, QPen *pen) {
 
     while (isLineSegment(k)) {
         if (fs->is_type(k, 0x01)) {
-            const x01<A_174> segment_inst = fs->get_x01(k);
+            const x01<A_175> segment_inst = fs->get_x01(k);
             drawX01(&segment_inst, &path);
             k = segment_inst.next;
         } else if (fs->is_type(k, 0x15)) {
-            const x15<A_174> segment_inst = fs->get_x15(k);
+            const x15<A_175> segment_inst = fs->get_x15(k);
             drawX15(&segment_inst, &path);
             k = segment_inst.next;
         } else if (fs->is_type(k, 0x16)) {
-            const x16<A_174> segment_inst = fs->get_x16(k);
+            const x16<A_175> segment_inst = fs->get_x16(k);
             drawX16(&segment_inst, &path);
             k = segment_inst.next;
         } else if (fs->is_type(k, 0x17)) {
-            const x17<A_174> segment_inst = fs->get_x17(k);
+            const x17<A_175> segment_inst = fs->get_x17(k);
             drawX17(&segment_inst, &path);
             k = segment_inst.next;
         } else {
@@ -360,12 +360,12 @@ void BrdView::drawX28(const x28<A_174> *inst, QPen *pen) {
     // }
 };
 
-void BrdView::drawX2B(const x2B<A_174> *inst, QPen *pen) {
+void BrdView::drawX2B(const x2B<A_175> *inst, QPen *pen) {
     // drawShape(inst->ptr2, pen);
     // drawShape(inst->ptr8, pen);
 }
 
-void BrdView::drawX2D(const x2D<A_174> *inst, QPen *pen) {
+void BrdView::drawX2D(const x2D<A_175> *inst, QPen *pen) {
     // Bounding box?
     // drawShape(inst->ptr4[0], pen);
 
@@ -405,7 +405,7 @@ void BrdView::drawX2D(const x2D<A_174> *inst, QPen *pen) {
     }
 }
 
-void BrdView::drawX30(const x30<A_174> *inst, QPen *pen) {
+void BrdView::drawX30(const x30<A_175> *inst, QPen *pen) {
     if (!onSelectedLayer(inst->subtype, inst->layer)) {
         return;
     }
@@ -416,7 +416,7 @@ void BrdView::drawX30(const x30<A_174> *inst, QPen *pen) {
     }
     */
 
-    const x31<A_174> &str_graphic = fs->get_x31(inst->str_graphic_ptr);
+    const x31<A_175> &str_graphic = fs->get_x31(inst->str_graphic_ptr);
 
     QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
     font.setFixedPitch(true);
@@ -424,7 +424,7 @@ void BrdView::drawX30(const x30<A_174> *inst, QPen *pen) {
 
     qreal factor = 1000;
 
-    const x36_x08<A_174> *x36_x08_inst = font_lookup(inst->font.key, *fs);
+    const x36_x08<A_175> *x36_x08_inst = font_lookup(inst->font.key, *fs);
     if (x36_x08_inst != nullptr) {
         font.setPixelSize(x36_x08_inst->char_height / factor);
 
@@ -481,10 +481,10 @@ void BrdView::drawX30(const x30<A_174> *inst, QPen *pen) {
 }
 
 // Pad
-void BrdView::drawX32(const x32<A_174> *inst, QPen *pen,
+void BrdView::drawX32(const x32<A_175> *inst, QPen *pen,
                       uint32_t sym_rotation) {
     if (fs->is_type(inst->ptr3, 0x2D)) {
-        const x2D<A_174> x2D_inst = fs->get_x2D(inst->ptr3);
+        const x2D<A_175> x2D_inst = fs->get_x2D(inst->ptr3);
         if (!onSelectedLayer(inst->subtype,
                              x2D_inst.layer == 0 ? 0 : fs->layer_count - 1)) {
             return;
@@ -499,14 +499,14 @@ void BrdView::drawX32(const x32<A_174> *inst, QPen *pen,
     */
 
     // Try to draw pad shape
-    const x0D<A_174> &x0D_inst = fs->get_x0D(inst->ptr5);
-    const x1C<A_174> &x1C_inst = fs->get_x1C(x0D_inst.pad_ptr);
+    const x0D<A_175> &x0D_inst = fs->get_x0D(inst->ptr5);
+    const x1C<A_175> &x1C_inst = fs->get_x1C(x0D_inst.pad_ptr);
 
     QPointF center = QPointF((inst->coords[0] + inst->coords[2]) / 2. / factor,
                              (inst->coords[1] + inst->coords[3]) / 2. / factor);
 
     // Just draw the first part
-    const t13<A_174> *first_part = &x1C_inst.parts[0];
+    const t13<A_175> *first_part = &x1C_inst.parts[0];
     QGraphicsItem *pad;
     QTransform t = QTransform()
                        .translate(center.x(), center.y())
@@ -533,7 +533,7 @@ void BrdView::drawX32(const x32<A_174> *inst, QPen *pen,
     // drawShape(inst->ptr10, pen2);
 }
 
-void BrdView::drawX33(const x33<A_174> *inst, QPen *pen) {
+void BrdView::drawX33(const x33<A_175> *inst, QPen *pen) {
     if (!onSelectedLayer(inst->subtype, 0x100)) {
         return;
     }
@@ -562,7 +562,7 @@ void BrdView::drawX33(const x33<A_174> *inst, QPen *pen) {
         return;
     }
 
-    const x1C<A_174> &x1C_inst = fs->get_x1C(inst->ptr4);
+    const x1C<A_175> &x1C_inst = fs->get_x1C(inst->ptr4);
     /*
     if (x1C_inst.pad_info.a == 0) {
         pen = new QPen(QColorConstants::Svg::mediumpurple);
@@ -576,7 +576,7 @@ void BrdView::drawX33(const x33<A_174> *inst, QPen *pen) {
         QPointF((inst->coords[0]) / factor, (inst->coords[1]) / factor);
 
     // Just draw the first part
-    const t13<A_174> *first_part = &x1C_inst.parts[4];
+    const t13<A_175> *first_part = &x1C_inst.parts[4];
     QGraphicsItem *pad;
     QTransform t = QTransform().translate(center.x(), center.y());
     switch (first_part->t) {
@@ -607,7 +607,7 @@ void BrdView::drawX33(const x33<A_174> *inst, QPen *pen) {
     pad->setData(0, inst->k);
 }
 
-void BrdView::drawX34(const x34<A_174> *inst, QPen *pen) {
+void BrdView::drawX34(const x34<A_175> *inst, QPen *pen) {
     if (!onSelectedLayer(inst->subtype, inst->layer)) {
         return;
     }
@@ -619,19 +619,19 @@ void BrdView::drawX34(const x34<A_174> *inst, QPen *pen) {
 
     while (isLineSegment(k)) {
         if (fs->is_type(k, 0x01)) {
-            const x01<A_174> segment_inst = fs->get_x01(k);
+            const x01<A_175> segment_inst = fs->get_x01(k);
             drawX01(&segment_inst, &path);
             k = segment_inst.next;
         } else if (fs->is_type(k, 0x15)) {
-            const x15<A_174> segment_inst = fs->get_x15(k);
+            const x15<A_175> segment_inst = fs->get_x15(k);
             drawX15(&segment_inst, &path);
             k = segment_inst.next;
         } else if (fs->is_type(k, 0x16)) {
-            const x16<A_174> segment_inst = fs->get_x16(k);
+            const x16<A_175> segment_inst = fs->get_x16(k);
             drawX16(&segment_inst, &path);
             k = segment_inst.next;
         } else if (fs->is_type(k, 0x17)) {
-            const x17<A_174> segment_inst = fs->get_x17(k);
+            const x17<A_175> segment_inst = fs->get_x17(k);
             drawX17(&segment_inst, &path);
             k = segment_inst.next;
         } else {
@@ -656,69 +656,69 @@ void BrdView::drawShape(const uint32_t ptr, QPen *pen) {
     QPen *darkerPen = pen;
 
     if (fs->is_type(ptr, 0x01)) {
-        const x01<A_174> inst = fs->get_x01(ptr);
+        const x01<A_175> inst = fs->get_x01(ptr);
         // drawX01(inst, pen);
         // drawShape(inst->ptr1, darkerPen);
         // drawShape(inst->ptr2, darkerPen);
     } else if (fs->is_type(ptr, 0x05)) {
         // std::printf("Trying to draw x05\n");
-        const x05<A_174> inst = fs->get_x05(ptr);
+        const x05<A_175> inst = fs->get_x05(ptr);
         drawX05(&inst, pen);
     } else if (fs->is_type(ptr, 0x10)) {
-        const x10<A_174> inst = fs->get_x10(ptr);
+        const x10<A_175> inst = fs->get_x10(ptr);
         drawShape(inst.ptr1, darkerPen);
         drawShape(inst.ptr2, darkerPen);
         drawShape(inst.ptr3, darkerPen);
     } else if (fs->is_type(ptr, 0x14)) {
-        const x14<A_174> inst = fs->get_x14(ptr);
+        const x14<A_175> inst = fs->get_x14(ptr);
         drawX14(&inst, pen);
         // } else if (fs->x15_map.count(ptr) > 0) {
-        // const x15<A_174> *inst = (const x15<A_174> *)&fs->x15_map.at(ptr);
+        // const x15<A_175> *inst = (const x15<A_175> *)&fs->x15_map.at(ptr);
         // drawX15(inst, pen);
         // drawShape(inst->un1, darkerPen);
         // drawShape(inst->ptr, darkerPen);
         // } else if (fs->x16_map.count(ptr) > 0) {
-        // const x16<A_174> *inst = (const x16<A_174> *)&fs->x16_map.at(ptr);
+        // const x16<A_175> *inst = (const x16<A_175> *)&fs->x16_map.at(ptr);
         // drawX16(inst, pen);
         // drawShape(inst->un1, darkerPen);
         // drawShape(inst->ptr, darkerPen);
         // } else if (fs->x17_map.count(ptr) > 0) {
-        // const x17<A_174> *inst = (const x17<A_174> *)&fs->x17_map.at(ptr);
+        // const x17<A_175> *inst = (const x17<A_175> *)&fs->x17_map.at(ptr);
         // drawX17(inst, pen);
         // drawShape(inst->un1, darkerPen);
         // drawShape(inst->ptr, darkerPen);
     } else if (fs->is_type(ptr, 0x23)) {
-        const x23<A_174> inst = fs->get_x23(ptr);
+        const x23<A_175> inst = fs->get_x23(ptr);
         drawX23(&inst, pen);
     } else if (fs->is_type(ptr, 0x28)) {
-        const x28<A_174> inst = fs->get_x28(ptr);
+        const x28<A_175> inst = fs->get_x28(ptr);
         drawX28(&inst, pen);
         // drawShape(inst->ptr5, darkerPen);
         // drawShape(inst->ptr1, darkerPen);
         // drawShape(inst->ptr2, darkerPen);
         // drawShape(inst->ptr5, darkerPen);
     } else if (fs->is_type(ptr, 0x2D)) {
-        const x2D<A_174> inst = fs->get_x2D(ptr);
+        const x2D<A_175> inst = fs->get_x2D(ptr);
         drawX2D(&inst, pen);
     } else if (fs->is_type(ptr, 0x30)) {
-        const x30<A_174> &inst = fs->get_x30(ptr);
+        const x30<A_175> &inst = fs->get_x30(ptr);
         drawX30(&inst, pen);
         // } else if (fs.x31_map->count(ptr) > 0) {
         //     const x31 *inst = (const x31*)&fs.x31_map->at(ptr);
         //     drawX31((const x31*)&fs.x31_map->at(ptr), pen);
     } else if (fs->is_type(ptr, 0x32)) {
-        const x32<A_174> &inst = fs->get_x32(ptr);
+        const x32<A_175> &inst = fs->get_x32(ptr);
         drawX32(&inst, pen, 0);
     } else if (fs->is_type(ptr, 0x33)) {
-        const x33<A_174> &inst = fs->get_x33(ptr);
+        const x33<A_175> &inst = fs->get_x33(ptr);
         drawX33(&inst, pen);
         // drawShape(inst->un1, darkerPen);
         // drawShape(inst->ptr1, darkerPen);
     } else if (fs->is_type(ptr, 0x34)) {
-        const x34<A_174> &inst = fs->get_x34(ptr);
+        const x34<A_175> &inst = fs->get_x34(ptr);
         drawX34(&inst, pen);
     } else if (fs->is_type(ptr, 0x37)) {
-        const x37<A_174> &inst = fs->get_x37(ptr);
+        const x37<A_175> &inst = fs->get_x37(ptr);
         drawShape(inst.ptr1, darkerPen);
         // for (uint8_t i; i<inst->count; i++) {
         // for (uint8_t i=0; i<inst->capacity; i++) {
@@ -899,7 +899,7 @@ void BrdView::drawFile() {
 
 QColor BrdView::customPenColor(uint32_t x05_k, QColor default_) {
     if (fs->is_type(x05_k, 0x05)) {
-        const x05<A_174> inst = fs->get_x05(x05_k);
+        const x05<A_175> inst = fs->get_x05(x05_k);
         if (onSelectedLayer(inst.subtype, inst.layer)) {
             return QColorConstants::Svg::palevioletred;
         } else {
@@ -908,7 +908,7 @@ QColor BrdView::customPenColor(uint32_t x05_k, QColor default_) {
     } else if (fs->is_type(x05_k, 0x14)) {
         return QColorConstants::Svg::goldenrod;
     } else if (fs->is_type(x05_k, 0x28)) {
-        const x28<A_174> &inst = fs->get_x28(x05_k);
+        const x28<A_175> &inst = fs->get_x28(x05_k);
         if (onSelectedLayer(inst.subtype, inst.layer)) {
             return QColorConstants::Svg::palevioletred;
         } else {
@@ -916,14 +916,14 @@ QColor BrdView::customPenColor(uint32_t x05_k, QColor default_) {
             // return QColorConstants::Svg::crimson;
         }
     } else if (fs->is_type(x05_k, 0x34)) {
-        const x34<A_174> &inst = fs->get_x34(x05_k);
+        const x34<A_175> &inst = fs->get_x34(x05_k);
         if (onSelectedLayer(inst.subtype, inst.layer)) {
             return QColorConstants::Svg::palevioletred;
         } else {
             return QColorConstants::Svg::blanchedalmond;
         }
     } else if (fs->is_type(x05_k, 0x30)) {
-        const x30<A_174> &inst = fs->get_x30(x05_k);
+        const x30<A_175> &inst = fs->get_x30(x05_k);
         if (onSelectedLayer(inst.subtype, inst.layer)) {
             return QColorConstants::Svg::lightsalmon;
         } else {
@@ -1029,16 +1029,16 @@ bool BrdView::isLineSegment(uint32_t k) {
 
 std::optional<QPointF> BrdView::startingPoint(uint32_t k) {
     if (fs->is_type(k, 0x01)) {
-        const x01<A_174> segment_inst = fs->get_x01(k);
+        const x01<A_175> segment_inst = fs->get_x01(k);
         return QPointF(segment_inst.coords[0], segment_inst.coords[1]);
     } else if (fs->is_type(k, 0x15)) {
-        const x15<A_174> segment_inst = fs->get_x15(k);
+        const x15<A_175> segment_inst = fs->get_x15(k);
         return QPointF(segment_inst.coords[0], segment_inst.coords[1]);
     } else if (fs->is_type(k, 0x16)) {
-        const x16<A_174> segment_inst = fs->get_x16(k);
+        const x16<A_175> segment_inst = fs->get_x16(k);
         return QPointF(segment_inst.coords[0], segment_inst.coords[1]);
     } else if (fs->is_type(k, 0x17)) {
-        const x17<A_174> segment_inst = fs->get_x17(k);
+        const x17<A_175> segment_inst = fs->get_x17(k);
         return QPointF(segment_inst.coords[0], segment_inst.coords[1]);
     } else {
         return std::optional<QPointF>();
@@ -1047,16 +1047,16 @@ std::optional<QPointF> BrdView::startingPoint(uint32_t k) {
 
 std::optional<QPointF> BrdView::endingPoint(uint32_t k) {
     if (fs->is_type(k, 0x01)) {
-        const x01<A_174> segment_inst = fs->get_x01(k);
+        const x01<A_175> segment_inst = fs->get_x01(k);
         return QPointF(segment_inst.coords[2], segment_inst.coords[3]);
     } else if (fs->is_type(k, 0x15)) {
-        const x15<A_174> segment_inst = fs->get_x15(k);
+        const x15<A_175> segment_inst = fs->get_x15(k);
         return QPointF(segment_inst.coords[2], segment_inst.coords[3]);
     } else if (fs->is_type(k, 0x16)) {
-        const x16<A_174> segment_inst = fs->get_x16(k);
+        const x16<A_175> segment_inst = fs->get_x16(k);
         return QPointF(segment_inst.coords[2], segment_inst.coords[3]);
     } else if (fs->is_type(k, 0x17)) {
-        const x17<A_174> segment_inst = fs->get_x17(k);
+        const x17<A_175> segment_inst = fs->get_x17(k);
         return QPointF(segment_inst.coords[2], segment_inst.coords[3]);
     } else {
         return std::optional<QPointF>();
@@ -1065,11 +1065,11 @@ std::optional<QPointF> BrdView::endingPoint(uint32_t k) {
 
 char *BrdView::netName(uint32_t k) {
     if (fs->is_type(k, 0x28)) {
-        const x28<A_174> &x28_inst = fs->get_x28(k);
+        const x28<A_175> &x28_inst = fs->get_x28(k);
         if (fs->is_type(x28_inst.ptr1, 0x04)) {
-            const x04<A_174> &x04_inst = fs->get_x04(x28_inst.ptr1);
+            const x04<A_175> &x04_inst = fs->get_x04(x28_inst.ptr1);
             if (fs->is_type(x04_inst.ptr1, 0x1B)) {
-                const x1B<A_174> x1B_inst = fs->get_x1B(x04_inst.ptr1);
+                const x1B<A_175> x1B_inst = fs->get_x1B(x04_inst.ptr1);
                 // qDebug("Net name: 0x%08X", x1B_inst->net_name);
                 return fs->strings.at(x1B_inst.net_name);
             }
