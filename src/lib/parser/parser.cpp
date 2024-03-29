@@ -39,10 +39,10 @@ uint8_t layer_count(File<version>* fs) {
 }
 
 template <template <AllegroVersion> typename T, AllegroVersion version>
-uint32_t default_parser(File<A_174>& fs, void*& address) {
+uint32_t default_parser(File<A_175>& fs, void*& address) {
     T<version>* inst = static_cast<T<version>*>(address);
     // fs.ptrs[inst->k] = address;
-    // new_find_map<T<A_174>>(fs)[inst->k] = address;
+    // new_find_map<T<A_175>>(fs)[inst->k] = address;
     fs.ptrs[inst->k] = address;
     size_t size = sizeof_until_tail<T<version>>();
     skip(address, size);
@@ -50,7 +50,7 @@ uint32_t default_parser(File<A_174>& fs, void*& address) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x03(File<A_174>& fs, void*& address) {
+uint32_t parse_x03(File<A_175>& fs, void*& address) {
     x03<version>* i = static_cast<x03<version>*>(address);
     uint32_t k = default_parser<x03, version>(fs, address);
 
@@ -107,7 +107,7 @@ uint32_t parse_x03(File<A_174>& fs, void*& address) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x1C(File<A_174>& fs, void*& address) {
+uint32_t parse_x1C(File<A_175>& fs, void*& address) {
     x1C<version>* i = static_cast<x1C<version>*>(address);
     uint32_t k = default_parser<x1C, version>(fs, address);
 
@@ -141,7 +141,7 @@ uint32_t parse_x1C(File<A_174>& fs, void*& address) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x1D(File<A_174>& fs, void*& address) {
+uint32_t parse_x1D(File<A_175>& fs, void*& address) {
     x1D<version>* i = static_cast<x1D<version>*>(address);
     uint32_t k = default_parser<x1D, version>(fs, address);
 
@@ -155,7 +155,7 @@ uint32_t parse_x1D(File<A_174>& fs, void*& address) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x1E(File<A_174>& fs, void*& address) {
+uint32_t parse_x1E(File<A_175>& fs, void*& address) {
     x1E* x1E_inst = new x1E;
     memcpy(x1E_inst, address, sizeof(x1E_hdr));
     skip(address, sizeof(x1E_hdr));
@@ -171,11 +171,13 @@ uint32_t parse_x1E(File<A_174>& fs, void*& address) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x1F(File<A_174>& fs, void*& address) {
+uint32_t parse_x1F(File<A_175>& fs, void*& address) {
     x1F<version>* i = static_cast<x1F<version>*>(address);
     uint32_t k = default_parser<x1F, version>(fs, address);
 
-    if constexpr (version >= A_172) {
+    if constexpr (version >= A_175) {
+        skip(address, i->size * 384 + 8);
+    } else if constexpr (version >= A_172) {
         skip(address, i->size * 280 + 8);
     } else if constexpr (version >= A_162) {
         skip(address, i->size * 280 + 4);
@@ -187,7 +189,7 @@ uint32_t parse_x1F(File<A_174>& fs, void*& address) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x21(File<A_174>& fs, void*& address) {
+uint32_t parse_x21(File<A_175>& fs, void*& address) {
     // x21_header i;
     // f.read((char*)&i, sizeof(x21_header));
     x21_header* i = static_cast<x21_header*>(address);
@@ -223,13 +225,13 @@ uint32_t parse_x21(File<A_174>& fs, void*& address) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x27(File<A_174>& fs, void*& address) {
+uint32_t parse_x27(File<A_175>& fs, void*& address) {
     address = (char*)fs.region.get_address() + fs.hdr->x27_end_offset - 1;
     return 0;
 }
 
 template <AllegroVersion version>
-uint32_t parse_x2A(File<A_174>& fs, void*& address) {
+uint32_t parse_x2A(File<A_175>& fs, void*& address) {
     x2A x2A_inst;
     memcpy(&x2A_inst, address, sizeof(x2A_hdr));
 
@@ -275,7 +277,7 @@ uint32_t parse_x2A(File<A_174>& fs, void*& address) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x31(File<A_174>& fs, void*& address) {
+uint32_t parse_x31(File<A_175>& fs, void*& address) {
     x31<version>* i = (x31<version>*)address;
     uint32_t k = default_parser<x31, version>(fs, address);
 
@@ -288,13 +290,13 @@ uint32_t parse_x31(File<A_174>& fs, void*& address) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x35(File<A_174>& fs, void*& address) {
+uint32_t parse_x35(File<A_175>& fs, void*& address) {
     skip(address, 124);
     return 0;
 }
 
 template <AllegroVersion version>
-uint32_t parse_x36(File<A_174>& fs, void*& address) {
+uint32_t parse_x36(File<A_175>& fs, void*& address) {
     x36<version> inst;
     memcpy(&inst, address, sizeof_until_tail<x36<version>>());
     skip(address, sizeof_until_tail<x36<version>>());
@@ -420,12 +422,12 @@ uint32_t parse_x36(File<A_174>& fs, void*& address) {
             exit(1);
     }
 
-    fs.x36_map[inst.k] = upgrade<version, A_174>(inst);
+    fs.x36_map[inst.k] = upgrade<version, A_175>(inst);
     return 0;
 }
 
 template <AllegroVersion version>
-uint32_t parse_x3B(File<A_174>& fs, void*& address) {
+uint32_t parse_x3B(File<A_175>& fs, void*& address) {
     x3B<version>* i = (x3B<version>*)address;
 
     skip(address, sizeof_until_tail<x3B<version>>());
@@ -435,7 +437,7 @@ uint32_t parse_x3B(File<A_174>& fs, void*& address) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x3C(File<A_174>& fs, void*& address) {
+uint32_t parse_x3C(File<A_175>& fs, void*& address) {
     x3C<version>* i = (x3C<version>*)address;
     uint32_t k = default_parser<x3C, version>(fs, address);
     skip(address, i->size * 4);
@@ -443,12 +445,12 @@ uint32_t parse_x3C(File<A_174>& fs, void*& address) {
 }
 
 template <AllegroVersion version>
-File<A_174> parse_file_raw(mapped_region region) {
+File<A_175> parse_file_raw(mapped_region region) {
     void* base_addr = region.get_address();
     void* cur_addr = base_addr;
     size_t size = region.get_size();
 
-    File<A_174> fs(std::move(region));
+    File<A_175> fs(std::move(region));
 
     // Read header
     fs.hdr = static_cast<header*>(base_addr);
@@ -508,7 +510,7 @@ File<A_174> parse_file_raw(mapped_region region) {
     return fs;
 }
 
-std::optional<File<A_174>> parse_file(const std::string& filepath) {
+std::optional<File<A_175>> parse_file(const std::string& filepath) {
     file_mapping mapped_file;
     try {
         mapped_file = file_mapping(filepath.c_str(), read_only);
@@ -553,6 +555,8 @@ std::optional<File<A_174>> parse_file(const std::string& filepath) {
         case 0x00140902:
         case 0x00140E00:
             return parse_file_raw<A_174>(std::move(region));
+        case 0x00141502:
+            return parse_file_raw<A_175>(std::move(region));
     }
 
     printf("Magic unrecognized! Magic = 0x%08X\n", magic);

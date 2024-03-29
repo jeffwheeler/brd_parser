@@ -40,7 +40,8 @@ enum AllegroVersion {
     A_165 = 0x00131000,
     A_166 = 0x00131500,
     A_172 = 0x00140400,
-    A_174 = 0x00140900
+    A_174 = 0x00140900,
+    A_175 = 0x00141500
 };
 
 // This alternative to `sizeof` is used where conditional fields are at the end
@@ -167,12 +168,12 @@ struct x07 {
     uint32_t ptr4;  // x32 or null
 
     uint32_t TAIL;
-    operator x07<A_174>() const;
+    operator x07<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_172};
 };
 
 static_assert(sizeof_until_tail<x07<A_172>>() == 48);
-static_assert(sizeof_until_tail<x07<A_174>>() == 48);
+static_assert(sizeof_until_tail<x07<A_175>>() == 48);
 
 // Line segment (with some curve, I think)
 template <AllegroVersion version>
@@ -206,13 +207,13 @@ struct x01 {
     int32_t bbox[4];
 
     uint32_t TAIL;
-    operator x01<A_174>() const;
+    operator x01<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_172};
 };
 
 static_assert(sizeof_until_tail<x01<A_160>>() == 80);
 static_assert(sizeof_until_tail<x01<A_172>>() == 84);
-static_assert(sizeof_until_tail<x01<A_174>>() == 84);
+static_assert(sizeof_until_tail<x01<A_175>>() == 84);
 
 struct x02 {
     uint32_t t;
@@ -239,7 +240,7 @@ struct x03 {
     COND_FIELD(version >= A_172, uint32_t, un2);
 
     uint32_t TAIL;
-    operator x03<A_174>() const;
+    operator x03<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_172};
 
     bool has_str;
@@ -262,7 +263,7 @@ struct x04 {
     COND_FIELD(version >= A_174, uint32_t, un1);
 
     uint32_t TAIL;
-    operator x04<A_174>() const;
+    operator x04<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_174};
 };
 
@@ -303,7 +304,7 @@ struct x05 {
     uint32_t un3;
 
     uint32_t TAIL;
-    operator x05<A_174>() const;
+    operator x05<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_172};
 };
 
@@ -339,7 +340,7 @@ struct x06 {
     COND_FIELD(version >= A_172, uint32_t, un2);
 
     uint32_t TAIL;
-    operator x06<A_174>() const;
+    operator x06<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_172};
 };
 
@@ -373,7 +374,7 @@ struct x08 {
     uint32_t ptr4;
 
     uint32_t TAIL;
-    operator x08<A_174>() const;
+    operator x08<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_172};
 };
 
@@ -403,7 +404,7 @@ struct x09 {
     COND_FIELD(version >= A_174, uint32_t, un4);
 
     uint32_t TAIL;
-    operator x09<A_174>() const;
+    operator x09<A_175>() const;
     static constexpr AllegroVersion versions[2] = {A_172, A_174};
 };
 
@@ -423,7 +424,7 @@ struct x0A {
     COND_FIELD(version >= A_174, uint32_t, un3);
 
     uint32_t TAIL;
-    operator x0A<A_174>() const;
+    operator x0A<A_175>() const;
     static constexpr AllegroVersion versions[2] = {A_172, A_174};
 };
 
@@ -449,7 +450,7 @@ struct x0C {
     COND_FIELD(version >= A_174, uint32_t, un4);
 
     uint32_t TAIL;
-    operator x0C<A_174>() const;
+    operator x0C<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_172};
 };
 
@@ -468,7 +469,7 @@ struct x0D {
     uint32_t rotation;
 
     uint32_t TAIL;
-    operator x0D<A_174>() const;
+    operator x0D<A_175>() const;
     static constexpr AllegroVersion versions[2] = {A_172, A_174};
 };
 
@@ -481,7 +482,7 @@ struct x0E {
     COND_FIELD(version >= A_172, uint32_t[2], un1);
 
     uint32_t TAIL;
-    operator x0E<A_174>() const;
+    operator x0E<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_172};
 };
 
@@ -501,7 +502,7 @@ struct x0F {
     COND_FIELD(version >= A_174, uint32_t, un3);
 
     uint32_t TAIL;
-    operator x0F<A_174>() const;
+    operator x0F<A_175>() const;
     static constexpr AllegroVersion versions[2] = {A_172, A_174};
 };
 
@@ -535,7 +536,7 @@ struct x10 {
     uint32_t path_str;
 
     uint32_t TAIL;
-    operator x10<A_174>() const;
+    operator x10<A_175>() const;
     static constexpr AllegroVersion versions[2] = {A_172, A_174};
 };
 
@@ -558,7 +559,7 @@ struct x11 {
     COND_FIELD(version >= A_174, uint32_t, un1);
 
     uint32_t TAIL;
-    operator x11<A_174>() const;
+    operator x11<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_174};
 };
 
@@ -581,7 +582,7 @@ struct x12 {
     COND_FIELD(version >= A_174, uint32_t, un2);
 
     uint32_t TAIL;
-    operator x12<A_174>() const;
+    operator x12<A_175>() const;
     static constexpr AllegroVersion versions[2] = {A_165, A_174};
 };
 
@@ -608,7 +609,7 @@ struct x14 {
     uint32_t ptr4;
 
     uint32_t TAIL;
-    operator x14<A_174>() const;
+    operator x14<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_172};
 };
 
@@ -631,7 +632,7 @@ struct x15 {
     int32_t coords[4];
 
     uint32_t TAIL;
-    operator x15<A_174>() const;
+    operator x15<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_172};
 };
 
@@ -653,7 +654,7 @@ struct x16 {
     int32_t coords[4];
 
     uint32_t TAIL;
-    operator x16<A_174>() const;
+    operator x16<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_172};
 };
 
@@ -673,7 +674,7 @@ struct x17 {
     int32_t coords[4];
 
     uint32_t TAIL;
-    operator x17<A_174>() const;
+    operator x17<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_172};
 };
 
@@ -720,7 +721,7 @@ struct x1B {
     uint32_t ptr6;
 
     uint32_t TAIL;
-    operator x1B<A_174>() const;
+    operator x1B<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_172};
 };
 
@@ -743,7 +744,7 @@ struct t13 {
     int32_t x4;
 
     uint32_t TAIL;
-    operator t13<A_174>() const;
+    operator t13<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_172};
 };
 
@@ -790,7 +791,7 @@ struct x1C {
     COND_FIELD(version == A_165 || version == A_166, uint32_t[8], un10);
 
     uint32_t TAIL;
-    operator x1C<A_174>() const;
+    operator x1C<A_175>() const;
     static constexpr AllegroVersion versions[2] = {A_165, A_172};
 
     std::vector<t13<version>> parts;
@@ -898,7 +899,7 @@ struct x22 {
     uint32_t un[8];
 
     uint32_t TAIL;
-    operator x22<A_174>() const;
+    operator x22<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_172};
 };
 
@@ -930,7 +931,7 @@ struct x23 {
     COND_FIELD(version >= A_174, uint32_t, un1);
 
     uint32_t TAIL;
-    operator x23<A_174>() const;
+    operator x23<A_175>() const;
     static constexpr AllegroVersion versions[2] = {A_164, A_174};
 };
 
@@ -942,7 +943,7 @@ struct x24 {
     COND_FIELD(version >= A_172, uint32_t, un1);
 
     uint32_t TAIL;
-    operator x24<A_174>() const;
+    operator x24<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_172};
 };
 
@@ -965,7 +966,7 @@ struct x26 {
     COND_FIELD(version >= A_174, uint32_t, un1);
 
     uint32_t TAIL;
-    operator x26<A_174>() const;
+    operator x26<A_175>() const;
     static constexpr AllegroVersion versions[2] = {A_172, A_174};
 };
 
@@ -1017,7 +1018,7 @@ struct x28 {
     int32_t coords[4];
 
     uint32_t TAIL;
-    operator x28<A_174>() const;
+    operator x28<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_172};
 };
 
@@ -1111,7 +1112,7 @@ struct x2B {
     COND_FIELD(version >= A_172, uint32_t, un3);
 
     uint32_t TAIL;
-    operator x2B<A_174>() const;
+    operator x2B<A_175>() const;
     static constexpr AllegroVersion versions[2] = {A_164, A_172};
 };
 
@@ -1144,7 +1145,7 @@ struct x2C {
     uint32_t bitmask;
 
     uint32_t TAIL;
-    operator x2C<A_174>() const;
+    operator x2C<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_172};
 };
 
@@ -1191,7 +1192,7 @@ struct x2D {
     uint32_t group_assignment_ptr;
 
     uint32_t TAIL;
-    operator x2D<A_174>() const;
+    operator x2D<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_172};
 };
 
@@ -1203,7 +1204,7 @@ struct x2E {
     COND_FIELD(version >= A_172, uint32_t, un1);
 
     uint32_t TAIL;
-    operator x2E<A_174>() const;
+    operator x2E<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_172};
 };
 
@@ -1214,7 +1215,7 @@ struct x2F {
     uint32_t un[6];
 
     uint32_t TAIL;
-    operator x2F<A_174>() const;
+    operator x2F<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_160};
 };
 
@@ -1263,7 +1264,7 @@ struct x30 {
     COND_FIELD(version < A_172, uint32_t, ptr3_16x);
 
     uint32_t TAIL;
-    operator x30<A_174>() const;
+    operator x30<A_175>() const;
     static constexpr AllegroVersion versions[2] = {A_172, A_174};
 };
 
@@ -1287,7 +1288,7 @@ struct x31 {
     COND_FIELD(version >= A_174, uint32_t, un2);
 
     uint32_t TAIL;
-    operator x31<A_174>() const;
+    operator x31<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_174};
 
     std::string s;
@@ -1328,7 +1329,7 @@ struct x32 {
     int32_t coords[4];
 
     uint32_t TAIL;
-    operator x32<A_174>() const;
+    operator x32<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_172};
 };
 
@@ -1369,7 +1370,7 @@ struct x33 {
     int32_t bb_coords[4];
 
     uint32_t TAIL;
-    operator x33<A_174>() const;
+    operator x33<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_172};
 };
 
@@ -1392,7 +1393,7 @@ struct x34 {
     uint32_t un;
 
     uint32_t TAIL;
-    operator x34<A_174>() const;
+    operator x34<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_172};
 };
 
@@ -1442,7 +1443,7 @@ struct x36_x08 {
     COND_FIELD(version >= A_172, uint32_t[8], ys);
 
     uint32_t TAIL;
-    operator x36_x08<A_174>() const;
+    operator x36_x08<A_175>() const;
     static constexpr AllegroVersion versions[2] = {A_172, A_174};
 };
 
@@ -1477,7 +1478,7 @@ struct x36 {
     std::vector<x36_x08<version>> x08s;
     std::vector<x36_x0F<version>> x0Fs;
 
-    operator x36<A_174>() const;
+    operator x36<A_175>() const;
     static constexpr AllegroVersion versions[2] = {A_172, A_174};
 };
 
@@ -1494,7 +1495,7 @@ struct x37 {
     COND_FIELD(version >= A_174, uint32_t, un4);
 
     uint32_t TAIL;
-    operator x37<A_174>() const;
+    operator x37<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_174};
 };
 
@@ -1511,7 +1512,7 @@ struct t38_film {
     COND_FIELD(version >= A_174, uint32_t, un3);
 
     uint32_t TAIL;
-    operator t38_film<A_174>() const;
+    operator t38_film<A_175>() const;
     static constexpr AllegroVersion versions[2] = {A_166, A_174};
 
     std::string s;
@@ -1530,7 +1531,7 @@ struct t39_film_layer_list {
     uint16_t x[22];
 
     uint32_t TAIL;
-    operator t39_film_layer_list<A_174>() const;
+    operator t39_film_layer_list<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_160};
 };
 
@@ -1548,7 +1549,7 @@ struct t3A_film_layer_list_node {
     COND_FIELD(version >= A_174, uint32_t, un1);
 
     uint32_t TAIL;
-    operator t3A_film_layer_list_node<A_174>() const;
+    operator t3A_film_layer_list_node<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_174};
 };
 
@@ -1566,7 +1567,7 @@ struct x3B {
     COND_FIELD(version >= A_172, uint32_t, un3);
 
     uint32_t TAIL;
-    operator x3B<A_174>() const;
+    operator x3B<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_172};
 
     std::string model_str;
@@ -1582,7 +1583,7 @@ struct x3C {
     uint32_t size;
 
     uint32_t TAIL;
-    operator x3C<A_174>() const;
+    operator x3C<A_175>() const;
     static constexpr AllegroVersion versions[1] = {A_174};
 
     std::vector<uint32_t> ptrs;
@@ -1616,45 +1617,45 @@ class File {
 
     uint8_t layer_count = 0;
 
-    x01<A_174> get_x01(uint32_t k);
-    const x03<A_174> get_x03(uint32_t k);
-    const x04<A_174> get_x04(uint32_t k);
-    const x05<A_174> get_x05(uint32_t k);
-    const x06<A_174> get_x06(uint32_t k);
-    const x07<A_174> get_x07(uint32_t k);
-    const x08<A_174> get_x08(uint32_t k);
-    const x09<A_174> get_x09(uint32_t k);
-    const x0A<A_174> get_x0A(uint32_t k);
-    const x0C<A_174> get_x0C(uint32_t k);
-    const x0D<A_174> get_x0D(uint32_t k);
-    const x0E<A_174> get_x0E(uint32_t k);
-    const x10<A_174> get_x10(uint32_t k);
-    const x14<A_174> get_x14(uint32_t k);
-    const x15<A_174> get_x15(uint32_t k);
-    const x16<A_174> get_x16(uint32_t k);
-    const x17<A_174> get_x17(uint32_t k);
-    const x1B<A_174> get_x1B(uint32_t k);
-    const x1C<A_174> get_x1C(uint32_t k);
-    const x1D<A_174> get_x1D(uint32_t k);
-    const x1F<A_174> get_x1F(uint32_t k);
-    const x23<A_174> get_x23(uint32_t k);
-    const x24<A_174> get_x24(uint32_t k);
-    const x26<A_174> get_x26(uint32_t k);
-    const x28<A_174> get_x28(uint32_t k);
-    const x2B<A_174> get_x2B(uint32_t k);
-    const x2C<A_174> get_x2C(uint32_t k);
-    const x2D<A_174> get_x2D(uint32_t k);
-    const x2E<A_174> get_x2E(uint32_t k);
-    const x30<A_174> get_x30(uint32_t k);
-    const x31<A_174> get_x31(uint32_t k);
-    const x32<A_174> get_x32(uint32_t k);
-    const x33<A_174> get_x33(uint32_t k);
-    const x34<A_174> get_x34(uint32_t k);
-    const x37<A_174> get_x37(uint32_t k);
-    const t38_film<A_174> get_x38(uint32_t k);
-    const t39_film_layer_list<A_174> get_x39(uint32_t k);
-    const t3A_film_layer_list_node<A_174> get_x3A(uint32_t k);
-    const x3C<A_174> get_x3C(uint32_t k);
+    x01<A_175> get_x01(uint32_t k);
+    const x03<A_175> get_x03(uint32_t k);
+    const x04<A_175> get_x04(uint32_t k);
+    const x05<A_175> get_x05(uint32_t k);
+    const x06<A_175> get_x06(uint32_t k);
+    const x07<A_175> get_x07(uint32_t k);
+    const x08<A_175> get_x08(uint32_t k);
+    const x09<A_175> get_x09(uint32_t k);
+    const x0A<A_175> get_x0A(uint32_t k);
+    const x0C<A_175> get_x0C(uint32_t k);
+    const x0D<A_175> get_x0D(uint32_t k);
+    const x0E<A_175> get_x0E(uint32_t k);
+    const x10<A_175> get_x10(uint32_t k);
+    const x14<A_175> get_x14(uint32_t k);
+    const x15<A_175> get_x15(uint32_t k);
+    const x16<A_175> get_x16(uint32_t k);
+    const x17<A_175> get_x17(uint32_t k);
+    const x1B<A_175> get_x1B(uint32_t k);
+    const x1C<A_175> get_x1C(uint32_t k);
+    const x1D<A_175> get_x1D(uint32_t k);
+    const x1F<A_175> get_x1F(uint32_t k);
+    const x23<A_175> get_x23(uint32_t k);
+    const x24<A_175> get_x24(uint32_t k);
+    const x26<A_175> get_x26(uint32_t k);
+    const x28<A_175> get_x28(uint32_t k);
+    const x2B<A_175> get_x2B(uint32_t k);
+    const x2C<A_175> get_x2C(uint32_t k);
+    const x2D<A_175> get_x2D(uint32_t k);
+    const x2E<A_175> get_x2E(uint32_t k);
+    const x30<A_175> get_x30(uint32_t k);
+    const x31<A_175> get_x31(uint32_t k);
+    const x32<A_175> get_x32(uint32_t k);
+    const x33<A_175> get_x33(uint32_t k);
+    const x34<A_175> get_x34(uint32_t k);
+    const x37<A_175> get_x37(uint32_t k);
+    const t38_film<A_175> get_x38(uint32_t k);
+    const t39_film_layer_list<A_175> get_x39(uint32_t k);
+    const t3A_film_layer_list_node<A_175> get_x3A(uint32_t k);
+    const x3C<A_175> get_x3C(uint32_t k);
 
     bool is_type(uint32_t k, uint8_t t);
 
@@ -1662,7 +1663,7 @@ class File {
     // yet, so we can't read what magic we are.
     void prepare();
 
-    operator File<A_174>() const;
+    operator File<A_175>() const;
 
     template <typename T>
     struct Iter {
@@ -1878,46 +1879,46 @@ class File {
     void cache_upgrade_funcs();
     std::ptrdiff_t offset(void *);
 
-    x01<A_174> (*x01_upgrade)(void *);
-    x03<A_174> (*x03_upgrade)(void *);
-    x04<A_174> (*x04_upgrade)(void *);
-    x05<A_174> (*x05_upgrade)(void *);
-    x06<A_174> (*x06_upgrade)(void *);
-    x07<A_174> (*x07_upgrade)(void *);
-    x08<A_174> (*x08_upgrade)(void *);
-    x09<A_174> (*x09_upgrade)(void *);
-    x0A<A_174> (*x0A_upgrade)(void *);
-    x0C<A_174> (*x0C_upgrade)(void *);
-    x0D<A_174> (*x0D_upgrade)(void *);
-    x0E<A_174> (*x0E_upgrade)(void *);
-    x10<A_174> (*x10_upgrade)(void *);
-    x14<A_174> (*x14_upgrade)(void *);
-    x15<A_174> (*x15_upgrade)(void *);
-    x16<A_174> (*x16_upgrade)(void *);
-    x17<A_174> (*x17_upgrade)(void *);
-    x1B<A_174> (*x1B_upgrade)(void *);
-    x1C<A_174> (*x1C_upgrade)(void *);
-    t13<A_174> (*t13_upgrade)(void *);
-    x1D<A_174> (*x1D_upgrade)(void *);
-    x1F<A_174> (*x1F_upgrade)(void *);
-    x23<A_174> (*x23_upgrade)(void *);
-    x24<A_174> (*x24_upgrade)(void *);
-    x26<A_174> (*x26_upgrade)(void *);
-    x28<A_174> (*x28_upgrade)(void *);
-    x2B<A_174> (*x2B_upgrade)(void *);
-    x2C<A_174> (*x2C_upgrade)(void *);
-    x2D<A_174> (*x2D_upgrade)(void *);
-    x2E<A_174> (*x2E_upgrade)(void *);
-    x30<A_174> (*x30_upgrade)(void *);
-    x31<A_174> (*x31_upgrade)(void *);
-    x32<A_174> (*x32_upgrade)(void *);
-    x33<A_174> (*x33_upgrade)(void *);
-    x34<A_174> (*x34_upgrade)(void *);
-    x37<A_174> (*x37_upgrade)(void *);
-    t38_film<A_174> (*x38_upgrade)(void *);
-    t39_film_layer_list<A_174> (*x39_upgrade)(void *);
-    t3A_film_layer_list_node<A_174> (*x3A_upgrade)(void *);
-    x3C<A_174> (*x3C_upgrade)(void *);
+    x01<A_175> (*x01_upgrade)(void *);
+    x03<A_175> (*x03_upgrade)(void *);
+    x04<A_175> (*x04_upgrade)(void *);
+    x05<A_175> (*x05_upgrade)(void *);
+    x06<A_175> (*x06_upgrade)(void *);
+    x07<A_175> (*x07_upgrade)(void *);
+    x08<A_175> (*x08_upgrade)(void *);
+    x09<A_175> (*x09_upgrade)(void *);
+    x0A<A_175> (*x0A_upgrade)(void *);
+    x0C<A_175> (*x0C_upgrade)(void *);
+    x0D<A_175> (*x0D_upgrade)(void *);
+    x0E<A_175> (*x0E_upgrade)(void *);
+    x10<A_175> (*x10_upgrade)(void *);
+    x14<A_175> (*x14_upgrade)(void *);
+    x15<A_175> (*x15_upgrade)(void *);
+    x16<A_175> (*x16_upgrade)(void *);
+    x17<A_175> (*x17_upgrade)(void *);
+    x1B<A_175> (*x1B_upgrade)(void *);
+    x1C<A_175> (*x1C_upgrade)(void *);
+    t13<A_175> (*t13_upgrade)(void *);
+    x1D<A_175> (*x1D_upgrade)(void *);
+    x1F<A_175> (*x1F_upgrade)(void *);
+    x23<A_175> (*x23_upgrade)(void *);
+    x24<A_175> (*x24_upgrade)(void *);
+    x26<A_175> (*x26_upgrade)(void *);
+    x28<A_175> (*x28_upgrade)(void *);
+    x2B<A_175> (*x2B_upgrade)(void *);
+    x2C<A_175> (*x2C_upgrade)(void *);
+    x2D<A_175> (*x2D_upgrade)(void *);
+    x2E<A_175> (*x2E_upgrade)(void *);
+    x30<A_175> (*x30_upgrade)(void *);
+    x31<A_175> (*x31_upgrade)(void *);
+    x32<A_175> (*x32_upgrade)(void *);
+    x33<A_175> (*x33_upgrade)(void *);
+    x34<A_175> (*x34_upgrade)(void *);
+    x37<A_175> (*x37_upgrade)(void *);
+    t38_film<A_175> (*x38_upgrade)(void *);
+    t39_film_layer_list<A_175> (*x39_upgrade)(void *);
+    t3A_film_layer_list_node<A_175> (*x3A_upgrade)(void *);
+    x3C<A_175> (*x3C_upgrade)(void *);
 };
 
 #endif

@@ -29,6 +29,12 @@ download_brd(beaglebone_ai
     URL_HASH MD5=ec0a401266c8e8bf94f6dbf19eb5fafe
 )
 
+# License: CC-BY-4.0 (https://openbeagle.org/beagley-ai/beagley-ai/-/blob/c4c30e13adfb64c1feea3d927340288f7a261591/LICENSE)
+download_brd(beagle_y
+    URL https://openbeagle.org/beagley-ai/beagley-ai/-/raw/main/design/BeagleY-AI_PCB_V1.0_240105.brd
+    URL_HASH MD5=adf96848a307076dca3ef09063179fc1
+)
+
 # License: CC BY-SA 3.0 US (https://github.com/parallella/parallella-hw/blob/a6bcdf844c56366525bef73d3355c75bba19e3f5/LICENSE)
 download_brd(parallella
     URL https://github.com/parallella/parallella-hw/raw/a6bcdf844c56366525bef73d3355c75bba19e3f5/parallella/src/parallella_layout.brd
@@ -140,6 +146,7 @@ download_brd(euro_adc
 FetchContent_MakeAvailable(
     avalon
     beaglebone_ai
+    beagle_y
     creatable_main
     eda_v3
     euro_adc
