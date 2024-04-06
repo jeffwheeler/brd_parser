@@ -416,6 +416,10 @@ void BrdView::drawX30(const x30<A_175> *inst, QPen *pen) {
     }
     */
 
+    if (!fs->is_type(inst->str_graphic_ptr, 0x31)) {
+        return;
+    }
+
     const x31<A_175> &str_graphic = fs->get_x31(inst->str_graphic_ptr);
 
     QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
