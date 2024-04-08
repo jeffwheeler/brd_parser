@@ -100,6 +100,11 @@ struct ll_ptrs {
   uint32_t head;
 };
 
+enum class BRD_UNITS : uint8_t {
+  IMPERIAL = 0x01,
+  METRIC = 0x03,
+};
+
 struct header {
   uint32_t magic;
   uint32_t un1[4];
@@ -132,15 +137,24 @@ struct header {
   ll_ptrs ll_x21;
   ll_ptrs ll_unused_4;
   ll_ptrs ll_x0A;
-  uint32_t un5;
+  uint32_t un3;
   char allegro_version[60];
-  uint32_t un6;
+  uint32_t un4;
   uint32_t max_key;
-  uint32_t un7[20];
+  uint32_t un5[17];
+
+  BRD_UNITS units;
+  uint8_t un6;
+  uint16_t un7;
+
+  uint32_t un8[2];
   uint32_t x27_end_offset;
-  uint32_t un8;
+  uint32_t un9;
   uint32_t strings_count;
-  uint32_t un9[166];
+
+  uint32_t un10[53];
+  uint32_t unit_divisor;
+  uint32_t un11[112];
 };
 
 // Instance
