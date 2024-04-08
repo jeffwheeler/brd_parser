@@ -56,7 +56,7 @@ void check_header_values(File<version>& fs) {
                     fs.is_type(fs.hdr->ll_x1D_x1E_x1F.head, 0x1F));
     }
     if (fs.hdr->ll_x38.head != 0) {
-        for (auto& i : fs.iter_x38()) {
+        for (auto& i : fs.iter_t38_film()) {
         }
     }
     if (fs.hdr->ll_x2C.head != 0) {

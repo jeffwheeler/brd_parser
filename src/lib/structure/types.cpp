@@ -1573,7 +1573,7 @@ const x37<A_MAX> File<A_MAX>::get_x37(uint32_t k) {
 }
 
 template <>
-const t38_film<A_MAX> File<A_MAX>::get_x38(uint32_t k) {
+const t38_film<A_MAX> File<A_MAX>::get_t38_film(uint32_t k) {
     return this->x38_upgrade(this->ptrs[k]);
 }
 
