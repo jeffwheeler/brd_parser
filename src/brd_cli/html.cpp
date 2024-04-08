@@ -45,7 +45,19 @@ void stream_header(std::string &fname, File<A_MAX> &f) {
       "<tr><td>Allegro Version</td><td "
       "class='text-break'><code>%s</code></td></tr>",
       f.hdr->allegro_version);
+  std::cout << "<tr><td>Units</td>";
+  switch (f.hdr->units) {
+      case BRD_UNITS::METRIC:
+          std::cout << "<td>Metric</td>";
+          break;
+      case BRD_UNITS::IMPERIAL:
+          std::cout << "<td>Imperial</td>";
+          break;
+      default:
+          printf("<td>Unrecognized! <code>%02hhX</code></td>", f.hdr->units);
+  };
   std::cout << R"A(
+                </tr>
             </tbody>
         </table>
     )A";
