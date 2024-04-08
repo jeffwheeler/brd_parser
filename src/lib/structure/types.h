@@ -157,6 +157,8 @@ struct header {
   uint32_t un11[112];
 };
 
+static_assert(offsetof(header, unit_divisor) == 620);
+
 // Instance
 template <AllegroVersion version>
 struct x07 {
