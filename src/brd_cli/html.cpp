@@ -26,7 +26,7 @@ char HTML_FOOTER[] = R"A(
 </html>
 )A";
 
-void stream_header(std::string& fname, File<A_175>& f) {
+void stream_header(std::string& fname, File<A_MAX>& f) {
     std::cout << "<h1>Decoded .brd file</h1>";
     printf("<p>Filename: <code>%s</code></p>", fname.c_str());
     std::cout << R"A(
@@ -51,7 +51,7 @@ void stream_header(std::string& fname, File<A_175>& f) {
     )A";
 }
 
-void stream_layers(File<A_175>& f) {
+void stream_layers(File<A_MAX>& f) {
     std::cout << R"A(
         <h2>Layers</h2>
         <p>Not all fields shown</p>
@@ -83,7 +83,27 @@ void stream_layers(File<A_175>& f) {
     )A";
 }
 
-void stream_strings(File<A_175>& f) {
+void stream_films(File<A_MAX>& f) {
+    std::cout << R"A(
+        <h2>Films</h2>
+        <div class="border overflow-auto mb-3" style="max-height: 300px; max-width: 500px">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Film name</th>
+                        <th>Layers</th>
+                    </tr>
+                </thead>
+                <tbody>
+    )A";
+    std::cout << R"A(
+                </tbody>
+            </table>
+        </div>
+    )A";
+}
+
+void stream_strings(File<A_MAX>& f) {
     std::cout << R"A(
         <h2>Strings</h2>
         <div class="border overflow-auto mb-3" style="max-height: 300px; max-width: 500px">
@@ -109,7 +129,7 @@ void stream_strings(File<A_175>& f) {
     )A";
 }
 
-void stream_x30(File<A_175>& f) {
+void stream_x30(File<A_MAX>& f) {
     std::cout << R"A(
         <h2>Placed string objects</h2>
         <div class="border overflow-auto mb-3" style="max-height: 300px; max-width: 900px">
@@ -126,8 +146,8 @@ void stream_x30(File<A_175>& f) {
     )A";
     /*
     for (auto& [k, inst] : f.x30_map) {
-        const x31<A_175>* str_graphic =
-            (const x31<A_175>*)&f.x31_map.at(inst.str_graphic_ptr);
+        const x31<A_MAX>* str_graphic =
+            (const x31<A_MAX>*)&f.x31_map.at(inst.str_graphic_ptr);
 
         printf(R"A(
                 <tr>
@@ -148,7 +168,7 @@ void stream_x30(File<A_175>& f) {
     )A";
 }
 
-void stream_misc_metadata(File<A_175>& f) {
+void stream_misc_metadata(File<A_MAX>& f) {
     std::cout << R"A(
         <h2>Misc other metadata</h2>
         <div class="mb-3">
@@ -164,10 +184,11 @@ void stream_misc_metadata(File<A_175>& f) {
     )A";
 }
 
-void stream_file(std::string& fname, File<A_175>& f) {
+void stream_file(std::string& fname, File<A_MAX>& f) {
     std::cout << HTML_HEADER;
     stream_header(fname, f);
     stream_layers(f);
+    stream_films(f);
     stream_strings(f);
     stream_x30(f);
     stream_misc_metadata(f);

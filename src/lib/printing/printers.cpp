@@ -7,7 +7,7 @@
  * Helpers *
  ***********/
 
-sfs<A_175> SFS_TABLE[] = {
+sfs<A_MAX> SFS_TABLE[] = {
     // 0x00
     {},
     // 0x01
@@ -164,7 +164,7 @@ void print_struct(const uint32_t k, File<version> &fs, const int d) {
     }
 }
 
-template void print_struct<A_175>(const uint32_t k, File<A_175> &fs,
+template void print_struct<A_MAX>(const uint32_t k, File<A_MAX> &fs,
                                   const int d);
 
 /*******************
@@ -173,14 +173,14 @@ template void print_struct<A_175>(const uint32_t k, File<A_175> &fs,
 
 template <AllegroVersion version>
 void default_printer(const void *untyped_inst, File<version> *fs, const int d) {
-    const x05<A_175> *inst = (const x05<A_175> *)untyped_inst;
+    const x05<A_MAX> *inst = (const x05<A_MAX> *)untyped_inst;
     printf_d(d, "\x1b[33mDefault printer:\x1b[0m t=0x%08X k=0x%08X\n",
              ntohl(inst->t), ntohl(inst->k));
 }
 
 template <AllegroVersion version>
 void print_x01(const void *untyped_inst, File<version> *fs, const int d) {
-    const x01<A_175> *inst = (const x01<A_175> *)untyped_inst;
+    const x01<A_MAX> *inst = (const x01<A_MAX> *)untyped_inst;
     std::pair<double, double> center = x01_center(inst);
     printf_d(d,
              "x01: t=0x%04X un0=%02X subtype=%02X k=0x%08X un1=%08X"
@@ -474,7 +474,7 @@ void print_x05(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x06(const void *untyped_inst, File<version> *fs, const int d) {
-    const x06<A_175> *inst = (const x06<A_175> *)untyped_inst;
+    const x06<A_MAX> *inst = (const x06<A_MAX> *)untyped_inst;
     printf_d(d, "x06: t=0x%08X k=0x%08X \x1b[34m\"%s\" \"%s\"\x1b[0m\n",
              ntohl(inst->t), ntohl(inst->k), str_lookup(inst->ptr1, *fs),
              str_lookup(inst->ptr2, *fs));
