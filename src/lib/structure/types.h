@@ -697,11 +697,11 @@ struct x17 {
 
 // A net
 template <AllegroVersion version>
-struct x1B {
+struct t1B_net {
   uint32_t t;
   uint32_t k;
 
-  // Points to another `x1B`
+  // Points to another `t1B_net`
   uint32_t next;
 
   uint32_t net_name;
@@ -738,7 +738,7 @@ struct x1B {
   uint32_t ptr6;
 
   uint32_t TAIL;
-  operator x1B<A_MAX>() const;
+  operator t1B_net<A_MAX>() const;
   static constexpr AllegroVersion versions[1] = {A_172};
 };
 
@@ -1651,7 +1651,7 @@ class File {
   const x15<A_MAX> get_x15(uint32_t k);
   const x16<A_MAX> get_x16(uint32_t k);
   const x17<A_MAX> get_x17(uint32_t k);
-  const x1B<A_MAX> get_x1B(uint32_t k);
+  const t1B_net<A_MAX> get_x1B(uint32_t k);
   const x1C<A_MAX> get_x1C(uint32_t k);
   const x1D<A_MAX> get_x1D(uint32_t k);
   const x1F<A_MAX> get_x1F(uint32_t k);
@@ -1773,15 +1773,16 @@ class File {
         Iter<x14<version>>(*this, this->hdr->ll_x14.tail, &File::get_x14));
   };
 
-  IterBase<x1B<version>> iter_x1B() {
+  IterBase<t1B_net<version>> iter_t1B_net() {
     if (this->hdr->ll_x1B.head == 0) {
-      return IterBase<x1B<version>>(
-          Iter<x1B<version>>(*this, 0, &File::get_x1B),
-          Iter<x1B<version>>(*this, 0, &File::get_x1B));
+      return IterBase<t1B_net<version>>(
+          Iter<t1B_net<version>>(*this, 0, &File::get_x1B),
+          Iter<t1B_net<version>>(*this, 0, &File::get_x1B));
     } else {
-      return IterBase<x1B<version>>(
-          Iter<x1B<version>>(*this, this->hdr->ll_x1B.head, &File::get_x1B),
-          Iter<x1B<version>>(*this, this->hdr->ll_x1B.tail, &File::get_x1B));
+      return IterBase<t1B_net<version>>(
+          Iter<t1B_net<version>>(*this, this->hdr->ll_x1B.head, &File::get_x1B),
+          Iter<t1B_net<version>>(*this, this->hdr->ll_x1B.tail,
+                                 &File::get_x1B));
     }
   };
 
@@ -1904,7 +1905,7 @@ class File {
   x15<A_MAX> (*x15_upgrade)(void *);
   x16<A_MAX> (*x16_upgrade)(void *);
   x17<A_MAX> (*x17_upgrade)(void *);
-  x1B<A_MAX> (*x1B_upgrade)(void *);
+  t1B_net<A_MAX> (*x1B_upgrade)(void *);
   x1C<A_MAX> (*x1C_upgrade)(void *);
   t13<A_MAX> (*t13_upgrade)(void *);
   x1D<A_MAX> (*x1D_upgrade)(void *);

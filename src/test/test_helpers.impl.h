@@ -24,7 +24,7 @@ void check_header_values(File<version>& fs) {
     }
   }
   if (fs.hdr->ll_x1B.head != 0) {
-    for (auto& i : fs.iter_x1B()) {
+    for (auto& i : fs.iter_t1B_net()) {
     }
   }
   if (fs.hdr->ll_x1C.head != 0) {

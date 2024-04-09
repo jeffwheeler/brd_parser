@@ -1274,8 +1274,8 @@ void print_x17(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x1B(const void *untyped_inst, File<version> *fs, const int d) {
-    const uint32_t k = ((const x1B<version> *)untyped_inst)->k;
-    x1B<version> inst = fs->get_x1B(k);
+    const uint32_t k = ((const t1B_net<version> *)untyped_inst)->k;
+    t1B_net<version> inst = fs->get_x1B(k);
     printf_d(d,
              "x1B: \x1b[36;3mNet\x1b[0m t=0x%08X k=0x%08X type=%08X %08X "
              "\x1b[34m\"%s\"\x1b[0m\n",

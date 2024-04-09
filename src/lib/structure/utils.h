@@ -19,6 +19,18 @@ char *str_lookup(uint32_t id, File<version> &fs) {
 }
 
 template <AllegroVersion version>
+const char *x03_str_lookup(uint32_t id, File<version> &fs) {
+  const x03<version> *i = (const x03<version> *)fs.ptrs[id];
+  if (i->subtype.size == 0) {
+      return "";
+  } else if (i->subtype.t == 0x6A) {
+    return str_lookup(i->ptr, fs);
+  } else {
+    return i->s.c_str();
+  }
+}
+
+template <AllegroVersion version>
 std::optional<std::string> x2B_footprint(const x2B<version> *inst,
                                          File<version> *fs) {
   if (fs->strings.count(inst->footprint_string_ref) > 0) {
@@ -100,8 +112,8 @@ std::string x38_layer_name(const t38_film<version> &inst, File<version> *fs) {
 }
 
 template <AllegroVersion version>
-std::vector<std::pair<uint8_t, uint8_t>>
-x39_layers(const t39_film_layer_list<version> &inst, File<version> &fs) {
+std::vector<std::pair<uint8_t, uint8_t>> x39_layers(
+    const t39_film_layer_list<version> &inst, File<version> &fs) {
   std::vector<std::pair<uint8_t, uint8_t>> layers;
 
   uint32_t next_key = inst.head;
@@ -152,7 +164,7 @@ std::optional<uint8_t> x14_layer(const uint32_t k, File<version> *fs) {
 template <AllegroVersion version>
 char *x1B_net_name(const uint32_t k, File<version> *fs) {
   if (fs->is_type(k, 0x1B)) {
-    const x1B<version> inst = fs->get_x1B(k);
+    const t1B_net<version> inst = fs->get_x1B(k);
     return str_lookup(inst.net_name, *fs);
   } else {
     return nullptr;

@@ -47,14 +47,14 @@ void stream_header(std::string &fname, File<A_MAX> &f) {
       f.hdr->allegro_version);
   std::cout << "<tr><td>Units</td>";
   switch (f.hdr->units) {
-      case BRD_UNITS::METRIC:
-          std::cout << "<td>Metric</td>";
-          break;
-      case BRD_UNITS::IMPERIAL:
-          std::cout << "<td>Imperial</td>";
-          break;
-      default:
-          printf("<td>Unrecognized! <code>%02hhX</code></td>", f.hdr->units);
+    case BRD_UNITS::METRIC:
+      std::cout << "<td>Metric</td>";
+      break;
+    case BRD_UNITS::IMPERIAL:
+      std::cout << "<td>Imperial</td>";
+      break;
+    default:
+      printf("<td>Unrecognized! <code>%02hhX</code></td>", f.hdr->units);
   };
   std::cout << R"A(
                 </tr>
@@ -104,7 +104,7 @@ void stream_layers(File<A_MAX> &f) {
 void stream_films(File<A_MAX> &f) {
   std::cout << R"A(
         <h2>Films</h2>
-        <div class="border overflow-auto mb-3" style="max-height: 300px; max-width: 500px">
+        <div class="border overflow-auto mb-3" style="max-height: 300px; max-width: 900px">
             <table class="table">
                 <thead>
                     <tr>
@@ -148,6 +148,38 @@ void stream_strings(File<A_MAX> &f) {
         "<tr><td><code>0x%08X</code></td><td "
         "class='text-break'><code>%s</code></tr>\n",
         k, s);
+  }
+  std::cout << R"A(
+                </tbody>
+            </table>
+        </div>
+    )A";
+}
+
+void stream_nets(File<A_MAX> &f) {
+  std::cout << R"A(
+        <h2>Nets</h2>
+        <div class="border overflow-auto mb-3" style="max-height: 300px; max-width: 900px">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Net name</th>
+                        <th>Path</th>
+                    </tr>
+                </thead>
+                <tbody>
+    )A";
+  for (auto &net : f.iter_t1B_net()) {
+    printf("<tr><td><code>0x%08X</code></td><td><code>%s</code></td>", net.k,
+           x1B_net_name(net.k, &f));
+
+    if (net.path_str_ptr == 0) {
+      std::cout << "<td>Blank path</td></tr>";
+    } else {
+      printf("<td><code>%s</code></td></tr>",
+             x03_str_lookup(net.path_str_ptr, f));
+    }
   }
   std::cout << R"A(
                 </tbody>
@@ -216,7 +248,8 @@ void stream_file(std::string &fname, File<A_MAX> &f) {
   stream_header(fname, f);
   stream_layers(f);
   stream_films(f);
-  stream_strings(f);
+  // stream_strings(f);
+  stream_nets(f);
   stream_x30(f);
   stream_misc_metadata(f);
   std::cout << HTML_FOOTER;

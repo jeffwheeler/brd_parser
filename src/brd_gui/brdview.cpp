@@ -754,7 +754,7 @@ void BrdView::drawFile() {
     QPen *pen5 = new QPen(QColor(132, 169, 140, 127), 0);
     QPen *pen6 = new QPen(QColor(237, 211, 130, 127), 0);
 
-    for (auto &i_x1B : fs->iter_x1B()) {
+    for (auto &i_x1B : fs->iter_t1B_net()) {
         for (auto &i_x04 : fs->iter_x04(i_x1B.k)) {
             uint32_t k = i_x04.ptr2;
             while (1) {
@@ -1073,7 +1073,7 @@ char *BrdView::netName(uint32_t k) {
         if (fs->is_type(x28_inst.ptr1, 0x04)) {
             const x04<A_MAX> &x04_inst = fs->get_x04(x28_inst.ptr1);
             if (fs->is_type(x04_inst.ptr1, 0x1B)) {
-                const x1B<A_MAX> x1B_inst = fs->get_x1B(x04_inst.ptr1);
+                const t1B_net<A_MAX> x1B_inst = fs->get_x1B(x04_inst.ptr1);
                 // qDebug("Net name: 0x%08X", x1B_inst->net_name);
                 return fs->strings.at(x1B_inst.net_name);
             }
