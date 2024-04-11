@@ -1,14 +1,95 @@
+#include <gtest/gtest.h>
+
+#include <format>
+#include <iostream>
+#include <string>
+#include <string_view>
+
 #include "lib/structure/types.h"
+
+template <typename T, uint8_t J, AllegroVersion version>
+testing::AssertionResult CheckType(T& i, const ExpectRefType<J>& field,
+                                   File<version>& fs) {
+  if (fs.is_type(field, field.expected_type())) {
+    return testing::AssertionSuccess();
+  } else {
+    return testing::AssertionFailure() << std::format(
+               "key {:#012x} expected to be of type {:#04x}, but isn't (ptr "
+               "found in obj with k={:#012x})",
+               field.value, field.expected_type(), i.k);
+  }
+}
+
+template <typename T, uint8_t J, AllegroVersion version>
+testing::AssertionResult CheckNullableType(T& i, const ExpectRefType<J>& field,
+                                           File<version>& fs) {
+  if (field == 0x0) {
+    return testing::AssertionSuccess();
+  } else {
+    return CheckType(i, field, fs);
+  }
+}
+
+template <AllegroVersion version>
+void validate_x04(const x04<version>& i, File<version>& fs) {
+  if (i.next != fs.hdr->ll_x04.tail) {
+    EXPECT_TRUE(CheckType(i, i.next, fs));
+  }
+}
+
+template <AllegroVersion version>
+void validate_x06(const x06<version>& i, File<version>& fs) {
+  if (i.next != fs.hdr->ll_x06.tail) {
+    EXPECT_TRUE(CheckType(i, i.next, fs));
+  }
+}
+
+template <AllegroVersion version>
+void validate_x14(const x14<version>& i, File<version>& fs) {
+  if (i.next != fs.hdr->ll_x14.tail) {
+    EXPECT_TRUE(CheckType(i, i.next, fs));
+  }
+  EXPECT_TRUE(CheckNullableType(i, i.ptr3, fs));
+  EXPECT_TRUE(CheckNullableType(i, i.ptr4, fs));
+}
+
+template <AllegroVersion version>
+void validate_x1B(const t1B_net<version>& i, File<version>& fs) {
+  if (i.next != fs.hdr->ll_x1B.tail) {
+    EXPECT_TRUE(CheckType(i, i.next, fs));
+  }
+  EXPECT_TRUE(CheckNullableType(i, i.ptr1, fs));
+  EXPECT_TRUE(CheckNullableType(i, i.path_str_ptr, fs));
+  EXPECT_TRUE(CheckNullableType(i, i.ptr6, fs));
+}
+
+template <AllegroVersion version>
+void validate_x23(const x23<version>& i, File<version>& fs) {
+  EXPECT_TRUE(fs.is_type(i.ptr1, i.ptr1.expected_type()));
+}
+
+template <AllegroVersion version>
+void validate_x2B(const x2B<version>& i, File<version>& fs) {
+  if (i.next != fs.hdr->ll_x2B.tail) {
+    EXPECT_TRUE(CheckType(i, i.next, fs));
+  }
+  EXPECT_TRUE(CheckNullableType(i, i.ptr2, fs));
+  EXPECT_TRUE(CheckNullableType(i, i.ptr3, fs));
+  EXPECT_TRUE(CheckNullableType(i, i.ptr4, fs));
+  EXPECT_TRUE(CheckNullableType(i, i.ptr5, fs));
+}
 
 template <AllegroVersion version>
 void check_header_values(File<version>& fs) {
   if (fs.hdr->ll_x04.head != 0) {
     // Iterating will crash if the pointers are incorrect
     for (auto& i : fs.iter_x04()) {
+      validate_x04(i, fs);
     }
   }
   if (fs.hdr->ll_x06.head != 0) {
     for (auto& i : fs.iter_x06()) {
+      validate_x06(i, fs);
     }
   }
   if (fs.hdr->ll_x0C_2.head != 0) {
@@ -21,10 +102,12 @@ void check_header_values(File<version>& fs) {
   }
   if (fs.hdr->ll_x14.head != 0) {
     for (auto& i : fs.iter_x14()) {
+      validate_x14(i, fs);
     }
   }
   if (fs.hdr->ll_x1B.head != 0) {
     for (auto& i : fs.iter_t1B_net()) {
+      validate_x1B(i, fs);
     }
   }
   if (fs.hdr->ll_x1C.head != 0) {
@@ -36,6 +119,7 @@ void check_header_values(File<version>& fs) {
                 fs.is_type(fs.hdr->ll_x24_x28.head, 0x28));
   }
   for (auto& i_x2B : fs.iter_x2B()) {
+    validate_x2B(i_x2B, fs);
     for (auto& i_x2D : fs.iter_x2D(i_x2B.k)) {
       for (auto& i_x30 : fs.iter_x30(i_x2D.k)) {
       }
@@ -83,6 +167,6 @@ void check_header_values(File<version>& fs) {
     for (auto& i : fs.iter_x0A()) {
     }
   }
-  EXPECT_TRUE(fs.hdr->units == BRD_UNITS::IMPERIAL ||
-              fs.hdr->units == BRD_UNITS::METRIC);
+  EXPECT_TRUE(fs.hdr->units == Units::kImperial ||
+              fs.hdr->units == Units::kMetric);
 }

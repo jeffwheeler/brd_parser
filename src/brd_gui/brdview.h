@@ -17,26 +17,26 @@ class BrdView : public QGraphicsView {
    public:
     explicit BrdView(MainWindow *parent = nullptr);
 
-    void loadFile(File<A_MAX> *fs);
+    void loadFile(File<kAMax> *fs);
 
     void zoomIn();
     void zoomOut();
     void zoomFit();
 
-    void drawX01(const x01<A_MAX> *inst, QPainterPath *path);
-    void drawX05(const x05<A_MAX> *inst, QPen *pen);
-    void drawX14(const x14<A_MAX> *inst, QPen *pen);
-    void drawX15(const x15<A_MAX> *inst, QPainterPath *path);
-    void drawX16(const x16<A_MAX> *inst, QPainterPath *path);
-    void drawX17(const x17<A_MAX> *inst, QPainterPath *path);
-    void drawX23(const x23<A_MAX> *inst, QPen *pen);
-    void drawX28(const x28<A_MAX> *inst, QPen *pen);
-    void drawX2B(const x2B<A_MAX> *inst, QPen *pen);
-    void drawX2D(const x2D<A_MAX> *inst, QPen *pen);
-    void drawX30(const x30<A_MAX> *inst, QPen *pen);
-    void drawX32(const x32<A_MAX> *inst, QPen *pen, uint32_t sym_rotation);
-    void drawX33(const x33<A_MAX> *inst, QPen *pen);
-    void drawX34(const x34<A_MAX> *inst, QPen *pen);
+    void drawX01(const x01<kAMax> *inst, QPainterPath *path);
+    void drawX05(const x05<kAMax> *inst, QPen *pen);
+    void drawX14(const x14<kAMax> *inst, QPen *pen);
+    void drawX15(const x15<kAMax> *inst, QPainterPath *path);
+    void drawX16(const x16<kAMax> *inst, QPainterPath *path);
+    void drawX17(const x17<kAMax> *inst, QPainterPath *path);
+    void drawX23(const x23<kAMax> *inst, QPen *pen);
+    void drawX28(const x28<kAMax> *inst, QPen *pen);
+    void drawX2B(const x2B<kAMax> *inst, QPen *pen);
+    void drawX2D(const x2D<kAMax> *inst, QPen *pen);
+    void drawX30(const x30<kAMax> *inst, QPen *pen);
+    void drawX32(const x32<kAMax> *inst, QPen *pen, uint32_t sym_rotation);
+    void drawX33(const x33<kAMax> *inst, QPen *pen);
+    void drawX34(const x34<kAMax> *inst, QPen *pen);
     void drawShape(const uint32_t ptr, QPen *pen);
     void drawFile();
 
@@ -64,7 +64,7 @@ class BrdView : public QGraphicsView {
     qreal centerX, centerY;
     std::unordered_set<uint32_t> already_drawn;
 
-    File<A_MAX> *fs;
+    File<kAMax> *fs;
     const double factor;
     std::vector<std::pair<uint16_t, uint16_t>> selectedLayers;
 };

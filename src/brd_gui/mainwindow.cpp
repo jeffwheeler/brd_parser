@@ -590,8 +590,8 @@ void MainWindow::selectFilm() {
 
         // Lookup layers associated with this film
         uint32_t x38_k = layer_cache[t.toStdString()];
-        const t38_film<A_MAX>& film = fs->get_t38_film(x38_k);
-        const t39_film_layer_list<A_MAX>& layer_list =
+        const t38_film<kAMax>& film = fs->get_t38_film(x38_k);
+        const t39_film_layer_list<kAMax>& layer_list =
             fs->get_x39(film.layer_list);
         for (const auto& layer : x39_layers(layer_list, fs.value())) {
             layers.push_back(layer);

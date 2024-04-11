@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
   std::string fname = argv[1];
   auto parsed_file = parse_file(argv[1]);
   if (parsed_file.has_value()) {
-    stream_file(fname, *parsed_file);
+    // stream_file(fname, *parsed_file);
   }
 
   /*
@@ -42,8 +42,7 @@ int main(int argc, char* argv[]) {
   }
   */
 
-  /*
-  ll_ptrs pts = parsed_file->hdr->ll_x1B;
+  LinkedListPtrs pts = parsed_file->hdr->ll_x1B;
   uint32_t k = pts.head;
   // k = ntohl(0x2FA3AD00);
   printf("Chain started at key = 0x %08X, expecting to end at 0x %08X\n",
@@ -135,5 +134,4 @@ int main(int argc, char* argv[]) {
       break;
     }
   }
-  */
 }

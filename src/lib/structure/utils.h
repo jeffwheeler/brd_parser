@@ -5,8 +5,8 @@
 
 #include "types.h"
 
-std::pair<double, double> x01_center(const x01<A_MAX> *inst);
-const std::vector<stackup_material> ordered_stackup_materials(File<A_MAX> &f);
+std::pair<double, double> x01_center(const x01<kAMax> *inst);
+const std::vector<stackup_material> ordered_stackup_materials(File<kAMax> &f);
 std::string padtype(PadType padtype);
 
 template <AllegroVersion version>

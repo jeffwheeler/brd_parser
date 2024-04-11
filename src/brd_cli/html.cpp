@@ -26,7 +26,7 @@ char HTML_FOOTER[] = R"A(
 </html>
 )A";
 
-void stream_header(std::string &fname, File<A_MAX> &f) {
+void stream_header(std::string &fname, File<kAMax> &f) {
   std::cout << "<h1>Decoded .brd file</h1>";
   printf("<p>Filename: <code>%s</code></p>", fname.c_str());
   std::cout << R"A(
@@ -47,10 +47,10 @@ void stream_header(std::string &fname, File<A_MAX> &f) {
       f.hdr->allegro_version);
   std::cout << "<tr><td>Units</td>";
   switch (f.hdr->units) {
-    case BRD_UNITS::METRIC:
+    case Units::kMetric:
       std::cout << "<td>Metric</td>";
       break;
-    case BRD_UNITS::IMPERIAL:
+    case Units::kImperial:
       std::cout << "<td>Imperial</td>";
       break;
     default:
@@ -63,7 +63,7 @@ void stream_header(std::string &fname, File<A_MAX> &f) {
     )A";
 }
 
-void stream_layers(File<A_MAX> &f) {
+void stream_layers(File<kAMax> &f) {
   std::cout << R"A(
         <h2>Layers</h2>
         <p>Not all fields shown</p>
@@ -101,7 +101,7 @@ void stream_layers(File<A_MAX> &f) {
     )A";
 }
 
-void stream_films(File<A_MAX> &f) {
+void stream_films(File<kAMax> &f) {
   std::cout << R"A(
         <h2>Films</h2>
         <div class="border overflow-auto mb-3" style="max-height: 300px; max-width: 900px">
@@ -130,7 +130,7 @@ void stream_films(File<A_MAX> &f) {
     )A";
 }
 
-void stream_strings(File<A_MAX> &f) {
+void stream_strings(File<kAMax> &f) {
   std::cout << R"A(
         <h2>Strings</h2>
         <div class="border overflow-auto mb-3" style="max-height: 300px; max-width: 500px">
@@ -156,7 +156,7 @@ void stream_strings(File<A_MAX> &f) {
     )A";
 }
 
-void stream_nets(File<A_MAX> &f) {
+void stream_nets(File<kAMax> &f) {
   std::cout << R"A(
         <h2>Nets</h2>
         <div class="border overflow-auto mb-3" style="max-height: 300px; max-width: 900px">
@@ -188,7 +188,7 @@ void stream_nets(File<A_MAX> &f) {
     )A";
 }
 
-void stream_x30(File<A_MAX> &f) {
+void stream_x30(File<kAMax> &f) {
   std::cout << R"A(
         <h2>Placed string objects</h2>
         <div class="border overflow-auto mb-3" style="max-height: 300px; max-width: 900px">
@@ -227,7 +227,7 @@ void stream_x30(File<A_MAX> &f) {
     )A";
 }
 
-void stream_misc_metadata(File<A_MAX> &f) {
+void stream_misc_metadata(File<kAMax> &f) {
   std::cout << R"A(
         <h2>Misc other metadata</h2>
         <div class="mb-3">
@@ -243,7 +243,7 @@ void stream_misc_metadata(File<A_MAX> &f) {
     )A";
 }
 
-void stream_file(std::string &fname, File<A_MAX> &f) {
+void stream_file(std::string &fname, File<kAMax> &f) {
   std::cout << HTML_HEADER;
   stream_header(fname, f);
   stream_layers(f);

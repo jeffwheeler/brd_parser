@@ -10,42 +10,42 @@
 #include "lib/structure/types.h"
 
 template <template <AllegroVersion> typename T, AllegroVersion version>
-uint32_t default_parser(File<A_MAX>& fs, void*& address);
+uint32_t default_parser(File<kAMax>& fs, void*& address);
 
 template <AllegroVersion version>
-uint32_t parse_x03(File<A_MAX>& fs, void*& address);
+uint32_t parse_x03(File<kAMax>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x12(File<A_MAX>& fs, void*& address);
+uint32_t parse_x12(File<kAMax>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x1C(File<A_MAX>& fs, void*& address);
+uint32_t parse_x1C(File<kAMax>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x1D(File<A_MAX>& fs, void*& address);
+uint32_t parse_x1D(File<kAMax>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x1E(File<A_MAX>& fs, void*& address);
+uint32_t parse_x1E(File<kAMax>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x1F(File<A_MAX>& fs, void*& address);
+uint32_t parse_x1F(File<kAMax>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x21(File<A_MAX>& fs, void*& address);
+uint32_t parse_x21(File<kAMax>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x27(File<A_MAX>& fs, void*& address);
+uint32_t parse_x27(File<kAMax>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x2A(File<A_MAX>& fs, void*& address);
+uint32_t parse_x2A(File<kAMax>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x31(File<A_MAX>& fs, void*& address);
+uint32_t parse_x31(File<kAMax>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x35(File<A_MAX>& fs, void*& address);
+uint32_t parse_x35(File<kAMax>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x36(File<A_MAX>& fs, void*& address);
+uint32_t parse_x36(File<kAMax>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x3A(File<A_MAX>& fs, void*& address);
+uint32_t parse_x3A(File<kAMax>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x3B(File<A_MAX>& fs, void*& address);
+uint32_t parse_x3B(File<kAMax>& fs, void*& address);
 template <AllegroVersion version>
-uint32_t parse_x3C(File<A_MAX>& fs, void*& address);
+uint32_t parse_x3C(File<kAMax>& fs, void*& address);
 
 template <AllegroVersion version>
 struct parser_t {
-    uint32_t (*parse)(File<A_MAX>&, void*& cur_addr);
+    uint32_t (*parse)(File<kAMax>&, void*& cur_addr);
 };
 
 template <AllegroVersion version>
@@ -180,9 +180,9 @@ void skip(std::ifstream* f, std::ifstream::pos_type n);
 void skip_and_pad(std::ifstream* f, std::ifstream::pos_type n);
 
 template <AllegroVersion version>
-File<A_MAX> parse_file_raw(boost::interprocess::mapped_region region);
+File<kAMax> parse_file_raw(boost::interprocess::mapped_region region);
 
 // Non-template version automatically upgrades
-std::optional<File<A_MAX>> parse_file(const std::string& filepath);
+std::optional<File<kAMax>> parse_file(const std::string& filepath);
 
 #endif

@@ -34,15 +34,15 @@ using namespace boost::interprocess;
 #endif
 
 enum AllegroVersion {
-  A_160 = 0x00130000,
-  A_162 = 0x00130400,
-  A_164 = 0x00130C00,
-  A_165 = 0x00131000,
-  A_166 = 0x00131500,
-  A_172 = 0x00140400,
-  A_174 = 0x00140900,
-  A_175 = 0x00141500,
-  A_MAX = 0x00150000
+  kA160 = 0x00130000,
+  kA162 = 0x00130400,
+  kA164 = 0x00130C00,
+  kA165 = 0x00131000,
+  kA166 = 0x00131500,
+  kA172 = 0x00140400,
+  kA174 = 0x00140900,
+  kA175 = 0x00141500,
+  kAMax = 0x00150000
 };
 
 // This alternative to `sizeof` is used where conditional fields are at the end
@@ -52,6 +52,16 @@ constexpr size_t sizeof_until_tail() {
   return offsetof(T, TAIL);
 }
 
+template <uint8_t J>
+class ExpectRefType {
+ public:
+  uint32_t value{};
+
+  // Allow this object to be used as if it were a `T` directly.
+  operator uint32_t() const { return value; };
+   uint8_t expected_type() const { return J; }
+};
+
 template <AllegroVersion start, AllegroVersion end,
           template <AllegroVersion> class T>
 constexpr T<end> upgrade(const T<start> &a) {
@@ -59,7 +69,7 @@ constexpr T<end> upgrade(const T<start> &a) {
   if constexpr (n >= 1 && start < T<start>::versions[0]) {
     // Reinterpret the element as T<A_160> so we can use the explicitly-
     // defined conversion function.
-    return *reinterpret_cast<const T<A_160> *>(&a);
+    return *reinterpret_cast<const T<kA160> *>(&a);
   }
   if constexpr (n >= 2 && start < T<start>::versions[1]) {
     return *reinterpret_cast<const T<T<start>::versions[0]> *>(&a);
@@ -79,7 +89,7 @@ constexpr T<end> new_upgrade(void *x) {
   if constexpr (n >= 1 && start < T<start>::versions[0]) {
     // Reinterpret the element as T<A_160> so we can use the explicitly-
     // defined conversion function.
-    t = *reinterpret_cast<const T<A_160> *>(&a);
+    t = *reinterpret_cast<const T<kA160> *>(&a);
     return t;
   }
   if constexpr (n >= 2 && start < T<start>::versions[1]) {
@@ -95,55 +105,55 @@ constexpr T<end> new_upgrade(void *x) {
 }
 
 // Linked list
-struct ll_ptrs {
+struct LinkedListPtrs {
   uint32_t tail;
   uint32_t head;
 };
 
-enum class BRD_UNITS : uint8_t {
-  IMPERIAL = 0x01,
-  METRIC = 0x03,
+enum class Units : uint8_t {
+  kImperial = 0x01,
+  kMetric = 0x03,
 };
 
-struct header {
+struct Header {
   uint32_t magic;
   uint32_t un1[4];
   uint32_t object_count;
   uint32_t un2[9];
-  ll_ptrs ll_x04;
-  ll_ptrs ll_x06;
-  ll_ptrs ll_x0C_2;
-  ll_ptrs ll_x0E_x28;
-  ll_ptrs ll_x14;
-  ll_ptrs ll_x1B;
-  ll_ptrs ll_x1C;
-  ll_ptrs ll_x24_x28;
-  ll_ptrs ll_unused_1;
-  ll_ptrs ll_x2B;
-  ll_ptrs ll_x03_x30;
-  ll_ptrs ll_x0A_2;
-  ll_ptrs ll_x1D_x1E_x1F;
-  ll_ptrs ll_unused_2;
-  ll_ptrs ll_x38;
-  ll_ptrs ll_x2C;
-  ll_ptrs ll_x0C;
-  ll_ptrs ll_unused_3;
+  LinkedListPtrs ll_x04;
+  LinkedListPtrs ll_x06;
+  LinkedListPtrs ll_x0C_2;
+  LinkedListPtrs ll_x0E_x28;
+  LinkedListPtrs ll_x14;
+  LinkedListPtrs ll_x1B;
+  LinkedListPtrs ll_x1C;
+  LinkedListPtrs ll_x24_x28;
+  LinkedListPtrs ll_unused_1;
+  LinkedListPtrs ll_x2B;
+  LinkedListPtrs ll_x03_x30;
+  LinkedListPtrs ll_x0A_2;
+  LinkedListPtrs ll_x1D_x1E_x1F;
+  LinkedListPtrs ll_unused_2;
+  LinkedListPtrs ll_x38;
+  LinkedListPtrs ll_x2C;
+  LinkedListPtrs ll_x0C;
+  LinkedListPtrs ll_unused_3;
 
   // Is there only ever one x35? This points to both the start and end?
   uint32_t x35_start;
   uint32_t x35_end;
 
-  ll_ptrs ll_x36;
-  ll_ptrs ll_x21;
-  ll_ptrs ll_unused_4;
-  ll_ptrs ll_x0A;
+  LinkedListPtrs ll_x36;
+  LinkedListPtrs ll_x21;
+  LinkedListPtrs ll_unused_4;
+  LinkedListPtrs ll_x0A;
   uint32_t un3;
   char allegro_version[60];
   uint32_t un4;
   uint32_t max_key;
   uint32_t un5[17];
 
-  BRD_UNITS units;
+  Units units;
   uint8_t un6;
   uint16_t un7;
 
@@ -157,7 +167,7 @@ struct header {
   uint32_t un11[112];
 };
 
-static_assert(offsetof(header, unit_divisor) == 620);
+static_assert(offsetof(Header, unit_divisor) == 620);
 
 // Instance
 template <AllegroVersion version>
@@ -166,13 +176,13 @@ struct x07 {
   uint32_t k;
   uint32_t un1;  // Points to another instance
 
-  COND_FIELD(version >= A_172, uint32_t, ptr0);
-  COND_FIELD(version >= A_172, uint32_t, un4);
-  COND_FIELD(version >= A_172, uint32_t, un2);
+  COND_FIELD(version >= kA172, uint32_t, ptr0);
+  COND_FIELD(version >= kA172, uint32_t, un4);
+  COND_FIELD(version >= kA172, uint32_t, un2);
 
   uint32_t ptr1;  // 0x2D
 
-  COND_FIELD(version < A_172, uint32_t, un5);
+  COND_FIELD(version < kA172, uint32_t, un5);
 
   uint32_t refdes_string_ref;
 
@@ -185,12 +195,12 @@ struct x07 {
   uint32_t ptr4;  // x32 or null
 
   uint32_t TAIL;
-  operator x07<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_172};
+  operator x07<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
 };
 
-static_assert(sizeof_until_tail<x07<A_172>>() == 48);
-static_assert(sizeof_until_tail<x07<A_MAX>>() == 48);
+static_assert(sizeof_until_tail<x07<kA172>>() == 48);
+static_assert(sizeof_until_tail<x07<kAMax>>() == 48);
 
 // Line segment (with some curve, I think)
 template <AllegroVersion version>
@@ -210,7 +220,7 @@ struct x01 {
   uint32_t un1;
 
   // New in 17.2
-  COND_FIELD(version >= A_172, uint32_t, un6);
+  COND_FIELD(version >= kA172, uint32_t, un6);
 
   uint32_t width;
 
@@ -224,13 +234,13 @@ struct x01 {
   int32_t bbox[4];
 
   uint32_t TAIL;
-  operator x01<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_172};
+  operator x01<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
 };
 
-static_assert(sizeof_until_tail<x01<A_160>>() == 80);
-static_assert(sizeof_until_tail<x01<A_172>>() == 84);
-static_assert(sizeof_until_tail<x01<A_MAX>>() == 84);
+static_assert(sizeof_until_tail<x01<kA160>>() == 80);
+static_assert(sizeof_until_tail<x01<kA172>>() == 84);
+static_assert(sizeof_until_tail<x01<kAMax>>() == 84);
 
 struct x02 {
   uint32_t t;
@@ -252,13 +262,13 @@ struct x03 {
   // May point to `x36_x0F` object, among other types?
   uint32_t next;
 
-  COND_FIELD(version >= A_172, uint32_t, un1);
+  COND_FIELD(version >= kA172, uint32_t, un1);
   x03_hdr_subtype subtype;
-  COND_FIELD(version >= A_172, uint32_t, un2);
+  COND_FIELD(version >= kA172, uint32_t, un2);
 
   uint32_t TAIL;
-  operator x03<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_172};
+  operator x03<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
 
   bool has_str;
   std::string s;
@@ -269,19 +279,21 @@ template <AllegroVersion version>
 struct x04 {
   uint32_t t;
   uint32_t k;
-  uint32_t next;
+  ExpectRefType<0x04> next;
 
   // Points to `x1B`
   uint32_t ptr1;
+  // ExpectRefType<0x1B> ptr1;
 
   // Points to `x05`
   uint32_t ptr2;
+  // ExpectRefType<0x1B> ptr2;
 
-  COND_FIELD(version >= A_174, uint32_t, un1);
+  COND_FIELD(version >= kA174, uint32_t, un1);
 
   uint32_t TAIL;
-  operator x04<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_174};
+  operator x04<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA174};
 };
 
 // Line (composed of multiple line segments, x01, x15, x16, and x17)
@@ -309,7 +321,7 @@ struct x05 {
   // Points to one of: `x04`, `x05`, `0x09`, `x28`, `x2E`, `x32`, `x33`.
   uint32_t ptr3[2];
 
-  COND_FIELD(version >= A_172, uint32_t, un4[3]);
+  COND_FIELD(version >= kA172, uint32_t, un4[3]);
 
   // Points to one of: `0x01`, `x15, `x16`, `x17`.
   uint32_t first_segment_ptr;
@@ -321,12 +333,12 @@ struct x05 {
   uint32_t un3;
 
   uint32_t TAIL;
-  operator x05<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_172};
+  operator x05<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
 };
 
-static_assert(sizeof_until_tail<x05<A_160>>() == 60);
-static_assert(sizeof_until_tail<x05<A_172>>() == 68);
+static_assert(sizeof_until_tail<x05<kA160>>() == 60);
+static_assert(sizeof_until_tail<x05<kA172>>() == 68);
 
 template <AllegroVersion version>
 struct x06 {
@@ -334,7 +346,8 @@ struct x06 {
   uint32_t k;
 
   // Pointer to x06
-  uint32_t next;
+  // uint32_t next;
+  ExpectRefType<0x06> next;
 
   // Pointer to string
   uint32_t ptr1;
@@ -354,15 +367,15 @@ struct x06 {
   uint32_t ptr6;
 
   // Added in 17.x?
-  COND_FIELD(version >= A_172, uint32_t, un2);
+  COND_FIELD(version >= kA172, uint32_t, un2);
 
   uint32_t TAIL;
-  operator x06<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_172};
+  operator x06<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
 };
 
-static_assert(sizeof_until_tail<x06<A_160>>() == 36);
-static_assert(sizeof_until_tail<x06<A_172>>() == 40);
+static_assert(sizeof_until_tail<x06<kA160>>() == 36);
+static_assert(sizeof_until_tail<x06<kA172>>() == 40);
 
 template <AllegroVersion version>
 struct x08 {
@@ -370,29 +383,29 @@ struct x08 {
   uint32_t k;
 
   // x08?
-  COND_FIELD(version >= A_172, uint32_t, ptr1);
+  COND_FIELD(version >= kA172, uint32_t, ptr1);
 
   // String
   // Note: String pointers swap position around `ptr2` in different versions.
-  COND_FIELD(version < A_172, uint32_t, str_ptr_16x);
+  COND_FIELD(version < kA172, uint32_t, str_ptr_16x);
 
   // x06
   uint32_t ptr2;
 
   // String
-  COND_FIELD(version >= A_172, uint32_t, str_ptr);
+  COND_FIELD(version >= kA172, uint32_t, str_ptr);
 
   // x11
   uint32_t ptr3;
 
-  COND_FIELD(version >= A_172, uint32_t, un1);
+  COND_FIELD(version >= kA172, uint32_t, un1);
 
   // Can be string, usually null
   uint32_t ptr4;
 
   uint32_t TAIL;
-  operator x08<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_172};
+  operator x08<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
 };
 
 template <AllegroVersion version>
@@ -402,7 +415,7 @@ struct x09 {
 
   // Always null?
   uint32_t un1[4];
-  COND_FIELD(version >= A_172, uint32_t, un3);
+  COND_FIELD(version >= kA172, uint32_t, un3);
 
   // Points to `x28`, `x32`, or `x33` (sometimes null)
   uint32_t ptr1;
@@ -418,11 +431,11 @@ struct x09 {
 
   uint32_t ptr4;
 
-  COND_FIELD(version >= A_174, uint32_t, un4);
+  COND_FIELD(version >= kA174, uint32_t, un4);
 
   uint32_t TAIL;
-  operator x09<A_MAX>() const;
-  static constexpr AllegroVersion versions[2] = {A_172, A_174};
+  operator x09<kAMax>() const;
+  static constexpr AllegroVersion versions[2] = {kA172, kA174};
 };
 
 // DRC, not fully decoded
@@ -434,15 +447,15 @@ struct x0A {
   uint32_t k;
   uint32_t next;
   uint32_t un1;  // Always null?
-  COND_FIELD(version >= A_172, uint32_t, un2);
+  COND_FIELD(version >= kA172, uint32_t, un2);
   int32_t coords[4];
   uint32_t un4[4];
   uint32_t un5[5];
-  COND_FIELD(version >= A_174, uint32_t, un3);
+  COND_FIELD(version >= kA174, uint32_t, un3);
 
   uint32_t TAIL;
-  operator x0A<A_MAX>() const;
-  static constexpr AllegroVersion versions[2] = {A_172, A_174};
+  operator x0A<kAMax>() const;
+  static constexpr AllegroVersion versions[2] = {kA172, kA174};
 };
 
 template <AllegroVersion version>
@@ -452,8 +465,8 @@ struct x0C {
   uint8_t layer;
   uint32_t k;
   uint32_t next;
-  COND_FIELD(version >= A_172, uint32_t, un2);
-  COND_FIELD(version >= A_172, uint32_t, un3);
+  COND_FIELD(version >= kA172, uint32_t, un2);
+  COND_FIELD(version >= kA172, uint32_t, un3);
   union {
     uint32_t un[11];
     struct {
@@ -464,11 +477,11 @@ struct x0C {
       uint32_t un6[3];
     };
   };
-  COND_FIELD(version >= A_174, uint32_t, un4);
+  COND_FIELD(version >= kA174, uint32_t, un4);
 
   uint32_t TAIL;
-  operator x0C<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_172};
+  operator x0C<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
 };
 
 template <AllegroVersion version>
@@ -478,16 +491,16 @@ struct x0D {
   uint32_t str_ptr;
   uint32_t ptr2;      // Points to a random different `x0D`?
   int32_t coords[2];  // Relative to symbol origin
-  COND_FIELD(version >= A_174, uint32_t, un3);
+  COND_FIELD(version >= kA174, uint32_t, un3);
   uint32_t pad_ptr;  // Points to `x1C`
   uint32_t un1;      // Always null?
-  COND_FIELD(version >= A_172, uint32_t, un2);
+  COND_FIELD(version >= kA172, uint32_t, un2);
   uint32_t bitmask;
   uint32_t rotation;
 
   uint32_t TAIL;
-  operator x0D<A_MAX>() const;
-  static constexpr AllegroVersion versions[2] = {A_172, A_174};
+  operator x0D<kAMax>() const;
+  static constexpr AllegroVersion versions[2] = {kA172, kA174};
 };
 
 template <AllegroVersion version>
@@ -496,11 +509,11 @@ struct x0E {
   uint32_t k;
   uint32_t un[13];
 
-  COND_FIELD(version >= A_172, uint32_t[2], un1);
+  COND_FIELD(version >= kA172, uint32_t[2], un1);
 
   uint32_t TAIL;
-  operator x0E<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_172};
+  operator x0E<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
 };
 
 // Footprint
@@ -515,24 +528,24 @@ struct x0F {
   uint32_t ptr3;  // Points to x11
   uint32_t un;    // Always null?
 
-  COND_FIELD(version >= A_172, uint32_t, un2);
-  COND_FIELD(version >= A_174, uint32_t, un3);
+  COND_FIELD(version >= kA172, uint32_t, un2);
+  COND_FIELD(version >= kA174, uint32_t, un3);
 
   uint32_t TAIL;
-  operator x0F<A_MAX>() const;
-  static constexpr AllegroVersion versions[2] = {A_172, A_174};
+  operator x0F<kAMax>() const;
+  static constexpr AllegroVersion versions[2] = {kA172, kA174};
 };
 
 template <AllegroVersion version>
 struct x10 {
   uint32_t t;
   uint32_t k;
-  COND_FIELD(version >= A_172, uint32_t, un2);
+  COND_FIELD(version >= kA172, uint32_t, un2);
 
   // Instance
   uint32_t ptr1;
 
-  COND_FIELD(version >= A_174, uint32_t, un3);
+  COND_FIELD(version >= kA174, uint32_t, un3);
 
   uint32_t ptr2;
 
@@ -553,8 +566,8 @@ struct x10 {
   uint32_t path_str;
 
   uint32_t TAIL;
-  operator x10<A_MAX>() const;
-  static constexpr AllegroVersion versions[2] = {A_172, A_174};
+  operator x10<kAMax>() const;
+  static constexpr AllegroVersion versions[2] = {kA172, kA174};
 };
 
 template <AllegroVersion version>
@@ -573,11 +586,11 @@ struct x11 {
 
   uint32_t un;
 
-  COND_FIELD(version >= A_174, uint32_t, un1);
+  COND_FIELD(version >= kA174, uint32_t, un1);
 
   uint32_t TAIL;
-  operator x11<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_174};
+  operator x11<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA174};
 };
 
 template <AllegroVersion version>
@@ -595,12 +608,12 @@ struct x12 {
   uint32_t ptr3;
 
   uint32_t un0;
-  COND_FIELD(version >= A_165, uint32_t, un1);
-  COND_FIELD(version >= A_174, uint32_t, un2);
+  COND_FIELD(version >= kA165, uint32_t, un1);
+  COND_FIELD(version >= kA174, uint32_t, un2);
 
   uint32_t TAIL;
-  operator x12<A_MAX>() const;
-  static constexpr AllegroVersion versions[2] = {A_165, A_174};
+  operator x12<kAMax>() const;
+  static constexpr AllegroVersion versions[2] = {kA165, kA174};
 };
 
 template <AllegroVersion version>
@@ -610,24 +623,24 @@ struct x14 {
   uint8_t layer;
 
   uint32_t k;
-  uint32_t next;
+  ExpectRefType<0x14> next;
 
   uint32_t ptr1;
 
   uint32_t un2;
-  COND_FIELD(version >= A_172, uint32_t, un3);
+  COND_FIELD(version >= kA172, uint32_t, un3);
 
   uint32_t ptr2;
 
   // Null or sometimes `x03`
-  uint32_t ptr3;
+  ExpectRefType<0x03> ptr3;
 
   // `x26`
-  uint32_t ptr4;
+  ExpectRefType<0x26> ptr4;
 
   uint32_t TAIL;
-  operator x14<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_172};
+  operator x14<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
 };
 
 // Line segment
@@ -641,7 +654,7 @@ struct x15 {
 
   // Usually null, sometimes one bit is set
   uint32_t un3;
-  COND_FIELD(version >= A_172, uint32_t, un4);
+  COND_FIELD(version >= kA172, uint32_t, un4);
 
   // Often 0
   uint32_t width;
@@ -649,8 +662,8 @@ struct x15 {
   int32_t coords[4];
 
   uint32_t TAIL;
-  operator x15<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_172};
+  operator x15<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
 };
 
 // Line segment
@@ -665,14 +678,14 @@ struct x16 {
   // Some bit mask?
   uint32_t bitmask;
 
-  COND_FIELD(version >= A_172, uint32_t, un);
+  COND_FIELD(version >= kA172, uint32_t, un);
 
   uint32_t width;
   int32_t coords[4];
 
   uint32_t TAIL;
-  operator x16<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_172};
+  operator x16<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
 };
 
 // Line segment
@@ -685,14 +698,14 @@ struct x17 {
   uint32_t parent;
 
   uint32_t un3;
-  COND_FIELD(version >= A_172, uint32_t, un4);
+  COND_FIELD(version >= kA172, uint32_t, un4);
 
   uint32_t width;
   int32_t coords[4];
 
   uint32_t TAIL;
-  operator x17<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_172};
+  operator x17<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
 };
 
 // A net
@@ -702,7 +715,7 @@ struct t1B_net {
   uint32_t k;
 
   // Points to another `t1B_net`
-  uint32_t next;
+  ExpectRefType<0x1B> next;
 
   uint32_t net_name;
 
@@ -710,20 +723,20 @@ struct t1B_net {
   uint32_t un2;
 
   // 17.x?
-  COND_FIELD(version >= A_172, uint32_t, un4);
+  COND_FIELD(version >= kA172, uint32_t, un4);
 
   // Bit mask, not fully decoded
   // 0x0000 0002 = has net name?
   uint32_t type;
 
   // `x04`
-  uint32_t ptr1;
+  ExpectRefType<0x04> ptr1;
   uint32_t ptr2;
 
   // `x03`
   // Points to a string like
   // `@\cc256xqfn-em_102612a_added_cap\.schematic(sch_1):aud_fsync_1v8`
-  uint32_t path_str_ptr;
+  ExpectRefType<0x03> path_str_ptr;
 
   // `x26`
   uint32_t ptr4;
@@ -735,11 +748,11 @@ struct t1B_net {
   uint32_t un3[2];
 
   // `x22`
-  uint32_t ptr6;
+  ExpectRefType<0x22> ptr6;
 
   uint32_t TAIL;
-  operator t1B_net<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_172};
+  operator t1B_net<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
 };
 
 template <AllegroVersion version>
@@ -747,7 +760,7 @@ struct t13 {
   uint32_t str_ptr;  // Often null
   uint32_t t;
 
-  COND_FIELD(version >= A_172, uint32_t, z0);
+  COND_FIELD(version >= kA172, uint32_t, z0);
 
   int32_t w;
   int32_t h;
@@ -756,17 +769,17 @@ struct t13 {
 
   // This should be _after_ `x4`, but conditional fields at the end of
   // the struct are flakey?
-  COND_FIELD(version >= A_172, uint32_t, z);
+  COND_FIELD(version >= kA172, uint32_t, z);
 
   int32_t x4;
 
   uint32_t TAIL;
-  operator t13<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_172};
+  operator t13<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
 };
 
-static_assert(sizeof_until_tail<t13<A_160>>() == 28);
-static_assert(sizeof_until_tail<t13<A_174>>() == 36);
+static_assert(sizeof_until_tail<t13<kA160>>() == 28);
+static_assert(sizeof_until_tail<t13<kA174>>() == 36);
 
 // x1C shows how to draw pads
 enum PadType : uint8_t {
@@ -797,31 +810,31 @@ struct x1C {
   uint32_t un2;
   uint32_t un3;
   uint32_t pad_path;
-  COND_FIELD(version < A_172, uint32_t[4], un4);
+  COND_FIELD(version < kA172, uint32_t[4], un4);
   PadInfo pad_info;
-  COND_FIELD(version >= A_172, uint32_t[3], un5);
-  COND_FIELD(version < A_172, uint16_t, un6);
+  COND_FIELD(version >= kA172, uint32_t[3], un5);
+  COND_FIELD(version < kA172, uint16_t, un6);
   uint16_t layer_count;
-  COND_FIELD(version >= A_172, uint16_t, un7);
+  COND_FIELD(version >= kA172, uint16_t, un7);
   uint32_t un8[7];
-  COND_FIELD(version >= A_172, uint32_t[28], un9);
-  COND_FIELD(version == A_165 || version == A_166, uint32_t[8], un10);
+  COND_FIELD(version >= kA172, uint32_t[28], un9);
+  COND_FIELD(version == kA165 || version == kA166, uint32_t[8], un10);
 
   uint32_t TAIL;
-  operator x1C<A_MAX>() const;
-  static constexpr AllegroVersion versions[2] = {A_165, A_172};
+  operator x1C<kAMax>() const;
+  static constexpr AllegroVersion versions[2] = {kA165, kA172};
 
   std::vector<t13<version>> parts;
 };
 
-static_assert(sizeof_until_tail<x1C<A_164>>() == 20 * 4);
-static_assert(sizeof_until_tail<x1C<A_165>>() == 28 * 4);
-static_assert(sizeof_until_tail<x1C<A_172>>() == 47 * 4);
+static_assert(sizeof_until_tail<x1C<kA164>>() == 20 * 4);
+static_assert(sizeof_until_tail<x1C<kA165>>() == 28 * 4);
+static_assert(sizeof_until_tail<x1C<kA172>>() == 47 * 4);
 
-static_assert(offsetof(x1C<A_164>, layer_count) == 50);
-static_assert(offsetof(x1C<A_172>, layer_count) == 44);
-static_assert(offsetof(x1C<A_164>, pad_info) == 44);
-static_assert(offsetof(x1C<A_172>, pad_info) == 28);
+static_assert(offsetof(x1C<kA164>, layer_count) == 50);
+static_assert(offsetof(x1C<kA172>, layer_count) == 44);
+static_assert(offsetof(x1C<kA164>, pad_info) == 44);
+static_assert(offsetof(x1C<kA172>, pad_info) == 28);
 
 template <AllegroVersion version>
 struct x1D {
@@ -832,7 +845,7 @@ struct x1D {
   uint16_t size_b;
 
   uint32_t TAIL;
-  static constexpr AllegroVersion versions[1] = {A_160};
+  static constexpr AllegroVersion versions[1] = {kA160};
 };
 
 struct x1E_hdr {
@@ -863,7 +876,7 @@ struct x1F {
   uint16_t size;
 
   uint32_t TAIL;
-  static constexpr AllegroVersion versions[1] = {A_160};
+  static constexpr AllegroVersion versions[1] = {kA160};
 };
 
 template <AllegroVersion version>
@@ -873,10 +886,10 @@ struct x20 {
   uint32_t ptr1;
   uint32_t un[7];
 
-  COND_FIELD(version >= A_174, uint32_t[10], un1);
+  COND_FIELD(version >= kA174, uint32_t[10], un1);
 
   uint32_t TAIL;
-  static constexpr AllegroVersion versions[2] = {A_160, A_174};
+  static constexpr AllegroVersion versions[2] = {kA160, kA174};
 };
 
 struct x21_header {
@@ -912,12 +925,12 @@ template <AllegroVersion version>
 struct x22 {
   uint32_t t;
   uint32_t k;
-  COND_FIELD(version >= A_172, uint32_t, un1);
+  COND_FIELD(version >= kA172, uint32_t, un1);
   uint32_t un[8];
 
   uint32_t TAIL;
-  operator x22<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_172};
+  operator x22<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
 };
 
 // Connection (rat). Draws a line between two connected pads.
@@ -933,7 +946,8 @@ struct x23 {
   uint32_t bitmask[2];
 
   // Matching placed symbol pad (`x32`)
-  uint32_t ptr1;
+  // uint32_t ptr1;
+  ExpectRefType<0x32> ptr1;
 
   // Another `x23`
   uint32_t ptr2;
@@ -944,12 +958,12 @@ struct x23 {
   int32_t coords[5];
 
   uint32_t un[4];
-  COND_FIELD(version >= A_164, uint32_t[4], un2);
-  COND_FIELD(version >= A_174, uint32_t, un1);
+  COND_FIELD(version >= kA164, uint32_t[4], un2);
+  COND_FIELD(version >= kA174, uint32_t, un1);
 
   uint32_t TAIL;
-  operator x23<A_MAX>() const;
-  static constexpr AllegroVersion versions[2] = {A_164, A_174};
+  operator x23<kAMax>() const;
+  static constexpr AllegroVersion versions[2] = {kA164, kA174};
 };
 
 template <AllegroVersion version>
@@ -957,11 +971,11 @@ struct x24 {
   uint32_t t;
   uint32_t k;
   uint32_t un[11];
-  COND_FIELD(version >= A_172, uint32_t, un1);
+  COND_FIELD(version >= kA172, uint32_t, un1);
 
   uint32_t TAIL;
-  operator x24<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_172};
+  operator x24<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
 };
 
 template <AllegroVersion version>
@@ -971,7 +985,7 @@ struct x26 {
 
   uint32_t member_ptr;
 
-  COND_FIELD(version >= A_172, uint32_t, un);
+  COND_FIELD(version >= kA172, uint32_t, un);
 
   // Points to instance of `x22`, `x2C`, or `x33`.
   // Indicates the group that the member is a member of.
@@ -980,11 +994,11 @@ struct x26 {
   // Always null?
   uint32_t const_ptr;
 
-  COND_FIELD(version >= A_174, uint32_t, un1);
+  COND_FIELD(version >= kA174, uint32_t, un1);
 
   uint32_t TAIL;
-  operator x26<A_MAX>() const;
-  static constexpr AllegroVersion versions[2] = {A_172, A_174};
+  operator x26<kAMax>() const;
+  static constexpr AllegroVersion versions[2] = {kA172, kA174};
 };
 
 // Shape
@@ -1003,7 +1017,7 @@ struct x28 {
   // Null?
   uint32_t un2;
 
-  COND_FIELD(version >= A_172, uint32_t[2], un5);
+  COND_FIELD(version >= kA172, uint32_t[2], un5);
 
   // Points to `x28`, `x2D`, or `x33`
   uint32_t next;
@@ -1024,19 +1038,19 @@ struct x28 {
   uint32_t un4;
 
   // Points to `x26`, `x2C`
-  COND_FIELD(version >= A_172, uint32_t, ptr7);
+  COND_FIELD(version >= kA172, uint32_t, ptr7);
 
   // Points to `x03`
   uint32_t ptr6;
 
-  COND_FIELD(version < A_172, uint32_t, ptr7_16x);
+  COND_FIELD(version < kA172, uint32_t, ptr7_16x);
 
   // Bounding box
   int32_t coords[4];
 
   uint32_t TAIL;
-  operator x28<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_172};
+  operator x28<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
 };
 
 struct x2A_hdr {
@@ -1097,19 +1111,19 @@ struct x2B {
   int32_t coords[4];
 
   // Points to another x2B object? Just the next item, not interesting.
-  uint32_t next;
+  ExpectRefType<0x2B> next;
 
   // Points to placed symbol (x2D)
-  uint32_t ptr2;
+  ExpectRefType<0x2D> ptr2;
 
   // Points to pad of some type (x0D)?
-  uint32_t ptr3;
+  ExpectRefType<0x0D> ptr3;
 
   // Symbol pad (x32)
-  uint32_t ptr4;
+  ExpectRefType<0x32> ptr4;
 
   // x14?
-  uint32_t ptr5;
+  ExpectRefType<0x14> ptr5;
 
   // Usually (but not always) points to footprint file path.
   uint32_t str_ptr;
@@ -1123,14 +1137,14 @@ struct x2B {
   // x28
   uint32_t ptr8;
 
-  COND_FIELD(version >= A_164, uint32_t, un2);  // Always null?
+  COND_FIELD(version >= kA164, uint32_t, un2);  // Always null?
 
   // 17.x?
-  COND_FIELD(version >= A_172, uint32_t, un3);
+  COND_FIELD(version >= kA172, uint32_t, un3);
 
   uint32_t TAIL;
-  operator x2B<A_MAX>() const;
-  static constexpr AllegroVersion versions[2] = {A_164, A_172};
+  operator x2B<kAMax>() const;
+  static constexpr AllegroVersion versions[2] = {kA164, kA172};
 };
 
 // Table?
@@ -1140,14 +1154,14 @@ struct x2C {
   uint32_t k;
   uint32_t next;
 
-  COND_FIELD(version >= A_172, uint32_t, un2);
-  COND_FIELD(version >= A_172, uint32_t, un3);
-  COND_FIELD(version >= A_172, uint32_t, un4);
+  COND_FIELD(version >= kA172, uint32_t, un2);
+  COND_FIELD(version >= kA172, uint32_t, un3);
+  COND_FIELD(version >= kA172, uint32_t, un4);
 
   // May be null
   uint32_t string_ptr;
 
-  COND_FIELD(version < A_172, uint32_t, un5);
+  COND_FIELD(version < kA172, uint32_t, un5);
 
   // Points to instance of `x37` or `x3C` (or null).
   uint32_t ptr1;
@@ -1162,8 +1176,8 @@ struct x2C {
   uint32_t bitmask;
 
   uint32_t TAIL;
-  operator x2C<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_172};
+  operator x2C<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
 };
 
 // Placed symbol
@@ -1177,15 +1191,15 @@ struct x2D {
   uint32_t next;  // Points to x2B or x2D
 
   // Points to x2B?
-  COND_FIELD(version >= A_172, uint32_t, un4);
+  COND_FIELD(version >= kA172, uint32_t, un4);
 
   // Points to instance (x07) or null
-  COND_FIELD(version < A_172, uint32_t, inst_ref_16x);
+  COND_FIELD(version < kA172, uint32_t, inst_ref_16x);
 
   uint16_t un2;
   uint16_t un3;
 
-  COND_FIELD(version >= A_172, uint32_t, un5);
+  COND_FIELD(version >= kA172, uint32_t, un5);
 
   // Bit 0 = part is rotated to non-90 deg angle?
   uint32_t bitmask1;
@@ -1194,7 +1208,7 @@ struct x2D {
   int32_t coords[2];
 
   // Points to instance (x07) or null
-  COND_FIELD(version >= A_172, uint32_t, inst_ref);
+  COND_FIELD(version >= kA172, uint32_t, inst_ref);
 
   uint32_t ptr1;  // x14
 
@@ -1209,8 +1223,8 @@ struct x2D {
   uint32_t group_assignment_ptr;
 
   uint32_t TAIL;
-  operator x2D<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_172};
+  operator x2D<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
 };
 
 template <AllegroVersion version>
@@ -1218,11 +1232,11 @@ struct x2E {
   uint32_t t;
   uint32_t k;
   uint32_t un[7];
-  COND_FIELD(version >= A_172, uint32_t, un1);
+  COND_FIELD(version >= kA172, uint32_t, un1);
 
   uint32_t TAIL;
-  operator x2E<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_172};
+  operator x2E<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
 };
 
 template <AllegroVersion version>
@@ -1232,8 +1246,8 @@ struct x2F {
   uint32_t un[6];
 
   uint32_t TAIL;
-  operator x2F<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_160};
+  operator x2F<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA160};
 };
 
 // `x30` wraps a string graphic object and includes info like rotation and
@@ -1261,28 +1275,28 @@ struct x30 {
   uint32_t k;
   uint32_t next;
 
-  COND_FIELD(version >= A_172, uint32_t, un4);
-  COND_FIELD(version >= A_172, uint32_t, un5);
-  COND_FIELD(version >= A_172, TextProperties, font);
-  COND_FIELD(version >= A_172, uint32_t, ptr3);
-  COND_FIELD(version >= A_174, uint32_t, un7);
+  COND_FIELD(version >= kA172, uint32_t, un4);
+  COND_FIELD(version >= kA172, uint32_t, un5);
+  COND_FIELD(version >= kA172, TextProperties, font);
+  COND_FIELD(version >= kA172, uint32_t, ptr3);
+  COND_FIELD(version >= kA174, uint32_t, un7);
 
   // Pointer to string graphic object
   uint32_t str_graphic_ptr;
   uint32_t un1;
-  COND_FIELD(version < A_172, TextProperties, font_16x);
+  COND_FIELD(version < kA172, TextProperties, font_16x);
 
-  COND_FIELD(version >= A_172, uint32_t, ptr4);
+  COND_FIELD(version >= kA172, uint32_t, ptr4);
 
   int32_t coords[2];
   uint32_t un3;
 
   uint32_t rotation;
-  COND_FIELD(version < A_172, uint32_t, ptr3_16x);
+  COND_FIELD(version < kA172, uint32_t, ptr3_16x);
 
   uint32_t TAIL;
-  operator x30<A_MAX>() const;
-  static constexpr AllegroVersion versions[2] = {A_172, A_174};
+  operator x30<kAMax>() const;
+  static constexpr AllegroVersion versions[2] = {kA172, kA174};
 };
 
 // String graphic
@@ -1302,11 +1316,11 @@ struct x31 {
   uint16_t un;
 
   uint16_t len;
-  COND_FIELD(version >= A_174, uint32_t, un2);
+  COND_FIELD(version >= kA174, uint32_t, un2);
 
   uint32_t TAIL;
-  operator x31<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_174};
+  operator x31<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA174};
 
   std::string s;
 };
@@ -1326,7 +1340,7 @@ struct x32 {
   // Don't look for layer here, seems almost always null.
   uint32_t bitmask1;
 
-  COND_FIELD(version >= A_172, uint32_t, prev);
+  COND_FIELD(version >= kA172, uint32_t, prev);
   uint32_t next;
 
   uint32_t ptr3;
@@ -1338,7 +1352,7 @@ struct x32 {
 
   uint32_t previous;
 
-  COND_FIELD(version >= A_172, uint32_t, un2);
+  COND_FIELD(version >= kA172, uint32_t, un2);
 
   uint32_t ptr10;
   uint32_t ptr11;
@@ -1346,8 +1360,8 @@ struct x32 {
   int32_t coords[4];
 
   uint32_t TAIL;
-  operator x32<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_172};
+  operator x32<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
 };
 
 template <AllegroVersion version>
@@ -1363,11 +1377,11 @@ struct x33 {
 
   // Some bit field?
   uint32_t un2;
-  COND_FIELD(version >= A_172, uint32_t, un4);
+  COND_FIELD(version >= kA172, uint32_t, un4);
 
   uint32_t ptr2;
 
-  COND_FIELD(version >= A_172, uint32_t, ptr7);
+  COND_FIELD(version >= kA172, uint32_t, ptr7);
 
   int32_t coords[2];
 
@@ -1387,8 +1401,8 @@ struct x33 {
   int32_t bb_coords[4];
 
   uint32_t TAIL;
-  operator x33<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_172};
+  operator x33<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
 };
 
 // Keepout/keepin/etc.region
@@ -1402,7 +1416,7 @@ struct x34 {
   uint32_t next;
 
   uint32_t ptr1;  // x28
-  COND_FIELD(version >= A_172, uint32_t, un2);
+  COND_FIELD(version >= kA172, uint32_t, un2);
   uint32_t bitmask1;
   uint32_t ptr2;  // x01
   uint32_t ptr3;  // x03
@@ -1410,8 +1424,8 @@ struct x34 {
   uint32_t un;
 
   uint32_t TAIL;
-  operator x34<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_172};
+  operator x34<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
 };
 
 // List of strings, such as `"OBJECT_INSTANCE"`, `"VIASTRUCTUREID"`,
@@ -1422,8 +1436,8 @@ template <AllegroVersion version>
 struct x36_x02 {
   uint8_t str[32];
   uint32_t xs[14];
-  COND_FIELD(version >= A_164, uint32_t[3], ys);
-  COND_FIELD(version >= A_172, uint32_t[2], zs);
+  COND_FIELD(version >= kA164, uint32_t[3], ys);
+  COND_FIELD(version >= kA172, uint32_t[2], zs);
 
   uint32_t TAIL;
 };
@@ -1432,9 +1446,9 @@ struct x36_x02 {
 // `"ETH_DIFF"`. No obvious pattern?
 template <AllegroVersion version>
 struct x36_x03 {
-  COND_FIELD(version >= A_172, uint8_t[64], str);
-  COND_FIELD(version < A_172, uint8_t[32], str_16x);
-  COND_FIELD(version >= A_174, uint32_t, un2);
+  COND_FIELD(version >= kA172, uint8_t[64], str);
+  COND_FIELD(version < kA172, uint8_t[32], str_16x);
+  COND_FIELD(version >= kA174, uint32_t, un2);
 
   uint32_t TAIL;
 };
@@ -1445,7 +1459,7 @@ struct x36_x06 {
   uint8_t r;
   uint8_t s;
   uint32_t un1;
-  COND_FIELD(version < A_172, uint32_t[50], un2);
+  COND_FIELD(version < kA172, uint32_t[50], un2);
   uint32_t TAIL;
 };
 
@@ -1455,13 +1469,13 @@ struct x36_x08 {
   uint32_t a, b;
   uint32_t char_height;
   uint32_t char_width;
-  COND_FIELD(version >= A_174, uint32_t, un2);
+  COND_FIELD(version >= kA174, uint32_t, un2);
   uint32_t xs[4];
-  COND_FIELD(version >= A_172, uint32_t[8], ys);
+  COND_FIELD(version >= kA172, uint32_t[8], ys);
 
   uint32_t TAIL;
-  operator x36_x08<A_MAX>() const;
-  static constexpr AllegroVersion versions[2] = {A_172, A_174};
+  operator x36_x08<kAMax>() const;
+  static constexpr AllegroVersion versions[2] = {kA172, kA174};
 };
 
 template <AllegroVersion version>
@@ -1481,22 +1495,22 @@ struct x36 {
   uint16_t c;
   uint32_t k;
   uint32_t next;
-  COND_FIELD(version >= A_172, uint32_t, un1);
+  COND_FIELD(version >= kA172, uint32_t, un1);
   uint32_t size;
 
   uint32_t count;
   uint32_t last_idx;
   uint32_t un3;
 
-  COND_FIELD(version >= A_174, uint32_t, un2);
+  COND_FIELD(version >= kA174, uint32_t, un2);
 
   uint32_t TAIL;
 
   std::vector<x36_x08<version>> x08s;
   std::vector<x36_x0F<version>> x0Fs;
 
-  operator x36<A_MAX>() const;
-  static constexpr AllegroVersion versions[2] = {A_172, A_174};
+  operator x36<kAMax>() const;
+  static constexpr AllegroVersion versions[2] = {kA172, kA174};
 };
 
 template <AllegroVersion version>
@@ -1509,11 +1523,11 @@ struct x37 {
   uint32_t count;
   uint32_t un3;
   uint32_t ptrs[100];
-  COND_FIELD(version >= A_174, uint32_t, un4);
+  COND_FIELD(version >= kA174, uint32_t, un4);
 
   uint32_t TAIL;
-  operator x37<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_174};
+  operator x37<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA174};
 };
 
 template <AllegroVersion version>
@@ -1522,22 +1536,22 @@ struct t38_film {
   uint32_t k;
   uint32_t next;
   uint32_t layer_list;
-  COND_FIELD(version < A_166, char[20], film_name);
-  COND_FIELD(version >= A_166, uint32_t, layer_name_str);
-  COND_FIELD(version >= A_166, uint32_t, un2);
+  COND_FIELD(version < kA166, char[20], film_name);
+  COND_FIELD(version >= kA166, uint32_t, layer_name_str);
+  COND_FIELD(version >= kA166, uint32_t, un2);
   uint32_t un1[7];
-  COND_FIELD(version >= A_174, uint32_t, un3);
+  COND_FIELD(version >= kA174, uint32_t, un3);
 
   uint32_t TAIL;
-  operator t38_film<A_MAX>() const;
-  static constexpr AllegroVersion versions[2] = {A_166, A_174};
+  operator t38_film<kAMax>() const;
+  static constexpr AllegroVersion versions[2] = {kA166, kA174};
 
   std::string s;
 };
 
-static_assert(sizeof_until_tail<t38_film<A_160>>() == 64);
-static_assert(sizeof_until_tail<t38_film<A_165>>() == 64);
-static_assert(sizeof_until_tail<t38_film<A_166>>() == 52);
+static_assert(sizeof_until_tail<t38_film<kA160>>() == 64);
+static_assert(sizeof_until_tail<t38_film<kA165>>() == 64);
+static_assert(sizeof_until_tail<t38_film<kA166>>() == 52);
 
 template <AllegroVersion version>
 struct t39_film_layer_list {
@@ -1548,8 +1562,8 @@ struct t39_film_layer_list {
   uint16_t x[22];
 
   uint32_t TAIL;
-  operator t39_film_layer_list<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_160};
+  operator t39_film_layer_list<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA160};
 };
 
 template <AllegroVersion version>
@@ -1563,11 +1577,11 @@ struct t3A_film_layer_list_node {
 
   uint32_t un;
 
-  COND_FIELD(version >= A_174, uint32_t, un1);
+  COND_FIELD(version >= kA174, uint32_t, un1);
 
   uint32_t TAIL;
-  operator t3A_film_layer_list_node<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_174};
+  operator t3A_film_layer_list_node<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA174};
 };
 
 // List of SI models
@@ -1581,11 +1595,11 @@ struct x3B {
   char type[32];
   uint32_t un1;
   uint32_t un2;
-  COND_FIELD(version >= A_172, uint32_t, un3);
+  COND_FIELD(version >= kA172, uint32_t, un3);
 
   uint32_t TAIL;
-  operator x3B<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_172};
+  operator x3B<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
 
   std::string model_str;
 };
@@ -1596,12 +1610,12 @@ template <AllegroVersion version>
 struct x3C {
   uint32_t t;
   uint32_t k;
-  COND_FIELD(version >= A_174, uint32_t, un);
+  COND_FIELD(version >= kA174, uint32_t, un);
   uint32_t size;
 
   uint32_t TAIL;
-  operator x3C<A_MAX>() const;
-  static constexpr AllegroVersion versions[1] = {A_174};
+  operator x3C<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA174};
 
   std::vector<uint32_t> ptrs;
 };
@@ -1611,7 +1625,7 @@ class File {
  public:
   File(mapped_region input_region);
 
-  header *hdr;
+  Header *hdr;
   std::vector<std::tuple<uint32_t, uint32_t>> layers;
 
   // `unordered_flat_map` provides a very significant performance improvement
@@ -1634,45 +1648,45 @@ class File {
 
   uint8_t layer_count = 0;
 
-  x01<A_MAX> get_x01(uint32_t k);
-  const x03<A_MAX> get_x03(uint32_t k);
-  const x04<A_MAX> get_x04(uint32_t k);
-  const x05<A_MAX> get_x05(uint32_t k);
-  const x06<A_MAX> get_x06(uint32_t k);
-  const x07<A_MAX> get_x07(uint32_t k);
-  const x08<A_MAX> get_x08(uint32_t k);
-  const x09<A_MAX> get_x09(uint32_t k);
-  const x0A<A_MAX> get_x0A(uint32_t k);
-  const x0C<A_MAX> get_x0C(uint32_t k);
-  const x0D<A_MAX> get_x0D(uint32_t k);
-  const x0E<A_MAX> get_x0E(uint32_t k);
-  const x10<A_MAX> get_x10(uint32_t k);
-  const x14<A_MAX> get_x14(uint32_t k);
-  const x15<A_MAX> get_x15(uint32_t k);
-  const x16<A_MAX> get_x16(uint32_t k);
-  const x17<A_MAX> get_x17(uint32_t k);
-  const t1B_net<A_MAX> get_x1B(uint32_t k);
-  const x1C<A_MAX> get_x1C(uint32_t k);
-  const x1D<A_MAX> get_x1D(uint32_t k);
-  const x1F<A_MAX> get_x1F(uint32_t k);
-  const x23<A_MAX> get_x23(uint32_t k);
-  const x24<A_MAX> get_x24(uint32_t k);
-  const x26<A_MAX> get_x26(uint32_t k);
-  const x28<A_MAX> get_x28(uint32_t k);
-  const x2B<A_MAX> get_x2B(uint32_t k);
-  const x2C<A_MAX> get_x2C(uint32_t k);
-  const x2D<A_MAX> get_x2D(uint32_t k);
-  const x2E<A_MAX> get_x2E(uint32_t k);
-  const x30<A_MAX> get_x30(uint32_t k);
-  const x31<A_MAX> get_x31(uint32_t k);
-  const x32<A_MAX> get_x32(uint32_t k);
-  const x33<A_MAX> get_x33(uint32_t k);
-  const x34<A_MAX> get_x34(uint32_t k);
-  const x37<A_MAX> get_x37(uint32_t k);
-  const t38_film<A_MAX> get_t38_film(uint32_t k);
-  const t39_film_layer_list<A_MAX> get_x39(uint32_t k);
-  const t3A_film_layer_list_node<A_MAX> get_x3A(uint32_t k);
-  const x3C<A_MAX> get_x3C(uint32_t k);
+  x01<kAMax> get_x01(uint32_t k);
+  const x03<kAMax> get_x03(uint32_t k);
+  const x04<kAMax> get_x04(uint32_t k);
+  const x05<kAMax> get_x05(uint32_t k);
+  const x06<kAMax> get_x06(uint32_t k);
+  const x07<kAMax> get_x07(uint32_t k);
+  const x08<kAMax> get_x08(uint32_t k);
+  const x09<kAMax> get_x09(uint32_t k);
+  const x0A<kAMax> get_x0A(uint32_t k);
+  const x0C<kAMax> get_x0C(uint32_t k);
+  const x0D<kAMax> get_x0D(uint32_t k);
+  const x0E<kAMax> get_x0E(uint32_t k);
+  const x10<kAMax> get_x10(uint32_t k);
+  const x14<kAMax> get_x14(uint32_t k);
+  const x15<kAMax> get_x15(uint32_t k);
+  const x16<kAMax> get_x16(uint32_t k);
+  const x17<kAMax> get_x17(uint32_t k);
+  const t1B_net<kAMax> get_x1B(uint32_t k);
+  const x1C<kAMax> get_x1C(uint32_t k);
+  const x1D<kAMax> get_x1D(uint32_t k);
+  const x1F<kAMax> get_x1F(uint32_t k);
+  const x23<kAMax> get_x23(uint32_t k);
+  const x24<kAMax> get_x24(uint32_t k);
+  const x26<kAMax> get_x26(uint32_t k);
+  const x28<kAMax> get_x28(uint32_t k);
+  const x2B<kAMax> get_x2B(uint32_t k);
+  const x2C<kAMax> get_x2C(uint32_t k);
+  const x2D<kAMax> get_x2D(uint32_t k);
+  const x2E<kAMax> get_x2E(uint32_t k);
+  const x30<kAMax> get_x30(uint32_t k);
+  const x31<kAMax> get_x31(uint32_t k);
+  const x32<kAMax> get_x32(uint32_t k);
+  const x33<kAMax> get_x33(uint32_t k);
+  const x34<kAMax> get_x34(uint32_t k);
+  const x37<kAMax> get_x37(uint32_t k);
+  const t38_film<kAMax> get_t38_film(uint32_t k);
+  const t39_film_layer_list<kAMax> get_x39(uint32_t k);
+  const t3A_film_layer_list_node<kAMax> get_x3A(uint32_t k);
+  const x3C<kAMax> get_x3C(uint32_t k);
 
   bool is_type(uint32_t k, uint8_t t);
 
@@ -1680,7 +1694,7 @@ class File {
   // yet, so we can't read what magic we are.
   void prepare();
 
-  operator File<A_MAX>() const;
+  operator File<kAMax>() const;
 
   template <typename T>
   struct Iter {
@@ -1888,46 +1902,46 @@ class File {
   void cache_upgrade_funcs();
   std::ptrdiff_t offset(void *);
 
-  x01<A_MAX> (*x01_upgrade)(void *);
-  x03<A_MAX> (*x03_upgrade)(void *);
-  x04<A_MAX> (*x04_upgrade)(void *);
-  x05<A_MAX> (*x05_upgrade)(void *);
-  x06<A_MAX> (*x06_upgrade)(void *);
-  x07<A_MAX> (*x07_upgrade)(void *);
-  x08<A_MAX> (*x08_upgrade)(void *);
-  x09<A_MAX> (*x09_upgrade)(void *);
-  x0A<A_MAX> (*x0A_upgrade)(void *);
-  x0C<A_MAX> (*x0C_upgrade)(void *);
-  x0D<A_MAX> (*x0D_upgrade)(void *);
-  x0E<A_MAX> (*x0E_upgrade)(void *);
-  x10<A_MAX> (*x10_upgrade)(void *);
-  x14<A_MAX> (*x14_upgrade)(void *);
-  x15<A_MAX> (*x15_upgrade)(void *);
-  x16<A_MAX> (*x16_upgrade)(void *);
-  x17<A_MAX> (*x17_upgrade)(void *);
-  t1B_net<A_MAX> (*x1B_upgrade)(void *);
-  x1C<A_MAX> (*x1C_upgrade)(void *);
-  t13<A_MAX> (*t13_upgrade)(void *);
-  x1D<A_MAX> (*x1D_upgrade)(void *);
-  x1F<A_MAX> (*x1F_upgrade)(void *);
-  x23<A_MAX> (*x23_upgrade)(void *);
-  x24<A_MAX> (*x24_upgrade)(void *);
-  x26<A_MAX> (*x26_upgrade)(void *);
-  x28<A_MAX> (*x28_upgrade)(void *);
-  x2B<A_MAX> (*x2B_upgrade)(void *);
-  x2C<A_MAX> (*x2C_upgrade)(void *);
-  x2D<A_MAX> (*x2D_upgrade)(void *);
-  x2E<A_MAX> (*x2E_upgrade)(void *);
-  x30<A_MAX> (*x30_upgrade)(void *);
-  x31<A_MAX> (*x31_upgrade)(void *);
-  x32<A_MAX> (*x32_upgrade)(void *);
-  x33<A_MAX> (*x33_upgrade)(void *);
-  x34<A_MAX> (*x34_upgrade)(void *);
-  x37<A_MAX> (*x37_upgrade)(void *);
-  t38_film<A_MAX> (*x38_upgrade)(void *);
-  t39_film_layer_list<A_MAX> (*x39_upgrade)(void *);
-  t3A_film_layer_list_node<A_MAX> (*x3A_upgrade)(void *);
-  x3C<A_MAX> (*x3C_upgrade)(void *);
+  x01<kAMax> (*x01_upgrade)(void *);
+  x03<kAMax> (*x03_upgrade)(void *);
+  x04<kAMax> (*x04_upgrade)(void *);
+  x05<kAMax> (*x05_upgrade)(void *);
+  x06<kAMax> (*x06_upgrade)(void *);
+  x07<kAMax> (*x07_upgrade)(void *);
+  x08<kAMax> (*x08_upgrade)(void *);
+  x09<kAMax> (*x09_upgrade)(void *);
+  x0A<kAMax> (*x0A_upgrade)(void *);
+  x0C<kAMax> (*x0C_upgrade)(void *);
+  x0D<kAMax> (*x0D_upgrade)(void *);
+  x0E<kAMax> (*x0E_upgrade)(void *);
+  x10<kAMax> (*x10_upgrade)(void *);
+  x14<kAMax> (*x14_upgrade)(void *);
+  x15<kAMax> (*x15_upgrade)(void *);
+  x16<kAMax> (*x16_upgrade)(void *);
+  x17<kAMax> (*x17_upgrade)(void *);
+  t1B_net<kAMax> (*x1B_upgrade)(void *);
+  x1C<kAMax> (*x1C_upgrade)(void *);
+  t13<kAMax> (*t13_upgrade)(void *);
+  x1D<kAMax> (*x1D_upgrade)(void *);
+  x1F<kAMax> (*x1F_upgrade)(void *);
+  x23<kAMax> (*x23_upgrade)(void *);
+  x24<kAMax> (*x24_upgrade)(void *);
+  x26<kAMax> (*x26_upgrade)(void *);
+  x28<kAMax> (*x28_upgrade)(void *);
+  x2B<kAMax> (*x2B_upgrade)(void *);
+  x2C<kAMax> (*x2C_upgrade)(void *);
+  x2D<kAMax> (*x2D_upgrade)(void *);
+  x2E<kAMax> (*x2E_upgrade)(void *);
+  x30<kAMax> (*x30_upgrade)(void *);
+  x31<kAMax> (*x31_upgrade)(void *);
+  x32<kAMax> (*x32_upgrade)(void *);
+  x33<kAMax> (*x33_upgrade)(void *);
+  x34<kAMax> (*x34_upgrade)(void *);
+  x37<kAMax> (*x37_upgrade)(void *);
+  t38_film<kAMax> (*x38_upgrade)(void *);
+  t39_film_layer_list<kAMax> (*x39_upgrade)(void *);
+  t3A_film_layer_list_node<kAMax> (*x3A_upgrade)(void *);
+  x3C<kAMax> (*x3C_upgrade)(void *);
 };
 
 #endif
