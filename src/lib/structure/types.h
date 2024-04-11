@@ -59,7 +59,7 @@ class ExpectRefType {
 
   // Allow this object to be used as if it were a `T` directly.
   operator uint32_t() const { return value; };
-   uint8_t expected_type() const { return J; }
+  uint8_t expected_type() const { return J; }
 };
 
 template <AllegroVersion start, AllegroVersion end,
@@ -1167,7 +1167,8 @@ struct x2C {
   uint32_t ptr1;
 
   // Points to instance of `x03` (string or constant)
-  uint32_t ptr2;
+  // uint32_t ptr2;
+  ExpectRefType<0x03> ptr2;
 
   // Points to instance of `x26` or `x2C`
   uint32_t ptr3;
@@ -1210,9 +1211,8 @@ struct x2D {
   // Points to instance (x07) or null
   COND_FIELD(version >= kA172, uint32_t, inst_ref);
 
-  uint32_t ptr1;  // x14
-
-  uint32_t first_pad_ptr;  // x32
+  ExpectRefType<0x14> ptr1;
+  ExpectRefType<0x32> first_pad_ptr;
 
   uint32_t ptr3;  // x03 or x30
 

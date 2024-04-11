@@ -80,6 +80,18 @@ void validate_x2B(const x2B<version>& i, File<version>& fs) {
 }
 
 template <AllegroVersion version>
+void validate_x2C(const x2C<version>& i, File<version>& fs) {
+  EXPECT_TRUE(CheckNullableType(i, i.ptr2, fs));
+}
+
+template <AllegroVersion version>
+void validate_x2D(const x2D<version>& i, File<version>& fs) {
+  EXPECT_TRUE(CheckNullableType(i, i.ptr1, fs));
+  EXPECT_TRUE(CheckNullableType(i, i.first_pad_ptr, fs));
+  EXPECT_TRUE(CheckNullableType(i, i.first_pad_ptr, fs));
+}
+
+template <AllegroVersion version>
 void check_header_values(File<version>& fs) {
   if (fs.hdr->ll_x04.head != 0) {
     // Iterating will crash if the pointers are incorrect
@@ -121,6 +133,7 @@ void check_header_values(File<version>& fs) {
   for (auto& i_x2B : fs.iter_x2B()) {
     validate_x2B(i_x2B, fs);
     for (auto& i_x2D : fs.iter_x2D(i_x2B.k)) {
+      validate_x2D(i_x2D, fs);
       for (auto& i_x30 : fs.iter_x30(i_x2D.k)) {
       }
       for (auto& i_x32 : fs.iter_x32(i_x2D.k)) {
@@ -145,6 +158,7 @@ void check_header_values(File<version>& fs) {
   }
   if (fs.hdr->ll_x2C.head != 0) {
     for (auto& i : fs.iter_x2C()) {
+      validate_x2C(i, fs);
     }
   }
   if (fs.hdr->ll_x0C.head != 0) {
