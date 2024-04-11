@@ -180,7 +180,7 @@ struct x07 {
   COND_FIELD(version >= kA172, uint32_t, un4);
   COND_FIELD(version >= kA172, uint32_t, un2);
 
-  uint32_t ptr1;  // 0x2D
+  ExpectRefType<0x2D> ptr1;
 
   COND_FIELD(version < kA172, uint32_t, un5);
 
@@ -188,11 +188,11 @@ struct x07 {
 
   uint32_t ptr2;
 
-  uint32_t ptr3;  // x03 or null
+  ExpectRefType<0x03> ptr3;
 
   uint32_t un3;  // Always null?
 
-  uint32_t ptr4;  // x32 or null
+  ExpectRefType<0x32> ptr4;
 
   uint32_t TAIL;
   operator x07<kAMax>() const;
@@ -327,7 +327,7 @@ struct x05 {
   uint32_t first_segment_ptr;
 
   // Points to instance of `0x03` (nullable).
-  uint32_t ptr5;
+  ExpectRefType<0x03> ptr5;
 
   // Null
   uint32_t un3;
@@ -355,16 +355,16 @@ struct x06 {
   uint32_t ptr2;
 
   // Points to instance
-  uint32_t ptr3;
+  ExpectRefType<0x07> ptr3;
 
   // Points to footprint
-  uint32_t ptr4;
+  ExpectRefType<0x0F> ptr4;
 
   // Points to x08
-  uint32_t ptr5;
+  ExpectRefType<0x08> ptr5;
 
   // Points to x03, schematic symbol (e.g. RESISTOR)
-  uint32_t ptr6;
+  ExpectRefType<0x03> ptr6;
 
   // Added in 17.x?
   COND_FIELD(version >= kA172, uint32_t, un2);
@@ -396,7 +396,7 @@ struct x08 {
   COND_FIELD(version >= kA172, uint32_t, str_ptr);
 
   // x11
-  uint32_t ptr3;
+  ExpectRefType<0x11> ptr3;
 
   COND_FIELD(version >= kA172, uint32_t, un1);
 
@@ -555,7 +555,7 @@ struct x10 {
   uint32_t ptr3;
 
   // Points to a footprint (x0F) or so that I can't print right now?
-  uint32_t ptr4;
+  ExpectRefType<0x0F> ptr4;
 
   // Something like:
   // "@beagle_xm_revcb.schematic(sch_1):ins21222351@beagle_d.\tfp410.normal\(chips)"
@@ -563,7 +563,7 @@ struct x10 {
   // ".\pstchip.dat"
   // or even like:
   // "L:/hdllib2/library/mechanical/rpv64101#2f02r1/chips/chips.prt"
-  uint32_t path_str;
+  ExpectRefType<0x03> path_str;
 
   uint32_t TAIL;
   operator x10<kAMax>() const;
@@ -1026,7 +1026,7 @@ struct x28 {
   uint32_t ptr3;
 
   // Points to `x34`?
-  uint32_t ptr4;
+  ExpectRefType<0x34> ptr4;
 
   // Line segments that form shape (x01, x15, x16, x17)
   uint32_t first_segment_ptr;
@@ -1282,7 +1282,7 @@ struct x30 {
   COND_FIELD(version >= kA174, uint32_t, un7);
 
   // Pointer to string graphic object
-  uint32_t str_graphic_ptr;
+  ExpectRefType<0x31> str_graphic_ptr;
   uint32_t un1;
   COND_FIELD(version < kA172, TextProperties, font_16x);
 
@@ -1309,7 +1309,7 @@ struct x31 {
   uint32_t k;
 
   // Points to x30
-  uint32_t str_graphic_wrapper_ptr;
+  ExpectRefType<0x30> str_graphic_wrapper_ptr;
 
   int32_t coords[2];
 
@@ -1415,11 +1415,11 @@ struct x34 {
   uint32_t k;
   uint32_t next;
 
-  uint32_t ptr1;  // x28
+  ExpectRefType<0x28> ptr1;
   COND_FIELD(version >= kA172, uint32_t, un2);
   uint32_t bitmask1;
-  uint32_t ptr2;  // x01
-  uint32_t ptr3;  // x03
+  ExpectRefType<0x01> ptr2;
+  ExpectRefType<0x03> ptr3;
 
   uint32_t un;
 

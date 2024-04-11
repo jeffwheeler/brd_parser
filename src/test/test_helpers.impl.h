@@ -31,10 +31,11 @@ testing::AssertionResult CheckNullableType(T& i, const ExpectRefType<J>& field,
 }
 
 template <AllegroVersion version>
-void validate_x04(const x04<version>& i, File<version>& fs) {
-  if (i.next != fs.hdr->ll_x04.tail) {
-    EXPECT_TRUE(CheckType(i, i.next, fs));
-  }
+void validate_x04(const x04<version>& i, File<version>& fs) {}
+
+template <AllegroVersion version>
+void validate_x05(const x05<version>& i, File<version>& fs) {
+  EXPECT_TRUE(CheckNullableType(i, i.ptr5, fs));
 }
 
 template <AllegroVersion version>
@@ -42,13 +43,35 @@ void validate_x06(const x06<version>& i, File<version>& fs) {
   if (i.next != fs.hdr->ll_x06.tail) {
     EXPECT_TRUE(CheckType(i, i.next, fs));
   }
+  EXPECT_TRUE(CheckType(i, i.ptr3, fs));
+  EXPECT_TRUE(CheckType(i, i.ptr4, fs));
+  EXPECT_TRUE(CheckNullableType(i, i.ptr5, fs));
+  EXPECT_TRUE(CheckNullableType(i, i.ptr6, fs));
+}
+
+template <AllegroVersion version>
+void validate_x07(const x07<version>& i, File<version>& fs) {
+  EXPECT_TRUE(CheckNullableType(i, i.ptr1, fs));
+  EXPECT_TRUE(CheckNullableType(i, i.ptr3, fs));
+  EXPECT_TRUE(CheckNullableType(i, i.ptr4, fs));
+}
+
+template <AllegroVersion version>
+void validate_x08(const x08<version>& i, File<version>& fs) {
+  EXPECT_TRUE(CheckNullableType(i, i.ptr3, fs));
+}
+
+template <AllegroVersion version>
+void validate_x0F(const x0F<version>& i, File<version>& fs) {}
+
+template <AllegroVersion version>
+void validate_x10(const x10<version>& i, File<version>& fs) {
+  EXPECT_TRUE(CheckNullableType(i, i.ptr4, fs));
+  EXPECT_TRUE(CheckNullableType(i, i.path_str, fs));
 }
 
 template <AllegroVersion version>
 void validate_x14(const x14<version>& i, File<version>& fs) {
-  if (i.next != fs.hdr->ll_x14.tail) {
-    EXPECT_TRUE(CheckType(i, i.next, fs));
-  }
   EXPECT_TRUE(CheckNullableType(i, i.ptr3, fs));
   EXPECT_TRUE(CheckNullableType(i, i.ptr4, fs));
 }
@@ -65,7 +88,12 @@ void validate_x1B(const t1B_net<version>& i, File<version>& fs) {
 
 template <AllegroVersion version>
 void validate_x23(const x23<version>& i, File<version>& fs) {
-  EXPECT_TRUE(fs.is_type(i.ptr1, i.ptr1.expected_type()));
+  EXPECT_TRUE(CheckNullableType(i, i.ptr1, fs));
+}
+
+template <AllegroVersion version>
+void validate_x28(const x28<version>& i, File<version>& fs) {
+  EXPECT_TRUE(CheckNullableType(i, i.ptr4, fs));
 }
 
 template <AllegroVersion version>
@@ -92,16 +120,31 @@ void validate_x2D(const x2D<version>& i, File<version>& fs) {
 }
 
 template <AllegroVersion version>
+void validate_x30(const x30<version>& i, File<version>& fs) {
+  EXPECT_TRUE(CheckType(i, i.str_graphic_ptr, fs));
+}
+
+template <AllegroVersion version>
+void validate_x31(const x31<version>& i, File<version>& fs) {
+  EXPECT_TRUE(CheckType(i, i.str_graphic_wrapper_ptr, fs));
+}
+
+template <AllegroVersion version>
+void validate_x34(const x34<version>& i, File<version>& fs) {
+  EXPECT_TRUE(CheckType(i, i.ptr1, fs));
+  EXPECT_TRUE(CheckType(i, i.ptr2, fs));
+  EXPECT_TRUE(CheckType(i, i.ptr3, fs));
+}
+
+template <AllegroVersion version>
 void check_header_values(File<version>& fs) {
   if (fs.hdr->ll_x04.head != 0) {
     // Iterating will crash if the pointers are incorrect
     for (auto& i : fs.iter_x04()) {
-      validate_x04(i, fs);
     }
   }
   if (fs.hdr->ll_x06.head != 0) {
     for (auto& i : fs.iter_x06()) {
-      validate_x06(i, fs);
     }
   }
   if (fs.hdr->ll_x0C_2.head != 0) {
@@ -114,12 +157,10 @@ void check_header_values(File<version>& fs) {
   }
   if (fs.hdr->ll_x14.head != 0) {
     for (auto& i : fs.iter_x14()) {
-      validate_x14(i, fs);
     }
   }
   if (fs.hdr->ll_x1B.head != 0) {
     for (auto& i : fs.iter_t1B_net()) {
-      validate_x1B(i, fs);
     }
   }
   if (fs.hdr->ll_x1C.head != 0) {
@@ -183,4 +224,64 @@ void check_header_values(File<version>& fs) {
   }
   EXPECT_TRUE(fs.hdr->units == Units::kImperial ||
               fs.hdr->units == Units::kMetric);
+}
+
+template <AllegroVersion version>
+void validate_objects(File<version>& fs) {
+  // Note: Iterating over all objects finds objects that should have been
+  // deleted, and aren't actually found by iterating normally through the
+  // linked list structures.
+  for (auto& [k, ptr] : fs.ptrs) {
+    uint8_t t = *reinterpret_cast<uint8_t*>(ptr);
+    switch (t) {
+      case 0x04:
+        validate_x04(fs.get_x04(k), fs);
+        break;
+      case 0x05:
+        validate_x05(fs.get_x05(k), fs);
+        break;
+      case 0x06:
+        validate_x06(fs.get_x06(k), fs);
+        break;
+      case 0x07:
+        validate_x07(fs.get_x07(k), fs);
+        break;
+      case 0x08:
+        validate_x08(fs.get_x08(k), fs);
+        break;
+      case 0x0F:
+        validate_x0F(*reinterpret_cast<x0F<version>*>(ptr), fs);
+        break;
+      case 0x10:
+        validate_x10(fs.get_x10(k), fs);
+        break;
+      case 0x14:
+        validate_x14(fs.get_x14(k), fs);
+        break;
+      case 0x1B:
+        validate_x1B(fs.get_x1B(k), fs);
+        break;
+      case 0x28:
+        validate_x28(fs.get_x28(k), fs);
+        break;
+      case 0x2B:
+        validate_x2B(fs.get_x2B(k), fs);
+        break;
+      case 0x2C:
+        validate_x2C(fs.get_x2C(k), fs);
+        break;
+      case 0x2D:
+        validate_x2D(fs.get_x2D(k), fs);
+        break;
+      case 0x30:
+        validate_x30(fs.get_x30(k), fs);
+        break;
+      case 0x31:
+        validate_x31(fs.get_x31(k), fs);
+        break;
+      case 0x35:
+        validate_x34(fs.get_x34(k), fs);
+        break;
+    }
+  }
 }

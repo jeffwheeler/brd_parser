@@ -24,6 +24,7 @@ TEST(ParseFile, Slugs) {
   EXPECT_TRUE(fs.is_type(0x06634ED0, 0x23));
 
   check_header_values(fs);
+  validate_objects(fs);
 
   const auto x30_inst = fs.get_x30(0x065BD3E8);
   const auto x36_x08_inst = font_lookup(x30_inst.font.key, fs);
@@ -44,6 +45,7 @@ TEST(ParseFile, Parallella) {
   EXPECT_TRUE(fs.is_type(0x0B63E710, 0x23));
 
   check_header_values(fs);
+  validate_objects(fs);
 
   const x1C<kAMax> &x1C_inst = fs.get_x1C(0x0ACD3EE0);
   EXPECT_EQ(x1C_inst.parts[0].w, 2600);
@@ -79,6 +81,7 @@ TEST(ParseFile, SmartPlug) {
   EXPECT_STREQ(x03_str_lookup(fs.get_x1B(0x0EAF6DC8).path_str_ptr, fs), "");
 
   check_header_values(fs);
+  validate_objects(fs);
 
   const auto pad = fs.get_x1C(0x0EAFC8D0);
   EXPECT_EQ(pad.pad_info.pad_type, PadType::SmtPin);
@@ -97,6 +100,7 @@ TEST(ParseFile, AvalonParsed) {
   EXPECT_TRUE(fs.is_type(0x13E64B30, 0x23));
 
   check_header_values(fs);
+  validate_objects(fs);
 
   const auto pad = fs.get_x1C(0x13DDE500);
   EXPECT_EQ(pad.pad_info.pad_type, PadType::SmtPin);
@@ -115,6 +119,7 @@ TEST(ParseFile, OpenCellularRf) {
   EXPECT_TRUE(fs.is_type(0x035B0010, 0x09));
 
   check_header_values(fs);
+  validate_objects(fs);
 }
 
 // Magic is 0x00131504
@@ -127,6 +132,7 @@ TEST(ParseFile, EdaV3) {
   // EXPECT_TRUE(fs.x03_map.count(0xF2692148) > 0);
 
   check_header_values(fs);
+  validate_objects(fs);
 }
 
 // Magic is 0x00131504
@@ -141,6 +147,7 @@ TEST(ParseFile, OpenCellularGbc) {
   EXPECT_TRUE(fs.is_type(0x163ECF78, 0x23));
 
   check_header_values(fs);
+  validate_objects(fs);
 
   const auto x30_inst = fs.get_x30(0x147E3120);
   const auto x36_x08_inst = font_lookup(x30_inst.font.key, fs);
@@ -165,6 +172,7 @@ TEST(ParseFile, OpenCellularSdr) {
   EXPECT_TRUE(fs.is_type(0x0FD96758, 0x23));
 
   check_header_values(fs);
+  validate_objects(fs);
 }
 
 // Magic is 0x00131504
@@ -178,6 +186,7 @@ TEST(ParseFile, EuroAdc) {
   // EXPECT_TRUE(fs.x03_map.count(0xEC0FA1D0) > 0);
 
   check_header_values(fs);
+  validate_objects(fs);
 }
 
 // Magic is 0x00140400
@@ -191,6 +200,7 @@ TEST(ParseFile, BeagleBoneAIParsed) {
   EXPECT_TRUE(fs.is_type(0x0002814C, 0x23));
 
   check_header_values(fs);
+  validate_objects(fs);
 
   const x1C<kAMax> &x1C_inst = fs.get_x1C(0x00002010);
   EXPECT_EQ(x1C_inst.parts[0].w, 23000);
@@ -214,6 +224,7 @@ TEST(ParseFile, BeagleYParsed) {
                "y ai_sch_v1.0_240105\\.\\beagley ai\\(sch_1):pmic_reset");
 
   check_header_values(fs);
+  validate_objects(fs);
 }
 
 // Magic is 0x00140400
@@ -227,6 +238,7 @@ TEST(ParseFile, RFPowerDivider) {
   // EXPECT_TRUE(fs.x03_map.count(0x0C190840) > 0);
 
   check_header_values(fs);
+  validate_objects(fs);
 }
 
 // Magic is 0x00140400
@@ -239,6 +251,7 @@ TEST(ParseFile, OpenRex) {
   // EXPECT_TRUE(fs.x15_map.count(0x08E10832) > 0);
 
   check_header_values(fs);
+  validate_objects(fs);
 }
 
 // Magic is 0x00140400
@@ -250,6 +263,7 @@ TEST(ParseFile, M1K) {
   EXPECT_TRUE(fs.is_type(0x084A1B4D, 0x23));
 
   check_header_values(fs);
+  validate_objects(fs);
 }
 
 // Magic is 0x00140400
@@ -264,6 +278,7 @@ TEST(ParseFile, CreatableMain) {
   validate_x23(fs.get_x23(0x0E7C8635), fs);
 
   check_header_values(fs);
+  validate_objects(fs);
 }
 
 // Magic is 0x00140400
@@ -277,6 +292,7 @@ TEST(ParseFile, JtagToDc3) {
   // EXPECT_TRUE(fs.x03_map.count(0x00000A6F) > 0);
 
   check_header_values(fs);
+  validate_objects(fs);
 }
 
 // Magic is 0x00140400
@@ -288,6 +304,7 @@ TEST(ParseFile, FmcTlu) {
   EXPECT_TRUE(fs.is_type(0x0001937A, 0x23));
 
   check_header_values(fs);
+  validate_objects(fs);
 }
 
 // Magic is 0x00140900
@@ -301,6 +318,7 @@ TEST(ParseFile, MotorEncoderParsed) {
   EXPECT_TRUE(fs.is_type(0x00001197, 0x23));
 
   check_header_values(fs);
+  validate_objects(fs);
 }
 
 // Magic is 0x00140902
@@ -314,6 +332,7 @@ TEST(ParseFile, Pc069A) {
   EXPECT_TRUE(fs.is_type(0x0000CDE7, 0x23));
 
   check_header_values(fs);
+  validate_objects(fs);
 }
 
 // Magic is 0x00140902
@@ -327,6 +346,7 @@ TEST(ParseFile, MtcaInterfaceBoard) {
   EXPECT_TRUE(fs.is_type(0x0002ABBC, 0x23));
 
   check_header_values(fs);
+  validate_objects(fs);
 
   const auto x30_inst = fs.get_x30(0x00001CD4);
   const auto x36_x08_inst = font_lookup(x30_inst.font.key, fs);
@@ -343,4 +363,5 @@ TEST(ParseFile, PllFmHw) {
   // EXPECT_TRUE(fs.x03_map.count(0x0003096A) > 0);
 
   check_header_values(fs);
+  validate_objects(fs);
 }
