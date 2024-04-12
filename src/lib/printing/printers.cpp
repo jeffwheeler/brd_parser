@@ -287,7 +287,7 @@ void print_x04(const void *untyped_inst, File<version> *fs, const int d) {
            "x04: \x1b[36;3mNet/Shape Pair\x1b[0m t=0x%08X k=0x%08X"
            " \x1b[34m\"%s\"\x1b[0m ↔ \x1b[34m\"%s\"\x1b[0m\n",
            ntohl(inst->t), ntohl(inst->k), x1B_net_name(inst->ptr1, fs),
-           x32_pin_name(inst->ptr2, fs)->c_str());
+           x32_pin_name(inst->ptr2, fs).value_or(std::string("?")).c_str());
 
   printf_d(d + 1, "ptr1:\n");
   if (fs->is_type(inst->ptr1, 0x1B)) {
@@ -1521,7 +1521,7 @@ void print_x23(const void *untyped_inst, File<version> *fs, const int d) {
     print_struct(inst->ptr1, *fs, d + 2);
   } else {
     printf_d(d + 2, "ptr1 unrecognized: 0x%08X\n", ntohl(inst->ptr1));
-    exit(0);
+    // exit(0);
   }
 
   printf_d(d + 1, "ptr2:");
@@ -1533,7 +1533,7 @@ void print_x23(const void *untyped_inst, File<version> *fs, const int d) {
       print_struct(inst->ptr2, *fs, d + 2);
     } else {
       printf_d(d + 2, "ptr2 unrecognized: 0x%08X\n", ntohl(inst->ptr2));
-      exit(0);
+      // exit(0);
     }
   }
 
@@ -1542,14 +1542,14 @@ void print_x23(const void *untyped_inst, File<version> *fs, const int d) {
     print_struct(inst->ptr3, *fs, d + 2);
   } else {
     printf_d(d + 2, "ptr3 unrecognized: 0x%08X\n", ntohl(inst->ptr3));
-    exit(0);
+    // exit(0);
   }
 
   for (int i = 0; i < 8; i++) {
     if (inst->un[i] != 0) {
       printf_d(d + 1, "un[%d] expected to be 0, but is actually 0x%08X\n", i,
                ntohl(inst->un[i]));
-      exit(1);
+      // exit(1);
     }
   }
 }

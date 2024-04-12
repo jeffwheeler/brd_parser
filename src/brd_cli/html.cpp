@@ -178,7 +178,7 @@ void stream_nets(File<kAMax> &f) {
       std::cout << "<td>Blank path</td></tr>";
     } else {
       printf("<td><code>%s</code></td></tr>",
-             x03_str_lookup(net.path_str_ptr, f));
+             x03_str_lookup(net.path_str_ptr, f).c_str());
     }
   }
   std::cout << R"A(

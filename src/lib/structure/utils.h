@@ -1,6 +1,7 @@
 #ifndef STRUCTURE_UTILS_H
 #define STRUCTURE_UTILS_H
 
+#include <iostream>
 #include <optional>
 
 #include "types.h"
@@ -19,14 +20,20 @@ char *str_lookup(uint32_t id, File<version> &fs) {
 }
 
 template <AllegroVersion version>
-const char *x03_str_lookup(uint32_t id, File<version> &fs) {
-  const x03<version> *i = (const x03<version> *)fs.ptrs[id];
-  if (i->subtype.size == 0) {
-      return "";
-  } else if (i->subtype.t == 0x6A) {
-    return str_lookup(i->ptr, fs);
+const std::string x03_str_lookup(uint32_t id, File<version> &fs) {
+  // const x03<version> *i = (const x03<version> *)fs.ptrs[id];
+  auto& i = fs.get_x03(id);
+  std::cout << "x03_str_lookup id=" << id << std::endl;
+  if (i.subtype.size == 0) {
+    std::cout << "size=0" << std::endl;
+    return "";
+  } else if (i.subtype.t == 0x6A) {
+    std::cout << "0x6A" << std::endl;
+    return std::string(str_lookup(i.ptr, fs));
   } else {
-    return i->s.c_str();
+    std::cout << "not 0x6A" << std::endl;
+    return i.s;
+    // return i.s.c_str();
   }
 }
 

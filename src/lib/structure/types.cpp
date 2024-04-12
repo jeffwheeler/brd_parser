@@ -1334,6 +1334,9 @@ const x03<kAMax> File<kAMax>::get_x03(uint32_t k) {
     case 0x00140E00:
       size = sizeof_until_tail<x03<kA174>>();
       break;
+    case 0x00141502:
+      size = sizeof_until_tail<x03<kA175>>();
+      break;
     default:
       size = 0;
   }
