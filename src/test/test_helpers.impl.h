@@ -1,9 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <format>
-#include <iostream>
-#include <string>
-#include <string_view>
+#include <boost/format.hpp>
 
 #include "lib/structure/types.h"
 
@@ -13,10 +10,17 @@ testing::AssertionResult CheckType(T& i, const ExpectRefType<J>& field,
   if (fs.is_type(field, field.expected_type())) {
     return testing::AssertionSuccess();
   } else {
-    return testing::AssertionFailure() << std::format(
-               "key {:#012x} expected to be of type {:#04x}, but isn't (ptr "
-               "found in obj with k={:#012x})",
-               field.value, field.expected_type(), i.k);
+    // This use of `boost::format` can be changed to `std::format` when
+    // upgrading to C++20.
+    //
+    // Also, the typecast is required to avoid being interpreted as a character
+    // and printing the ASCII representation.
+    return testing::AssertionFailure()
+           << boost::format(
+                  "key 0x%|08X| expected to be of type 0x%|02X|, but isn't "
+                  "(ptr "
+                  "found in obj with k=0x%|08X|)") %
+                  field.value % (uint32_t)field.expected_type() % i.k;
   }
 }
 

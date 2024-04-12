@@ -5,7 +5,7 @@ project(AllegroParser)
 
 option(BUILD_GUI "Build Qt GUI")
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_FLAGS "-O3") # Use -Wall here
 set(CMAKE_CXX_EXTENSIONS OFF)
