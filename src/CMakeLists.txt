@@ -7,7 +7,7 @@ option(BUILD_GUI "Build Qt GUI")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Release)
-set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra") # Use -Wall here
+set(CMAKE_CXX_FLAGS "-O3 -Wall") # Use -Wall here
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
