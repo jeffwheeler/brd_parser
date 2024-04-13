@@ -1472,7 +1472,7 @@ const x1C<kAMax> File<kAMax>::get_x1C(uint32_t k) {
   }
 
   void *next_ptr = ((char *)p) + obj_size;
-  for (int j = 0; j < count; j++) {
+  for (uint32_t j = 0; j < count; j++) {
     t13<kAMax> t13_inst = this->t13_upgrade(next_ptr);
     i.parts.push_back(t13_inst);
     next_ptr = ((char *)next_ptr) + t13_size;

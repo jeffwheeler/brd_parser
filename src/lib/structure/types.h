@@ -1705,7 +1705,7 @@ class File {
     using reference = const T &;
 
     Iter(File &f, const pointer k, value_type (File<version>::*func)(pointer))
-        : f(f), k(k), func(func){};
+        : f(f), func(func), k(k){};
     Iter &operator++() {
       reference inst = (f.*func)(k);
       k = inst.next;

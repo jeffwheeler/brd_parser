@@ -33,7 +33,6 @@ const std::string x03_str_lookup(uint32_t id, File<version> &fs) {
   } else {
     std::cout << "not 0x6A" << std::endl;
     return i.s;
-    // return i.s.c_str();
   }
 }
 

@@ -54,7 +54,7 @@ void stream_header(std::string &fname, File<kAMax> &f) {
       std::cout << "<td>Imperial</td>";
       break;
     default:
-      printf("<td>Unrecognized! <code>%02hhX</code></td>", f.hdr->units);
+      printf("<td>Unrecognized! <code>%02hhX</code></td>", (uint8_t)f.hdr->units);
   };
   std::cout << R"A(
                 </tr>
@@ -188,7 +188,7 @@ void stream_nets(File<kAMax> &f) {
     )A";
 }
 
-void stream_x30(File<kAMax> &f) {
+void stream_x30([[maybe_unused]] File<kAMax> &f) {
   std::cout << R"A(
         <h2>Placed string objects</h2>
         <div class="border overflow-auto mb-3" style="max-height: 300px; max-width: 900px">
