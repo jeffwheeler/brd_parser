@@ -1420,12 +1420,6 @@ void print_x1C(const void *untyped_inst, File<version> *fs, const int d) {
            inst.pad_info.a, inst.pad_info.b, inst.pad_info.c, inst.pad_info.d,
            ntohl(inst.pad_str), str_lookup(inst.pad_str, *fs));
 
-  uint32_t un7;
-  if constexpr (std::is_same_v<decltype(inst.un7), std::monostate>) {
-    un7 = 0;
-  } else {
-    un7 = inst.un7;
-  }
   printf_d(d + 1, "layer_count=%d len(parts)=%d\n", inst.layer_count,
            inst.parts.size());
 
