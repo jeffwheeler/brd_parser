@@ -11,6 +11,11 @@ set(CMAKE_CXX_FLAGS "-O3 -Wall")
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
+IF(MSVC)
+    # https://stackoverflow.com/questions/50133783/c-cmake-build-error-undefined-reference-to-boostthrow-exceptionstdexcep
+    add_compile_options(/EHsc)
+ENDIF(MSVC)
+
 include(FetchContent)
 FetchContent_Declare(
     googletest
