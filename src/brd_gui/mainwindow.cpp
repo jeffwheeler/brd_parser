@@ -13,8 +13,8 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     setAcceptDrops(true);
 
     createToolBar();
-    // createDockWidget();
-    createFilmSelectWidget();
+    createDockWidget();
+    // createFilmSelectWidget();
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent* event) {
@@ -43,8 +43,9 @@ void MainWindow::loadFile(std::string path) {
     auto parsed_file = parse_file(path);
     if (parsed_file) {
         fs = std::move(parsed_file);
+        qDebug("File version: %08X -> \"%s\"", ntohl(fs->hdr->magic), fs->hdr->allegro_version);
         brdView->loadFile(&fs.value());
-        loadFilms();
+        // loadFilms();
 
         /*
         for (auto& i : fs->iter_x1C()) {
@@ -589,8 +590,8 @@ void MainWindow::selectFilm() {
 
         // Lookup layers associated with this film
         uint32_t x38_k = layer_cache[t.toStdString()];
-        const t38_film<A_175>& film = fs->get_x38(x38_k);
-        const t39_film_layer_list<A_175>& layer_list =
+        const t38_film<kAMax>& film = fs->get_t38_film(x38_k);
+        const t39_film_layer_list<kAMax>& layer_list =
             fs->get_x39(film.layer_list);
         for (const auto& layer : x39_layers(layer_list, fs.value())) {
             layers.push_back(layer);

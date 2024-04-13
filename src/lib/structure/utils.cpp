@@ -2,11 +2,11 @@
 
 #include <algorithm>
 
-std::pair<double, double> x01_center(const x01<A_175>* inst) {
+std::pair<double, double> x01_center(const x01<kAMax>* inst) {
     return std::pair(cfp_to_double(inst->x), cfp_to_double(inst->y));
 }
 
-const std::vector<stackup_material> ordered_stackup_materials(File<A_175>& f) {
+const std::vector<stackup_material> ordered_stackup_materials(File<kAMax>& f) {
     std::vector<stackup_material> arr;
     for (auto& [k, stackup_material] : f.stackup_materials) {
         arr.push_back(stackup_material);
