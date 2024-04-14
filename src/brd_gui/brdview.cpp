@@ -527,6 +527,8 @@ void BrdView::drawX32(const x32<kAMax> *inst, QPen *pen,
                            QPen(Qt::NoPen), QBrush(pen->color()));
       pad->setTransform(t);
       break;
+    default:
+      return;
   }
 
   pad->setData(0, inst->k);
@@ -587,6 +589,9 @@ void BrdView::drawX33(const x33<kAMax> *inst, QPen *pen) {
                               first_part->w / factor, first_part->h / factor,
                               QPen(Qt::NoPen), QBrush(pen->color()));
       pad->setTransform(t);
+      break;
+    default:
+      return;
   }
 
   pad->setData(0, inst->k);
@@ -602,6 +607,9 @@ void BrdView::drawX33(const x33<kAMax> *inst, QPen *pen) {
                               first_part->w / factor, first_part->h / factor,
                               QPen(Qt::NoPen), QBrush(pen->color()));
       pad->setTransform(t);
+      break;
+    default:
+      return;
   }
 
   pad->setData(0, inst->k);
