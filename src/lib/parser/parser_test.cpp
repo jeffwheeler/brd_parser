@@ -78,7 +78,8 @@ TEST(ParseFile, SmartPlug) {
 
   EXPECT_STREQ(x03_str_lookup(fs.get_x1B(0x0EAF6CB0).path_str_ptr, fs).c_str(),
                "@plugmeter_zigbee.plugmeter(sch_1):swdio");
-  EXPECT_STREQ(x03_str_lookup(fs.get_x1B(0x0EAF6DC8).path_str_ptr, fs).c_str(), "");
+  EXPECT_STREQ(x03_str_lookup(fs.get_x1B(0x0EAF6DC8).path_str_ptr, fs).c_str(),
+               "");
 
   check_header_values(fs);
   validate_objects(fs);
@@ -220,8 +221,9 @@ TEST(ParseFile, BeagleYParsed) {
   EXPECT_EQ(fs.layer_count, 14);
   EXPECT_TRUE(fs.is_type(0x0006F98F, 0x16));
 
-  EXPECT_STREQ(x03_str_lookup(fs.get_x1B(0x00002337).path_str_ptr, fs).c_str(),
-               "@\\beagley ai_sch_v1.0_240105\\.\\beagley ai\\(sch_1):pmic_reset");
+  EXPECT_STREQ(
+      x03_str_lookup(fs.get_x1B(0x00002337).path_str_ptr, fs).c_str(),
+      "@\\beagley ai_sch_v1.0_240105\\.\\beagley ai\\(sch_1):pmic_reset");
 
   check_header_values(fs);
   validate_objects(fs);
