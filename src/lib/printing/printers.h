@@ -15,7 +15,7 @@
 #define MAX_DEPTH 5
 
 #define PRINT(MAP, KEY, DEPTH) \
-    (print_struct((const void *)&fs->MAP.at(KEY), fs, DEPTH))
+  (print_struct((const void *)&fs->MAP.at(KEY), fs, DEPTH))
 
 template <AllegroVersion version>
 void default_printer(const void *untyped_inst, File<version> *fs, const int d);
@@ -149,7 +149,7 @@ void print_x3C(const void *untyped_inst, File<version> *fs, const int d);
 
 template <AllegroVersion version>
 struct sfs {
-    void (*print)(const void *, File<version> *, const int);
+  void (*print)(const void *, File<version> *, const int);
 };
 
 template <AllegroVersion version>

@@ -54,7 +54,8 @@ void stream_header(std::string &fname, File<kAMax> &f) {
       std::cout << "<td>Imperial</td>";
       break;
     default:
-      printf("<td>Unrecognized! <code>%02hhX</code></td>", (uint8_t)f.hdr->units);
+      printf("<td>Unrecognized! <code>%02hhX</code></td>",
+             (uint8_t)f.hdr->units);
   };
   std::cout << R"A(
                 </tr>

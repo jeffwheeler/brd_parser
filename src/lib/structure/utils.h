@@ -22,7 +22,7 @@ char *str_lookup(uint32_t id, File<version> &fs) {
 template <AllegroVersion version>
 const std::string x03_str_lookup(uint32_t id, File<version> &fs) {
   // const x03<version> *i = (const x03<version> *)fs.ptrs[id];
-  auto& i = fs.get_x03(id);
+  auto &i = fs.get_x03(id);
   std::cout << "x03_str_lookup id=" << id << std::endl;
   if (i.subtype.size == 0) {
     std::cout << "size=0" << std::endl;

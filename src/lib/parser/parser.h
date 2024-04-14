@@ -45,7 +45,7 @@ uint32_t parse_x3C(File<kAMax>& fs, void*& address);
 
 template <AllegroVersion version>
 struct parser_t {
-    uint32_t (*parse)(File<kAMax>&, void*& cur_addr);
+  uint32_t (*parse)(File<kAMax>&, void*& cur_addr);
 };
 
 template <AllegroVersion version>

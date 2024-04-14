@@ -9,8 +9,8 @@
  * swap them.
  */
 typedef struct {
-    uint32_t x;
-    uint32_t y;
+  uint32_t x;
+  uint32_t y;
 } cadence_fp;
 
 double cfp_to_double(const cadence_fp r);
