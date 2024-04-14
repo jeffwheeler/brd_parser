@@ -144,15 +144,15 @@ template <AllegroVersion version>
 void check_header_values(File<version>& fs) {
   if (fs.hdr->ll_x04.head != 0) {
     // Iterating will crash if the pointers are incorrect
-    for (auto& i : fs.iter_x04()) {
+    for ([[maybe_unused]] auto& i : fs.iter_x04()) {
     }
   }
   if (fs.hdr->ll_x06.head != 0) {
-    for (auto& i : fs.iter_x06()) {
+    for ([[maybe_unused]] auto& i : fs.iter_x06()) {
     }
   }
   if (fs.hdr->ll_x0C_2.head != 0) {
-    for (auto& i : fs.iter_x0C_2()) {
+    for ([[maybe_unused]] auto& i : fs.iter_x0C_2()) {
     }
   }
   if (fs.hdr->ll_x0E_x28.head != 0) {
@@ -160,15 +160,15 @@ void check_header_values(File<version>& fs) {
                 fs.is_type(fs.hdr->ll_x0E_x28.head, 0x28));
   }
   if (fs.hdr->ll_x14.head != 0) {
-    for (auto& i : fs.iter_x14()) {
+    for ([[maybe_unused]] auto& i : fs.iter_x14()) {
     }
   }
   if (fs.hdr->ll_x1B.head != 0) {
-    for (auto& i : fs.iter_t1B_net()) {
+    for ([[maybe_unused]] auto& i : fs.iter_t1B_net()) {
     }
   }
   if (fs.hdr->ll_x1C.head != 0) {
-    for (auto& i : fs.iter_x1C()) {
+    for ([[maybe_unused]] auto& i : fs.iter_x1C()) {
     }
   }
   if (fs.hdr->ll_x24_x28.head != 0) {
@@ -179,9 +179,9 @@ void check_header_values(File<version>& fs) {
     validate_x2B(i_x2B, fs);
     for (auto& i_x2D : fs.iter_x2D(i_x2B.k)) {
       validate_x2D(i_x2D, fs);
-      for (auto& i_x30 : fs.iter_x30(i_x2D.k)) {
+      for ([[maybe_unused]] auto& i_x30 : fs.iter_x30(i_x2D.k)) {
       }
-      for (auto& i_x32 : fs.iter_x32(i_x2D.k)) {
+      for ([[maybe_unused]] auto& i_x32 : fs.iter_x32(i_x2D.k)) {
       }
     }
   }
@@ -189,7 +189,7 @@ void check_header_values(File<version>& fs) {
     // EXPECT_TRUE(fs.x03_map.count(fs.hdr->ll_x03.head) > 0);
   }
   if (fs.hdr->ll_x0A_2.head != 0) {
-    for (auto& i : fs.iter_x0A_2()) {
+    for ([[maybe_unused]] auto& i : fs.iter_x0A_2()) {
     }
   }
   if (fs.hdr->ll_x1D_x1E_x1F.head != 0) {
@@ -198,7 +198,7 @@ void check_header_values(File<version>& fs) {
                 fs.is_type(fs.hdr->ll_x1D_x1E_x1F.head, 0x1F));
   }
   if (fs.hdr->ll_x38.head != 0) {
-    for (auto& i : fs.iter_t38_film()) {
+    for ([[maybe_unused]] auto& i : fs.iter_t38_film()) {
     }
   }
   if (fs.hdr->ll_x2C.head != 0) {
@@ -207,7 +207,7 @@ void check_header_values(File<version>& fs) {
     }
   }
   if (fs.hdr->ll_x0C.head != 0) {
-    for (auto& i : fs.iter_x0C()) {
+    for ([[maybe_unused]] auto& i : fs.iter_x0C()) {
     }
   }
   /*
@@ -223,7 +223,7 @@ void check_header_values(File<version>& fs) {
     }
   }
   if (fs.hdr->ll_x0A.head != 0) {
-    for (auto& i : fs.iter_x0A()) {
+    for ([[maybe_unused]] auto& i : fs.iter_x0A()) {
     }
   }
   EXPECT_TRUE(fs.hdr->units == Units::kImperial ||

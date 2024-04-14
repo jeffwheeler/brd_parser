@@ -172,7 +172,7 @@ template void print_struct<kAMax>(const uint32_t k, File<kAMax> &fs,
  *******************/
 
 template <AllegroVersion version>
-void default_printer(const void *untyped_inst, [[maybe_unused]] File<version> *fs, const int d) {
+void default_printer(const void *untyped_inst, File<version> *, const int d) {
   const x05<kAMax> *inst = (const x05<kAMax> *)untyped_inst;
   printf_d(d, "\x1b[33mDefault printer:\x1b[0m t=0x%08X k=0x%08X\n",
            ntohl(inst->t), ntohl(inst->k));
@@ -777,7 +777,7 @@ void print_x09(const void *untyped_inst, File<version> *fs, const int d) {
 }
 
 template <AllegroVersion version>
-void print_x0A(const void *untyped_inst, [[maybe_unused]] File<version> *fs, const int d) {
+void print_x0A(const void *untyped_inst, File<version> *, const int d) {
   const x0A<version> *inst = (const x0A<version> *)untyped_inst;
   printf_d(d,
            "x0A: t=0x%04X subtype=%02X layer=%d k=0x%08X un1={%08X}"
@@ -798,7 +798,7 @@ void print_x0A(const void *untyped_inst, [[maybe_unused]] File<version> *fs, con
 }
 
 template <AllegroVersion version>
-void print_x0C(const void *untyped_inst, [[maybe_unused]] File<version> *fs, const int d) {
+void print_x0C(const void *untyped_inst, File<version> *, const int d) {
   const x0C<version> *inst = (const x0C<version> *)untyped_inst;
   printf_d(d, "x0C: t=0x%04X subtype=%02X layer=%d k=0x%08X kind=%d\n",
            ntohl(inst->t), inst->subtype, inst->layer, ntohl(inst->k),
@@ -1092,7 +1092,7 @@ void print_x14(const void *untyped_inst, File<version> *fs, const int d) {
 }
 
 template <AllegroVersion version>
-void print_x15(const void *untyped_inst, [[maybe_unused]] File<version> *fs, const int d) {
+void print_x15(const void *untyped_inst, File<version> *, const int d) {
   const x15<version> *inst = (const x15<version> *)untyped_inst;
   uint32_t un4;
   if constexpr (std::is_same_v<decltype(inst->un4), std::monostate>) {
@@ -1156,7 +1156,7 @@ void print_x15(const void *untyped_inst, [[maybe_unused]] File<version> *fs, con
 }
 
 template <AllegroVersion version>
-void print_x16(const void *untyped_inst, [[maybe_unused]] File<version> *fs, const int d) {
+void print_x16(const void *untyped_inst, File<version> *, const int d) {
   const x16<version> *inst = (const x16<version> *)untyped_inst;
   uint32_t un;
   if constexpr (std::is_same_v<decltype(inst->un), std::monostate>) {
@@ -1212,7 +1212,7 @@ void print_x16(const void *untyped_inst, [[maybe_unused]] File<version> *fs, con
 }
 
 template <AllegroVersion version>
-void print_x17(const void *untyped_inst, [[maybe_unused]] File<version> *fs, const int d) {
+void print_x17(const void *untyped_inst, File<version> *, const int d) {
   const x17<version> *inst = (const x17<version> *)untyped_inst;
   uint32_t un4;
   if constexpr (std::is_same_v<decltype(inst->un4), std::monostate>) {
@@ -1420,12 +1420,6 @@ void print_x1C(const void *untyped_inst, File<version> *fs, const int d) {
            inst.pad_info.a, inst.pad_info.b, inst.pad_info.c, inst.pad_info.d,
            ntohl(inst.pad_str), str_lookup(inst.pad_str, *fs));
 
-  uint32_t un7;
-  if constexpr (std::is_same_v<decltype(inst.un7), std::monostate>) {
-    un7 = 0;
-  } else {
-    un7 = inst.un7;
-  }
   printf_d(d + 1, "layer_count=%d len(parts)=%d\n", inst.layer_count,
            inst.parts.size());
 
@@ -1483,7 +1477,7 @@ void print_x1E(const void *untyped_inst, File<version> *fs, const int d) {
 }
 
 template <AllegroVersion version>
-void print_x22(const void *untyped_inst, [[maybe_unused]] File<version> *fs, const int d) {
+void print_x22(const void *untyped_inst, File<version> *, const int d) {
   const x22<version> *inst = (const x22<version> *)untyped_inst;
   printf_d(
       d, "x22: t=0x%08X k=0x%08X %08X %08X %08X %08X, %08X %08X %08X %08X\n",
@@ -2755,7 +2749,7 @@ void print_x36(const void *untyped_inst, File<version> *fs, const int d) {
 }
 
 template <AllegroVersion version>
-void print_x37(const void *untyped_inst, [[maybe_unused]] File<version> *fs, const int d) {
+void print_x37(const void *untyped_inst, File<version> *, const int d) {
   const x37<version> *inst = (const x37<version> *)untyped_inst;
   const int MAX_TO_PRINT = 5;
   printf_d(d, "x37: t=0x%08X k=0x%08X %08X \x1b[2m(%d/%d)\x1b[0m\n",
@@ -2901,7 +2895,7 @@ void print_x3A(const void *untyped_inst, File<version> *fs, const int d) {
 }
 
 template <AllegroVersion version>
-void print_x3C(const void *untyped_inst, [[maybe_unused]] File<version> *fs, const int d) {
+void print_x3C(const void *untyped_inst, File<version> *, const int d) {
   const x3C<version> *inst = (const x3C<version> *)untyped_inst;
   printf_d(d, "x3C: t=0x%08X k=0x%08X\n", ntohl(inst->t), ntohl(inst->k));
 

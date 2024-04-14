@@ -6,15 +6,21 @@ project(AllegroParser)
 option(BUILD_GUI "Build Qt GUI")
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_BUILD_TYPE Release)
-set(CMAKE_CXX_FLAGS "-O3 -Wall")
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+
+add_compile_options("-O3")
+add_compile_options("-Wall")
 
 IF(MSVC)
     # https://stackoverflow.com/questions/50133783/c-cmake-build-error-undefined-reference-to-boostthrow-exceptionstdexcep
-    add_compile_options(/EHsc)
+    add_compile_options("/EHsc")
+
+    # GoogleTest fails with /W3.
+    add_compile_options("/W2")
+ELSE()
+    add_compile_options("-Werror")
 ENDIF(MSVC)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 include(FetchContent)
 FetchContent_Declare(

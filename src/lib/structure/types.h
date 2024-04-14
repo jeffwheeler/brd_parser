@@ -100,7 +100,7 @@ constexpr T<end> new_upgrade(void *x) {
     t = *reinterpret_cast<const T<T<start>::versions[1]> *>(&a);
     return t;
   }
-  memcpy(&t, x, sizeof_until_tail<T<end>>());
+  memcpy(static_cast<void *>(&t), x, sizeof_until_tail<T<end>>());
   return t;
 }
 
