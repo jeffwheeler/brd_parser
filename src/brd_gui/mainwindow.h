@@ -7,8 +7,8 @@
 #include <utility>
 
 // #include "brdview.h"
-#include "lib/parser/parser.h"
 #include "layer_model.h"
+#include "lib/parser/parser.h"
 
 class BrdView;
 
