@@ -11,7 +11,8 @@ add_compile_options("-O3")
 add_compile_options("-Wall")
 
 IF(MSVC)
-    # https://stackoverflow.com/questions/50133783/c-cmake-build-error-undefined-reference-to-boostthrow-exceptionstdexcep
+    # Fix Boost compatibility issue with MSVC:
+    # https://stackoverflow.com/a/78034542/647720
     add_compile_options("/EHsc")
 
     # GoogleTest fails with /W3.
@@ -21,6 +22,10 @@ ELSE()
 ENDIF(MSVC)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+
+# Enable color output from compilers even when using Ninja, which otherwise
+# suppresses the colors. See https://stackoverflow.com/a/73349744/647720.
+set(CMAKE_COLOR_DIAGNOSTICS ON)
 
 include(FetchContent)
 FetchContent_Declare(
