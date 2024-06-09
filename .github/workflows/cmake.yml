@@ -65,7 +65,7 @@ jobs:
     - name: Install Ubuntu Packages
       run: |
         sudo apt update --fix-missing
-        sudo apt install qt6-base-dev libgl1-mesa-dev libboost-dev
+        sudo apt install qt6-base-dev libgl1-mesa-dev libboost-dev xvfb
 
     - name: Configure CMake
       run: CXX=g++-12 cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_GUI=ON -S ${{github.workspace}}/src
@@ -73,7 +73,8 @@ jobs:
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-    - name: Test
-      working-directory: ${{github.workspace}}/build
-      run: ctest -C ${{env.BUILD_TYPE}}
-
+    - name: Test (including GUI tests)
+      uses: coactions/setup-xvfb@v1
+      with:
+        run: ctest -C ${{env.BUILD_TYPE}}
+        working-directory: ${{github.workspace}}/build
