@@ -4,10 +4,10 @@
 #include <QMainWindow>
 #include <QtWidgets>
 #include <string>
-#include <unordered_set>
 #include <utility>
 
 // #include "brdview.h"
+#include "layer_model.h"
 #include "lib/parser/parser.h"
 
 class BrdView;
@@ -31,14 +31,20 @@ class MainWindow : public QMainWindow {
   void zoomFit();
 
  private slots:
-  void selectLayer();
+  void selectionChanged();
   void selectFilm();
 
  private:
   std::optional<File<kAMax>> fs;
   BrdView *brdView;
-  QTreeWidget *tree;
+  QTreeWidget *film_tree_widget_;
+  QTreeView *layer_tree_view_;
+  LayerModel *layer_model_;
   std::map<std::string, uint32_t> layer_cache;
+
+  // This is used by the layer selection event handlers to avoid reacting to
+  // each other.
+  bool updating_layers;
 
   void createToolBar();
   void createDockWidget();
@@ -46,7 +52,6 @@ class MainWindow : public QMainWindow {
   void loadFilms();
   QTreeWidgetItem *createTopLevelItem(QString s);
   void addLayer(QTreeWidgetItem *parent, QString s);
-  std::pair<uint16_t, uint16_t> layerPair(uint16_t x, uint16_t y);
 };
 
 #endif

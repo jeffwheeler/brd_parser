@@ -40,7 +40,7 @@ class BrdView : public QGraphicsView {
   void drawShape(const uint32_t ptr, QPen *pen);
   void drawFile();
 
-  void selectLayer(std::vector<std::pair<uint16_t, uint16_t>> layers);
+  void selectLayer(std::set<std::pair<uint16_t, uint16_t>> layers);
 
   enum layer_choice { ALL = -1, FAB = -2 };
 
@@ -66,7 +66,7 @@ class BrdView : public QGraphicsView {
 
   File<kAMax> *fs;
   const double factor;
-  std::vector<std::pair<uint16_t, uint16_t>> selectedLayers;
+  std::set<std::pair<uint16_t, uint16_t>> selectedLayers;
 };
 
 #endif
