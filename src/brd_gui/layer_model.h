@@ -62,11 +62,15 @@ const constexpr Layer kG7Layers[] = {
 };
 
 const constexpr Layer kG9Layers[] = {
-    {0x09, 0xEC, nullptr},        {0x09, 0xED, nullptr},
-    {0x09, 0xF3, nullptr},        {0x09, 0xF4, nullptr},
-    {0x09, 0xF6, "Pin nums bot"}, {0x09, 0xF7, "Pin nums top"},
-    {0x09, 0xFC, nullptr},        {0x09, 0xFC, nullptr},
-    {0x09, 0xFD, nullptr},        {0, 0, nullptr},
+    {0x09, 0xEC, nullptr},
+    {0x09, 0xED, nullptr},
+    {0x09, 0xF3, nullptr},
+    {0x09, 0xF4, nullptr},
+    {0x09, 0xF6, "Pin nums bot"},
+    {0x09, 0xF7, "Pin nums top"},
+    {0x09, 0xFC, nullptr},
+    {0x09, 0xFD, nullptr},
+    {0, 0, nullptr},
 };
 
 const constexpr Layer kGCLayers[] = {
