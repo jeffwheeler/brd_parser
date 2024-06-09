@@ -512,7 +512,7 @@ File<kAMax> parse_file_raw(mapped_region region) {
 
 std::optional<File<kAMax>> parse_file(const std::string& filepath) {
   if (!std::filesystem::exists(filepath)) {
-    printf("Unable to oepn file because it does not exist.\n");
+    printf("Unable to open file because it does not exist.\n");
     return {};
   }
 
