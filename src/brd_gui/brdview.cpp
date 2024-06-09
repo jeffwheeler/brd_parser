@@ -986,7 +986,7 @@ QColor BrdView::customPenColor(uint32_t x05_k, QColor default_) {
   */
 }
 
-void BrdView::selectLayer(std::vector<std::pair<uint16_t, uint16_t>> layers) {
+void BrdView::selectLayer(std::set<std::pair<uint16_t, uint16_t>> layers) {
   selectedLayers = layers;
   drawFile();
 

@@ -1,4 +1,5 @@
 #include <QtWidgets>
+
 #include <iostream>
 
 #include "brdview.h"
