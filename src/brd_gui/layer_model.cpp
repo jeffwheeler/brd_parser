@@ -3,14 +3,14 @@
 LayerModel::LayerModel(const QString& data, QObject* parent)
     : QAbstractItemModel(parent),
       root_item_(std::make_unique<LayerItem>("Layer")) {
-  addLayerGroup("1 - ?", kG1Layers);
+  addLayerGroup("1 - Board geometry?", kG1Layers);
   addLayerGroup("3 - ?", kG3Layers);
-  addLayerGroup("4 - Fab/assy?", kG4Layers);
+  addLayerGroup("4 - Drawing Format?", kG4Layers);
   addLayerGroup("6 - Etch?", kG6Layers);
-  addLayerGroup("7 - Component silk?", kG7Layers);
+  addLayerGroup("7 - Manufacturing?", kG7Layers);
   addLayerGroup("9 - ?", kG9Layers);
   addLayerGroup("C - ?", kGCLayers);
-  addLayerGroup("D - ?", kGDLayers);
+  addLayerGroup("D - Refdes?", kGDLayers);
   addLayerGroup("12 - ?", kG12Layers);
 };
 
