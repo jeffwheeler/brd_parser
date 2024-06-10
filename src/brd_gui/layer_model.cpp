@@ -2,37 +2,69 @@
 
 #include "lib/structure/utils.h"
 
-LayerModel::LayerModel(File<kAMax>& data, QObject* parent)
+LayerModel::LayerModel(File<kAMax>& fs, QObject* parent)
     : QAbstractItemModel(parent),
       root_item_(std::make_unique<LayerItem>("Layer")) {
   uint16_t i = 1;
-  for ([[maybe_unused]] const auto& [a, b] : data.layers) {
-    if (b != 0x00 && data.x2A_map.count(b) > 0) {
-      x2A* inst = &data.x2A_map[b];
+  for ([[maybe_unused]] const auto& [a, x2A_k] : fs.layers) {
+    qDebug() << "Starting " << i;
+    uint8_t fixedEntriesLength = 0;
 
-      Layer* layers = new Layer[inst->hdr.size + 1];
+    if (kFixedLayersMap.count(i) > 0) {
+      const Layer* fixedEntries = kFixedLayersMap.at(i);
+      while (fixedEntries[fixedEntriesLength].x != 0) fixedEntriesLength++;
+    }
+
+    uint8_t dynamicEntriesLength = 0;
+
+    if (x2A_k != 0x00 && fs.x2A_map.count(x2A_k) > 0) {
+      x2A* inst = &fs.x2A_map[x2A_k];
+      dynamicEntriesLength = inst->hdr.size;
+    }
+
+    Layer* layers = new Layer[dynamicEntriesLength + fixedEntriesLength + 1];
+    uint8_t currentLayer = 0;
+
+    if (x2A_k != 0x00 && fs.x2A_map.count(x2A_k) > 0) {
+      x2A* inst = &fs.x2A_map[x2A_k];
       if (inst->references) {
-        uint8_t j = 0;
         for (const auto& entry : inst->reference_entries) {
-          layers[j].x = i;
-          layers[j].y = j;
-          layers[j].label = str_lookup(entry.ptr, data);
-          j++;
+          layers[currentLayer].x = i;
+          layers[currentLayer].y = currentLayer;
+          layers[currentLayer].label = str_lookup(entry.ptr, fs);
+          currentLayer++;
         }
       } else {
-        uint8_t j = 0;
         for (const auto& entry : inst->local_entries) {
-          layers[j].x = i;
-          layers[j].y = j;
-          layers[j].label = entry.s.c_str();
-          j++;
+          layers[currentLayer].x = i;
+          layers[currentLayer].y = currentLayer;
+          layers[currentLayer].label = entry.s.c_str();
+          currentLayer++;
         }
       }
-
-      addLayerGroup(QString("%1 - ?").arg(i).toStdString(), layers);
-
-      delete[] layers;
     }
+
+    // Now add the fixed layers
+    if (kFixedLayersMap.count(i) > 0) {
+      const Layer* fixedEntries = kFixedLayersMap.at(i);
+      for (uint8_t j = 0; j < fixedEntriesLength; j++) {
+        const Layer* layer = &fixedEntries[j];
+        layers[currentLayer].x = i;
+        layers[currentLayer].y = layer->y;
+        layers[currentLayer].label = layer->label;
+        currentLayer++;
+      }
+    }
+
+    // Add layer if we've iterated through _any_ layers, fixed or dynamic
+    qDebug() << "looking to add?";
+    if (currentLayer > 0) {
+      qDebug() << "adding";
+      addLayerGroup(QString("%1 - ?").arg(i).toStdString(), layers);
+    }
+
+    delete[] layers;
+
     i++;
   }
   /*
