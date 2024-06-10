@@ -1,10 +1,11 @@
 #include "layer_model.h"
+
 #include "lib/structure/utils.h"
 
 LayerModel::LayerModel(File<kAMax>& data, QObject* parent)
     : QAbstractItemModel(parent),
-      root_item_(std::make_unique<LayerItem>("Layer")){
-        uint16_t i = 1;
+      root_item_(std::make_unique<LayerItem>("Layer")) {
+  uint16_t i = 1;
   for ([[maybe_unused]] const auto& [a, b] : data.layers) {
     if (b != 0x00 && data.x2A_map.count(b) > 0) {
       x2A* inst = &data.x2A_map[b];
@@ -45,7 +46,7 @@ LayerModel::LayerModel(File<kAMax>& data, QObject* parent)
   addLayerGroup("D - Refdes?", kGDLayers);
   addLayerGroup("12 - ?", kG12Layers);
   */
-      };
+};
 
 Qt::ItemFlags LayerModel::flags(const QModelIndex& index) const {
   if (!index.isValid()) {
