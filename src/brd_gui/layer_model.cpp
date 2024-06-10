@@ -7,7 +7,6 @@ LayerModel::LayerModel(File<kAMax>& fs, QObject* parent)
       root_item_(std::make_unique<LayerItem>("Layer")) {
   uint16_t i = 1;
   for ([[maybe_unused]] const auto& [a, x2A_k] : fs.layers) {
-    qDebug() << "Starting " << i;
     uint8_t fixedEntriesLength = 0;
 
     if (kFixedLayersMap.count(i) > 0) {
@@ -57,9 +56,7 @@ LayerModel::LayerModel(File<kAMax>& fs, QObject* parent)
     }
 
     // Add layer if we've iterated through _any_ layers, fixed or dynamic
-    qDebug() << "looking to add?";
     if (currentLayer > 0) {
-      qDebug() << "adding";
       addLayerGroup(QString("%1 - ?").arg(i).toStdString(), layers);
     }
 
