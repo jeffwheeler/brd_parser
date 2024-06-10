@@ -1,8 +1,40 @@
 #include "layer_model.h"
+#include "lib/structure/utils.h"
 
-LayerModel::LayerModel(const QString& data, QObject* parent)
+LayerModel::LayerModel(File<kAMax>& data, QObject* parent)
     : QAbstractItemModel(parent),
-      root_item_(std::make_unique<LayerItem>("Layer")) {
+      root_item_(std::make_unique<LayerItem>("Layer")){
+        uint16_t i = 1;
+  for ([[maybe_unused]] const auto& [a, b] : data.layers) {
+    if (b != 0x00 && data.x2A_map.count(b) > 0) {
+      x2A* inst = &data.x2A_map[b];
+
+      Layer* layers = new Layer[inst->hdr.size + 1];
+      if (inst->references) {
+        uint8_t j = 0;
+        for (const auto& entry : inst->reference_entries) {
+          layers[j].x = i;
+          layers[j].y = j;
+          layers[j].label = str_lookup(entry.ptr, data);
+          j++;
+        }
+      } else {
+        uint8_t j = 0;
+        for (const auto& entry : inst->local_entries) {
+          layers[j].x = i;
+          layers[j].y = j;
+          layers[j].label = entry.s.c_str();
+          j++;
+        }
+      }
+
+      addLayerGroup(QString("%1 - ?").arg(i).toStdString(), layers);
+
+      delete[] layers;
+    }
+    i++;
+  }
+  /*
   addLayerGroup("1 - Board geometry?", kG1Layers);
   addLayerGroup("3 - ?", kG3Layers);
   addLayerGroup("4 - Drawing Format?", kG4Layers);
@@ -12,7 +44,8 @@ LayerModel::LayerModel(const QString& data, QObject* parent)
   addLayerGroup("C - ?", kGCLayers);
   addLayerGroup("D - Refdes?", kGDLayers);
   addLayerGroup("12 - ?", kG12Layers);
-};
+  */
+      };
 
 Qt::ItemFlags LayerModel::flags(const QModelIndex& index) const {
   if (!index.isValid()) {
@@ -105,7 +138,7 @@ void LayerModel::addLayerGroup(const std::string label, const Layer layers[]) {
   uint16_t i = 0;
   while (true) {
     const Layer* layer_info = &layers[i];
-    if (layer_info->x == 0) break;
+    if (layer_info->x == 0 && layer_info->y == 0) break;
 
     const auto label_str = layer_info->label == nullptr
                                ? std::optional<std::string>()

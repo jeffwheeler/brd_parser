@@ -83,6 +83,16 @@ void MainWindow::createFilmSelectWidget() {
 
 void MainWindow::loadFilms() {
   layer_cache.clear();
+
+  if (fs) {
+    layer_model_ = new LayerModel(*fs);
+    layer_tree_view_->setModel(layer_model_);
+
+    connect(layer_tree_view_->selectionModel(),
+            &QItemSelectionModel::selectionChanged, this,
+            &MainWindow::selectionChanged);
+  }
+
   film_tree_widget_->clear();
 
   std::vector<std::pair<std::string, uint32_t>> layers = film_list(fs.value());
@@ -127,15 +137,11 @@ void MainWindow::createDockWidget() {
   QDockWidget* dock = new QDockWidget("Layer Selector", this);
   dock->setAllowedAreas(Qt::RightDockWidgetArea);
 
-  layer_model_ = new LayerModel("ABC");
+  // layer_model_ = new LayerModel("ABC");
 
   layer_tree_view_ = new QTreeView();
   layer_tree_view_->setSelectionMode(QAbstractItemView::MultiSelection);
-  layer_tree_view_->setModel(layer_model_);
-
-  connect(layer_tree_view_->selectionModel(),
-          &QItemSelectionModel::selectionChanged, this,
-          &MainWindow::selectionChanged);
+  // layer_tree_view_->setModel(layer_model_);
 
   dock->setWidget(layer_tree_view_);
 

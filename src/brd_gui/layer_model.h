@@ -5,25 +5,27 @@
 #include <set>
 
 #include "layer_item.h"
+#include "lib/structure/types.h"
 
 struct Layer {
-  const uint8_t x, y;
-  const char *label;
+  uint8_t x = 0, y = 0;
+  const char *label = nullptr;
 };
 
+/*
 const constexpr Layer kG1Layers[] = {
-    {0x1, 0x00, nullptr},    {0x1, 0x01, nullptr},
-    {0x1, 0x03, "Outline?"}, {0x1, 0x04, nullptr},
-    {0x1, 0x05, nullptr},    {0x1, 0x06, nullptr},
-    {0x1, 0x07, nullptr},    {0x1, 0x0F, nullptr},
-    {0x1, 0x10, nullptr},    {0x1, 0x11, nullptr},
-    {0x1, 0x14, nullptr},    {0x1, 0x16, nullptr},
-    {0x1, 0x19, nullptr},    {0x1, 0x23, nullptr},
-    {0x1, 0xEA, nullptr},    {0x1, 0xED, nullptr},
-    {0x1, 0xEE, nullptr},    {0x1, 0xF0, "Silk bot"},
-    {0x1, 0xF1, "Silk top"}, {0x1, 0xF9, "Fab dims?"},
-    {0x1, 0xFB, "Assy?"},    {0x1, 0xFD, "Design outline?"},
-    {0x1, 0xFF, "All"},      {0, 0, nullptr},
+    {0x01, 0x00, nullptr},    {0x01, 0x01, nullptr},
+    {0x01, 0x03, "Outline?"}, {0x01, 0x04, nullptr},
+    {0x01, 0x05, nullptr},    {0x01, 0x06, nullptr},
+    {0x01, 0x07, nullptr},    {0x01, 0x0F, nullptr},
+    {0x01, 0x010, nullptr},   {0x01, 0x011, nullptr},
+    {0x01, 0x014, nullptr},   {0x01, 0x016, nullptr},
+    {0x01, 0x019, nullptr},   {0x01, 0x23, nullptr},
+    {0x01, 0xEA, nullptr},    {0x01, 0xED, nullptr},
+    {0x01, 0xEE, nullptr},    {0x01, 0xF0, "Silk bot"},
+    {0x01, 0xF1, "Silk top"}, {0x01, 0xF9, "Fab dims?"},
+    {0x01, 0xFB, "Assy?"},    {0x01, 0xFD, "Design outline?"},
+    {0x01, 0xFF, "All"},      {0, 0, nullptr},
 };
 
 const constexpr Layer kG3Layers[] = {
@@ -117,6 +119,7 @@ const constexpr Layer kG12Layers[] = {
     {0x12, 0xFD, "Mask top?"},
     {0, 0, nullptr},
 };
+*/
 
 class LayerModel : public QAbstractItemModel {
   Q_OBJECT
@@ -124,7 +127,7 @@ class LayerModel : public QAbstractItemModel {
  public:
   Q_DISABLE_COPY_MOVE(LayerModel);
 
-  explicit LayerModel(const QString &data, QObject *parent = nullptr);
+  explicit LayerModel(File<kAMax> &data, QObject *parent = nullptr);
   ~LayerModel() override = default;
 
   Qt::ItemFlags flags(const QModelIndex &index) const override;
@@ -143,10 +146,10 @@ class LayerModel : public QAbstractItemModel {
   std::vector<QModelIndex> mapLayersToIndices(
       const std::set<std::pair<uint16_t, uint16_t>> &layer_pairs) const;
 
+  void addLayerGroup(const std::string label, const Layer layers[]);
+
  private:
   std::unique_ptr<LayerItem> root_item_;
-
-  void addLayerGroup(const std::string label, const Layer layers[]);
 };
 
 #endif
