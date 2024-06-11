@@ -6,7 +6,7 @@
 
 #include "types.h"
 
-std::pair<double, double> x01_center(const x01<kAMax> *inst);
+std::pair<double, double> x01_center(const T01ArcSegment<kAMax> *inst);
 const std::vector<stackup_material> ordered_stackup_materials(File<kAMax> &f);
 std::string padtype(PadType padtype);
 
@@ -47,7 +47,7 @@ std::optional<std::string> x2B_footprint(const x2B<version> *inst,
 }
 
 template <AllegroVersion version>
-std::string inst_refdes(const x07<version> *inst, File<version> *fs) {
+std::string inst_refdes(const T07Instance<version> *inst, File<version> *fs) {
   return fs->strings.at(inst->refdes_string_ref);
 }
 
@@ -75,7 +75,7 @@ std::optional<std::string> x2D_refdes(const uint32_t k, File<version> *fs) {
       return std::optional<std::string>();
     }
 
-    const x07<version> x07_inst = fs->get_x07(inst.inst_ref);
+    const T07Instance<version> x07_inst = fs->get_x07(inst.inst_ref);
     return inst_refdes(&x07_inst, fs);
   }
 }
@@ -170,7 +170,7 @@ std::optional<uint8_t> x14_layer(const uint32_t k, File<version> *fs) {
 template <AllegroVersion version>
 char *x1B_net_name(const uint32_t k, File<version> *fs) {
   if (fs->is_type(k, 0x1B)) {
-    const t1B_net<version> inst = fs->get_x1B(k);
+    const T1BNet<version> inst = fs->get_x1B(k);
     return str_lookup(inst.net_name, *fs);
   } else {
     return nullptr;

@@ -169,42 +169,9 @@ struct Header {
 
 static_assert(offsetof(Header, unit_divisor) == 620);
 
-// Instance
-template <AllegroVersion version>
-struct x07 {
-  uint32_t t;
-  uint32_t k;
-  uint32_t un1;  // Points to another instance
-
-  COND_FIELD(version >= kA172, uint32_t, ptr0);
-  COND_FIELD(version >= kA172, uint32_t, un4);
-  COND_FIELD(version >= kA172, uint32_t, un2);
-
-  ExpectRefType<0x2D> ptr1;
-
-  COND_FIELD(version < kA172, uint32_t, un5);
-
-  uint32_t refdes_string_ref;
-
-  uint32_t ptr2;
-
-  ExpectRefType<0x03> ptr3;
-
-  uint32_t un3;  // Always null?
-
-  ExpectRefType<0x32> ptr4;
-
-  uint32_t TAIL;
-  operator x07<kAMax>() const;
-  static constexpr AllegroVersion versions[1] = {kA172};
-};
-
-static_assert(sizeof_until_tail<x07<kA172>>() == 48);
-static_assert(sizeof_until_tail<x07<kAMax>>() == 48);
-
 // Line segment (with some curve, I think)
 template <AllegroVersion version>
-struct x01 {
+struct T01ArcSegment {
   uint16_t t;
   uint8_t un0;
 
@@ -234,13 +201,13 @@ struct x01 {
   int32_t bbox[4];
 
   uint32_t TAIL;
-  operator x01<kAMax>() const;
+  operator T01ArcSegment<kAMax>() const;
   static constexpr AllegroVersion versions[1] = {kA172};
 };
 
-static_assert(sizeof_until_tail<x01<kA160>>() == 80);
-static_assert(sizeof_until_tail<x01<kA172>>() == 84);
-static_assert(sizeof_until_tail<x01<kAMax>>() == 84);
+static_assert(sizeof_until_tail<T01ArcSegment<kA160>>() == 80);
+static_assert(sizeof_until_tail<T01ArcSegment<kA172>>() == 84);
+static_assert(sizeof_until_tail<T01ArcSegment<kAMax>>() == 84);
 
 struct x02 {
   uint32_t t;
@@ -298,7 +265,7 @@ struct x04 {
 
 // Line (composed of multiple line segments, x01, x15, x16, and x17)
 template <AllegroVersion version>
-struct x05 {
+struct T05Line {
   uint16_t t;
   uint8_t subtype;
   uint8_t layer;
@@ -333,12 +300,12 @@ struct x05 {
   uint32_t un3;
 
   uint32_t TAIL;
-  operator x05<kAMax>() const;
+  operator T05Line<kAMax>() const;
   static constexpr AllegroVersion versions[1] = {kA172};
 };
 
-static_assert(sizeof_until_tail<x05<kA160>>() == 60);
-static_assert(sizeof_until_tail<x05<kA172>>() == 68);
+static_assert(sizeof_until_tail<T05Line<kA160>>() == 60);
+static_assert(sizeof_until_tail<T05Line<kA172>>() == 68);
 
 template <AllegroVersion version>
 struct x06 {
@@ -376,6 +343,39 @@ struct x06 {
 
 static_assert(sizeof_until_tail<x06<kA160>>() == 36);
 static_assert(sizeof_until_tail<x06<kA172>>() == 40);
+
+// Instance
+template <AllegroVersion version>
+struct T07Instance {
+  uint32_t t;
+  uint32_t k;
+  uint32_t un1;  // Points to another instance
+
+  COND_FIELD(version >= kA172, uint32_t, ptr0);
+  COND_FIELD(version >= kA172, uint32_t, un4);
+  COND_FIELD(version >= kA172, uint32_t, un2);
+
+  ExpectRefType<0x2D> ptr1;
+
+  COND_FIELD(version < kA172, uint32_t, un5);
+
+  uint32_t refdes_string_ref;
+
+  uint32_t ptr2;
+
+  ExpectRefType<0x03> ptr3;
+
+  uint32_t un3;  // Always null?
+
+  ExpectRefType<0x32> ptr4;
+
+  uint32_t TAIL;
+  operator T07Instance<kAMax>() const;
+  static constexpr AllegroVersion versions[1] = {kA172};
+};
+
+static_assert(sizeof_until_tail<T07Instance<kA172>>() == 48);
+static_assert(sizeof_until_tail<T07Instance<kAMax>>() == 48);
 
 template <AllegroVersion version>
 struct x08 {
@@ -440,7 +440,7 @@ struct x09 {
 
 // DRC, not fully decoded
 template <AllegroVersion version>
-struct x0A {
+struct T0ADRC {
   uint16_t t;
   uint8_t subtype;
   uint8_t layer;
@@ -454,7 +454,7 @@ struct x0A {
   COND_FIELD(version >= kA174, uint32_t, un3);
 
   uint32_t TAIL;
-  operator x0A<kAMax>() const;
+  operator T0ADRC<kAMax>() const;
   static constexpr AllegroVersion versions[2] = {kA172, kA174};
 };
 
@@ -519,7 +519,7 @@ struct x0E {
 // Footprint
 // There's a copy for every instance, not just every kind of footprint.
 template <AllegroVersion version>
-struct x0F {
+struct T0FFootprint {
   uint32_t t;
   uint32_t k;
   uint32_t ptr1;  // Refers to `G1`, `G2`, `G3`, etc. string...?
@@ -532,7 +532,7 @@ struct x0F {
   COND_FIELD(version >= kA174, uint32_t, un3);
 
   uint32_t TAIL;
-  operator x0F<kAMax>() const;
+  operator T0FFootprint<kAMax>() const;
   static constexpr AllegroVersion versions[2] = {kA172, kA174};
 };
 
@@ -645,7 +645,7 @@ struct x14 {
 
 // Line segment
 template <AllegroVersion version>
-struct x15 {
+struct T15LineSegment {
   uint32_t t;
   uint32_t k;
 
@@ -662,13 +662,13 @@ struct x15 {
   int32_t coords[4];
 
   uint32_t TAIL;
-  operator x15<kAMax>() const;
+  operator T15LineSegment<kAMax>() const;
   static constexpr AllegroVersion versions[1] = {kA172};
 };
 
 // Line segment
 template <AllegroVersion version>
-struct x16 {
+struct T16LineSegment {
   uint32_t t;
   uint32_t k;
 
@@ -684,13 +684,13 @@ struct x16 {
   int32_t coords[4];
 
   uint32_t TAIL;
-  operator x16<kAMax>() const;
+  operator T16LineSegment<kAMax>() const;
   static constexpr AllegroVersion versions[1] = {kA172};
 };
 
 // Line segment
 template <AllegroVersion version>
-struct x17 {
+struct T17LineSegment {
   uint32_t t;
   uint32_t k;
 
@@ -704,13 +704,13 @@ struct x17 {
   int32_t coords[4];
 
   uint32_t TAIL;
-  operator x17<kAMax>() const;
+  operator T17LineSegment<kAMax>() const;
   static constexpr AllegroVersion versions[1] = {kA172};
 };
 
 // A net
 template <AllegroVersion version>
-struct t1B_net {
+struct T1BNet {
   uint32_t t;
   uint32_t k;
 
@@ -751,7 +751,7 @@ struct t1B_net {
   ExpectRefType<0x22> ptr6;
 
   uint32_t TAIL;
-  operator t1B_net<kAMax>() const;
+  operator T1BNet<kAMax>() const;
   static constexpr AllegroVersion versions[1] = {kA172};
 };
 
@@ -1648,24 +1648,24 @@ class File {
 
   uint8_t layer_count = 0;
 
-  x01<kAMax> get_x01(uint32_t k);
+  T01ArcSegment<kAMax> get_x01(uint32_t k);
   const x03<kAMax> get_x03(uint32_t k);
   const x04<kAMax> get_x04(uint32_t k);
-  const x05<kAMax> get_x05(uint32_t k);
+  const T05Line<kAMax> get_x05(uint32_t k);
   const x06<kAMax> get_x06(uint32_t k);
-  const x07<kAMax> get_x07(uint32_t k);
+  const T07Instance<kAMax> get_x07(uint32_t k);
   const x08<kAMax> get_x08(uint32_t k);
   const x09<kAMax> get_x09(uint32_t k);
-  const x0A<kAMax> get_x0A(uint32_t k);
+  const T0ADRC<kAMax> get_x0A(uint32_t k);
   const x0C<kAMax> get_x0C(uint32_t k);
   const x0D<kAMax> get_x0D(uint32_t k);
   const x0E<kAMax> get_x0E(uint32_t k);
   const x10<kAMax> get_x10(uint32_t k);
   const x14<kAMax> get_x14(uint32_t k);
-  const x15<kAMax> get_x15(uint32_t k);
-  const x16<kAMax> get_x16(uint32_t k);
-  const x17<kAMax> get_x17(uint32_t k);
-  const t1B_net<kAMax> get_x1B(uint32_t k);
+  const T15LineSegment<kAMax> get_x15(uint32_t k);
+  const T16LineSegment<kAMax> get_x16(uint32_t k);
+  const T17LineSegment<kAMax> get_x17(uint32_t k);
+  const T1BNet<kAMax> get_x1B(uint32_t k);
   const x1C<kAMax> get_x1C(uint32_t k);
   const x1D<kAMax> get_x1D(uint32_t k);
   const x1F<kAMax> get_x1F(uint32_t k);
@@ -1757,16 +1757,16 @@ class File {
         Iter<x06<version>>(*this, this->hdr->ll_x06.tail, &File::get_x06));
   };
 
-  IterBase<x0A<version>> iter_x0A() {
-    return IterBase<x0A<version>>(
-        Iter<x0A<version>>(*this, this->hdr->ll_x0A.head, &File::get_x0A),
-        Iter<x0A<version>>(*this, this->hdr->ll_x0A.tail, &File::get_x0A));
+  IterBase<T0ADRC<version>> iter_x0A() {
+    return IterBase<T0ADRC<version>>(
+        Iter<T0ADRC<version>>(*this, this->hdr->ll_x0A.head, &File::get_x0A),
+        Iter<T0ADRC<version>>(*this, this->hdr->ll_x0A.tail, &File::get_x0A));
   };
 
-  IterBase<x0A<version>> iter_x0A_2() {
-    return IterBase<x0A<version>>(
-        Iter<x0A<version>>(*this, this->hdr->ll_x0A_2.head, &File::get_x0A),
-        Iter<x0A<version>>(*this, this->hdr->ll_x0A_2.tail, &File::get_x0A));
+  IterBase<T0ADRC<version>> iter_x0A_2() {
+    return IterBase<T0ADRC<version>>(
+        Iter<T0ADRC<version>>(*this, this->hdr->ll_x0A_2.head, &File::get_x0A),
+        Iter<T0ADRC<version>>(*this, this->hdr->ll_x0A_2.tail, &File::get_x0A));
   };
 
   IterBase<x0C<version>> iter_x0C() {
@@ -1787,15 +1787,15 @@ class File {
         Iter<x14<version>>(*this, this->hdr->ll_x14.tail, &File::get_x14));
   };
 
-  IterBase<t1B_net<version>> iter_t1B_net() {
+  IterBase<T1BNet<version>> iter_t1B_net() {
     if (this->hdr->ll_x1B.head == 0) {
-      return IterBase<t1B_net<version>>(
-          Iter<t1B_net<version>>(*this, 0, &File::get_x1B),
-          Iter<t1B_net<version>>(*this, 0, &File::get_x1B));
+      return IterBase<T1BNet<version>>(
+          Iter<T1BNet<version>>(*this, 0, &File::get_x1B),
+          Iter<T1BNet<version>>(*this, 0, &File::get_x1B));
     } else {
-      return IterBase<t1B_net<version>>(
-          Iter<t1B_net<version>>(*this, this->hdr->ll_x1B.head, &File::get_x1B),
-          Iter<t1B_net<version>>(*this, this->hdr->ll_x1B.tail,
+      return IterBase<T1BNet<version>>(
+          Iter<T1BNet<version>>(*this, this->hdr->ll_x1B.head, &File::get_x1B),
+          Iter<T1BNet<version>>(*this, this->hdr->ll_x1B.tail,
                                  &File::get_x1B));
     }
   };
@@ -1902,24 +1902,24 @@ class File {
   void cache_upgrade_funcs();
   std::ptrdiff_t offset(void *);
 
-  x01<kAMax> (*x01_upgrade)(void *);
+  T01ArcSegment<kAMax> (*x01_upgrade)(void *);
   x03<kAMax> (*x03_upgrade)(void *);
   x04<kAMax> (*x04_upgrade)(void *);
-  x05<kAMax> (*x05_upgrade)(void *);
+  T05Line<kAMax> (*x05_upgrade)(void *);
   x06<kAMax> (*x06_upgrade)(void *);
-  x07<kAMax> (*x07_upgrade)(void *);
+  T07Instance<kAMax> (*x07_upgrade)(void *);
   x08<kAMax> (*x08_upgrade)(void *);
   x09<kAMax> (*x09_upgrade)(void *);
-  x0A<kAMax> (*x0A_upgrade)(void *);
+  T0ADRC<kAMax> (*x0A_upgrade)(void *);
   x0C<kAMax> (*x0C_upgrade)(void *);
   x0D<kAMax> (*x0D_upgrade)(void *);
   x0E<kAMax> (*x0E_upgrade)(void *);
   x10<kAMax> (*x10_upgrade)(void *);
   x14<kAMax> (*x14_upgrade)(void *);
-  x15<kAMax> (*x15_upgrade)(void *);
-  x16<kAMax> (*x16_upgrade)(void *);
-  x17<kAMax> (*x17_upgrade)(void *);
-  t1B_net<kAMax> (*x1B_upgrade)(void *);
+  T15LineSegment<kAMax> (*x15_upgrade)(void *);
+  T16LineSegment<kAMax> (*x16_upgrade)(void *);
+  T17LineSegment<kAMax> (*x17_upgrade)(void *);
+  T1BNet<kAMax> (*x1B_upgrade)(void *);
   x1C<kAMax> (*x1C_upgrade)(void *);
   t13<kAMax> (*t13_upgrade)(void *);
   x1D<kAMax> (*x1D_upgrade)(void *);

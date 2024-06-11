@@ -77,7 +77,7 @@ void BrdView::mouseReleaseEvent(QMouseEvent *event) {
   }
 };
 
-void BrdView::drawX01(const x01<kAMax> *inst, QPainterPath *path) {
+void BrdView::drawX01(const T01ArcSegment<kAMax> *inst, QPainterPath *path) {
   std::pair<int32_t, int32_t> center = x01_center(inst);
   double r = cfp_to_double(inst->r);
 
@@ -126,7 +126,7 @@ void BrdView::updatePathWidth(QPainterPath *path, QPen **pen, QPen *base_pen,
   }
 }
 
-void BrdView::drawX05(const x05<kAMax> *inst, QPen *pen_) {
+void BrdView::drawX05(const T05Line<kAMax> *inst, QPen *pen_) {
   if (!onSelectedLayer(inst->subtype, inst->layer)) {
     return;
   }
@@ -140,22 +140,22 @@ void BrdView::drawX05(const x05<kAMax> *inst, QPen *pen_) {
 
   while (isLineSegment(k)) {
     if (fs->is_type(k, 0x01)) {
-      const x01<kAMax> segment_inst = fs->get_x01(k);
+      const T01ArcSegment<kAMax> segment_inst = fs->get_x01(k);
       updatePathWidth(&path, &pen, pen_, &prev_width, segment_inst.width);
       drawX01(&segment_inst, &path);
       k = segment_inst.next;
     } else if (fs->is_type(k, 0x15)) {
-      const x15<kAMax> segment_inst = fs->get_x15(k);
+      const T15LineSegment<kAMax> segment_inst = fs->get_x15(k);
       updatePathWidth(&path, &pen, pen_, &prev_width, segment_inst.width);
       drawX15(&segment_inst, &path);
       k = segment_inst.next;
     } else if (fs->is_type(k, 0x16)) {
-      const x16<kAMax> segment_inst = fs->get_x16(k);
+      const T16LineSegment<kAMax> segment_inst = fs->get_x16(k);
       updatePathWidth(&path, &pen, pen_, &prev_width, segment_inst.width);
       drawX16(&segment_inst, &path);
       k = segment_inst.next;
     } else if (fs->is_type(k, 0x17)) {
-      const x17<kAMax> segment_inst = fs->get_x17(k);
+      const T17LineSegment<kAMax> segment_inst = fs->get_x17(k);
       updatePathWidth(&path, &pen, pen_, &prev_width, segment_inst.width);
       drawX17(&segment_inst, &path);
       k = segment_inst.next;
@@ -183,22 +183,22 @@ void BrdView::drawX14(const x14<kAMax> *inst, QPen *pen_) {
 
   while (isLineSegment(k)) {
     if (fs->is_type(k, 0x01)) {
-      const x01<kAMax> segment_inst = fs->get_x01(k);
+      const T01ArcSegment<kAMax> segment_inst = fs->get_x01(k);
       updatePathWidth(&path, &pen, pen_, &prev_width, segment_inst.width);
       drawX01(&segment_inst, &path);
       k = segment_inst.next;
     } else if (fs->is_type(k, 0x15)) {
-      const x15<kAMax> segment_inst = fs->get_x15(k);
+      const T15LineSegment<kAMax> segment_inst = fs->get_x15(k);
       updatePathWidth(&path, &pen, pen_, &prev_width, segment_inst.width);
       drawX15(&segment_inst, &path);
       k = segment_inst.next;
     } else if (fs->is_type(k, 0x16)) {
-      const x16<kAMax> segment_inst = fs->get_x16(k);
+      const T16LineSegment<kAMax> segment_inst = fs->get_x16(k);
       updatePathWidth(&path, &pen, pen_, &prev_width, segment_inst.width);
       drawX16(&segment_inst, &path);
       k = segment_inst.next;
     } else if (fs->is_type(k, 0x17)) {
-      const x17<kAMax> segment_inst = fs->get_x17(k);
+      const T17LineSegment<kAMax> segment_inst = fs->get_x17(k);
       updatePathWidth(&path, &pen, pen_, &prev_width, segment_inst.width);
       drawX17(&segment_inst, &path);
       k = segment_inst.next;
@@ -211,7 +211,7 @@ void BrdView::drawX14(const x14<kAMax> *inst, QPen *pen_) {
   item->setData(0, inst->k);
 }
 
-void BrdView::drawX15(const x15<kAMax> *inst, QPainterPath *path) {
+void BrdView::drawX15(const T15LineSegment<kAMax> *inst, QPainterPath *path) {
   path->lineTo(inst->coords[2] / factor, inst->coords[3] / factor);
 
   // QGraphicsItem *item = scene->addLine(
@@ -222,7 +222,7 @@ void BrdView::drawX15(const x15<kAMax> *inst, QPainterPath *path) {
   // item->setData(0, inst->k);
 };
 
-void BrdView::drawX16(const x16<kAMax> *inst, QPainterPath *path) {
+void BrdView::drawX16(const T16LineSegment<kAMax> *inst, QPainterPath *path) {
   path->lineTo(inst->coords[2] / factor, inst->coords[3] / factor);
 
   // QGraphicsItem *item = scene->addLine(
@@ -233,7 +233,7 @@ void BrdView::drawX16(const x16<kAMax> *inst, QPainterPath *path) {
   // item->setData(0, inst->k);
 };
 
-void BrdView::drawX17(const x17<kAMax> *inst, QPainterPath *path) {
+void BrdView::drawX17(const T17LineSegment<kAMax> *inst, QPainterPath *path) {
   path->lineTo(inst->coords[2] / factor, inst->coords[3] / factor);
 
   // QGraphicsItem *item = scene->addLine(
@@ -281,19 +281,19 @@ void BrdView::drawX28(const x28<kAMax> *inst, QPen *pen) {
 
   while (isLineSegment(k)) {
     if (fs->is_type(k, 0x01)) {
-      const x01<kAMax> segment_inst = fs->get_x01(k);
+      const T01ArcSegment<kAMax> segment_inst = fs->get_x01(k);
       drawX01(&segment_inst, &path);
       k = segment_inst.next;
     } else if (fs->is_type(k, 0x15)) {
-      const x15<kAMax> segment_inst = fs->get_x15(k);
+      const T15LineSegment<kAMax> segment_inst = fs->get_x15(k);
       drawX15(&segment_inst, &path);
       k = segment_inst.next;
     } else if (fs->is_type(k, 0x16)) {
-      const x16<kAMax> segment_inst = fs->get_x16(k);
+      const T16LineSegment<kAMax> segment_inst = fs->get_x16(k);
       drawX16(&segment_inst, &path);
       k = segment_inst.next;
     } else if (fs->is_type(k, 0x17)) {
-      const x17<kAMax> segment_inst = fs->get_x17(k);
+      const T17LineSegment<kAMax> segment_inst = fs->get_x17(k);
       drawX17(&segment_inst, &path);
       k = segment_inst.next;
     } else {
@@ -627,19 +627,19 @@ void BrdView::drawX34(const x34<kAMax> *inst, QPen *pen) {
 
   while (isLineSegment(k)) {
     if (fs->is_type(k, 0x01)) {
-      const x01<kAMax> segment_inst = fs->get_x01(k);
+      const T01ArcSegment<kAMax> segment_inst = fs->get_x01(k);
       drawX01(&segment_inst, &path);
       k = segment_inst.next;
     } else if (fs->is_type(k, 0x15)) {
-      const x15<kAMax> segment_inst = fs->get_x15(k);
+      const T15LineSegment<kAMax> segment_inst = fs->get_x15(k);
       drawX15(&segment_inst, &path);
       k = segment_inst.next;
     } else if (fs->is_type(k, 0x16)) {
-      const x16<kAMax> segment_inst = fs->get_x16(k);
+      const T16LineSegment<kAMax> segment_inst = fs->get_x16(k);
       drawX16(&segment_inst, &path);
       k = segment_inst.next;
     } else if (fs->is_type(k, 0x17)) {
-      const x17<kAMax> segment_inst = fs->get_x17(k);
+      const T17LineSegment<kAMax> segment_inst = fs->get_x17(k);
       drawX17(&segment_inst, &path);
       k = segment_inst.next;
     } else {
@@ -665,7 +665,7 @@ void BrdView::drawShape(const uint32_t ptr, QPen *pen) {
 
   if (fs->is_type(ptr, 0x05)) {
     // std::printf("Trying to draw x05\n");
-    const x05<kAMax> inst = fs->get_x05(ptr);
+    const T05Line<kAMax> inst = fs->get_x05(ptr);
     drawX05(&inst, pen);
   } else if (fs->is_type(ptr, 0x10)) {
     const x10<kAMax> inst = fs->get_x10(ptr);
@@ -901,7 +901,7 @@ void BrdView::drawFile() {
 
 QColor BrdView::customPenColor(uint32_t x05_k, QColor default_) {
   if (fs->is_type(x05_k, 0x05)) {
-    const x05<kAMax> inst = fs->get_x05(x05_k);
+    const T05Line<kAMax> inst = fs->get_x05(x05_k);
     if (onSelectedLayer(inst.subtype, inst.layer)) {
       return QColorConstants::Svg::palevioletred;
     } else {
@@ -1031,16 +1031,16 @@ bool BrdView::isLineSegment(uint32_t k) {
 
 std::optional<QPointF> BrdView::startingPoint(uint32_t k) {
   if (fs->is_type(k, 0x01)) {
-    const x01<kAMax> segment_inst = fs->get_x01(k);
+    const T01ArcSegment<kAMax> segment_inst = fs->get_x01(k);
     return QPointF(segment_inst.coords[0], segment_inst.coords[1]);
   } else if (fs->is_type(k, 0x15)) {
-    const x15<kAMax> segment_inst = fs->get_x15(k);
+    const T15LineSegment<kAMax> segment_inst = fs->get_x15(k);
     return QPointF(segment_inst.coords[0], segment_inst.coords[1]);
   } else if (fs->is_type(k, 0x16)) {
-    const x16<kAMax> segment_inst = fs->get_x16(k);
+    const T16LineSegment<kAMax> segment_inst = fs->get_x16(k);
     return QPointF(segment_inst.coords[0], segment_inst.coords[1]);
   } else if (fs->is_type(k, 0x17)) {
-    const x17<kAMax> segment_inst = fs->get_x17(k);
+    const T17LineSegment<kAMax> segment_inst = fs->get_x17(k);
     return QPointF(segment_inst.coords[0], segment_inst.coords[1]);
   } else {
     return std::optional<QPointF>();
@@ -1049,16 +1049,16 @@ std::optional<QPointF> BrdView::startingPoint(uint32_t k) {
 
 std::optional<QPointF> BrdView::endingPoint(uint32_t k) {
   if (fs->is_type(k, 0x01)) {
-    const x01<kAMax> segment_inst = fs->get_x01(k);
+    const T01ArcSegment<kAMax> segment_inst = fs->get_x01(k);
     return QPointF(segment_inst.coords[2], segment_inst.coords[3]);
   } else if (fs->is_type(k, 0x15)) {
-    const x15<kAMax> segment_inst = fs->get_x15(k);
+    const T15LineSegment<kAMax> segment_inst = fs->get_x15(k);
     return QPointF(segment_inst.coords[2], segment_inst.coords[3]);
   } else if (fs->is_type(k, 0x16)) {
-    const x16<kAMax> segment_inst = fs->get_x16(k);
+    const T16LineSegment<kAMax> segment_inst = fs->get_x16(k);
     return QPointF(segment_inst.coords[2], segment_inst.coords[3]);
   } else if (fs->is_type(k, 0x17)) {
-    const x17<kAMax> segment_inst = fs->get_x17(k);
+    const T17LineSegment<kAMax> segment_inst = fs->get_x17(k);
     return QPointF(segment_inst.coords[2], segment_inst.coords[3]);
   } else {
     return std::optional<QPointF>();
@@ -1071,7 +1071,7 @@ char *BrdView::netName(uint32_t k) {
     if (fs->is_type(x28_inst.ptr1, 0x04)) {
       const x04<kAMax> &x04_inst = fs->get_x04(x28_inst.ptr1);
       if (fs->is_type(x04_inst.ptr1, 0x1B)) {
-        const t1B_net<kAMax> x1B_inst = fs->get_x1B(x04_inst.ptr1);
+        const T1BNet<kAMax> x1B_inst = fs->get_x1B(x04_inst.ptr1);
         // qDebug("Net name: 0x%08X", x1B_inst->net_name);
         return fs->strings.at(x1B_inst.net_name);
       }

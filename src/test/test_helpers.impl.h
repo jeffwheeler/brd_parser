@@ -38,7 +38,7 @@ template <AllegroVersion version>
 void validate_x04(const x04<version>& i, File<version>& fs) {}
 
 template <AllegroVersion version>
-void validate_x05(const x05<version>& i, File<version>& fs) {
+void validate_x05(const T05Line<version>& i, File<version>& fs) {
   EXPECT_TRUE(CheckNullableType(i, i.ptr5, fs));
 }
 
@@ -54,7 +54,7 @@ void validate_x06(const x06<version>& i, File<version>& fs) {
 }
 
 template <AllegroVersion version>
-void validate_x07(const x07<version>& i, File<version>& fs) {
+void validate_x07(const T07Instance<version>& i, File<version>& fs) {
   EXPECT_TRUE(CheckNullableType(i, i.ptr1, fs));
   EXPECT_TRUE(CheckNullableType(i, i.ptr3, fs));
   EXPECT_TRUE(CheckNullableType(i, i.ptr4, fs));
@@ -66,7 +66,7 @@ void validate_x08(const x08<version>& i, File<version>& fs) {
 }
 
 template <AllegroVersion version>
-void validate_x0F(const x0F<version>& i, File<version>& fs) {}
+void validate_x0F(const T0FFootprint<version>& i, File<version>& fs) {}
 
 template <AllegroVersion version>
 void validate_x10(const x10<version>& i, File<version>& fs) {
@@ -81,7 +81,7 @@ void validate_x14(const x14<version>& i, File<version>& fs) {
 }
 
 template <AllegroVersion version>
-void validate_x1B(const t1B_net<version>& i, File<version>& fs) {
+void validate_x1B(const T1BNet<version>& i, File<version>& fs) {
   if (i.next != fs.hdr->ll_x1B.tail) {
     EXPECT_TRUE(CheckType(i, i.next, fs));
   }
@@ -254,7 +254,7 @@ void validate_objects(File<version>& fs) {
         validate_x08(fs.get_x08(k), fs);
         break;
       case 0x0F:
-        validate_x0F(*reinterpret_cast<x0F<version>*>(ptr), fs);
+        validate_x0F(*reinterpret_cast<T0FFootprint<version>*>(ptr), fs);
         break;
       case 0x10:
         validate_x10(fs.get_x10(k), fs);

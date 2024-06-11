@@ -207,7 +207,7 @@ TEST(ParseFile, BeagleBoneAIParsed) {
   EXPECT_EQ(x1C_inst.parts[0].w, 23000);
   EXPECT_EQ(x1C_inst.parts[0].h, 43000);
 
-  const x01<kAMax> x01_inst = fs.get_x01(0x000278DE);
+  const T01ArcSegment<kAMax> x01_inst = fs.get_x01(0x000278DE);
   EXPECT_EQ(x01_inst.coords[0], -575000);
   EXPECT_EQ(x01_inst.coords[1], 125000);
 }

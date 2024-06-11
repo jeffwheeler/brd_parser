@@ -173,14 +173,14 @@ template void print_struct<kAMax>(const uint32_t k, File<kAMax> &fs,
 
 template <AllegroVersion version>
 void default_printer(const void *untyped_inst, File<version> *, const int d) {
-  const x05<kAMax> *inst = (const x05<kAMax> *)untyped_inst;
+  const T05Line<kAMax> *inst = (const T05Line<kAMax> *)untyped_inst;
   printf_d(d, "\x1b[33mDefault printer:\x1b[0m t=0x%08X k=0x%08X\n",
            ntohl(inst->t), ntohl(inst->k));
 }
 
 template <AllegroVersion version>
 void print_x01(const void *untyped_inst, File<version> *fs, const int d) {
-  const x01<kAMax> *inst = (const x01<kAMax> *)untyped_inst;
+  const T01ArcSegment<kAMax> *inst = (const T01ArcSegment<kAMax> *)untyped_inst;
   std::pair<double, double> center = x01_center(inst);
   printf_d(d,
            "x01: t=0x%04X un0=%02X subtype=%02X k=0x%08X un1=%08X"
@@ -321,8 +321,8 @@ void print_x04(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x05(const void *untyped_inst, File<version> *fs, const int d) {
-  const uint32_t k = ((const x05<version> *)untyped_inst)->k;
-  x05<version> inst = fs->get_x05(k);
+  const uint32_t k = ((const T05Line<version> *)untyped_inst)->k;
+  T05Line<version> inst = fs->get_x05(k);
   printf_d(d, "x05: t=0x%04X subtype=%02X layer=%d k=0x%08X\n", ntohl(inst.t),
            inst.subtype, inst.layer, ntohl(inst.k));
 
@@ -523,8 +523,8 @@ void print_x06(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x07(const void *untyped_inst, File<version> *fs, const int d) {
-  const uint32_t k = ((const x07<version> *)untyped_inst)->k;
-  x07<version> inst = fs->get_x07(k);
+  const uint32_t k = ((const T07Instance<version> *)untyped_inst)->k;
+  T07Instance<version> inst = fs->get_x07(k);
   printf_d(d,
            "x07: \x1b[36;3mInstance\x1b[0m t=0x%08X k=0x%08X"
            " \x1b[34m\"%s\"\x1b[0m\n",
@@ -778,7 +778,7 @@ void print_x09(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x0A(const void *untyped_inst, File<version> *, const int d) {
-  const x0A<version> *inst = (const x0A<version> *)untyped_inst;
+  const T0ADRC<version> *inst = (const T0ADRC<version> *)untyped_inst;
   printf_d(d,
            "x0A: t=0x%04X subtype=%02X layer=%d k=0x%08X un1={%08X}"
            " \x1b[2m(%d, %d, %d, %d)\x1b[0m\n",
@@ -858,7 +858,7 @@ void print_x0D(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x0F(const void *untyped_inst, File<version> *fs, const int d) {
-  const x0F<version> *inst = (const x0F<version> *)untyped_inst;
+  const T0FFootprint<version> *inst = (const T0FFootprint<version> *)untyped_inst;
   printf_d(d,
            "x0F: \x1b[36;3mFootprint Instance\x1b[0m t=0x%08X k=0x%08X"
            " \x1b[34m\"%s\" \"%s\"\x1b[0m\n",
@@ -1093,7 +1093,7 @@ void print_x14(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x15(const void *untyped_inst, File<version> *, const int d) {
-  const x15<version> *inst = (const x15<version> *)untyped_inst;
+  const T15LineSegment<version> *inst = (const T15LineSegment<version> *)untyped_inst;
   uint32_t un4;
   if constexpr (std::is_same_v<decltype(inst->un4), std::monostate>) {
     un4 = 0;
@@ -1157,7 +1157,7 @@ void print_x15(const void *untyped_inst, File<version> *, const int d) {
 
 template <AllegroVersion version>
 void print_x16(const void *untyped_inst, File<version> *, const int d) {
-  const x16<version> *inst = (const x16<version> *)untyped_inst;
+  const T16LineSegment<version> *inst = (const T16LineSegment<version> *)untyped_inst;
   uint32_t un;
   if constexpr (std::is_same_v<decltype(inst->un), std::monostate>) {
     un = 0;
@@ -1213,7 +1213,7 @@ void print_x16(const void *untyped_inst, File<version> *, const int d) {
 
 template <AllegroVersion version>
 void print_x17(const void *untyped_inst, File<version> *, const int d) {
-  const x17<version> *inst = (const x17<version> *)untyped_inst;
+  const T17LineSegment<version> *inst = (const T17LineSegment<version> *)untyped_inst;
   uint32_t un4;
   if constexpr (std::is_same_v<decltype(inst->un4), std::monostate>) {
     un4 = 0;
@@ -1267,8 +1267,8 @@ void print_x17(const void *untyped_inst, File<version> *, const int d) {
 
 template <AllegroVersion version>
 void print_x1B(const void *untyped_inst, File<version> *fs, const int d) {
-  const uint32_t k = ((const t1B_net<version> *)untyped_inst)->k;
-  t1B_net<version> inst = fs->get_x1B(k);
+  const uint32_t k = ((const T1BNet<version> *)untyped_inst)->k;
+  T1BNet<version> inst = fs->get_x1B(k);
   printf_d(d,
            "x1B: \x1b[36;3mNet\x1b[0m t=0x%08X k=0x%08X type=%08X %08X "
            "\x1b[34m\"%s\"\x1b[0m\n",

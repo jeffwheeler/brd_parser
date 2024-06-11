@@ -23,12 +23,12 @@ class BrdView : public QGraphicsView {
   void zoomOut();
   void zoomFit();
 
-  void drawX01(const x01<kAMax> *inst, QPainterPath *path);
-  void drawX05(const x05<kAMax> *inst, QPen *pen);
+  void drawX01(const T01ArcSegment<kAMax> *inst, QPainterPath *path);
+  void drawX05(const T05Line<kAMax> *inst, QPen *pen);
   void drawX14(const x14<kAMax> *inst, QPen *pen);
-  void drawX15(const x15<kAMax> *inst, QPainterPath *path);
-  void drawX16(const x16<kAMax> *inst, QPainterPath *path);
-  void drawX17(const x17<kAMax> *inst, QPainterPath *path);
+  void drawX15(const T15LineSegment<kAMax> *inst, QPainterPath *path);
+  void drawX16(const T16LineSegment<kAMax> *inst, QPainterPath *path);
+  void drawX17(const T17LineSegment<kAMax> *inst, QPainterPath *path);
   void drawX23(const x23<kAMax> *inst, QPen *pen);
   void drawX28(const x28<kAMax> *inst, QPen *pen);
   void drawX2B(const x2B<kAMax> *inst, QPen *pen);

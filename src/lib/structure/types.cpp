@@ -1,8 +1,8 @@
 #include "types.h"
 
 template <>
-x01<kA160>::operator x01<kAMax>() const {
-  x01<kAMax> new_inst;
+T01ArcSegment<kA160>::operator T01ArcSegment<kAMax>() const {
+  T01ArcSegment<kAMax> new_inst;
   new_inst.t = this->t;
   new_inst.un0 = this->un0;
   new_inst.subtype = this->subtype;
@@ -48,8 +48,8 @@ x04<kA160>::operator x04<kAMax>() const {
 }
 
 template <>
-x05<kA160>::operator x05<kAMax>() const {
-  x05<kAMax> new_inst;
+T05Line<kA160>::operator T05Line<kAMax>() const {
+  T05Line<kAMax> new_inst;
   new_inst.t = this->t;
   new_inst.subtype = this->subtype;
   new_inst.layer = this->layer;
@@ -85,8 +85,8 @@ x06<kA160>::operator x06<kAMax>() const {
 }
 
 template <>
-x07<kA160>::operator x07<kAMax>() const {
-  x07<kAMax> new_inst;
+T07Instance<kA160>::operator T07Instance<kAMax>() const {
+  T07Instance<kAMax> new_inst;
   new_inst.t = this->t;
   new_inst.k = k;
   new_inst.un1 = this->un1;
@@ -147,8 +147,8 @@ x09<kA172>::operator x09<kAMax>() const {
 }
 
 template <>
-x0A<kA160>::operator x0A<kAMax>() const {
-  x0A<kAMax> new_inst;
+T0ADRC<kA160>::operator T0ADRC<kAMax>() const {
+  T0ADRC<kAMax> new_inst;
   new_inst.t = this->t;
   new_inst.subtype = this->subtype;
   new_inst.layer = this->layer;
@@ -170,8 +170,8 @@ x0A<kA160>::operator x0A<kAMax>() const {
 }
 
 template <>
-x0A<kA172>::operator x0A<kAMax>() const {
-  x0A<kAMax> new_inst;
+T0ADRC<kA172>::operator T0ADRC<kAMax>() const {
+  T0ADRC<kAMax> new_inst;
   new_inst.t = this->t;
   new_inst.subtype = this->subtype;
   new_inst.layer = this->layer;
@@ -270,8 +270,8 @@ x0E<kA160>::operator x0E<kAMax>() const {
 }
 
 template <>
-x0F<kA160>::operator x0F<kAMax>() const {
-  x0F<kAMax> new_inst;
+T0FFootprint<kA160>::operator T0FFootprint<kAMax>() const {
+  T0FFootprint<kAMax> new_inst;
   new_inst.t = this->t;
   new_inst.k = this->k;
   new_inst.ptr1 = this->ptr1;
@@ -285,8 +285,8 @@ x0F<kA160>::operator x0F<kAMax>() const {
 }
 
 template <>
-x0F<kA172>::operator x0F<kAMax>() const {
-  x0F<kAMax> new_inst;
+T0FFootprint<kA172>::operator T0FFootprint<kAMax>() const {
+  T0FFootprint<kAMax> new_inst;
   new_inst.t = this->t;
   new_inst.k = this->k;
   new_inst.ptr1 = this->ptr1;
@@ -356,8 +356,8 @@ x14<kA160>::operator x14<kAMax>() const {
 }
 
 template <>
-x15<kA160>::operator x15<kAMax>() const {
-  x15<kAMax> new_inst;
+T15LineSegment<kA160>::operator T15LineSegment<kAMax>() const {
+  T15LineSegment<kAMax> new_inst;
   new_inst.t = this->t;
   new_inst.k = this->k;
   new_inst.next = this->next;
@@ -371,8 +371,8 @@ x15<kA160>::operator x15<kAMax>() const {
 }
 
 template <>
-x16<kA160>::operator x16<kAMax>() const {
-  x16<kAMax> new_inst;
+T16LineSegment<kA160>::operator T16LineSegment<kAMax>() const {
+  T16LineSegment<kAMax> new_inst;
   new_inst.t = this->t;
   new_inst.k = this->k;
   new_inst.next = this->next;
@@ -386,8 +386,8 @@ x16<kA160>::operator x16<kAMax>() const {
 }
 
 template <>
-x17<kA160>::operator x17<kAMax>() const {
-  x17<kAMax> new_inst;
+T17LineSegment<kA160>::operator T17LineSegment<kAMax>() const {
+  T17LineSegment<kAMax> new_inst;
   new_inst.t = this->t;
   new_inst.k = this->k;
   new_inst.next = this->next;
@@ -401,8 +401,8 @@ x17<kA160>::operator x17<kAMax>() const {
 }
 
 template <>
-t1B_net<kA160>::operator t1B_net<kAMax>() const {
-  t1B_net<kAMax> new_inst;
+T1BNet<kA160>::operator T1BNet<kAMax>() const {
+  T1BNet<kAMax> new_inst;
   new_inst.t = this->t;
   new_inst.k = this->k;
   new_inst.next = this->next;
@@ -944,24 +944,24 @@ void File<version>::cache_upgrade_funcs() {
   switch (this->hdr->magic) {
     case 0x00130000:
     case 0x00130200:
-      this->x01_upgrade = new_upgrade<kA160, kAMax, x01>;
+      this->x01_upgrade = new_upgrade<kA160, kAMax, T01ArcSegment>;
       this->x03_upgrade = new_upgrade<kA160, kAMax, x03>;
       this->x04_upgrade = new_upgrade<kA160, kAMax, x04>;
-      this->x05_upgrade = new_upgrade<kA160, kAMax, x05>;
+      this->x05_upgrade = new_upgrade<kA160, kAMax, T05Line>;
       this->x06_upgrade = new_upgrade<kA160, kAMax, x06>;
-      this->x07_upgrade = new_upgrade<kA160, kAMax, x07>;
+      this->x07_upgrade = new_upgrade<kA160, kAMax, T07Instance>;
       this->x08_upgrade = new_upgrade<kA160, kAMax, x08>;
       this->x09_upgrade = new_upgrade<kA160, kAMax, x09>;
-      this->x0A_upgrade = new_upgrade<kA160, kAMax, x0A>;
+      this->x0A_upgrade = new_upgrade<kA160, kAMax, T0ADRC>;
       this->x0C_upgrade = new_upgrade<kA160, kAMax, x0C>;
       this->x0D_upgrade = new_upgrade<kA160, kAMax, x0D>;
       this->x0E_upgrade = new_upgrade<kA160, kAMax, x0E>;
       this->x10_upgrade = new_upgrade<kA160, kAMax, x10>;
       this->x14_upgrade = new_upgrade<kA160, kAMax, x14>;
-      this->x15_upgrade = new_upgrade<kA160, kAMax, x15>;
-      this->x16_upgrade = new_upgrade<kA160, kAMax, x16>;
-      this->x17_upgrade = new_upgrade<kA160, kAMax, x17>;
-      this->x1B_upgrade = new_upgrade<kA160, kAMax, t1B_net>;
+      this->x15_upgrade = new_upgrade<kA160, kAMax, T15LineSegment>;
+      this->x16_upgrade = new_upgrade<kA160, kAMax, T16LineSegment>;
+      this->x17_upgrade = new_upgrade<kA160, kAMax, T17LineSegment>;
+      this->x1B_upgrade = new_upgrade<kA160, kAMax, T1BNet>;
       this->x1C_upgrade = new_upgrade<kA160, kAMax, x1C>;
       this->t13_upgrade = new_upgrade<kA160, kAMax, t13>;
       this->x1D_upgrade = new_upgrade<kA160, kAMax, x1D>;
@@ -986,24 +986,24 @@ void File<version>::cache_upgrade_funcs() {
       this->x3C_upgrade = new_upgrade<kA160, kAMax, x3C>;
       break;
     case 0x00130402:
-      this->x01_upgrade = new_upgrade<kA162, kAMax, x01>;
+      this->x01_upgrade = new_upgrade<kA162, kAMax, T01ArcSegment>;
       this->x03_upgrade = new_upgrade<kA162, kAMax, x03>;
       this->x04_upgrade = new_upgrade<kA162, kAMax, x04>;
-      this->x05_upgrade = new_upgrade<kA162, kAMax, x05>;
+      this->x05_upgrade = new_upgrade<kA162, kAMax, T05Line>;
       this->x06_upgrade = new_upgrade<kA162, kAMax, x06>;
-      this->x07_upgrade = new_upgrade<kA162, kAMax, x07>;
+      this->x07_upgrade = new_upgrade<kA162, kAMax, T07Instance>;
       this->x08_upgrade = new_upgrade<kA162, kAMax, x08>;
       this->x09_upgrade = new_upgrade<kA162, kAMax, x09>;
-      this->x0A_upgrade = new_upgrade<kA162, kAMax, x0A>;
+      this->x0A_upgrade = new_upgrade<kA162, kAMax, T0ADRC>;
       this->x0C_upgrade = new_upgrade<kA162, kAMax, x0C>;
       this->x0D_upgrade = new_upgrade<kA162, kAMax, x0D>;
       this->x0E_upgrade = new_upgrade<kA162, kAMax, x0E>;
       this->x10_upgrade = new_upgrade<kA162, kAMax, x10>;
       this->x14_upgrade = new_upgrade<kA162, kAMax, x14>;
-      this->x15_upgrade = new_upgrade<kA162, kAMax, x15>;
-      this->x16_upgrade = new_upgrade<kA162, kAMax, x16>;
-      this->x17_upgrade = new_upgrade<kA162, kAMax, x17>;
-      this->x1B_upgrade = new_upgrade<kA162, kAMax, t1B_net>;
+      this->x15_upgrade = new_upgrade<kA162, kAMax, T15LineSegment>;
+      this->x16_upgrade = new_upgrade<kA162, kAMax, T16LineSegment>;
+      this->x17_upgrade = new_upgrade<kA162, kAMax, T17LineSegment>;
+      this->x1B_upgrade = new_upgrade<kA162, kAMax, T1BNet>;
       this->x1C_upgrade = new_upgrade<kA162, kAMax, x1C>;
       this->t13_upgrade = new_upgrade<kA162, kAMax, t13>;
       this->x1D_upgrade = new_upgrade<kA162, kAMax, x1D>;
@@ -1028,24 +1028,24 @@ void File<version>::cache_upgrade_funcs() {
       this->x3C_upgrade = new_upgrade<kA162, kAMax, x3C>;
       break;
     case 0x00130C03:
-      this->x01_upgrade = new_upgrade<kA164, kAMax, x01>;
+      this->x01_upgrade = new_upgrade<kA164, kAMax, T01ArcSegment>;
       this->x03_upgrade = new_upgrade<kA164, kAMax, x03>;
       this->x04_upgrade = new_upgrade<kA164, kAMax, x04>;
-      this->x05_upgrade = new_upgrade<kA164, kAMax, x05>;
+      this->x05_upgrade = new_upgrade<kA164, kAMax, T05Line>;
       this->x06_upgrade = new_upgrade<kA164, kAMax, x06>;
-      this->x07_upgrade = new_upgrade<kA164, kAMax, x07>;
+      this->x07_upgrade = new_upgrade<kA164, kAMax, T07Instance>;
       this->x08_upgrade = new_upgrade<kA164, kAMax, x08>;
       this->x09_upgrade = new_upgrade<kA164, kAMax, x09>;
-      this->x0A_upgrade = new_upgrade<kA164, kAMax, x0A>;
+      this->x0A_upgrade = new_upgrade<kA164, kAMax, T0ADRC>;
       this->x0C_upgrade = new_upgrade<kA164, kAMax, x0C>;
       this->x0D_upgrade = new_upgrade<kA164, kAMax, x0D>;
       this->x0E_upgrade = new_upgrade<kA164, kAMax, x0E>;
       this->x10_upgrade = new_upgrade<kA164, kAMax, x10>;
       this->x14_upgrade = new_upgrade<kA164, kAMax, x14>;
-      this->x15_upgrade = new_upgrade<kA164, kAMax, x15>;
-      this->x16_upgrade = new_upgrade<kA164, kAMax, x16>;
-      this->x17_upgrade = new_upgrade<kA164, kAMax, x17>;
-      this->x1B_upgrade = new_upgrade<kA164, kAMax, t1B_net>;
+      this->x15_upgrade = new_upgrade<kA164, kAMax, T15LineSegment>;
+      this->x16_upgrade = new_upgrade<kA164, kAMax, T16LineSegment>;
+      this->x17_upgrade = new_upgrade<kA164, kAMax, T17LineSegment>;
+      this->x1B_upgrade = new_upgrade<kA164, kAMax, T1BNet>;
       this->x1C_upgrade = new_upgrade<kA164, kAMax, x1C>;
       this->t13_upgrade = new_upgrade<kA164, kAMax, t13>;
       this->x1D_upgrade = new_upgrade<kA164, kAMax, x1D>;
@@ -1070,24 +1070,24 @@ void File<version>::cache_upgrade_funcs() {
       this->x3C_upgrade = new_upgrade<kA164, kAMax, x3C>;
       break;
     case 0x00131003:
-      this->x01_upgrade = new_upgrade<kA165, kAMax, x01>;
+      this->x01_upgrade = new_upgrade<kA165, kAMax, T01ArcSegment>;
       this->x03_upgrade = new_upgrade<kA165, kAMax, x03>;
       this->x04_upgrade = new_upgrade<kA165, kAMax, x04>;
-      this->x05_upgrade = new_upgrade<kA165, kAMax, x05>;
+      this->x05_upgrade = new_upgrade<kA165, kAMax, T05Line>;
       this->x06_upgrade = new_upgrade<kA165, kAMax, x06>;
-      this->x07_upgrade = new_upgrade<kA165, kAMax, x07>;
+      this->x07_upgrade = new_upgrade<kA165, kAMax, T07Instance>;
       this->x08_upgrade = new_upgrade<kA165, kAMax, x08>;
       this->x09_upgrade = new_upgrade<kA165, kAMax, x09>;
-      this->x0A_upgrade = new_upgrade<kA165, kAMax, x0A>;
+      this->x0A_upgrade = new_upgrade<kA165, kAMax, T0ADRC>;
       this->x0C_upgrade = new_upgrade<kA165, kAMax, x0C>;
       this->x0D_upgrade = new_upgrade<kA165, kAMax, x0D>;
       this->x0E_upgrade = new_upgrade<kA165, kAMax, x0E>;
       this->x10_upgrade = new_upgrade<kA165, kAMax, x10>;
       this->x14_upgrade = new_upgrade<kA165, kAMax, x14>;
-      this->x15_upgrade = new_upgrade<kA165, kAMax, x15>;
-      this->x16_upgrade = new_upgrade<kA165, kAMax, x16>;
-      this->x17_upgrade = new_upgrade<kA165, kAMax, x17>;
-      this->x1B_upgrade = new_upgrade<kA165, kAMax, t1B_net>;
+      this->x15_upgrade = new_upgrade<kA165, kAMax, T15LineSegment>;
+      this->x16_upgrade = new_upgrade<kA165, kAMax, T16LineSegment>;
+      this->x17_upgrade = new_upgrade<kA165, kAMax, T17LineSegment>;
+      this->x1B_upgrade = new_upgrade<kA165, kAMax, T1BNet>;
       this->x1C_upgrade = new_upgrade<kA165, kAMax, x1C>;
       this->t13_upgrade = new_upgrade<kA165, kAMax, t13>;
       this->x1D_upgrade = new_upgrade<kA165, kAMax, x1D>;
@@ -1113,24 +1113,24 @@ void File<version>::cache_upgrade_funcs() {
       break;
     case 0x00131503:
     case 0x00131504:
-      this->x01_upgrade = new_upgrade<kA166, kAMax, x01>;
+      this->x01_upgrade = new_upgrade<kA166, kAMax, T01ArcSegment>;
       this->x03_upgrade = new_upgrade<kA166, kAMax, x03>;
       this->x04_upgrade = new_upgrade<kA166, kAMax, x04>;
-      this->x05_upgrade = new_upgrade<kA166, kAMax, x05>;
+      this->x05_upgrade = new_upgrade<kA166, kAMax, T05Line>;
       this->x06_upgrade = new_upgrade<kA166, kAMax, x06>;
-      this->x07_upgrade = new_upgrade<kA166, kAMax, x07>;
+      this->x07_upgrade = new_upgrade<kA166, kAMax, T07Instance>;
       this->x08_upgrade = new_upgrade<kA166, kAMax, x08>;
       this->x09_upgrade = new_upgrade<kA166, kAMax, x09>;
-      this->x0A_upgrade = new_upgrade<kA166, kAMax, x0A>;
+      this->x0A_upgrade = new_upgrade<kA166, kAMax, T0ADRC>;
       this->x0C_upgrade = new_upgrade<kA166, kAMax, x0C>;
       this->x0D_upgrade = new_upgrade<kA166, kAMax, x0D>;
       this->x0E_upgrade = new_upgrade<kA166, kAMax, x0E>;
       this->x10_upgrade = new_upgrade<kA166, kAMax, x10>;
       this->x14_upgrade = new_upgrade<kA166, kAMax, x14>;
-      this->x15_upgrade = new_upgrade<kA166, kAMax, x15>;
-      this->x16_upgrade = new_upgrade<kA166, kAMax, x16>;
-      this->x17_upgrade = new_upgrade<kA166, kAMax, x17>;
-      this->x1B_upgrade = new_upgrade<kA166, kAMax, t1B_net>;
+      this->x15_upgrade = new_upgrade<kA166, kAMax, T15LineSegment>;
+      this->x16_upgrade = new_upgrade<kA166, kAMax, T16LineSegment>;
+      this->x17_upgrade = new_upgrade<kA166, kAMax, T17LineSegment>;
+      this->x1B_upgrade = new_upgrade<kA166, kAMax, T1BNet>;
       this->x1C_upgrade = new_upgrade<kA166, kAMax, x1C>;
       this->t13_upgrade = new_upgrade<kA166, kAMax, t13>;
       this->x1D_upgrade = new_upgrade<kA166, kAMax, x1D>;
@@ -1160,24 +1160,24 @@ void File<version>::cache_upgrade_funcs() {
     case 0x00140502:
     case 0x00140600:
     case 0x00140700:
-      this->x01_upgrade = new_upgrade<kA172, kAMax, x01>;
+      this->x01_upgrade = new_upgrade<kA172, kAMax, T01ArcSegment>;
       this->x03_upgrade = new_upgrade<kA172, kAMax, x03>;
       this->x04_upgrade = new_upgrade<kA172, kAMax, x04>;
-      this->x05_upgrade = new_upgrade<kA172, kAMax, x05>;
+      this->x05_upgrade = new_upgrade<kA172, kAMax, T05Line>;
       this->x06_upgrade = new_upgrade<kA172, kAMax, x06>;
-      this->x07_upgrade = new_upgrade<kA172, kAMax, x07>;
+      this->x07_upgrade = new_upgrade<kA172, kAMax, T07Instance>;
       this->x08_upgrade = new_upgrade<kA172, kAMax, x08>;
       this->x09_upgrade = new_upgrade<kA172, kAMax, x09>;
-      this->x0A_upgrade = new_upgrade<kA172, kAMax, x0A>;
+      this->x0A_upgrade = new_upgrade<kA172, kAMax, T0ADRC>;
       this->x0C_upgrade = new_upgrade<kA172, kAMax, x0C>;
       this->x0D_upgrade = new_upgrade<kA172, kAMax, x0D>;
       this->x0E_upgrade = new_upgrade<kA172, kAMax, x0E>;
       this->x10_upgrade = new_upgrade<kA172, kAMax, x10>;
       this->x14_upgrade = new_upgrade<kA172, kAMax, x14>;
-      this->x15_upgrade = new_upgrade<kA172, kAMax, x15>;
-      this->x16_upgrade = new_upgrade<kA172, kAMax, x16>;
-      this->x17_upgrade = new_upgrade<kA172, kAMax, x17>;
-      this->x1B_upgrade = new_upgrade<kA172, kAMax, t1B_net>;
+      this->x15_upgrade = new_upgrade<kA172, kAMax, T15LineSegment>;
+      this->x16_upgrade = new_upgrade<kA172, kAMax, T16LineSegment>;
+      this->x17_upgrade = new_upgrade<kA172, kAMax, T17LineSegment>;
+      this->x1B_upgrade = new_upgrade<kA172, kAMax, T1BNet>;
       this->x1C_upgrade = new_upgrade<kA172, kAMax, x1C>;
       this->t13_upgrade = new_upgrade<kA172, kAMax, t13>;
       this->x1D_upgrade = new_upgrade<kA172, kAMax, x1D>;
@@ -1205,24 +1205,24 @@ void File<version>::cache_upgrade_funcs() {
     case 0x00140901:
     case 0x00140902:
     case 0x00140E00:
-      this->x01_upgrade = new_upgrade<kA174, kAMax, x01>;
+      this->x01_upgrade = new_upgrade<kA174, kAMax, T01ArcSegment>;
       this->x03_upgrade = new_upgrade<kA174, kAMax, x03>;
       this->x04_upgrade = new_upgrade<kA174, kAMax, x04>;
-      this->x05_upgrade = new_upgrade<kA174, kAMax, x05>;
+      this->x05_upgrade = new_upgrade<kA174, kAMax, T05Line>;
       this->x06_upgrade = new_upgrade<kA174, kAMax, x06>;
-      this->x07_upgrade = new_upgrade<kA174, kAMax, x07>;
+      this->x07_upgrade = new_upgrade<kA174, kAMax, T07Instance>;
       this->x08_upgrade = new_upgrade<kA174, kAMax, x08>;
       this->x09_upgrade = new_upgrade<kA174, kAMax, x09>;
-      this->x0A_upgrade = new_upgrade<kA174, kAMax, x0A>;
+      this->x0A_upgrade = new_upgrade<kA174, kAMax, T0ADRC>;
       this->x0C_upgrade = new_upgrade<kA174, kAMax, x0C>;
       this->x0D_upgrade = new_upgrade<kA174, kAMax, x0D>;
       this->x0E_upgrade = new_upgrade<kA174, kAMax, x0E>;
       this->x10_upgrade = new_upgrade<kA174, kAMax, x10>;
       this->x14_upgrade = new_upgrade<kA174, kAMax, x14>;
-      this->x15_upgrade = new_upgrade<kA174, kAMax, x15>;
-      this->x16_upgrade = new_upgrade<kA174, kAMax, x16>;
-      this->x17_upgrade = new_upgrade<kA174, kAMax, x17>;
-      this->x1B_upgrade = new_upgrade<kA174, kAMax, t1B_net>;
+      this->x15_upgrade = new_upgrade<kA174, kAMax, T15LineSegment>;
+      this->x16_upgrade = new_upgrade<kA174, kAMax, T16LineSegment>;
+      this->x17_upgrade = new_upgrade<kA174, kAMax, T17LineSegment>;
+      this->x1B_upgrade = new_upgrade<kA174, kAMax, T1BNet>;
       this->x1C_upgrade = new_upgrade<kA174, kAMax, x1C>;
       this->t13_upgrade = new_upgrade<kA174, kAMax, t13>;
       this->x1D_upgrade = new_upgrade<kA174, kAMax, x1D>;
@@ -1247,24 +1247,24 @@ void File<version>::cache_upgrade_funcs() {
       this->x3C_upgrade = new_upgrade<kA174, kAMax, x3C>;
       break;
     case 0x00141502:
-      this->x01_upgrade = new_upgrade<kAMax, kAMax, x01>;
+      this->x01_upgrade = new_upgrade<kAMax, kAMax, T01ArcSegment>;
       this->x03_upgrade = new_upgrade<kAMax, kAMax, x03>;
       this->x04_upgrade = new_upgrade<kAMax, kAMax, x04>;
-      this->x05_upgrade = new_upgrade<kAMax, kAMax, x05>;
+      this->x05_upgrade = new_upgrade<kAMax, kAMax, T05Line>;
       this->x06_upgrade = new_upgrade<kAMax, kAMax, x06>;
-      this->x07_upgrade = new_upgrade<kAMax, kAMax, x07>;
+      this->x07_upgrade = new_upgrade<kAMax, kAMax, T07Instance>;
       this->x08_upgrade = new_upgrade<kAMax, kAMax, x08>;
       this->x09_upgrade = new_upgrade<kAMax, kAMax, x09>;
-      this->x0A_upgrade = new_upgrade<kAMax, kAMax, x0A>;
+      this->x0A_upgrade = new_upgrade<kAMax, kAMax, T0ADRC>;
       this->x0C_upgrade = new_upgrade<kAMax, kAMax, x0C>;
       this->x0D_upgrade = new_upgrade<kAMax, kAMax, x0D>;
       this->x0E_upgrade = new_upgrade<kAMax, kAMax, x0E>;
       this->x10_upgrade = new_upgrade<kAMax, kAMax, x10>;
       this->x14_upgrade = new_upgrade<kAMax, kAMax, x14>;
-      this->x15_upgrade = new_upgrade<kAMax, kAMax, x15>;
-      this->x16_upgrade = new_upgrade<kAMax, kAMax, x16>;
-      this->x17_upgrade = new_upgrade<kAMax, kAMax, x17>;
-      this->x1B_upgrade = new_upgrade<kAMax, kAMax, t1B_net>;
+      this->x15_upgrade = new_upgrade<kAMax, kAMax, T15LineSegment>;
+      this->x16_upgrade = new_upgrade<kAMax, kAMax, T16LineSegment>;
+      this->x17_upgrade = new_upgrade<kAMax, kAMax, T17LineSegment>;
+      this->x1B_upgrade = new_upgrade<kAMax, kAMax, T1BNet>;
       this->x1C_upgrade = new_upgrade<kAMax, kAMax, x1C>;
       this->t13_upgrade = new_upgrade<kAMax, kAMax, t13>;
       this->x1D_upgrade = new_upgrade<kAMax, kAMax, x1D>;
@@ -1297,7 +1297,7 @@ std::ptrdiff_t File<kAMax>::offset(void *p) {
 }
 
 template <>
-x01<kAMax> File<kAMax>::get_x01(uint32_t k) {
+T01ArcSegment<kAMax> File<kAMax>::get_x01(uint32_t k) {
   return this->x01_upgrade(this->ptrs[k]);
 }
 
@@ -1373,7 +1373,7 @@ const x04<kAMax> File<kAMax>::get_x04(uint32_t k) {
 }
 
 template <>
-const x05<kAMax> File<kAMax>::get_x05(uint32_t k) {
+const T05Line<kAMax> File<kAMax>::get_x05(uint32_t k) {
   return this->x05_upgrade(this->ptrs[k]);
 }
 
@@ -1383,7 +1383,7 @@ const x06<kAMax> File<kAMax>::get_x06(uint32_t k) {
 }
 
 template <>
-const x07<kAMax> File<kAMax>::get_x07(uint32_t k) {
+const T07Instance<kAMax> File<kAMax>::get_x07(uint32_t k) {
   return this->x07_upgrade(this->ptrs[k]);
 }
 
@@ -1398,7 +1398,7 @@ const x09<kAMax> File<kAMax>::get_x09(uint32_t k) {
 }
 
 template <>
-const x0A<kAMax> File<kAMax>::get_x0A(uint32_t k) {
+const T0ADRC<kAMax> File<kAMax>::get_x0A(uint32_t k) {
   return this->x0A_upgrade(this->ptrs[k]);
 }
 
@@ -1428,22 +1428,22 @@ const x14<kAMax> File<kAMax>::get_x14(uint32_t k) {
 }
 
 template <>
-const x15<kAMax> File<kAMax>::get_x15(uint32_t k) {
+const T15LineSegment<kAMax> File<kAMax>::get_x15(uint32_t k) {
   return this->x15_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x16<kAMax> File<kAMax>::get_x16(uint32_t k) {
+const T16LineSegment<kAMax> File<kAMax>::get_x16(uint32_t k) {
   return this->x16_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x17<kAMax> File<kAMax>::get_x17(uint32_t k) {
+const T17LineSegment<kAMax> File<kAMax>::get_x17(uint32_t k) {
   return this->x17_upgrade(this->ptrs[k]);
 }
 
 template <>
-const t1B_net<kAMax> File<kAMax>::get_x1B(uint32_t k) {
+const T1BNet<kAMax> File<kAMax>::get_x1B(uint32_t k) {
   return this->x1B_upgrade(this->ptrs[k]);
 }
 

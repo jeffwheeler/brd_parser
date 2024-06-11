@@ -53,7 +53,7 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x00
     {},
     // 0x01
-    {&default_parser<x01, version>},
+    {&default_parser<T01ArcSegment, version>},
     // 0x02
     {},
     // 0x03
@@ -61,17 +61,17 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x04
     {&default_parser<x04, version>},
     // 0x05
-    {&default_parser<x05, version>},
+    {&default_parser<T05Line, version>},
     // 0x06
     {&default_parser<x06, version>},
     // 0x07
-    {&default_parser<x07, version>},
+    {&default_parser<T07Instance, version>},
     // 0x08
     {&default_parser<x08, version>},
     // 0x09
     {&default_parser<x09, version>},
     // 0x0A
-    {&default_parser<x0A, version>},
+    {&default_parser<T0ADRC, version>},
     // 0x0B
     {},
     // 0x0C
@@ -81,7 +81,7 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x0E
     {&default_parser<x0E, version>},
     // 0x0F
-    {&default_parser<x0F, version>},
+    {&default_parser<T0FFootprint, version>},
     // 0x10
     {&default_parser<x10, version>},
     // 0x11
@@ -93,11 +93,11 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x14
     {&default_parser<x14, version>},
     // 0x15
-    {&default_parser<x15, version>},
+    {&default_parser<T15LineSegment, version>},
     // 0x16
-    {&default_parser<x16, version>},
+    {&default_parser<T16LineSegment, version>},
     // 0x17
-    {&default_parser<x17, version>},
+    {&default_parser<T17LineSegment, version>},
     // 0x18
     {},
     // 0x19
@@ -105,7 +105,7 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x1A
     {},
     // 0x1B
-    {&default_parser<t1B_net, version>},
+    {&default_parser<T1BNet, version>},
     // 0x1C
     {&parse_x1C<version>},
     // 0x1D
