@@ -76,17 +76,6 @@ LayerModel::LayerModel(File<kAMax>& fs, QObject* parent)
 
     i++;
   }
-  /*
-  addLayerGroup("1 - Board geometry?", kG1Layers);
-  addLayerGroup("3 - ?", kG3Layers);
-  addLayerGroup("4 - Drawing Format?", kG4Layers);
-  addLayerGroup("6 - Etch?", kG6Layers);
-  addLayerGroup("7 - Manufacturing?", kG7Layers);
-  addLayerGroup("9 - ?", kG9Layers);
-  addLayerGroup("C - ?", kGCLayers);
-  addLayerGroup("D - Refdes?", kGDLayers);
-  addLayerGroup("12 - ?", kG12Layers);
-  */
 };
 
 Qt::ItemFlags LayerModel::flags(const QModelIndex& index) const {
