@@ -64,11 +64,12 @@ LayerModel::LayerModel(File<kAMax>& fs, QObject* parent)
 
     // Add layer if we've iterated through _any_ layers, fixed or dynamic
     if (currentLayer > 0) {
-      addLayerGroup(QString("%1 - %2")
-                        .arg(i)
-                        .arg(fixedEntriesLabel == nullptr ? "?" : fixedEntriesLabel)
-                        .toStdString(),
-                    layers);
+      addLayerGroup(
+          QString("%1 - %2")
+              .arg(i)
+              .arg(fixedEntriesLabel == nullptr ? "?" : fixedEntriesLabel)
+              .toStdString(),
+          layers);
     }
 
     delete[] layers;
