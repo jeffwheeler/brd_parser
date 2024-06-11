@@ -8,10 +8,16 @@ LayerModel::LayerModel(File<kAMax>& fs, QObject* parent)
   uint16_t i = 1;
   for ([[maybe_unused]] const auto& [a, x2A_k] : fs.layers) {
     uint8_t fixedEntriesLength = 0;
+    const char* fixedEntriesLabel = nullptr;
 
     if (kFixedLayersMap.count(i) > 0) {
-      const Layer* fixedEntries = kFixedLayersMap.at(i);
-      while (fixedEntries[fixedEntriesLength].x != 0) fixedEntriesLength++;
+      const auto fixedEntriesPair = kFixedLayersMap.at(i);
+      const Layer* fixedEntries = fixedEntriesPair.first;
+      fixedEntriesLabel = fixedEntriesPair.second;
+
+      while (fixedEntries[fixedEntriesLength].x != 0) {
+        fixedEntriesLength++;
+      }
     }
 
     uint8_t dynamicEntriesLength = 0;
@@ -45,7 +51,8 @@ LayerModel::LayerModel(File<kAMax>& fs, QObject* parent)
 
     // Now add the fixed layers
     if (kFixedLayersMap.count(i) > 0) {
-      const Layer* fixedEntries = kFixedLayersMap.at(i);
+      const auto fixedEntriesPair = kFixedLayersMap.at(i);
+      const Layer* fixedEntries = fixedEntriesPair.first;
       for (uint8_t j = 0; j < fixedEntriesLength; j++) {
         const Layer* layer = &fixedEntries[j];
         layers[currentLayer].x = i;
@@ -57,24 +64,18 @@ LayerModel::LayerModel(File<kAMax>& fs, QObject* parent)
 
     // Add layer if we've iterated through _any_ layers, fixed or dynamic
     if (currentLayer > 0) {
-      addLayerGroup(QString("%1 - ?").arg(i).toStdString(), layers);
+      addLayerGroup(
+          QString("%1 - %2")
+              .arg(i)
+              .arg(fixedEntriesLabel == nullptr ? "?" : fixedEntriesLabel)
+              .toStdString(),
+          layers);
     }
 
     delete[] layers;
 
     i++;
   }
-  /*
-  addLayerGroup("1 - Board geometry?", kG1Layers);
-  addLayerGroup("3 - ?", kG3Layers);
-  addLayerGroup("4 - Drawing Format?", kG4Layers);
-  addLayerGroup("6 - Etch?", kG6Layers);
-  addLayerGroup("7 - Manufacturing?", kG7Layers);
-  addLayerGroup("9 - ?", kG9Layers);
-  addLayerGroup("C - ?", kGCLayers);
-  addLayerGroup("D - Refdes?", kGDLayers);
-  addLayerGroup("12 - ?", kG12Layers);
-  */
 };
 
 Qt::ItemFlags LayerModel::flags(const QModelIndex& index) const {

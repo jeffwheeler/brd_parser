@@ -33,6 +33,11 @@ const constexpr Layer kG4Layers[] = {
     {0x04, 0xFC, "Title block"}, {0x04, 0xFD, nullptr}, {0, 0, nullptr},
 };
 
+// Used so that etch can be given a group name
+const constexpr Layer kG6Layers[] = {
+    {0, 0, nullptr},
+};
+
 const constexpr Layer kG7Layers[] = {
     {0x07, 0xF0, nullptr}, {0x07, 0x12, nullptr}, {0x07, 0x13, nullptr},
     {0x07, 0xF7, nullptr}, {0x07, 0xF8, nullptr}, {0x07, 0xFD, nullptr},
@@ -74,9 +79,13 @@ const constexpr Layer kG12Layers[] = {
     {0, 0, nullptr},
 };
 
-const std::map<uint16_t, const Layer *> kFixedLayersMap = {
-    {1, kG1Layers}, {3, kG3Layers},    {4, kG4Layers},    {7, kG7Layers},
-    {9, kG9Layers}, {0x0C, kGCLayers}, {0x0D, kGDLayers}, {0x12, kG12Layers},
+const std::map<uint16_t, const std::pair<const Layer *, const char *>>
+    kFixedLayersMap = {
+        {0x01, {kG1Layers, "Board geometry?"}}, {0x03, {kG3Layers, nullptr}},
+        {0x04, {kG4Layers, "Drawing format?"}}, {0x06, {kG6Layers, "Etch"}},
+        {0x07, {kG7Layers, "Manufacturing"}},   {0x09, {kG9Layers, nullptr}},
+        {0x0C, {kGCLayers, nullptr}},           {0x0D, {kGDLayers, "Refdes?"}},
+        {0x12, {kG12Layers, nullptr}},
 };
 
 class LayerModel : public QAbstractItemModel {
