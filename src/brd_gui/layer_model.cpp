@@ -8,10 +8,16 @@ LayerModel::LayerModel(File<kAMax>& fs, QObject* parent)
   uint16_t i = 1;
   for ([[maybe_unused]] const auto& [a, x2A_k] : fs.layers) {
     uint8_t fixedEntriesLength = 0;
+    const char* fixedEntriesLabel = nullptr;
 
     if (kFixedLayersMap.count(i) > 0) {
-      const Layer* fixedEntries = kFixedLayersMap.at(i);
-      while (fixedEntries[fixedEntriesLength].x != 0) fixedEntriesLength++;
+      const auto fixedEntriesPair = kFixedLayersMap.at(i);
+      const Layer* fixedEntries = fixedEntriesPair.first;
+      fixedEntriesLabel = fixedEntriesPair.second;
+
+      while (fixedEntries[fixedEntriesLength].x != 0) {
+        fixedEntriesLength++;
+      }
     }
 
     uint8_t dynamicEntriesLength = 0;
@@ -45,7 +51,8 @@ LayerModel::LayerModel(File<kAMax>& fs, QObject* parent)
 
     // Now add the fixed layers
     if (kFixedLayersMap.count(i) > 0) {
-      const Layer* fixedEntries = kFixedLayersMap.at(i);
+      const auto fixedEntriesPair = kFixedLayersMap.at(i);
+      const Layer* fixedEntries = fixedEntriesPair.first;
       for (uint8_t j = 0; j < fixedEntriesLength; j++) {
         const Layer* layer = &fixedEntries[j];
         layers[currentLayer].x = i;
@@ -57,7 +64,11 @@ LayerModel::LayerModel(File<kAMax>& fs, QObject* parent)
 
     // Add layer if we've iterated through _any_ layers, fixed or dynamic
     if (currentLayer > 0) {
-      addLayerGroup(QString("%1 - ?").arg(i).toStdString(), layers);
+      addLayerGroup(QString("%1 - %2")
+                        .arg(i)
+                        .arg(fixedEntriesLabel == nullptr ? "?" : fixedEntriesLabel)
+                        .toStdString(),
+                    layers);
     }
 
     delete[] layers;
