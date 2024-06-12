@@ -27,7 +27,7 @@ uint8_t layer_count(File<version>* fs) {
   std::tuple<uint32_t, uint32_t> tup = (fs->layers)[4];
   uint32_t ptr = std::get<1>(tup);
   if (fs->x2A_map.count(ptr) > 0) {
-    const x2A* x = &fs->x2A_map.at(ptr);
+    const T2ACustomLayer* x = &fs->x2A_map.at(ptr);
     if (x->references) {
       return x->reference_entries.size();
     } else {
@@ -108,8 +108,8 @@ uint32_t parse_x03(File<kAMax>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x1C(File<kAMax>& fs, void*& address) {
-  x1C<version>* i = static_cast<x1C<version>*>(address);
-  uint32_t k = default_parser<x1C, version>(fs, address);
+  T1CPad<version>* i = static_cast<T1CPad<version>*>(address);
+  uint32_t k = default_parser<T1CPad, version>(fs, address);
 
   uint16_t size;
   if constexpr (version < kA172) {
@@ -232,7 +232,7 @@ uint32_t parse_x27(File<kAMax>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x2A(File<kAMax>& fs, void*& address) {
-  x2A x2A_inst;
+  T2ACustomLayer x2A_inst;
   memcpy(static_cast<void*>(&x2A_inst), address, sizeof(x2A_hdr));
 
   // f.read((char*)&x2A_inst.hdr, sizeof(x2A_hdr));
@@ -278,8 +278,8 @@ uint32_t parse_x2A(File<kAMax>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x31(File<kAMax>& fs, void*& address) {
-  x31<version>* i = (x31<version>*)address;
-  default_parser<x31, version>(fs, address);
+  T31String<version>* i = (T31String<version>*)address;
+  default_parser<T31String, version>(fs, address);
 
   if (i->len > 0) {
     uint32_t len = round_to_word(i->len);

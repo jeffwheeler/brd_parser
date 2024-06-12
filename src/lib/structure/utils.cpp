@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-std::pair<double, double> x01_center(const x01<kAMax>* inst) {
+std::pair<double, double> x01_center(const T01ArcSegment<kAMax>* inst) {
   return std::pair(cfp_to_double(inst->x), cfp_to_double(inst->y));
 }
 

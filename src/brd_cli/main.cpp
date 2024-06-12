@@ -17,15 +17,16 @@ int main(int argc, char* argv[]) {
     // stream_file(fname, *parsed_file);
   }
 
-  /*
+  uint8_t i = 1;
   for (auto& [a, b] : parsed_file->layers) {
-      printf("0x %08X - 0x %08X\n", ntohl(a), ntohl(b));
-      if (parsed_file->x2A_map.count(b) > 0) {
-          x2A* i = &parsed_file->x2A_map[b];
-          print_struct((void*)i, &*parsed_file, 1);
-      }
+    printf("\x1b[4m#%d\x1b[0m: 0x %08X - 0x %08X\n", i++, ntohl(a), ntohl(b));
+    if (parsed_file->x2A_map.count(b) > 0) {
+      T2ACustomLayer* i = &parsed_file->x2A_map[b];
+      print_struct((void*)i, &*parsed_file, 1);
+    }
   }
 
+  /*
   for (auto& i : parsed_file->iter_x1C()) {
       print_struct((void*)&i, &*parsed_file, 0);
   }
@@ -42,6 +43,7 @@ int main(int argc, char* argv[]) {
   }
   */
 
+  /*
   LinkedListPtrs pts = parsed_file->hdr->ll_x1B;
   uint32_t k = pts.head;
   // k = ntohl(0x2FA3AD00);
@@ -134,4 +136,5 @@ int main(int argc, char* argv[]) {
       break;
     }
   }
+  */
 }

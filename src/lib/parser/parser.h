@@ -53,7 +53,7 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x00
     {},
     // 0x01
-    {&default_parser<x01, version>},
+    {&default_parser<T01ArcSegment, version>},
     // 0x02
     {},
     // 0x03
@@ -61,17 +61,17 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x04
     {&default_parser<x04, version>},
     // 0x05
-    {&default_parser<x05, version>},
+    {&default_parser<T05Line, version>},
     // 0x06
     {&default_parser<x06, version>},
     // 0x07
-    {&default_parser<x07, version>},
+    {&default_parser<T07Instance, version>},
     // 0x08
     {&default_parser<x08, version>},
     // 0x09
     {&default_parser<x09, version>},
     // 0x0A
-    {&default_parser<x0A, version>},
+    {&default_parser<T0ADRC, version>},
     // 0x0B
     {},
     // 0x0C
@@ -81,7 +81,7 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x0E
     {&default_parser<x0E, version>},
     // 0x0F
-    {&default_parser<x0F, version>},
+    {&default_parser<T0FFootprint, version>},
     // 0x10
     {&default_parser<x10, version>},
     // 0x11
@@ -93,11 +93,11 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x14
     {&default_parser<x14, version>},
     // 0x15
-    {&default_parser<x15, version>},
+    {&default_parser<T15LineSegment, version>},
     // 0x16
-    {&default_parser<x16, version>},
+    {&default_parser<T16LineSegment, version>},
     // 0x17
-    {&default_parser<x17, version>},
+    {&default_parser<T17LineSegment, version>},
     // 0x18
     {},
     // 0x19
@@ -105,7 +105,7 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x1A
     {},
     // 0x1B
-    {&default_parser<t1B_net, version>},
+    {&default_parser<T1BNet, version>},
     // 0x1C
     {&parse_x1C<version>},
     // 0x1D
@@ -121,7 +121,7 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x22
     {&default_parser<x22, version>},
     // 0x23
-    {&default_parser<x23, version>},
+    {&default_parser<T23Rat, version>},
     // 0x24
     {&default_parser<x24, version>},
     // 0x25
@@ -131,7 +131,7 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x27
     {&parse_x27<version>},
     // 0x28
-    {&default_parser<x28, version>},
+    {&default_parser<T28Shape, version>},
     // 0x29
     {},
     // 0x2A
@@ -141,17 +141,17 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x2C
     {&default_parser<x2C, version>},
     // 0x2D
-    {&default_parser<x2D, version>},
+    {&default_parser<T2DSymbolInstance, version>},
     // 0x2E
     {&default_parser<x2E, version>},
     // 0x2F
     {&default_parser<x2F, version>},
     // 0x30
-    {&default_parser<x30, version>},
+    {&default_parser<T30StringGraphic, version>},
     // 0x31
     {&parse_x31<version>},
     // 0x32
-    {&default_parser<x32, version>},
+    {&default_parser<T32SymbolPin, version>},
     // 0x33
     {&default_parser<x33, version>},
     // 0x34
@@ -163,11 +163,11 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x37
     {&default_parser<x37, version>},
     // 0x38
-    {&default_parser<t38_film, version>},
+    {&default_parser<T38Film, version>},
     // 0x39
-    {&default_parser<t39_film_layer_list, version>},
+    {&default_parser<T39FilmLayerList, version>},
     // 0x3A
-    {&default_parser<t3A_film_layer_list_node, version>},
+    {&default_parser<T3AFilmLayerListNode, version>},
     // 0x3B
     {&parse_x3B<version>},
     // 0x3C
