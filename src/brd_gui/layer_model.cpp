@@ -23,7 +23,7 @@ LayerModel::LayerModel(File<kAMax>& fs, QObject* parent)
     uint8_t dynamicEntriesLength = 0;
 
     if (x2A_k != 0x00 && fs.x2A_map.count(x2A_k) > 0) {
-      x2A* inst = &fs.x2A_map[x2A_k];
+      T2ACustomLayer* inst = &fs.x2A_map[x2A_k];
       dynamicEntriesLength = inst->hdr.size;
     }
 
@@ -31,7 +31,7 @@ LayerModel::LayerModel(File<kAMax>& fs, QObject* parent)
     uint8_t currentLayer = 0;
 
     if (x2A_k != 0x00 && fs.x2A_map.count(x2A_k) > 0) {
-      x2A* inst = &fs.x2A_map[x2A_k];
+      T2ACustomLayer* inst = &fs.x2A_map[x2A_k];
       if (inst->references) {
         for (const auto& entry : inst->reference_entries) {
           layers[currentLayer].x = i;

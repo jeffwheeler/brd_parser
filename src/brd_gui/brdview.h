@@ -29,12 +29,12 @@ class BrdView : public QGraphicsView {
   void drawX15(const T15LineSegment<kAMax> *inst, QPainterPath *path);
   void drawX16(const T16LineSegment<kAMax> *inst, QPainterPath *path);
   void drawX17(const T17LineSegment<kAMax> *inst, QPainterPath *path);
-  void drawX23(const x23<kAMax> *inst, QPen *pen);
-  void drawX28(const x28<kAMax> *inst, QPen *pen);
+  void drawX23(const T23Rat<kAMax> *inst, QPen *pen);
+  void drawX28(const T28Shape<kAMax> *inst, QPen *pen);
   void drawX2B(const x2B<kAMax> *inst, QPen *pen);
-  void drawX2D(const x2D<kAMax> *inst, QPen *pen);
-  void drawX30(const x30<kAMax> *inst, QPen *pen);
-  void drawX32(const x32<kAMax> *inst, QPen *pen, uint32_t sym_rotation);
+  void drawX2D(const T2DSymbolInstance<kAMax> *inst, QPen *pen);
+  void drawX30(const T30StringGraphic<kAMax> *inst, QPen *pen);
+  void drawX32(const T32SymbolPin<kAMax> *inst, QPen *pen, uint32_t sym_rotation);
   void drawX33(const x33<kAMax> *inst, QPen *pen);
   void drawX34(const x34<kAMax> *inst, QPen *pen);
   void drawShape(const uint32_t ptr, QPen *pen);

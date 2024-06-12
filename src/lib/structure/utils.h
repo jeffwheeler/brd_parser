@@ -67,7 +67,7 @@ std::optional<std::string> x2D_refdes(const uint32_t k, File<version> *fs) {
     return std::optional<std::string>();
   }
 
-  const x2D<version> &inst = fs->get_x2D(k);
+  const T2DSymbolInstance<version> &inst = fs->get_x2D(k);
   if constexpr (std::is_same_v<decltype(inst.inst_ref), std::monostate>) {
     return std::optional<std::string>();
   } else {
@@ -94,7 +94,7 @@ std::optional<std::string> x2B_or_x2D_refdes(const uint32_t k,
 template <AllegroVersion version>
 std::optional<std::string> x32_pin_name(const uint32_t k, File<version> *fs) {
   if (fs->is_type(k, 0x32)) {
-    const x32<version> &inst = fs->get_x32(k);
+    const T32SymbolPin<version> &inst = fs->get_x32(k);
     return x2B_or_x2D_refdes(inst.ptr3, fs).value_or(std::string("?")) + "." +
            x0D_pin_name(inst.ptr5, fs).value_or(std::string("?"));
   } else {
@@ -103,7 +103,7 @@ std::optional<std::string> x32_pin_name(const uint32_t k, File<version> *fs) {
 }
 
 template <AllegroVersion version>
-std::string x38_layer_name(const t38_film<version> &inst, File<version> *fs) {
+std::string x38_layer_name(const T38Film<version> &inst, File<version> *fs) {
   if constexpr (!std::is_same_v<decltype(inst.layer_name_str),
                                 std::monostate>) {
     if (inst.layer_name_str == 0) {
@@ -119,12 +119,12 @@ std::string x38_layer_name(const t38_film<version> &inst, File<version> *fs) {
 
 template <AllegroVersion version>
 std::vector<std::pair<uint8_t, uint8_t>> x39_layers(
-    const t39_film_layer_list<version> &inst, File<version> &fs) {
+    const T39FilmLayerList<version> &inst, File<version> &fs) {
   std::vector<std::pair<uint8_t, uint8_t>> layers;
 
   uint32_t next_key = inst.head;
   while (fs.is_type(next_key, 0x3A)) {
-    const t3A_film_layer_list_node<version> &x3A_inst = fs.get_x3A(next_key);
+    const T3AFilmLayerListNode<version> &x3A_inst = fs.get_x3A(next_key);
     layers.push_back(std::make_pair(x3A_inst.subtype, x3A_inst.layer));
     next_key = x3A_inst.next;
   }
@@ -180,7 +180,7 @@ char *x1B_net_name(const uint32_t k, File<version> *fs) {
 template <AllegroVersion version>
 std::optional<uint8_t> x2D_layer(const uint32_t k, File<version> *fs) {
   if (fs->is_type(k, 0x2D)) {
-    const x2D<version> &inst = fs->get_x2D(k);
+    const T2DSymbolInstance<version> &inst = fs->get_x2D(k);
     return x14_layer(inst.ptr1, fs);
   } else {
     return std::optional<uint8_t>();

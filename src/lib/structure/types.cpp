@@ -436,8 +436,8 @@ t13<kA160>::operator t13<kAMax>() const {
 }
 
 template <>
-x1C<kA160>::operator x1C<kAMax>() const {
-  x1C<kAMax> new_inst;
+T1CPad<kA160>::operator T1CPad<kAMax>() const {
+  T1CPad<kAMax> new_inst;
   new_inst.t = this->t;
   new_inst.n = this->n;
   new_inst.k = this->k;
@@ -453,8 +453,8 @@ x1C<kA160>::operator x1C<kAMax>() const {
 }
 
 template <>
-x1C<kA165>::operator x1C<kAMax>() const {
-  x1C<kAMax> new_inst;
+T1CPad<kA165>::operator T1CPad<kAMax>() const {
+  T1CPad<kAMax> new_inst;
   new_inst.t = this->t;
   new_inst.n = this->n;
   new_inst.k = this->k;
@@ -482,13 +482,13 @@ x22<kA160>::operator x22<kAMax>() const {
 }
 
 template <>
-x23<kA160>::operator x23<kAMax>() const {
-  return *reinterpret_cast<const x23<kAMax> *>(this);
+T23Rat<kA160>::operator T23Rat<kAMax>() const {
+  return *reinterpret_cast<const T23Rat<kAMax> *>(this);
 }
 
 template <>
-x23<kA164>::operator x23<kAMax>() const {
-  return *reinterpret_cast<const x23<kAMax> *>(this);
+T23Rat<kA164>::operator T23Rat<kAMax>() const {
+  return *reinterpret_cast<const T23Rat<kAMax> *>(this);
 }
 
 template <>
@@ -519,8 +519,8 @@ x26<kA172>::operator x26<kAMax>() const {
 }
 
 template <>
-x28<kA160>::operator x28<kAMax>() const {
-  x28<kAMax> new_inst;
+T28Shape<kA160>::operator T28Shape<kAMax>() const {
+  T28Shape<kAMax> new_inst;
   new_inst.type = this->type;
   new_inst.subtype = this->subtype;
   new_inst.layer = this->layer;
@@ -604,8 +604,8 @@ x2C<kA160>::operator x2C<kAMax>() const {
 }
 
 template <>
-x2D<kA160>::operator x2D<kAMax>() const {
-  x2D<kAMax> new_inst;
+T2DSymbolInstance<kA160>::operator T2DSymbolInstance<kAMax>() const {
+  T2DSymbolInstance<kAMax> new_inst;
   new_inst.t = this->t;
   new_inst.layer = this->layer;
   new_inst.un0 = this->un0;
@@ -634,8 +634,8 @@ x2E<kA160>::operator x2E<kAMax>() const {
 }
 
 template <>
-x30<kA160>::operator x30<kAMax>() const {
-  x30<kAMax> new_inst;
+T30StringGraphic<kA160>::operator T30StringGraphic<kAMax>() const {
+  T30StringGraphic<kAMax> new_inst;
   new_inst.type = this->type;
   new_inst.subtype = this->subtype;
   new_inst.layer = this->layer;
@@ -653,8 +653,8 @@ x30<kA160>::operator x30<kAMax>() const {
 }
 
 template <>
-x30<kA172>::operator x30<kAMax>() const {
-  x30<kAMax> new_inst;
+T30StringGraphic<kA172>::operator T30StringGraphic<kAMax>() const {
+  T30StringGraphic<kAMax> new_inst;
   new_inst.type = this->type;
   new_inst.subtype = this->subtype;
   new_inst.layer = this->layer;
@@ -675,8 +675,8 @@ x30<kA172>::operator x30<kAMax>() const {
 }
 
 template <>
-x31<kA160>::operator x31<kAMax>() const {
-  x31<kAMax> new_inst;
+T31String<kA160>::operator T31String<kAMax>() const {
+  T31String<kAMax> new_inst;
   new_inst.t = this->t;
   new_inst.subtype = this->subtype;
   new_inst.layer = this->layer;
@@ -690,8 +690,8 @@ x31<kA160>::operator x31<kAMax>() const {
 }
 
 template <>
-x32<kA160>::operator x32<kAMax>() const {
-  x32<kAMax> new_inst;
+T32SymbolPin<kA160>::operator T32SymbolPin<kAMax>() const {
+  T32SymbolPin<kAMax> new_inst;
   new_inst.type = this->type;
   new_inst.subtype = this->subtype;
   new_inst.layer = this->layer;
@@ -860,8 +860,8 @@ x37<kA160>::operator x37<kAMax>() const {
 }
 
 template <>
-t38_film<kA160>::operator t38_film<kAMax>() const {
-  t38_film<kAMax> new_inst;
+T38Film<kA160>::operator T38Film<kAMax>() const {
+  T38Film<kAMax> new_inst;
   new_inst.t = this->t;
   new_inst.k = this->k;
   new_inst.next = this->next;
@@ -874,8 +874,8 @@ t38_film<kA160>::operator t38_film<kAMax>() const {
 }
 
 template <>
-t38_film<kA166>::operator t38_film<kAMax>() const {
-  t38_film<kAMax> new_inst;
+T38Film<kA166>::operator T38Film<kAMax>() const {
+  T38Film<kAMax> new_inst;
   new_inst.t = this->t;
   new_inst.k = this->k;
   new_inst.next = this->next;
@@ -888,14 +888,14 @@ t38_film<kA166>::operator t38_film<kAMax>() const {
 }
 
 template <>
-t39_film_layer_list<kA160>::operator t39_film_layer_list<kAMax>() const {
-  return *reinterpret_cast<const t39_film_layer_list<kAMax> *>(this);
+T39FilmLayerList<kA160>::operator T39FilmLayerList<kAMax>() const {
+  return *reinterpret_cast<const T39FilmLayerList<kAMax> *>(this);
 }
 
 template <>
-t3A_film_layer_list_node<kA160>::operator t3A_film_layer_list_node<kAMax>()
+T3AFilmLayerListNode<kA160>::operator T3AFilmLayerListNode<kAMax>()
     const {
-  return *reinterpret_cast<const t3A_film_layer_list_node<kAMax> *>(this);
+  return *reinterpret_cast<const T3AFilmLayerListNode<kAMax> *>(this);
 }
 
 template <>
@@ -962,27 +962,27 @@ void File<version>::cache_upgrade_funcs() {
       this->x16_upgrade = new_upgrade<kA160, kAMax, T16LineSegment>;
       this->x17_upgrade = new_upgrade<kA160, kAMax, T17LineSegment>;
       this->x1B_upgrade = new_upgrade<kA160, kAMax, T1BNet>;
-      this->x1C_upgrade = new_upgrade<kA160, kAMax, x1C>;
+      this->x1C_upgrade = new_upgrade<kA160, kAMax, T1CPad>;
       this->t13_upgrade = new_upgrade<kA160, kAMax, t13>;
       this->x1D_upgrade = new_upgrade<kA160, kAMax, x1D>;
       this->x1F_upgrade = new_upgrade<kA160, kAMax, x1F>;
-      this->x23_upgrade = new_upgrade<kA160, kAMax, x23>;
+      this->x23_upgrade = new_upgrade<kA160, kAMax, T23Rat>;
       this->x24_upgrade = new_upgrade<kA160, kAMax, x24>;
       this->x26_upgrade = new_upgrade<kA160, kAMax, x26>;
-      this->x28_upgrade = new_upgrade<kA160, kAMax, x28>;
+      this->x28_upgrade = new_upgrade<kA160, kAMax, T28Shape>;
       this->x2B_upgrade = new_upgrade<kA160, kAMax, x2B>;
       this->x2C_upgrade = new_upgrade<kA160, kAMax, x2C>;
-      this->x2D_upgrade = new_upgrade<kA160, kAMax, x2D>;
+      this->x2D_upgrade = new_upgrade<kA160, kAMax, T2DSymbolInstance>;
       this->x2E_upgrade = new_upgrade<kA160, kAMax, x2E>;
-      this->x30_upgrade = new_upgrade<kA160, kAMax, x30>;
-      this->x31_upgrade = new_upgrade<kA160, kAMax, x31>;
-      this->x32_upgrade = new_upgrade<kA160, kAMax, x32>;
+      this->x30_upgrade = new_upgrade<kA160, kAMax, T30StringGraphic>;
+      this->x31_upgrade = new_upgrade<kA160, kAMax, T31String>;
+      this->x32_upgrade = new_upgrade<kA160, kAMax, T32SymbolPin>;
       this->x33_upgrade = new_upgrade<kA160, kAMax, x33>;
       this->x34_upgrade = new_upgrade<kA160, kAMax, x34>;
       this->x37_upgrade = new_upgrade<kA160, kAMax, x37>;
-      this->x38_upgrade = new_upgrade<kA160, kAMax, t38_film>;
-      this->x39_upgrade = new_upgrade<kA160, kAMax, t39_film_layer_list>;
-      this->x3A_upgrade = new_upgrade<kA160, kAMax, t3A_film_layer_list_node>;
+      this->x38_upgrade = new_upgrade<kA160, kAMax, T38Film>;
+      this->x39_upgrade = new_upgrade<kA160, kAMax, T39FilmLayerList>;
+      this->x3A_upgrade = new_upgrade<kA160, kAMax, T3AFilmLayerListNode>;
       this->x3C_upgrade = new_upgrade<kA160, kAMax, x3C>;
       break;
     case 0x00130402:
@@ -1004,27 +1004,27 @@ void File<version>::cache_upgrade_funcs() {
       this->x16_upgrade = new_upgrade<kA162, kAMax, T16LineSegment>;
       this->x17_upgrade = new_upgrade<kA162, kAMax, T17LineSegment>;
       this->x1B_upgrade = new_upgrade<kA162, kAMax, T1BNet>;
-      this->x1C_upgrade = new_upgrade<kA162, kAMax, x1C>;
+      this->x1C_upgrade = new_upgrade<kA162, kAMax, T1CPad>;
       this->t13_upgrade = new_upgrade<kA162, kAMax, t13>;
       this->x1D_upgrade = new_upgrade<kA162, kAMax, x1D>;
       this->x1F_upgrade = new_upgrade<kA162, kAMax, x1F>;
-      this->x23_upgrade = new_upgrade<kA162, kAMax, x23>;
+      this->x23_upgrade = new_upgrade<kA162, kAMax, T23Rat>;
       this->x24_upgrade = new_upgrade<kA162, kAMax, x24>;
       this->x26_upgrade = new_upgrade<kA162, kAMax, x26>;
-      this->x28_upgrade = new_upgrade<kA162, kAMax, x28>;
+      this->x28_upgrade = new_upgrade<kA162, kAMax, T28Shape>;
       this->x2B_upgrade = new_upgrade<kA162, kAMax, x2B>;
       this->x2C_upgrade = new_upgrade<kA162, kAMax, x2C>;
-      this->x2D_upgrade = new_upgrade<kA162, kAMax, x2D>;
+      this->x2D_upgrade = new_upgrade<kA162, kAMax, T2DSymbolInstance>;
       this->x2E_upgrade = new_upgrade<kA162, kAMax, x2E>;
-      this->x30_upgrade = new_upgrade<kA162, kAMax, x30>;
-      this->x31_upgrade = new_upgrade<kA162, kAMax, x31>;
-      this->x32_upgrade = new_upgrade<kA162, kAMax, x32>;
+      this->x30_upgrade = new_upgrade<kA162, kAMax, T30StringGraphic>;
+      this->x31_upgrade = new_upgrade<kA162, kAMax, T31String>;
+      this->x32_upgrade = new_upgrade<kA162, kAMax, T32SymbolPin>;
       this->x33_upgrade = new_upgrade<kA162, kAMax, x33>;
       this->x34_upgrade = new_upgrade<kA162, kAMax, x34>;
       this->x37_upgrade = new_upgrade<kA162, kAMax, x37>;
-      this->x38_upgrade = new_upgrade<kA162, kAMax, t38_film>;
-      this->x39_upgrade = new_upgrade<kA162, kAMax, t39_film_layer_list>;
-      this->x3A_upgrade = new_upgrade<kA162, kAMax, t3A_film_layer_list_node>;
+      this->x38_upgrade = new_upgrade<kA162, kAMax, T38Film>;
+      this->x39_upgrade = new_upgrade<kA162, kAMax, T39FilmLayerList>;
+      this->x3A_upgrade = new_upgrade<kA162, kAMax, T3AFilmLayerListNode>;
       this->x3C_upgrade = new_upgrade<kA162, kAMax, x3C>;
       break;
     case 0x00130C03:
@@ -1046,27 +1046,27 @@ void File<version>::cache_upgrade_funcs() {
       this->x16_upgrade = new_upgrade<kA164, kAMax, T16LineSegment>;
       this->x17_upgrade = new_upgrade<kA164, kAMax, T17LineSegment>;
       this->x1B_upgrade = new_upgrade<kA164, kAMax, T1BNet>;
-      this->x1C_upgrade = new_upgrade<kA164, kAMax, x1C>;
+      this->x1C_upgrade = new_upgrade<kA164, kAMax, T1CPad>;
       this->t13_upgrade = new_upgrade<kA164, kAMax, t13>;
       this->x1D_upgrade = new_upgrade<kA164, kAMax, x1D>;
       this->x1F_upgrade = new_upgrade<kA164, kAMax, x1F>;
-      this->x23_upgrade = new_upgrade<kA164, kAMax, x23>;
+      this->x23_upgrade = new_upgrade<kA164, kAMax, T23Rat>;
       this->x24_upgrade = new_upgrade<kA164, kAMax, x24>;
       this->x26_upgrade = new_upgrade<kA164, kAMax, x26>;
-      this->x28_upgrade = new_upgrade<kA164, kAMax, x28>;
+      this->x28_upgrade = new_upgrade<kA164, kAMax, T28Shape>;
       this->x2B_upgrade = new_upgrade<kA164, kAMax, x2B>;
       this->x2C_upgrade = new_upgrade<kA164, kAMax, x2C>;
-      this->x2D_upgrade = new_upgrade<kA164, kAMax, x2D>;
+      this->x2D_upgrade = new_upgrade<kA164, kAMax, T2DSymbolInstance>;
       this->x2E_upgrade = new_upgrade<kA164, kAMax, x2E>;
-      this->x30_upgrade = new_upgrade<kA164, kAMax, x30>;
-      this->x31_upgrade = new_upgrade<kA164, kAMax, x31>;
-      this->x32_upgrade = new_upgrade<kA164, kAMax, x32>;
+      this->x30_upgrade = new_upgrade<kA164, kAMax, T30StringGraphic>;
+      this->x31_upgrade = new_upgrade<kA164, kAMax, T31String>;
+      this->x32_upgrade = new_upgrade<kA164, kAMax, T32SymbolPin>;
       this->x33_upgrade = new_upgrade<kA164, kAMax, x33>;
       this->x34_upgrade = new_upgrade<kA164, kAMax, x34>;
       this->x37_upgrade = new_upgrade<kA164, kAMax, x37>;
-      this->x38_upgrade = new_upgrade<kA164, kAMax, t38_film>;
-      this->x39_upgrade = new_upgrade<kA164, kAMax, t39_film_layer_list>;
-      this->x3A_upgrade = new_upgrade<kA164, kAMax, t3A_film_layer_list_node>;
+      this->x38_upgrade = new_upgrade<kA164, kAMax, T38Film>;
+      this->x39_upgrade = new_upgrade<kA164, kAMax, T39FilmLayerList>;
+      this->x3A_upgrade = new_upgrade<kA164, kAMax, T3AFilmLayerListNode>;
       this->x3C_upgrade = new_upgrade<kA164, kAMax, x3C>;
       break;
     case 0x00131003:
@@ -1088,27 +1088,27 @@ void File<version>::cache_upgrade_funcs() {
       this->x16_upgrade = new_upgrade<kA165, kAMax, T16LineSegment>;
       this->x17_upgrade = new_upgrade<kA165, kAMax, T17LineSegment>;
       this->x1B_upgrade = new_upgrade<kA165, kAMax, T1BNet>;
-      this->x1C_upgrade = new_upgrade<kA165, kAMax, x1C>;
+      this->x1C_upgrade = new_upgrade<kA165, kAMax, T1CPad>;
       this->t13_upgrade = new_upgrade<kA165, kAMax, t13>;
       this->x1D_upgrade = new_upgrade<kA165, kAMax, x1D>;
       this->x1F_upgrade = new_upgrade<kA165, kAMax, x1F>;
-      this->x23_upgrade = new_upgrade<kA165, kAMax, x23>;
+      this->x23_upgrade = new_upgrade<kA165, kAMax, T23Rat>;
       this->x24_upgrade = new_upgrade<kA165, kAMax, x24>;
       this->x26_upgrade = new_upgrade<kA165, kAMax, x26>;
-      this->x28_upgrade = new_upgrade<kA165, kAMax, x28>;
+      this->x28_upgrade = new_upgrade<kA165, kAMax, T28Shape>;
       this->x2B_upgrade = new_upgrade<kA165, kAMax, x2B>;
       this->x2C_upgrade = new_upgrade<kA165, kAMax, x2C>;
-      this->x2D_upgrade = new_upgrade<kA165, kAMax, x2D>;
+      this->x2D_upgrade = new_upgrade<kA165, kAMax, T2DSymbolInstance>;
       this->x2E_upgrade = new_upgrade<kA165, kAMax, x2E>;
-      this->x30_upgrade = new_upgrade<kA165, kAMax, x30>;
-      this->x31_upgrade = new_upgrade<kA165, kAMax, x31>;
-      this->x32_upgrade = new_upgrade<kA165, kAMax, x32>;
+      this->x30_upgrade = new_upgrade<kA165, kAMax, T30StringGraphic>;
+      this->x31_upgrade = new_upgrade<kA165, kAMax, T31String>;
+      this->x32_upgrade = new_upgrade<kA165, kAMax, T32SymbolPin>;
       this->x33_upgrade = new_upgrade<kA165, kAMax, x33>;
       this->x34_upgrade = new_upgrade<kA165, kAMax, x34>;
       this->x37_upgrade = new_upgrade<kA165, kAMax, x37>;
-      this->x38_upgrade = new_upgrade<kA165, kAMax, t38_film>;
-      this->x39_upgrade = new_upgrade<kA165, kAMax, t39_film_layer_list>;
-      this->x3A_upgrade = new_upgrade<kA165, kAMax, t3A_film_layer_list_node>;
+      this->x38_upgrade = new_upgrade<kA165, kAMax, T38Film>;
+      this->x39_upgrade = new_upgrade<kA165, kAMax, T39FilmLayerList>;
+      this->x3A_upgrade = new_upgrade<kA165, kAMax, T3AFilmLayerListNode>;
       this->x3C_upgrade = new_upgrade<kA165, kAMax, x3C>;
       break;
     case 0x00131503:
@@ -1131,27 +1131,27 @@ void File<version>::cache_upgrade_funcs() {
       this->x16_upgrade = new_upgrade<kA166, kAMax, T16LineSegment>;
       this->x17_upgrade = new_upgrade<kA166, kAMax, T17LineSegment>;
       this->x1B_upgrade = new_upgrade<kA166, kAMax, T1BNet>;
-      this->x1C_upgrade = new_upgrade<kA166, kAMax, x1C>;
+      this->x1C_upgrade = new_upgrade<kA166, kAMax, T1CPad>;
       this->t13_upgrade = new_upgrade<kA166, kAMax, t13>;
       this->x1D_upgrade = new_upgrade<kA166, kAMax, x1D>;
       this->x1F_upgrade = new_upgrade<kA166, kAMax, x1F>;
-      this->x23_upgrade = new_upgrade<kA166, kAMax, x23>;
+      this->x23_upgrade = new_upgrade<kA166, kAMax, T23Rat>;
       this->x24_upgrade = new_upgrade<kA166, kAMax, x24>;
       this->x26_upgrade = new_upgrade<kA166, kAMax, x26>;
-      this->x28_upgrade = new_upgrade<kA166, kAMax, x28>;
+      this->x28_upgrade = new_upgrade<kA166, kAMax, T28Shape>;
       this->x2B_upgrade = new_upgrade<kA166, kAMax, x2B>;
       this->x2C_upgrade = new_upgrade<kA166, kAMax, x2C>;
-      this->x2D_upgrade = new_upgrade<kA166, kAMax, x2D>;
+      this->x2D_upgrade = new_upgrade<kA166, kAMax, T2DSymbolInstance>;
       this->x2E_upgrade = new_upgrade<kA166, kAMax, x2E>;
-      this->x30_upgrade = new_upgrade<kA166, kAMax, x30>;
-      this->x31_upgrade = new_upgrade<kA166, kAMax, x31>;
-      this->x32_upgrade = new_upgrade<kA166, kAMax, x32>;
+      this->x30_upgrade = new_upgrade<kA166, kAMax, T30StringGraphic>;
+      this->x31_upgrade = new_upgrade<kA166, kAMax, T31String>;
+      this->x32_upgrade = new_upgrade<kA166, kAMax, T32SymbolPin>;
       this->x33_upgrade = new_upgrade<kA166, kAMax, x33>;
       this->x34_upgrade = new_upgrade<kA166, kAMax, x34>;
       this->x37_upgrade = new_upgrade<kA166, kAMax, x37>;
-      this->x38_upgrade = new_upgrade<kA166, kAMax, t38_film>;
-      this->x39_upgrade = new_upgrade<kA166, kAMax, t39_film_layer_list>;
-      this->x3A_upgrade = new_upgrade<kA166, kAMax, t3A_film_layer_list_node>;
+      this->x38_upgrade = new_upgrade<kA166, kAMax, T38Film>;
+      this->x39_upgrade = new_upgrade<kA166, kAMax, T39FilmLayerList>;
+      this->x3A_upgrade = new_upgrade<kA166, kAMax, T3AFilmLayerListNode>;
       this->x3C_upgrade = new_upgrade<kA166, kAMax, x3C>;
       break;
     case 0x00140400:
@@ -1178,27 +1178,27 @@ void File<version>::cache_upgrade_funcs() {
       this->x16_upgrade = new_upgrade<kA172, kAMax, T16LineSegment>;
       this->x17_upgrade = new_upgrade<kA172, kAMax, T17LineSegment>;
       this->x1B_upgrade = new_upgrade<kA172, kAMax, T1BNet>;
-      this->x1C_upgrade = new_upgrade<kA172, kAMax, x1C>;
+      this->x1C_upgrade = new_upgrade<kA172, kAMax, T1CPad>;
       this->t13_upgrade = new_upgrade<kA172, kAMax, t13>;
       this->x1D_upgrade = new_upgrade<kA172, kAMax, x1D>;
       this->x1F_upgrade = new_upgrade<kA172, kAMax, x1F>;
-      this->x23_upgrade = new_upgrade<kA172, kAMax, x23>;
+      this->x23_upgrade = new_upgrade<kA172, kAMax, T23Rat>;
       this->x24_upgrade = new_upgrade<kA172, kAMax, x24>;
       this->x26_upgrade = new_upgrade<kA172, kAMax, x26>;
-      this->x28_upgrade = new_upgrade<kA172, kAMax, x28>;
+      this->x28_upgrade = new_upgrade<kA172, kAMax, T28Shape>;
       this->x2B_upgrade = new_upgrade<kA172, kAMax, x2B>;
       this->x2C_upgrade = new_upgrade<kA172, kAMax, x2C>;
-      this->x2D_upgrade = new_upgrade<kA172, kAMax, x2D>;
+      this->x2D_upgrade = new_upgrade<kA172, kAMax, T2DSymbolInstance>;
       this->x2E_upgrade = new_upgrade<kA172, kAMax, x2E>;
-      this->x30_upgrade = new_upgrade<kA172, kAMax, x30>;
-      this->x31_upgrade = new_upgrade<kA172, kAMax, x31>;
-      this->x32_upgrade = new_upgrade<kA172, kAMax, x32>;
+      this->x30_upgrade = new_upgrade<kA172, kAMax, T30StringGraphic>;
+      this->x31_upgrade = new_upgrade<kA172, kAMax, T31String>;
+      this->x32_upgrade = new_upgrade<kA172, kAMax, T32SymbolPin>;
       this->x33_upgrade = new_upgrade<kA172, kAMax, x33>;
       this->x34_upgrade = new_upgrade<kA172, kAMax, x34>;
       this->x37_upgrade = new_upgrade<kA172, kAMax, x37>;
-      this->x38_upgrade = new_upgrade<kA172, kAMax, t38_film>;
-      this->x39_upgrade = new_upgrade<kA172, kAMax, t39_film_layer_list>;
-      this->x3A_upgrade = new_upgrade<kA172, kAMax, t3A_film_layer_list_node>;
+      this->x38_upgrade = new_upgrade<kA172, kAMax, T38Film>;
+      this->x39_upgrade = new_upgrade<kA172, kAMax, T39FilmLayerList>;
+      this->x3A_upgrade = new_upgrade<kA172, kAMax, T3AFilmLayerListNode>;
       this->x3C_upgrade = new_upgrade<kA172, kAMax, x3C>;
       break;
     case 0x00140900:
@@ -1223,27 +1223,27 @@ void File<version>::cache_upgrade_funcs() {
       this->x16_upgrade = new_upgrade<kA174, kAMax, T16LineSegment>;
       this->x17_upgrade = new_upgrade<kA174, kAMax, T17LineSegment>;
       this->x1B_upgrade = new_upgrade<kA174, kAMax, T1BNet>;
-      this->x1C_upgrade = new_upgrade<kA174, kAMax, x1C>;
+      this->x1C_upgrade = new_upgrade<kA174, kAMax, T1CPad>;
       this->t13_upgrade = new_upgrade<kA174, kAMax, t13>;
       this->x1D_upgrade = new_upgrade<kA174, kAMax, x1D>;
       this->x1F_upgrade = new_upgrade<kA174, kAMax, x1F>;
-      this->x23_upgrade = new_upgrade<kA174, kAMax, x23>;
+      this->x23_upgrade = new_upgrade<kA174, kAMax, T23Rat>;
       this->x24_upgrade = new_upgrade<kA174, kAMax, x24>;
       this->x26_upgrade = new_upgrade<kA174, kAMax, x26>;
-      this->x28_upgrade = new_upgrade<kA174, kAMax, x28>;
+      this->x28_upgrade = new_upgrade<kA174, kAMax, T28Shape>;
       this->x2B_upgrade = new_upgrade<kA174, kAMax, x2B>;
       this->x2C_upgrade = new_upgrade<kA174, kAMax, x2C>;
-      this->x2D_upgrade = new_upgrade<kA174, kAMax, x2D>;
+      this->x2D_upgrade = new_upgrade<kA174, kAMax, T2DSymbolInstance>;
       this->x2E_upgrade = new_upgrade<kA174, kAMax, x2E>;
-      this->x30_upgrade = new_upgrade<kA174, kAMax, x30>;
-      this->x31_upgrade = new_upgrade<kA174, kAMax, x31>;
-      this->x32_upgrade = new_upgrade<kA174, kAMax, x32>;
+      this->x30_upgrade = new_upgrade<kA174, kAMax, T30StringGraphic>;
+      this->x31_upgrade = new_upgrade<kA174, kAMax, T31String>;
+      this->x32_upgrade = new_upgrade<kA174, kAMax, T32SymbolPin>;
       this->x33_upgrade = new_upgrade<kA174, kAMax, x33>;
       this->x34_upgrade = new_upgrade<kA174, kAMax, x34>;
       this->x37_upgrade = new_upgrade<kA174, kAMax, x37>;
-      this->x38_upgrade = new_upgrade<kA174, kAMax, t38_film>;
-      this->x39_upgrade = new_upgrade<kA174, kAMax, t39_film_layer_list>;
-      this->x3A_upgrade = new_upgrade<kA174, kAMax, t3A_film_layer_list_node>;
+      this->x38_upgrade = new_upgrade<kA174, kAMax, T38Film>;
+      this->x39_upgrade = new_upgrade<kA174, kAMax, T39FilmLayerList>;
+      this->x3A_upgrade = new_upgrade<kA174, kAMax, T3AFilmLayerListNode>;
       this->x3C_upgrade = new_upgrade<kA174, kAMax, x3C>;
       break;
     case 0x00141502:
@@ -1265,27 +1265,27 @@ void File<version>::cache_upgrade_funcs() {
       this->x16_upgrade = new_upgrade<kAMax, kAMax, T16LineSegment>;
       this->x17_upgrade = new_upgrade<kAMax, kAMax, T17LineSegment>;
       this->x1B_upgrade = new_upgrade<kAMax, kAMax, T1BNet>;
-      this->x1C_upgrade = new_upgrade<kAMax, kAMax, x1C>;
+      this->x1C_upgrade = new_upgrade<kAMax, kAMax, T1CPad>;
       this->t13_upgrade = new_upgrade<kAMax, kAMax, t13>;
       this->x1D_upgrade = new_upgrade<kAMax, kAMax, x1D>;
       this->x1F_upgrade = new_upgrade<kAMax, kAMax, x1F>;
-      this->x23_upgrade = new_upgrade<kAMax, kAMax, x23>;
+      this->x23_upgrade = new_upgrade<kAMax, kAMax, T23Rat>;
       this->x24_upgrade = new_upgrade<kAMax, kAMax, x24>;
       this->x26_upgrade = new_upgrade<kAMax, kAMax, x26>;
-      this->x28_upgrade = new_upgrade<kAMax, kAMax, x28>;
+      this->x28_upgrade = new_upgrade<kAMax, kAMax, T28Shape>;
       this->x2B_upgrade = new_upgrade<kAMax, kAMax, x2B>;
       this->x2C_upgrade = new_upgrade<kAMax, kAMax, x2C>;
-      this->x2D_upgrade = new_upgrade<kAMax, kAMax, x2D>;
+      this->x2D_upgrade = new_upgrade<kAMax, kAMax, T2DSymbolInstance>;
       this->x2E_upgrade = new_upgrade<kAMax, kAMax, x2E>;
-      this->x30_upgrade = new_upgrade<kAMax, kAMax, x30>;
-      this->x31_upgrade = new_upgrade<kAMax, kAMax, x31>;
-      this->x32_upgrade = new_upgrade<kAMax, kAMax, x32>;
+      this->x30_upgrade = new_upgrade<kAMax, kAMax, T30StringGraphic>;
+      this->x31_upgrade = new_upgrade<kAMax, kAMax, T31String>;
+      this->x32_upgrade = new_upgrade<kAMax, kAMax, T32SymbolPin>;
       this->x33_upgrade = new_upgrade<kAMax, kAMax, x33>;
       this->x34_upgrade = new_upgrade<kAMax, kAMax, x34>;
       this->x37_upgrade = new_upgrade<kAMax, kAMax, x37>;
-      this->x38_upgrade = new_upgrade<kAMax, kAMax, t38_film>;
-      this->x39_upgrade = new_upgrade<kAMax, kAMax, t39_film_layer_list>;
-      this->x3A_upgrade = new_upgrade<kAMax, kAMax, t3A_film_layer_list_node>;
+      this->x38_upgrade = new_upgrade<kAMax, kAMax, T38Film>;
+      this->x39_upgrade = new_upgrade<kAMax, kAMax, T39FilmLayerList>;
+      this->x3A_upgrade = new_upgrade<kAMax, kAMax, T3AFilmLayerListNode>;
       this->x3C_upgrade = new_upgrade<kAMax, kAMax, x3C>;
       break;
   }
@@ -1448,19 +1448,19 @@ const T1BNet<kAMax> File<kAMax>::get_x1B(uint32_t k) {
 }
 
 template <>
-const x1C<kAMax> File<kAMax>::get_x1C(uint32_t k) {
+const T1CPad<kAMax> File<kAMax>::get_x1C(uint32_t k) {
   void *p = this->ptrs[k];
-  x1C<kAMax> i = this->x1C_upgrade(this->ptrs[k]);
+  T1CPad<kAMax> i = this->x1C_upgrade(this->ptrs[k]);
 
   uint32_t obj_size, t13_size;
   if (this->hdr->magic < kA165) {
-    obj_size = sizeof_until_tail<x1C<kA160>>();
+    obj_size = sizeof_until_tail<T1CPad<kA160>>();
     t13_size = sizeof_until_tail<t13<kA160>>();
   } else if (this->hdr->magic < kA172) {
-    obj_size = sizeof_until_tail<x1C<kA165>>();
+    obj_size = sizeof_until_tail<T1CPad<kA165>>();
     t13_size = sizeof_until_tail<t13<kA165>>();
   } else {
-    obj_size = sizeof_until_tail<x1C<kA172>>();
+    obj_size = sizeof_until_tail<T1CPad<kA172>>();
     t13_size = sizeof_until_tail<t13<kA172>>();
   }
 
@@ -1492,7 +1492,7 @@ const x1F<kAMax> File<kAMax>::get_x1F(uint32_t k) {
 }
 
 template <>
-const x23<kAMax> File<kAMax>::get_x23(uint32_t k) {
+const T23Rat<kAMax> File<kAMax>::get_x23(uint32_t k) {
   return this->x23_upgrade(this->ptrs[k]);
 }
 
@@ -1507,7 +1507,7 @@ const x26<kAMax> File<kAMax>::get_x26(uint32_t k) {
 }
 
 template <>
-const x28<kAMax> File<kAMax>::get_x28(uint32_t k) {
+const T28Shape<kAMax> File<kAMax>::get_x28(uint32_t k) {
   return this->x28_upgrade(this->ptrs[k]);
 }
 
@@ -1522,7 +1522,7 @@ const x2C<kAMax> File<kAMax>::get_x2C(uint32_t k) {
 }
 
 template <>
-const x2D<kAMax> File<kAMax>::get_x2D(uint32_t k) {
+const T2DSymbolInstance<kAMax> File<kAMax>::get_x2D(uint32_t k) {
   return this->x2D_upgrade(this->ptrs[k]);
 }
 
@@ -1532,19 +1532,19 @@ const x2E<kAMax> File<kAMax>::get_x2E(uint32_t k) {
 }
 
 template <>
-const x30<kAMax> File<kAMax>::get_x30(uint32_t k) {
+const T30StringGraphic<kAMax> File<kAMax>::get_x30(uint32_t k) {
   return this->x30_upgrade(this->ptrs[k]);
 }
 
 template <>
-const x31<kAMax> File<kAMax>::get_x31(uint32_t k) {
+const T31String<kAMax> File<kAMax>::get_x31(uint32_t k) {
   void *p = this->ptrs[k];
-  x31<kAMax> i = this->x31_upgrade(p);
+  T31String<kAMax> i = this->x31_upgrade(p);
   uint32_t size;
   if (this->hdr->magic < kA174) {
-    size = sizeof_until_tail<x31<kA160>>();
+    size = sizeof_until_tail<T31String<kA160>>();
   } else {
-    size = sizeof_until_tail<x31<kA174>>();
+    size = sizeof_until_tail<T31String<kA174>>();
   }
   void *next_ptr = ((char *)p) + size;
   i.s = std::string(static_cast<char *>(next_ptr));
@@ -1552,7 +1552,7 @@ const x31<kAMax> File<kAMax>::get_x31(uint32_t k) {
 }
 
 template <>
-const x32<kAMax> File<kAMax>::get_x32(uint32_t k) {
+const T32SymbolPin<kAMax> File<kAMax>::get_x32(uint32_t k) {
   return this->x32_upgrade(this->ptrs[k]);
 }
 
@@ -1572,17 +1572,17 @@ const x37<kAMax> File<kAMax>::get_x37(uint32_t k) {
 }
 
 template <>
-const t38_film<kAMax> File<kAMax>::get_t38_film(uint32_t k) {
+const T38Film<kAMax> File<kAMax>::get_t38_film(uint32_t k) {
   return this->x38_upgrade(this->ptrs[k]);
 }
 
 template <>
-const t39_film_layer_list<kAMax> File<kAMax>::get_x39(uint32_t k) {
+const T39FilmLayerList<kAMax> File<kAMax>::get_x39(uint32_t k) {
   return this->x39_upgrade(this->ptrs[k]);
 }
 
 template <>
-const t3A_film_layer_list_node<kAMax> File<kAMax>::get_x3A(uint32_t k) {
+const T3AFilmLayerListNode<kAMax> File<kAMax>::get_x3A(uint32_t k) {
   return this->x3A_upgrade(this->ptrs[k]);
 }
 

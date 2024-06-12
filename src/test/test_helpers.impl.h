@@ -91,12 +91,12 @@ void validate_x1B(const T1BNet<version>& i, File<version>& fs) {
 }
 
 template <AllegroVersion version>
-void validate_x23(const x23<version>& i, File<version>& fs) {
+void validate_x23(const T23Rat<version>& i, File<version>& fs) {
   EXPECT_TRUE(CheckNullableType(i, i.ptr1, fs));
 }
 
 template <AllegroVersion version>
-void validate_x28(const x28<version>& i, File<version>& fs) {
+void validate_x28(const T28Shape<version>& i, File<version>& fs) {
   EXPECT_TRUE(CheckNullableType(i, i.ptr4, fs));
 }
 
@@ -117,19 +117,19 @@ void validate_x2C(const x2C<version>& i, File<version>& fs) {
 }
 
 template <AllegroVersion version>
-void validate_x2D(const x2D<version>& i, File<version>& fs) {
+void validate_x2D(const T2DSymbolInstance<version>& i, File<version>& fs) {
   EXPECT_TRUE(CheckNullableType(i, i.ptr1, fs));
   EXPECT_TRUE(CheckNullableType(i, i.first_pad_ptr, fs));
   EXPECT_TRUE(CheckNullableType(i, i.first_pad_ptr, fs));
 }
 
 template <AllegroVersion version>
-void validate_x30(const x30<version>& i, File<version>& fs) {
+void validate_x30(const T30StringGraphic<version>& i, File<version>& fs) {
   EXPECT_TRUE(CheckType(i, i.str_graphic_ptr, fs));
 }
 
 template <AllegroVersion version>
-void validate_x31(const x31<version>& i, File<version>& fs) {
+void validate_x31(const T31String<version>& i, File<version>& fs) {
   EXPECT_TRUE(CheckType(i, i.str_graphic_wrapper_ptr, fs));
 }
 

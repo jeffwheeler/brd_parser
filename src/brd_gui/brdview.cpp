@@ -245,7 +245,7 @@ void BrdView::drawX17(const T17LineSegment<kAMax> *inst, QPainterPath *path) {
 }
 
 // Connectivity (rat)
-void BrdView::drawX23(const x23<kAMax> *inst, QPen *pen) {
+void BrdView::drawX23(const T23Rat<kAMax> *inst, QPen *pen) {
   if (!onSelectedLayer(inst->subtype, inst->layer)) {
     return;
   }
@@ -260,7 +260,7 @@ void BrdView::drawX23(const x23<kAMax> *inst, QPen *pen) {
 }
 
 // Shapes
-void BrdView::drawX28(const x28<kAMax> *inst, QPen *pen) {
+void BrdView::drawX28(const T28Shape<kAMax> *inst, QPen *pen) {
   if (!onSelectedLayer(inst->subtype, inst->layer) ||
       fs->is_type(inst->ptr1, 0x2B)) {
     return;
@@ -364,7 +364,7 @@ void BrdView::drawX2B(const x2B<kAMax> *inst, QPen *pen) {
   // drawShape(inst->ptr8, pen);
 }
 
-void BrdView::drawX2D(const x2D<kAMax> *inst, QPen *pen) {
+void BrdView::drawX2D(const T2DSymbolInstance<kAMax> *inst, QPen *pen) {
   // Bounding box?
   // drawShape(inst->ptr4[0], pen);
 
@@ -404,7 +404,7 @@ void BrdView::drawX2D(const x2D<kAMax> *inst, QPen *pen) {
   }
 }
 
-void BrdView::drawX30(const x30<kAMax> *inst, QPen *pen) {
+void BrdView::drawX30(const T30StringGraphic<kAMax> *inst, QPen *pen) {
   if (!onSelectedLayer(inst->subtype, inst->layer)) {
     return;
   }
@@ -419,7 +419,7 @@ void BrdView::drawX30(const x30<kAMax> *inst, QPen *pen) {
     return;
   }
 
-  const x31<kAMax> &str_graphic = fs->get_x31(inst->str_graphic_ptr);
+  const T31String<kAMax> &str_graphic = fs->get_x31(inst->str_graphic_ptr);
 
   QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
   font.setFixedPitch(true);
@@ -482,10 +482,10 @@ void BrdView::drawX30(const x30<kAMax> *inst, QPen *pen) {
 }
 
 // Pad
-void BrdView::drawX32(const x32<kAMax> *inst, QPen *pen,
+void BrdView::drawX32(const T32SymbolPin<kAMax> *inst, QPen *pen,
                       uint32_t sym_rotation) {
   if (fs->is_type(inst->ptr3, 0x2D)) {
-    const x2D<kAMax> x2D_inst = fs->get_x2D(inst->ptr3);
+    const T2DSymbolInstance<kAMax> x2D_inst = fs->get_x2D(inst->ptr3);
     if (!onSelectedLayer(inst->subtype,
                          x2D_inst.layer == 0 ? 0 : fs->layer_count - 1)) {
       return;
@@ -501,7 +501,7 @@ void BrdView::drawX32(const x32<kAMax> *inst, QPen *pen,
 
   // Try to draw pad shape
   const x0D<kAMax> &x0D_inst = fs->get_x0D(inst->ptr5);
-  const x1C<kAMax> &x1C_inst = fs->get_x1C(x0D_inst.pad_ptr);
+  const T1CPad<kAMax> &x1C_inst = fs->get_x1C(x0D_inst.pad_ptr);
 
   QPointF center = QPointF((inst->coords[0] + inst->coords[2]) / 2. / factor,
                            (inst->coords[1] + inst->coords[3]) / 2. / factor);
@@ -565,7 +565,7 @@ void BrdView::drawX33(const x33<kAMax> *inst, QPen *pen) {
     return;
   }
 
-  const x1C<kAMax> &x1C_inst = fs->get_x1C(inst->ptr4);
+  const T1CPad<kAMax> &x1C_inst = fs->get_x1C(inst->ptr4);
   /*
   if (x1C_inst.pad_info.a == 0) {
       pen = new QPen(QColorConstants::Svg::mediumpurple);
@@ -691,26 +691,26 @@ void BrdView::drawShape(const uint32_t ptr, QPen *pen) {
     // drawShape(inst->un1, darkerPen);
     // drawShape(inst->ptr, darkerPen);
   } else if (fs->is_type(ptr, 0x23)) {
-    const x23<kAMax> inst = fs->get_x23(ptr);
+    const T23Rat<kAMax> inst = fs->get_x23(ptr);
     drawX23(&inst, pen);
   } else if (fs->is_type(ptr, 0x28)) {
-    const x28<kAMax> inst = fs->get_x28(ptr);
+    const T28Shape<kAMax> inst = fs->get_x28(ptr);
     drawX28(&inst, pen);
     // drawShape(inst->ptr5, darkerPen);
     // drawShape(inst->ptr1, darkerPen);
     // drawShape(inst->ptr2, darkerPen);
     // drawShape(inst->ptr5, darkerPen);
   } else if (fs->is_type(ptr, 0x2D)) {
-    const x2D<kAMax> inst = fs->get_x2D(ptr);
+    const T2DSymbolInstance<kAMax> inst = fs->get_x2D(ptr);
     drawX2D(&inst, pen);
   } else if (fs->is_type(ptr, 0x30)) {
-    const x30<kAMax> &inst = fs->get_x30(ptr);
+    const T30StringGraphic<kAMax> &inst = fs->get_x30(ptr);
     drawX30(&inst, pen);
     // } else if (fs.x31_map->count(ptr) > 0) {
     //     const x31 *inst = (const x31*)&fs.x31_map->at(ptr);
     //     drawX31((const x31*)&fs.x31_map->at(ptr), pen);
   } else if (fs->is_type(ptr, 0x32)) {
-    const x32<kAMax> &inst = fs->get_x32(ptr);
+    const T32SymbolPin<kAMax> &inst = fs->get_x32(ptr);
     drawX32(&inst, pen, 0);
   } else if (fs->is_type(ptr, 0x33)) {
     const x33<kAMax> &inst = fs->get_x33(ptr);
@@ -910,7 +910,7 @@ QColor BrdView::customPenColor(uint32_t x05_k, QColor default_) {
   } else if (fs->is_type(x05_k, 0x14)) {
     return QColorConstants::Svg::goldenrod;
   } else if (fs->is_type(x05_k, 0x28)) {
-    const x28<kAMax> &inst = fs->get_x28(x05_k);
+    const T28Shape<kAMax> &inst = fs->get_x28(x05_k);
     if (onSelectedLayer(inst.subtype, inst.layer)) {
       return QColorConstants::Svg::palevioletred;
     } else {
@@ -925,7 +925,7 @@ QColor BrdView::customPenColor(uint32_t x05_k, QColor default_) {
       return QColorConstants::Svg::blanchedalmond;
     }
   } else if (fs->is_type(x05_k, 0x30)) {
-    const x30<kAMax> &inst = fs->get_x30(x05_k);
+    const T30StringGraphic<kAMax> &inst = fs->get_x30(x05_k);
     if (onSelectedLayer(inst.subtype, inst.layer)) {
       return QColorConstants::Svg::lightsalmon;
     } else {
@@ -1067,7 +1067,7 @@ std::optional<QPointF> BrdView::endingPoint(uint32_t k) {
 
 char *BrdView::netName(uint32_t k) {
   if (fs->is_type(k, 0x28)) {
-    const x28<kAMax> &x28_inst = fs->get_x28(k);
+    const T28Shape<kAMax> &x28_inst = fs->get_x28(k);
     if (fs->is_type(x28_inst.ptr1, 0x04)) {
       const x04<kAMax> &x04_inst = fs->get_x04(x28_inst.ptr1);
       if (fs->is_type(x04_inst.ptr1, 0x1B)) {

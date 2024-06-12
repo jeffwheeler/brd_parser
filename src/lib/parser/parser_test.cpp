@@ -47,7 +47,7 @@ TEST(ParseFile, Parallella) {
   check_header_values(fs);
   validate_objects(fs);
 
-  const x1C<kAMax> &x1C_inst = fs.get_x1C(0x0ACD3EE0);
+  const T1CPad<kAMax> &x1C_inst = fs.get_x1C(0x0ACD3EE0);
   EXPECT_EQ(x1C_inst.parts[0].w, 2600);
   EXPECT_EQ(x1C_inst.parts[0].h, 2600);
 
@@ -203,7 +203,7 @@ TEST(ParseFile, BeagleBoneAIParsed) {
   check_header_values(fs);
   validate_objects(fs);
 
-  const x1C<kAMax> &x1C_inst = fs.get_x1C(0x00002010);
+  const T1CPad<kAMax> &x1C_inst = fs.get_x1C(0x00002010);
   EXPECT_EQ(x1C_inst.parts[0].w, 23000);
   EXPECT_EQ(x1C_inst.parts[0].h, 43000);
 

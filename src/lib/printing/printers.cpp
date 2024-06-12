@@ -1408,8 +1408,8 @@ void print_t13(const t13<version> &t13_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x1C(const void *untyped_inst, File<version> *fs, const int d) {
-  const uint32_t k = ((const x1C<version> *)untyped_inst)->k;
-  x1C<version> inst = fs->get_x1C(k);
+  const uint32_t k = ((const T1CPad<version> *)untyped_inst)->k;
+  T1CPad<version> inst = fs->get_x1C(k);
   // const x1C<version> *inst = (const x1C<version> *)untyped_inst;
   printf_d(d,
            "x1C: \x1b[36;3mPad/Via\x1b[0m t=0x%04X n=%02X un1=%02X k=0x%08X"
@@ -1488,7 +1488,7 @@ void print_x22(const void *untyped_inst, File<version> *, const int d) {
 
 template <AllegroVersion version>
 void print_x23(const void *untyped_inst, File<version> *fs, const int d) {
-  const x23<version> *inst = (const x23<version> *)untyped_inst;
+  const T23Rat<version> *inst = (const T23Rat<version> *)untyped_inst;
   printf_d(d,
            "x23: \x1b[36;3mConnection (Rat)\x1b[0m t=0x%04X subtype=%02X "
            "layer=%02X k=0x%08X"
@@ -1619,8 +1619,8 @@ void print_x26(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x28(const void *untyped_inst, File<version> *fs, const int d) {
-  const uint32_t k = ((const x28<version> *)untyped_inst)->k;
-  x28<version> inst = fs->get_x28(k);
+  const uint32_t k = ((const T28Shape<version> *)untyped_inst)->k;
+  T28Shape<version> inst = fs->get_x28(k);
   printf_d(d,
            "x28: t=0x%04X subtype=%02X layer=%d k=0x%08X 0x%08X"
            " \x1b[2m(%d, %d, %d, %d)\x1b[0m\n",
@@ -1824,7 +1824,7 @@ void print_x2A_entry_details(const x2A_layer_properties &properties) {
 
 template <AllegroVersion version>
 void print_x2A(const void *untyped_inst, File<version> *fs, const int d) {
-  const x2A *inst = (const x2A *)untyped_inst;
+  const T2ACustomLayer *inst = (const T2ACustomLayer *)untyped_inst;
   printf_d(d,
            "x2A: \x1b[36;3mLayer Name List\x1b[0m"
            " t=0x%04X size=%d k=0x%08X\n",
@@ -2058,8 +2058,8 @@ void print_x2C(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x2D(const void *untyped_inst, File<version> *fs, const int d) {
-  const uint32_t k = ((const x2D<version> *)untyped_inst)->k;
-  x2D<version> inst = fs->get_x2D(k);
+  const uint32_t k = ((const T2DSymbolInstance<version> *)untyped_inst)->k;
+  T2DSymbolInstance<version> inst = fs->get_x2D(k);
 
   printf_d(d,
            "x2D: \x1b[36;3mPlaced Symbol\x1b[0m"
@@ -2177,7 +2177,7 @@ void print_x2D(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x30(const void *untyped_inst, File<version> *fs, const int d) {
-  const x30<version> *inst = (const x30<version> *)untyped_inst;
+  const T30StringGraphic<version> *inst = (const T30StringGraphic<version> *)untyped_inst;
   TextProperties font;
   if constexpr (!std::is_same_v<decltype(inst->font), std::monostate>) {
     font = inst->font;
@@ -2343,7 +2343,7 @@ void print_x30(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x31(const void *untyped_inst, File<version> *fs, const int d) {
-  const x31<version> *inst = (const x31<version> *)untyped_inst;
+  const T31String<version> *inst = (const T31String<version> *)untyped_inst;
   printf_d(d,
            "x31: \x1b[36;3mString Graphic\x1b[0m"
            " t=0x%04X subtype=%02X layer=%d k=0x%08X un=%08X "
@@ -2364,8 +2364,8 @@ void print_x31(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x32(const void *untyped_inst, File<version> *fs, const int d) {
-  const uint32_t k = ((const x32<version> *)untyped_inst)->k;
-  x32<version> inst = fs->get_x32(k);
+  const uint32_t k = ((const T32SymbolPin<version> *)untyped_inst)->k;
+  T32SymbolPin<version> inst = fs->get_x32(k);
   printf_d(d,
            "x32: \x1b[36;3mSymbol Pad\x1b[0m"
            " t=0x%04X subtype=%02X layer=%d k=0x%08X bitmask1=%08X"
@@ -2806,8 +2806,8 @@ void print_x37(const void *untyped_inst, File<version> *, const int d) {
 
 template <AllegroVersion version>
 void print_x38(const void *untyped_inst, File<version> *fs, const int d) {
-  const uint32_t k = ((const t38_film<version> *)untyped_inst)->k;
-  t38_film<version> inst = fs->get_t38_film(k);
+  const uint32_t k = ((const T38Film<version> *)untyped_inst)->k;
+  T38Film<version> inst = fs->get_t38_film(k);
   printf_d(d,
            "x38: \x1b[36;3mFilm\x1b[0m"
            " t=0x%08X k=0x%08X un1=%3d"
@@ -2839,8 +2839,8 @@ void print_x38(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x39(const void *untyped_inst, File<version> *fs, const int d) {
-  const t39_film_layer_list<version> *inst =
-      (const t39_film_layer_list<version> *)untyped_inst;
+  const T39FilmLayerList<version> *inst =
+      (const T39FilmLayerList<version> *)untyped_inst;
   printf_d(d,
            "x39: t=0x%08X k=0x%08X"
            " x=\x1b[2m{%3d %3d %3d %3d %3d %3d %3d %3d %3d %3d %3d"
@@ -2878,8 +2878,8 @@ void print_x39(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x3A(const void *untyped_inst, File<version> *fs, const int d) {
-  const t3A_film_layer_list_node<version> *inst =
-      (const t3A_film_layer_list_node<version> *)untyped_inst;
+  const T3AFilmLayerListNode<version> *inst =
+      (const T3AFilmLayerListNode<version> *)untyped_inst;
   printf_d(d, "x3A: t=0x%04X subtype=%02X layer=%d k=0x%08X un=%d\n",
            ntohl(inst->t), inst->subtype, inst->layer, ntohl(inst->k),
            inst->un);
