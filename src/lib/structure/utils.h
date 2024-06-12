@@ -160,7 +160,7 @@ std::optional<std::string> x0D_pin_name(const uint32_t k, File<version> *fs) {
 template <AllegroVersion version>
 std::optional<uint8_t> x14_layer(const uint32_t k, File<version> *fs) {
   if (fs->is_type(k, 0x14)) {
-    const x14<version> inst = fs->get_x14(k);
+    const T14Path<version> inst = fs->get_x14(k);
     return inst.layer;
   } else {
     return std::optional<uint8_t>();

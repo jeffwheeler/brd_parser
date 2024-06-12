@@ -617,7 +617,7 @@ struct x12 {
 };
 
 template <AllegroVersion version>
-struct x14 {
+struct T14Path {
   uint16_t type;
   uint8_t subtype;
   uint8_t layer;
@@ -639,7 +639,7 @@ struct x14 {
   ExpectRefType<0x26> ptr4;
 
   uint32_t TAIL;
-  operator x14<kAMax>() const;
+  operator T14Path<kAMax>() const;
   static constexpr AllegroVersion versions[1] = {kA172};
 };
 
@@ -1660,7 +1660,7 @@ class File {
   const x0D<kAMax> get_x0D(uint32_t k);
   const x0E<kAMax> get_x0E(uint32_t k);
   const x10<kAMax> get_x10(uint32_t k);
-  const x14<kAMax> get_x14(uint32_t k);
+  const T14Path<kAMax> get_x14(uint32_t k);
   const T15LineSegment<kAMax> get_x15(uint32_t k);
   const T16LineSegment<kAMax> get_x16(uint32_t k);
   const T17LineSegment<kAMax> get_x17(uint32_t k);
@@ -1780,10 +1780,10 @@ class File {
         Iter<x0C<version>>(*this, this->hdr->ll_x0C_2.tail, &File::get_x0C));
   };
 
-  IterBase<x14<version>> iter_x14() {
-    return IterBase<x14<version>>(
-        Iter<x14<version>>(*this, this->hdr->ll_x14.head, &File::get_x14),
-        Iter<x14<version>>(*this, this->hdr->ll_x14.tail, &File::get_x14));
+  IterBase<T14Path<version>> iter_x14() {
+    return IterBase<T14Path<version>>(
+        Iter<T14Path<version>>(*this, this->hdr->ll_x14.head, &File::get_x14),
+        Iter<T14Path<version>>(*this, this->hdr->ll_x14.tail, &File::get_x14));
   };
 
   IterBase<T1BNet<version>> iter_t1B_net() {
@@ -1915,7 +1915,7 @@ class File {
   x0D<kAMax> (*x0D_upgrade)(void *);
   x0E<kAMax> (*x0E_upgrade)(void *);
   x10<kAMax> (*x10_upgrade)(void *);
-  x14<kAMax> (*x14_upgrade)(void *);
+  T14Path<kAMax> (*x14_upgrade)(void *);
   T15LineSegment<kAMax> (*x15_upgrade)(void *);
   T16LineSegment<kAMax> (*x16_upgrade)(void *);
   T17LineSegment<kAMax> (*x17_upgrade)(void *);

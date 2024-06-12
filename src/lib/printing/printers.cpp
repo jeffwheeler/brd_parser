@@ -1028,8 +1028,8 @@ void print_x12(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x14(const void *untyped_inst, File<version> *fs, const int d) {
-  const uint32_t k = ((const x14<version> *)untyped_inst)->k;
-  x14<version> inst = fs->get_x14(k);
+  const uint32_t k = ((const T14Path<version> *)untyped_inst)->k;
+  T14Path<version> inst = fs->get_x14(k);
   printf_d(d, "x14: t=0x%04X subtype=%02X layer=%d k=0x%08X %08X\n",
            ntohl(inst.type), inst.subtype, inst.layer, ntohl(inst.k),
            ntohl(inst.un2));

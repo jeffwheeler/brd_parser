@@ -340,8 +340,8 @@ x11<kA160>::operator x11<kAMax>() const {
 }
 
 template <>
-x14<kA160>::operator x14<kAMax>() const {
-  x14<kAMax> new_inst;
+T14Path<kA160>::operator T14Path<kAMax>() const {
+  T14Path<kAMax> new_inst;
   new_inst.type = this->type;
   new_inst.subtype = this->subtype;
   new_inst.layer = this->layer;
@@ -956,7 +956,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x0D_upgrade = new_upgrade<kA160, kAMax, x0D>;
       this->x0E_upgrade = new_upgrade<kA160, kAMax, x0E>;
       this->x10_upgrade = new_upgrade<kA160, kAMax, x10>;
-      this->x14_upgrade = new_upgrade<kA160, kAMax, x14>;
+      this->x14_upgrade = new_upgrade<kA160, kAMax, T14Path>;
       this->x15_upgrade = new_upgrade<kA160, kAMax, T15LineSegment>;
       this->x16_upgrade = new_upgrade<kA160, kAMax, T16LineSegment>;
       this->x17_upgrade = new_upgrade<kA160, kAMax, T17LineSegment>;
@@ -998,7 +998,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x0D_upgrade = new_upgrade<kA162, kAMax, x0D>;
       this->x0E_upgrade = new_upgrade<kA162, kAMax, x0E>;
       this->x10_upgrade = new_upgrade<kA162, kAMax, x10>;
-      this->x14_upgrade = new_upgrade<kA162, kAMax, x14>;
+      this->x14_upgrade = new_upgrade<kA162, kAMax, T14Path>;
       this->x15_upgrade = new_upgrade<kA162, kAMax, T15LineSegment>;
       this->x16_upgrade = new_upgrade<kA162, kAMax, T16LineSegment>;
       this->x17_upgrade = new_upgrade<kA162, kAMax, T17LineSegment>;
@@ -1040,7 +1040,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x0D_upgrade = new_upgrade<kA164, kAMax, x0D>;
       this->x0E_upgrade = new_upgrade<kA164, kAMax, x0E>;
       this->x10_upgrade = new_upgrade<kA164, kAMax, x10>;
-      this->x14_upgrade = new_upgrade<kA164, kAMax, x14>;
+      this->x14_upgrade = new_upgrade<kA164, kAMax, T14Path>;
       this->x15_upgrade = new_upgrade<kA164, kAMax, T15LineSegment>;
       this->x16_upgrade = new_upgrade<kA164, kAMax, T16LineSegment>;
       this->x17_upgrade = new_upgrade<kA164, kAMax, T17LineSegment>;
@@ -1082,7 +1082,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x0D_upgrade = new_upgrade<kA165, kAMax, x0D>;
       this->x0E_upgrade = new_upgrade<kA165, kAMax, x0E>;
       this->x10_upgrade = new_upgrade<kA165, kAMax, x10>;
-      this->x14_upgrade = new_upgrade<kA165, kAMax, x14>;
+      this->x14_upgrade = new_upgrade<kA165, kAMax, T14Path>;
       this->x15_upgrade = new_upgrade<kA165, kAMax, T15LineSegment>;
       this->x16_upgrade = new_upgrade<kA165, kAMax, T16LineSegment>;
       this->x17_upgrade = new_upgrade<kA165, kAMax, T17LineSegment>;
@@ -1125,7 +1125,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x0D_upgrade = new_upgrade<kA166, kAMax, x0D>;
       this->x0E_upgrade = new_upgrade<kA166, kAMax, x0E>;
       this->x10_upgrade = new_upgrade<kA166, kAMax, x10>;
-      this->x14_upgrade = new_upgrade<kA166, kAMax, x14>;
+      this->x14_upgrade = new_upgrade<kA166, kAMax, T14Path>;
       this->x15_upgrade = new_upgrade<kA166, kAMax, T15LineSegment>;
       this->x16_upgrade = new_upgrade<kA166, kAMax, T16LineSegment>;
       this->x17_upgrade = new_upgrade<kA166, kAMax, T17LineSegment>;
@@ -1172,7 +1172,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x0D_upgrade = new_upgrade<kA172, kAMax, x0D>;
       this->x0E_upgrade = new_upgrade<kA172, kAMax, x0E>;
       this->x10_upgrade = new_upgrade<kA172, kAMax, x10>;
-      this->x14_upgrade = new_upgrade<kA172, kAMax, x14>;
+      this->x14_upgrade = new_upgrade<kA172, kAMax, T14Path>;
       this->x15_upgrade = new_upgrade<kA172, kAMax, T15LineSegment>;
       this->x16_upgrade = new_upgrade<kA172, kAMax, T16LineSegment>;
       this->x17_upgrade = new_upgrade<kA172, kAMax, T17LineSegment>;
@@ -1217,7 +1217,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x0D_upgrade = new_upgrade<kA174, kAMax, x0D>;
       this->x0E_upgrade = new_upgrade<kA174, kAMax, x0E>;
       this->x10_upgrade = new_upgrade<kA174, kAMax, x10>;
-      this->x14_upgrade = new_upgrade<kA174, kAMax, x14>;
+      this->x14_upgrade = new_upgrade<kA174, kAMax, T14Path>;
       this->x15_upgrade = new_upgrade<kA174, kAMax, T15LineSegment>;
       this->x16_upgrade = new_upgrade<kA174, kAMax, T16LineSegment>;
       this->x17_upgrade = new_upgrade<kA174, kAMax, T17LineSegment>;
@@ -1259,7 +1259,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x0D_upgrade = new_upgrade<kAMax, kAMax, x0D>;
       this->x0E_upgrade = new_upgrade<kAMax, kAMax, x0E>;
       this->x10_upgrade = new_upgrade<kAMax, kAMax, x10>;
-      this->x14_upgrade = new_upgrade<kAMax, kAMax, x14>;
+      this->x14_upgrade = new_upgrade<kAMax, kAMax, T14Path>;
       this->x15_upgrade = new_upgrade<kAMax, kAMax, T15LineSegment>;
       this->x16_upgrade = new_upgrade<kAMax, kAMax, T16LineSegment>;
       this->x17_upgrade = new_upgrade<kAMax, kAMax, T17LineSegment>;
@@ -1422,7 +1422,7 @@ const x10<kAMax> File<kAMax>::get_x10(uint32_t k) {
 }
 
 template <>
-const x14<kAMax> File<kAMax>::get_x14(uint32_t k) {
+const T14Path<kAMax> File<kAMax>::get_x14(uint32_t k) {
   return this->x14_upgrade(this->ptrs[k]);
 }
 
