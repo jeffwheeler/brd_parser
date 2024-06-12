@@ -75,7 +75,7 @@ void validate_x10(const x10<version>& i, File<version>& fs) {
 }
 
 template <AllegroVersion version>
-void validate_x14(const x14<version>& i, File<version>& fs) {
+void validate_x14(const T14Path<version>& i, File<version>& fs) {
   EXPECT_TRUE(CheckNullableType(i, i.ptr3, fs));
   EXPECT_TRUE(CheckNullableType(i, i.ptr4, fs));
 }

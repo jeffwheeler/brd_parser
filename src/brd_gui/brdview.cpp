@@ -168,7 +168,7 @@ void BrdView::drawX05(const T05Line<kAMax> *inst, QPen *pen_) {
   item->setData(0, inst->k);
 }
 
-void BrdView::drawX14(const x14<kAMax> *inst, QPen *pen_) {
+void BrdView::drawX14(const T14Path<kAMax> *inst, QPen *pen_) {
   if (!onSelectedLayer(inst->subtype, inst->layer) ||
       fs->is_type(inst->ptr1, 0x2B)) {
     return;
@@ -673,7 +673,7 @@ void BrdView::drawShape(const uint32_t ptr, QPen *pen) {
     drawShape(inst.ptr2, darkerPen);
     drawShape(inst.ptr3, darkerPen);
   } else if (fs->is_type(ptr, 0x14)) {
-    const x14<kAMax> inst = fs->get_x14(ptr);
+    const T14Path<kAMax> inst = fs->get_x14(ptr);
     drawX14(&inst, pen);
     // } else if (fs->x15_map.count(ptr) > 0) {
     // const x15<A_MAX> *inst = (const x15<A_MAX> *)&fs->x15_map.at(ptr);

@@ -91,7 +91,7 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x13
     {},
     // 0x14
-    {&default_parser<x14, version>},
+    {&default_parser<T14Path, version>},
     // 0x15
     {&default_parser<T15LineSegment, version>},
     // 0x16

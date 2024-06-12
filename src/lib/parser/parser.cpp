@@ -460,6 +460,7 @@ File<kAMax> parse_file_raw(mapped_region region) {
     printf("Logcated at %p\n", &fs.hdr->magic);
     std::cout << fs.hdr->allegro_version << std::endl;
   }
+  printf("A: 0x%08X\n", ntohl(fs.hdr->ll_x14.tail));
   skip(cur_addr, sizeof(Header));
 
   // This must be done after reading the header
