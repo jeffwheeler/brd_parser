@@ -34,7 +34,8 @@ class BrdView : public QGraphicsView {
   void drawX2B(const x2B<kAMax> *inst, QPen *pen);
   void drawX2D(const T2DSymbolInstance<kAMax> *inst, QPen *pen);
   void drawX30(const T30StringGraphic<kAMax> *inst, QPen *pen);
-  void drawX32(const T32SymbolPin<kAMax> *inst, QPen *pen, uint32_t sym_rotation);
+  void drawX32(const T32SymbolPin<kAMax> *inst, QPen *pen,
+               uint32_t sym_rotation);
   void drawX33(const x33<kAMax> *inst, QPen *pen);
   void drawX34(const x34<kAMax> *inst, QPen *pen);
   void drawShape(const uint32_t ptr, QPen *pen);

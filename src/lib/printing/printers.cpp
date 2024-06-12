@@ -858,7 +858,8 @@ void print_x0D(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x0F(const void *untyped_inst, File<version> *fs, const int d) {
-  const T0FFootprint<version> *inst = (const T0FFootprint<version> *)untyped_inst;
+  const T0FFootprint<version> *inst =
+      (const T0FFootprint<version> *)untyped_inst;
   printf_d(d,
            "x0F: \x1b[36;3mFootprint Instance\x1b[0m t=0x%08X k=0x%08X"
            " \x1b[34m\"%s\" \"%s\"\x1b[0m\n",
@@ -1093,7 +1094,8 @@ void print_x14(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x15(const void *untyped_inst, File<version> *, const int d) {
-  const T15LineSegment<version> *inst = (const T15LineSegment<version> *)untyped_inst;
+  const T15LineSegment<version> *inst =
+      (const T15LineSegment<version> *)untyped_inst;
   uint32_t un4;
   if constexpr (std::is_same_v<decltype(inst->un4), std::monostate>) {
     un4 = 0;
@@ -1157,7 +1159,8 @@ void print_x15(const void *untyped_inst, File<version> *, const int d) {
 
 template <AllegroVersion version>
 void print_x16(const void *untyped_inst, File<version> *, const int d) {
-  const T16LineSegment<version> *inst = (const T16LineSegment<version> *)untyped_inst;
+  const T16LineSegment<version> *inst =
+      (const T16LineSegment<version> *)untyped_inst;
   uint32_t un;
   if constexpr (std::is_same_v<decltype(inst->un), std::monostate>) {
     un = 0;
@@ -1213,7 +1216,8 @@ void print_x16(const void *untyped_inst, File<version> *, const int d) {
 
 template <AllegroVersion version>
 void print_x17(const void *untyped_inst, File<version> *, const int d) {
-  const T17LineSegment<version> *inst = (const T17LineSegment<version> *)untyped_inst;
+  const T17LineSegment<version> *inst =
+      (const T17LineSegment<version> *)untyped_inst;
   uint32_t un4;
   if constexpr (std::is_same_v<decltype(inst->un4), std::monostate>) {
     un4 = 0;
@@ -2177,7 +2181,8 @@ void print_x2D(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x30(const void *untyped_inst, File<version> *fs, const int d) {
-  const T30StringGraphic<version> *inst = (const T30StringGraphic<version> *)untyped_inst;
+  const T30StringGraphic<version> *inst =
+      (const T30StringGraphic<version> *)untyped_inst;
   TextProperties font;
   if constexpr (!std::is_same_v<decltype(inst->font), std::monostate>) {
     font = inst->font;

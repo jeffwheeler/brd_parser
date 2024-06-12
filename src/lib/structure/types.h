@@ -1794,8 +1794,7 @@ class File {
     } else {
       return IterBase<T1BNet<version>>(
           Iter<T1BNet<version>>(*this, this->hdr->ll_x1B.head, &File::get_x1B),
-          Iter<T1BNet<version>>(*this, this->hdr->ll_x1B.tail,
-                                 &File::get_x1B));
+          Iter<T1BNet<version>>(*this, this->hdr->ll_x1B.tail, &File::get_x1B));
     }
   };
 
@@ -1851,8 +1850,10 @@ class File {
 
   IterBase<T30StringGraphic<version>> iter_x30() {
     return IterBase<T30StringGraphic<version>>(
-        Iter<T30StringGraphic<version>>(*this, this->hdr->ll_x03_x30.head, &File::get_x30),
-        Iter<T30StringGraphic<version>>(*this, this->hdr->ll_x03_x30.tail, &File::get_x30));
+        Iter<T30StringGraphic<version>>(*this, this->hdr->ll_x03_x30.head,
+                                        &File::get_x30),
+        Iter<T30StringGraphic<version>>(*this, this->hdr->ll_x03_x30.tail,
+                                        &File::get_x30));
   };
 
   IterBase<T32SymbolPin<version>> iter_x32(uint32_t i_x2D) {
@@ -1889,9 +1890,9 @@ class File {
     } else {
       return IterBase<T38Film<version>>(
           Iter<T38Film<version>>(*this, this->hdr->ll_x38.head,
-                                  &File::get_t38_film),
+                                 &File::get_t38_film),
           Iter<T38Film<version>>(*this, this->hdr->ll_x38.tail,
-                                  &File::get_t38_film));
+                                 &File::get_t38_film));
     }
   };
 

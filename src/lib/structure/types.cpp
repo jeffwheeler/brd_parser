@@ -893,8 +893,7 @@ T39FilmLayerList<kA160>::operator T39FilmLayerList<kAMax>() const {
 }
 
 template <>
-T3AFilmLayerListNode<kA160>::operator T3AFilmLayerListNode<kAMax>()
-    const {
+T3AFilmLayerListNode<kA160>::operator T3AFilmLayerListNode<kAMax>() const {
   return *reinterpret_cast<const T3AFilmLayerListNode<kAMax> *>(this);
 }
 
