@@ -1226,6 +1226,8 @@ struct T2DSymbolInstance {
   static constexpr AllegroVersion versions[1] = {kA172};
 };
 
+static_assert(offsetof(T2DSymbolInstance<kA166>, ptr1) == 36);
+
 template <AllegroVersion version>
 struct x2E {
   uint32_t t;
@@ -1784,6 +1786,18 @@ class File {
     return IterBase<T14Path<version>>(
         Iter<T14Path<version>>(*this, this->hdr->ll_x14.head, &File::get_x14),
         Iter<T14Path<version>>(*this, this->hdr->ll_x14.tail, &File::get_x14));
+  };
+
+  IterBase<T14Path<version>> iter_x14(const T2DSymbolInstance<version> &inst) {
+    if (inst.ptr1 == 0) {
+      return IterBase<T14Path<version>>(
+          Iter<T14Path<version>>(*this, inst.k, &File::get_x14),
+          Iter<T14Path<version>>(*this, inst.k, &File::get_x14));
+    } else {
+      return IterBase<T14Path<version>>(
+          Iter<T14Path<version>>(*this, inst.ptr1, &File::get_x14),
+          Iter<T14Path<version>>(*this, inst.k, &File::get_x14));
+    }
   };
 
   IterBase<T1BNet<version>> iter_t1B_net() {

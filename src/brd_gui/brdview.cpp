@@ -365,8 +365,9 @@ void BrdView::drawX2B(const T2BSymbol<kAMax> *inst, QPen *pen) {
 }
 
 void BrdView::drawX2D(const T2DSymbolInstance<kAMax> *inst, QPen *pen) {
-  // Bounding box?
-  // drawShape(inst->ptr4[0], pen);
+  for (auto &inst_x14 : fs->iter_x14(*inst)) {
+    drawShape(inst_x14.k, pen);
+  }
 
   // if (selectedLayer == 0 && inst->un2 != 0) {
   //     qDebug("Skipping 0x%08X, selectedLayer=%d but inst->un2 = 0x%08X",
