@@ -1852,7 +1852,7 @@ void print_x2A(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x2B(const void *untyped_inst, File<version> *fs, const int d) {
-  const x2B<version> *inst = (const x2B<version> *)untyped_inst;
+  const T2BSymbol<version> *inst = (const T2BSymbol<version> *)untyped_inst;
   printf_d(d,
            "x2B: t=0x%08X k=0x%08X"
            " \x1b[34m\"%s\"\x1b[0m"

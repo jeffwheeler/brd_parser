@@ -544,8 +544,8 @@ T28Shape<kA160>::operator T28Shape<kAMax>() const {
 }
 
 template <>
-x2B<kA160>::operator x2B<kAMax>() const {
-  x2B<kAMax> new_inst;
+T2BSymbol<kA160>::operator T2BSymbol<kAMax>() const {
+  T2BSymbol<kAMax> new_inst;
   new_inst.t = this->t;
   new_inst.k = this->k;
   new_inst.un1 = this->un1;
@@ -566,8 +566,8 @@ x2B<kA160>::operator x2B<kAMax>() const {
 }
 
 template <>
-x2B<kA164>::operator x2B<kAMax>() const {
-  x2B<kAMax> new_inst;
+T2BSymbol<kA164>::operator T2BSymbol<kAMax>() const {
+  T2BSymbol<kAMax> new_inst;
   new_inst.t = this->t;
   new_inst.k = this->k;
   new_inst.un1 = this->un1;
@@ -969,7 +969,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x24_upgrade = new_upgrade<kA160, kAMax, x24>;
       this->x26_upgrade = new_upgrade<kA160, kAMax, x26>;
       this->x28_upgrade = new_upgrade<kA160, kAMax, T28Shape>;
-      this->x2B_upgrade = new_upgrade<kA160, kAMax, x2B>;
+      this->x2B_upgrade = new_upgrade<kA160, kAMax, T2BSymbol>;
       this->x2C_upgrade = new_upgrade<kA160, kAMax, x2C>;
       this->x2D_upgrade = new_upgrade<kA160, kAMax, T2DSymbolInstance>;
       this->x2E_upgrade = new_upgrade<kA160, kAMax, x2E>;
@@ -1011,7 +1011,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x24_upgrade = new_upgrade<kA162, kAMax, x24>;
       this->x26_upgrade = new_upgrade<kA162, kAMax, x26>;
       this->x28_upgrade = new_upgrade<kA162, kAMax, T28Shape>;
-      this->x2B_upgrade = new_upgrade<kA162, kAMax, x2B>;
+      this->x2B_upgrade = new_upgrade<kA162, kAMax, T2BSymbol>;
       this->x2C_upgrade = new_upgrade<kA162, kAMax, x2C>;
       this->x2D_upgrade = new_upgrade<kA162, kAMax, T2DSymbolInstance>;
       this->x2E_upgrade = new_upgrade<kA162, kAMax, x2E>;
@@ -1053,7 +1053,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x24_upgrade = new_upgrade<kA164, kAMax, x24>;
       this->x26_upgrade = new_upgrade<kA164, kAMax, x26>;
       this->x28_upgrade = new_upgrade<kA164, kAMax, T28Shape>;
-      this->x2B_upgrade = new_upgrade<kA164, kAMax, x2B>;
+      this->x2B_upgrade = new_upgrade<kA164, kAMax, T2BSymbol>;
       this->x2C_upgrade = new_upgrade<kA164, kAMax, x2C>;
       this->x2D_upgrade = new_upgrade<kA164, kAMax, T2DSymbolInstance>;
       this->x2E_upgrade = new_upgrade<kA164, kAMax, x2E>;
@@ -1095,7 +1095,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x24_upgrade = new_upgrade<kA165, kAMax, x24>;
       this->x26_upgrade = new_upgrade<kA165, kAMax, x26>;
       this->x28_upgrade = new_upgrade<kA165, kAMax, T28Shape>;
-      this->x2B_upgrade = new_upgrade<kA165, kAMax, x2B>;
+      this->x2B_upgrade = new_upgrade<kA165, kAMax, T2BSymbol>;
       this->x2C_upgrade = new_upgrade<kA165, kAMax, x2C>;
       this->x2D_upgrade = new_upgrade<kA165, kAMax, T2DSymbolInstance>;
       this->x2E_upgrade = new_upgrade<kA165, kAMax, x2E>;
@@ -1138,7 +1138,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x24_upgrade = new_upgrade<kA166, kAMax, x24>;
       this->x26_upgrade = new_upgrade<kA166, kAMax, x26>;
       this->x28_upgrade = new_upgrade<kA166, kAMax, T28Shape>;
-      this->x2B_upgrade = new_upgrade<kA166, kAMax, x2B>;
+      this->x2B_upgrade = new_upgrade<kA166, kAMax, T2BSymbol>;
       this->x2C_upgrade = new_upgrade<kA166, kAMax, x2C>;
       this->x2D_upgrade = new_upgrade<kA166, kAMax, T2DSymbolInstance>;
       this->x2E_upgrade = new_upgrade<kA166, kAMax, x2E>;
@@ -1185,7 +1185,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x24_upgrade = new_upgrade<kA172, kAMax, x24>;
       this->x26_upgrade = new_upgrade<kA172, kAMax, x26>;
       this->x28_upgrade = new_upgrade<kA172, kAMax, T28Shape>;
-      this->x2B_upgrade = new_upgrade<kA172, kAMax, x2B>;
+      this->x2B_upgrade = new_upgrade<kA172, kAMax, T2BSymbol>;
       this->x2C_upgrade = new_upgrade<kA172, kAMax, x2C>;
       this->x2D_upgrade = new_upgrade<kA172, kAMax, T2DSymbolInstance>;
       this->x2E_upgrade = new_upgrade<kA172, kAMax, x2E>;
@@ -1230,7 +1230,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x24_upgrade = new_upgrade<kA174, kAMax, x24>;
       this->x26_upgrade = new_upgrade<kA174, kAMax, x26>;
       this->x28_upgrade = new_upgrade<kA174, kAMax, T28Shape>;
-      this->x2B_upgrade = new_upgrade<kA174, kAMax, x2B>;
+      this->x2B_upgrade = new_upgrade<kA174, kAMax, T2BSymbol>;
       this->x2C_upgrade = new_upgrade<kA174, kAMax, x2C>;
       this->x2D_upgrade = new_upgrade<kA174, kAMax, T2DSymbolInstance>;
       this->x2E_upgrade = new_upgrade<kA174, kAMax, x2E>;
@@ -1272,7 +1272,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x24_upgrade = new_upgrade<kAMax, kAMax, x24>;
       this->x26_upgrade = new_upgrade<kAMax, kAMax, x26>;
       this->x28_upgrade = new_upgrade<kAMax, kAMax, T28Shape>;
-      this->x2B_upgrade = new_upgrade<kAMax, kAMax, x2B>;
+      this->x2B_upgrade = new_upgrade<kAMax, kAMax, T2BSymbol>;
       this->x2C_upgrade = new_upgrade<kAMax, kAMax, x2C>;
       this->x2D_upgrade = new_upgrade<kAMax, kAMax, T2DSymbolInstance>;
       this->x2E_upgrade = new_upgrade<kAMax, kAMax, x2E>;
@@ -1511,7 +1511,7 @@ const T28Shape<kAMax> File<kAMax>::get_x28(uint32_t k) {
 }
 
 template <>
-const x2B<kAMax> File<kAMax>::get_x2B(uint32_t k) {
+const T2BSymbol<kAMax> File<kAMax>::get_x2B(uint32_t k) {
   return this->x2B_upgrade(this->ptrs[k]);
 }
 

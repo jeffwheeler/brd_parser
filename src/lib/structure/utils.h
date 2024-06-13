@@ -37,7 +37,7 @@ const std::string x03_str_lookup(uint32_t id, File<version> &fs) {
 }
 
 template <AllegroVersion version>
-std::optional<std::string> x2B_footprint(const x2B<version> *inst,
+std::optional<std::string> x2B_footprint(const T2BSymbol<version> *inst,
                                          File<version> *fs) {
   if (fs->strings.count(inst->footprint_string_ref) > 0) {
     return fs->strings.at(inst->footprint_string_ref);
@@ -57,7 +57,7 @@ std::optional<std::string> x2B_refdes(const uint32_t k, File<version> *fs) {
     return std::optional<std::string>();
   }
 
-  const x2B<version> &inst = fs->get_x2B(k);
+  const T2BSymbol<version> &inst = fs->get_x2B(k);
   return x2D_refdes(inst.ptr2, fs);
 }
 

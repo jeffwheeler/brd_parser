@@ -137,7 +137,7 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x2A
     {&parse_x2A<version>},
     // 0x2B
-    {&default_parser<x2B, version>},
+    {&default_parser<T2BSymbol, version>},
     // 0x2C
     {&default_parser<x2C, version>},
     // 0x2D
