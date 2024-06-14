@@ -359,7 +359,7 @@ void BrdView::drawX28(const T28Shape<kAMax> *inst, QPen *pen) {
   // }
 };
 
-void BrdView::drawX2B(const x2B<kAMax> *inst, QPen *pen) {
+void BrdView::drawX2B(const T2BSymbol<kAMax> *inst, QPen *pen) {
   // drawShape(inst->ptr2, pen);
   // drawShape(inst->ptr8, pen);
 }

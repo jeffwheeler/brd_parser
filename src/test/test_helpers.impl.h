@@ -101,7 +101,7 @@ void validate_x28(const T28Shape<version>& i, File<version>& fs) {
 }
 
 template <AllegroVersion version>
-void validate_x2B(const x2B<version>& i, File<version>& fs) {
+void validate_x2B(const T2BSymbol<version>& i, File<version>& fs) {
   if (i.next != fs.hdr->ll_x2B.tail) {
     EXPECT_TRUE(CheckType(i, i.next, fs));
   }

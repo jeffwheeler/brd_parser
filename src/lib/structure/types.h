@@ -1101,7 +1101,7 @@ struct T2ACustomLayer {
 };
 
 template <AllegroVersion version>
-struct x2B {
+struct T2BSymbol {
   uint32_t t;
   uint32_t k;
   uint32_t footprint_string_ref;
@@ -1143,7 +1143,7 @@ struct x2B {
   COND_FIELD(version >= kA172, uint32_t, un3);
 
   uint32_t TAIL;
-  operator x2B<kAMax>() const;
+  operator T2BSymbol<kAMax>() const;
   static constexpr AllegroVersion versions[2] = {kA164, kA172};
 };
 
@@ -1672,7 +1672,7 @@ class File {
   const x24<kAMax> get_x24(uint32_t k);
   const x26<kAMax> get_x26(uint32_t k);
   const T28Shape<kAMax> get_x28(uint32_t k);
-  const x2B<kAMax> get_x2B(uint32_t k);
+  const T2BSymbol<kAMax> get_x2B(uint32_t k);
   const x2C<kAMax> get_x2C(uint32_t k);
   const T2DSymbolInstance<kAMax> get_x2D(uint32_t k);
   const x2E<kAMax> get_x2E(uint32_t k);
@@ -1804,15 +1804,17 @@ class File {
         Iter<T1CPad<version>>(*this, this->hdr->ll_x1C.tail, &File::get_x1C));
   };
 
-  IterBase<x2B<version>> iter_x2B() {
+  IterBase<T2BSymbol<version>> iter_x2B() {
     if (this->hdr->ll_x2B.head == 0) {
-      return IterBase<x2B<version>>(
-          Iter<x2B<version>>(*this, 0, &File::get_x2B),
-          Iter<x2B<version>>(*this, 0, &File::get_x2B));
+      return IterBase<T2BSymbol<version>>(
+          Iter<T2BSymbol<version>>(*this, 0, &File::get_x2B),
+          Iter<T2BSymbol<version>>(*this, 0, &File::get_x2B));
     } else {
-      return IterBase<x2B<version>>(
-          Iter<x2B<version>>(*this, this->hdr->ll_x2B.head, &File::get_x2B),
-          Iter<x2B<version>>(*this, this->hdr->ll_x2B.tail, &File::get_x2B));
+      return IterBase<T2BSymbol<version>>(
+          Iter<T2BSymbol<version>>(*this, this->hdr->ll_x2B.head,
+                                   &File::get_x2B),
+          Iter<T2BSymbol<version>>(*this, this->hdr->ll_x2B.tail,
+                                   &File::get_x2B));
     }
   };
 
@@ -1928,7 +1930,7 @@ class File {
   x24<kAMax> (*x24_upgrade)(void *);
   x26<kAMax> (*x26_upgrade)(void *);
   T28Shape<kAMax> (*x28_upgrade)(void *);
-  x2B<kAMax> (*x2B_upgrade)(void *);
+  T2BSymbol<kAMax> (*x2B_upgrade)(void *);
   x2C<kAMax> (*x2C_upgrade)(void *);
   T2DSymbolInstance<kAMax> (*x2D_upgrade)(void *);
   x2E<kAMax> (*x2E_upgrade)(void *);
