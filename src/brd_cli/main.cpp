@@ -86,7 +86,7 @@ int main(int argc, char* argv[]) {
     } else if (parsed_file->is_type(k, 0x28)) {
       auto& i = parsed_file->get_x28(k);
       printf("Found x28 w/ key = 0x %08X\n", ntohl(k));
-      k = i.ptr1;
+      k = i.next;
     } else if (parsed_file->is_type(k, 0x24)) {
       auto& i = parsed_file->get_x24(k);
       printf("Found x24 w/ key = 0x %08X\n", ntohl(k));

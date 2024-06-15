@@ -526,10 +526,10 @@ T28Shape<kA160>::operator T28Shape<kAMax>() const {
   new_inst.layer = this->layer;
 
   new_inst.k = this->k;
-  new_inst.un1 = this->un1;
+  new_inst.next = this->next;
   new_inst.ptr1 = this->ptr1;
   new_inst.un2 = this->un2;
-  new_inst.next = this->next;
+  new_inst.ptr2 = this->ptr2;
   new_inst.ptr3 = this->ptr3;
   new_inst.ptr4 = this->ptr4;
   new_inst.first_segment_ptr = this->first_segment_ptr;
