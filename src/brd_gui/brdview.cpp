@@ -23,7 +23,9 @@ BrdView::BrdView(MainWindow *parent)
 
   // drawFile();
 
-  ((MainWindow *)parent)->updatePosition(QPointF(0, 0));
+  if (parent != nullptr) {
+    ((MainWindow *)parent)->updatePosition(QPointF(0, 0));
+  }
 };
 
 void BrdView::loadFile(File<kAMax> *fs) {
@@ -37,6 +39,10 @@ void BrdView::zoomIn() { scale(1.2, 1.2); }
 void BrdView::zoomOut() { scale(1 / 1.2, 1 / 1.2); }
 
 void BrdView::zoomFit() { fitInView(scene->sceneRect(), Qt::KeepAspectRatio); }
+
+bool BrdView::drewKey(const uint32_t ptr) {
+  return already_drawn.count(ptr) > 0;
+}
 
 void BrdView::keyPressEvent(QKeyEvent *event) {
   qint32 k = event->key();
