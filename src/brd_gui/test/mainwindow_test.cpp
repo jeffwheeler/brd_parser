@@ -1,4 +1,4 @@
-#include "gui_test.h"
+#include "mainwindow_test.h"
 
 #include "brd_gui/mainwindow.h"
 

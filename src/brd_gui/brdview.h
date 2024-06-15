@@ -43,6 +43,8 @@ class BrdView : public QGraphicsView {
 
   void selectLayer(std::set<std::pair<uint16_t, uint16_t>> layers);
 
+  bool drewKey(const uint32_t ptr);
+
   enum layer_choice { ALL = -1, FAB = -2 };
 
  protected:
