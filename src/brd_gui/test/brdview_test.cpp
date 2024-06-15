@@ -3,7 +3,6 @@
 #include "brd_gui/brdview.h"
 
 void TestBrdView::drawAllSymbolPaths() {
-  // Needs to draw 0xF6550000
   BrdView brdview;
 
   auto parsed_file = parse_file("../../test/data/fmc_tlu/fmc_tlu_v1f_38.brd");
