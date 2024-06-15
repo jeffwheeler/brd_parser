@@ -15,8 +15,11 @@ void TestBrdView::drawAllSymbolPaths() {
   brdview.selectLayer(layers);
 
   // If we don't iterate over all symbol paths, we miss this one.
-  QVERIFY2(brdview.drewKey(0x000055F6),
-           "Path unexpectedly missing after selecting its layer");
+  QVERIFY2(brdview.drewKey(0x000055F6), "Path unexpectedly missing");
+
+  // If we don't look through the x24/x28 linked list in the header, we will
+  // miss this shape.
+  QVERIFY2(brdview.drewKey(0x000016D4), "Shape unexpectedly missing");
 }
 
 QTEST_MAIN(TestBrdView)

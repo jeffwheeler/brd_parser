@@ -1701,16 +1701,16 @@ void print_x28(const void *untyped_inst, File<version> *fs, const int d) {
     }
   }
 
-  if (inst.next != 0) {
+  if (inst.ptr2 != 0) {
     printf_d(d + 1, "next:\n");
-    if (fs->is_type(inst.next, 0x28)) {
-      print_struct(inst.next, *fs, d + 2);
-    } else if (fs->is_type(inst.next, 0x33)) {
-      print_struct(inst.next, *fs, d + 2);
-    } else if (fs->is_type(inst.next, 0x2D)) {
-      print_struct(inst.next, *fs, d + 2);
+    if (fs->is_type(inst.ptr2, 0x28)) {
+      print_struct(inst.ptr2, *fs, d + 2);
+    } else if (fs->is_type(inst.ptr2, 0x33)) {
+      print_struct(inst.ptr2, *fs, d + 2);
+    } else if (fs->is_type(inst.ptr2, 0x2D)) {
+      print_struct(inst.ptr2, *fs, d + 2);
     } else {
-      printf_d(d + 2, "next unrecognized: 0x%08X\n", ntohl(inst.next));
+      printf_d(d + 2, "next unrecognized: 0x%08X\n", ntohl(inst.ptr2));
       exit(0);
     }
   }

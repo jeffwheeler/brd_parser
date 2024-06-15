@@ -1009,7 +1009,7 @@ struct T28Shape {
   uint8_t layer;
 
   uint32_t k;
-  uint32_t un1;
+  uint32_t next;
 
   // Points to one of: header value, `x04`, `x2B`, `x2D`
   uint32_t ptr1;
@@ -1020,7 +1020,7 @@ struct T28Shape {
   COND_FIELD(version >= kA172, uint32_t[2], un5);
 
   // Points to `x28`, `x2D`, or `x33`
-  uint32_t next;
+  uint32_t ptr2;
 
   // Points to `x05` or `x09` (much more frequently `x09`)
   uint32_t ptr3;

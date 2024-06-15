@@ -780,7 +780,7 @@ void BrdView::drawFile() {
         } else if (fs->is_type(k, 0x28)) {
           auto &x = fs->get_x28(k);
           drawShape(x.k, pen2);
-          k = x.un1;
+          k = x.next;
         } else if (fs->is_type(k, 0x1B)) {
           break;
         } else if (fs->is_type(k, 0x0E)) {
@@ -867,6 +867,24 @@ void BrdView::drawFile() {
       drawShape(i_x03_x30.k, pen2);
     }
   }
+
+  // Draw some additional shapes in an extra linked list
+  LinkedListPtrs text_ll = fs->hdr->ll_x24_x28;
+  uint32_t k = text_ll.head;
+  while (k != text_ll.tail) {
+    if (fs->is_type(k, 0x28)) {
+      auto &i = fs->get_x28(k);
+      drawShape(k, pen4);
+      k = i.next;
+    } else if (fs->is_type(k, 0x24)) {
+      auto &i = fs->get_x24(k);
+      k = i.un[0];
+    } else {
+      qDebug() << "Unexpected end of list?";
+      break;
+    }
+  }
+
   // for (const auto &[k, x30_inst] : fs->x30_map) {
   //     drawShape(k, pen2);
   // }
