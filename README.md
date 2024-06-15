@@ -37,7 +37,7 @@ The GUI will open a graphical view of a PCB:
 $ ./brd_gui/brd_gui [.brd filename]
 ```
 
-For example, opening the [BeagleBone AI design][bb-ai] (distributed under the terms of the [CC-BY-4.0 license][bb-ai-license]) and showing layer *LAY8* looks like this:
+For example, opening the [BeagleBone AI design][bb-ai] (distributed under the terms of the [CC-BY-4.0 license][bb-ai-license]) and showing a few layers looks like this:
 
 <img src="/docs/images/BeagleBone-AI.png" width="600" alt="BeagleBone AI .brd viewed in brd_gui" />
 
