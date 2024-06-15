@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
   */
 
   /*
-  LinkedListPtrs pts = parsed_file->hdr->ll_x1B;
+  LinkedListPtrs pts = parsed_file->hdr->ll_x24_x28;
   uint32_t k = pts.head;
   // k = ntohl(0x2FA3AD00);
   printf("Chain started at key = 0x %08X, expecting to end at 0x %08X\n",
@@ -92,6 +92,7 @@ int main(int argc, char* argv[]) {
     } else if (parsed_file->is_type(k, 0x24)) {
       auto& i = parsed_file->get_x24(k);
       printf("Found x24 w/ key = 0x %08X\n", ntohl(k));
+      // print_struct(k, *parsed_file, off);
       k = i.next;
     } else if (parsed_file->is_type(k, 0x1B)) {
       auto& i = parsed_file->get_x1B(k);

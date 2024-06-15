@@ -968,16 +968,27 @@ struct T23Rat {
 
 template <AllegroVersion version>
 struct x24 {
-  uint32_t t;
+  uint16_t type;
+  uint8_t subtype;
+  uint8_t layer;
+
   uint32_t k;
   uint32_t next;
-  uint32_t un[10];
-  COND_FIELD(version >= kA172, uint32_t, un1);
+  uint32_t ptr1;
+  uint32_t un1;
+  COND_FIELD(version >= kA172, uint32_t, un2);
+  int32_t coords[4];
+  ExpectRefType<0x03> ptr2;
+  uint32_t un[3];
 
   uint32_t TAIL;
   operator x24<kAMax>() const;
   static constexpr AllegroVersion versions[1] = {kA172};
 };
+
+static_assert(offsetof(x24<kA164>, coords) == 20);
+static_assert(offsetof(x24<kA172>, coords) == 24);
+static_assert(offsetof(x24<kA164>, ptr2) == 36);
 
 template <AllegroVersion version>
 struct x26 {

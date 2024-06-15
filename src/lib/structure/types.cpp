@@ -493,7 +493,24 @@ T23Rat<kA164>::operator T23Rat<kAMax>() const {
 
 template <>
 x24<kA160>::operator x24<kAMax>() const {
-  return *reinterpret_cast<const x24<kAMax> *>(this);
+  x24<kAMax> new_inst;
+  new_inst.type = this->type;
+  new_inst.subtype = this->subtype;
+  new_inst.layer = this->layer;
+
+  new_inst.k = this->k;
+  new_inst.next = this->next;
+  new_inst.ptr1 = this->ptr1;
+  new_inst.un1 = this->un1;
+  for (uint8_t i=0; i<4; i++) {
+    new_inst.coords[i] = this->coords[i];
+  }
+  new_inst.ptr2 = this->ptr2;
+  for (uint8_t i=0; i<3; i++) {
+    new_inst.un[i] = this->un[i];
+  }
+
+  return new_inst;
 }
 
 template <>
