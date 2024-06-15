@@ -251,7 +251,7 @@ void stream_file(std::string &fname, File<kAMax> &f) {
   stream_films(f);
   // stream_strings(f);
   stream_nets(f);
-  stream_x30(f);
+  // stream_x30(f);
   stream_misc_metadata(f);
   std::cout << HTML_FOOTER;
 }
