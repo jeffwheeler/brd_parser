@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
     } else if (parsed_file->is_type(k, 0x24)) {
       auto& i = parsed_file->get_x24(k);
       printf("Found x24 w/ key = 0x %08X\n", ntohl(k));
-      k = i.un[0];
+      k = i.next;
     } else if (parsed_file->is_type(k, 0x1B)) {
       auto& i = parsed_file->get_x1B(k);
       printf("Found t1B_net w/ key = 0x %08X\n", ntohl(k));

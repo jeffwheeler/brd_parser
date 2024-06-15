@@ -970,7 +970,8 @@ template <AllegroVersion version>
 struct x24 {
   uint32_t t;
   uint32_t k;
-  uint32_t un[11];
+  uint32_t next;
+  uint32_t un[10];
   COND_FIELD(version >= kA172, uint32_t, un1);
 
   uint32_t TAIL;

@@ -878,7 +878,7 @@ void BrdView::drawFile() {
       k = i.next;
     } else if (fs->is_type(k, 0x24)) {
       auto &i = fs->get_x24(k);
-      k = i.un[0];
+      k = i.next;
     } else {
       qDebug() << "Unexpected end of list?";
       break;
