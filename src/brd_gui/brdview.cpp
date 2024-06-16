@@ -189,21 +189,19 @@ void BrdView::drawX0C(const T0CDrillIndicator<kAMax> *inst, QPen *pen) {
                        .translate(center.x(), center.y())
                        .rotate(inst->rotation / 1000.);
     QGraphicsItem *item = nullptr;
-    if (inst->backdrill_id == DrillSymbol::Circle || inst->backdrill_id == DrillSymbol::RoundedRect) {
-      item = scene->addEllipse(
-          (-w / 2.) / factor, (-h / 2.) / factor, w / factor, h / factor,
-         *pen);
+    if (inst->backdrill_id == DrillSymbol::Circle ||
+        inst->backdrill_id == DrillSymbol::RoundedRect) {
+      item = scene->addEllipse((-w / 2.) / factor, (-h / 2.) / factor,
+                               w / factor, h / factor, *pen);
     } else {
-      item = scene->addRect(
-          (-w / 2.) / factor, (-h / 2.) / factor, w / factor, h / factor,
-          *pen);
+      item = scene->addRect((-w / 2.) / factor, (-h / 2.) / factor, w / factor,
+                            h / factor, *pen);
     }
     item->setTransform(t);
     item->setData(0, inst->k);
   }
 
   if (strlen(inst->label) > 0) {
-
     QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
     font.setFixedPitch(true);
     font.setKerning(false);

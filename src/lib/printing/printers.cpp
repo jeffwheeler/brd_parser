@@ -801,18 +801,19 @@ template <AllegroVersion version>
 void print_x0C(const void *untyped_inst, File<version> *fs, const int d) {
   const uint32_t k = ((const T0CDrillIndicator<version> *)untyped_inst)->k;
   T0CDrillIndicator<version> inst = fs->get_x0C(k);
-  printf_d(d, "x0C: t=0x%04X subtype=%02X layer=%d k=0x%08X label=\x1b[34m\"%s\"\x1b[0m backdrill_id=%08X\n",
-           ntohl(inst.t), inst.subtype, inst.layer, ntohl(inst.k),
-           inst.label, ntohl(inst.backdrill_id));
+  printf_d(d,
+           "x0C: t=0x%04X subtype=%02X layer=%d k=0x%08X "
+           "label=\x1b[34m\"%s\"\x1b[0m backdrill_id=%08X\n",
+           ntohl(inst.t), inst.subtype, inst.layer, ntohl(inst.k), inst.label,
+           ntohl(inst.backdrill_id));
   if constexpr (!std::is_same_v<decltype(inst.un2), std::monostate>) {
     printf_d(d + 1, "un2=%08X un4=%08X\n", ntohl(inst.un2), ntohl(inst.un4));
   }
   if constexpr (!std::is_same_v<decltype(inst.un5), std::monostate>) {
     printf_d(d + 1, "un5=%08X\n", ntohl(inst.un5));
   }
-  printf_d(d + 1, "un1={%08X %08X}, un5=%08X, un6=0x%08X\n",
-           ntohl(inst.un1[0]), ntohl(inst.un1[1]), ntohl(inst.un5),
-           ntohl(inst.un6));
+  printf_d(d + 1, "un1={%08X %08X}, un5=%08X, un6=0x%08X\n", ntohl(inst.un1[0]),
+           ntohl(inst.un1[1]), ntohl(inst.un5), ntohl(inst.un6));
   printf_d(d + 1, "\x1b[2m(%d, %d, %d, %d, %0.1f deg)\x1b[0m\n", inst.coords[0],
            inst.coords[1], inst.coords[2], inst.coords[3],
            inst.rotation / 1000.);
@@ -2812,7 +2813,7 @@ void print_x37(const void *untyped_inst, File<version> *fs, const int d) {
     printf_d(d + 1, "ptr[% 3d] = 0x%08X\n", i, ntohl(inst->ptrs[i]));
     if (inst->ptrs[i] != 0) {
       print_struct(inst->ptrs[i], *fs, d + 2);
-      }
+    }
   }
 
   if (inst->count > MAX_TO_PRINT) {

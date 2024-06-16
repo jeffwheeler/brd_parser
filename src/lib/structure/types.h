@@ -1794,24 +1794,32 @@ class File {
   IterBase<T0CDrillIndicator<version>> iter_x0C() {
     if (this->hdr->ll_x0C.head == 0) {
       return IterBase<T0CDrillIndicator<version>>(
-          Iter<T0CDrillIndicator<version>>(*this, this->hdr->ll_x0C.head, &File::get_x0C),
-          Iter<T0CDrillIndicator<version>>(*this, this->hdr->ll_x0C.head, &File::get_x0C));
+          Iter<T0CDrillIndicator<version>>(*this, this->hdr->ll_x0C.head,
+                                           &File::get_x0C),
+          Iter<T0CDrillIndicator<version>>(*this, this->hdr->ll_x0C.head,
+                                           &File::get_x0C));
     } else {
       return IterBase<T0CDrillIndicator<version>>(
-          Iter<T0CDrillIndicator<version>>(*this, this->hdr->ll_x0C.head, &File::get_x0C),
-          Iter<T0CDrillIndicator<version>>(*this, this->hdr->ll_x0C.tail, &File::get_x0C));
+          Iter<T0CDrillIndicator<version>>(*this, this->hdr->ll_x0C.head,
+                                           &File::get_x0C),
+          Iter<T0CDrillIndicator<version>>(*this, this->hdr->ll_x0C.tail,
+                                           &File::get_x0C));
     }
   };
 
   IterBase<T0CDrillIndicator<version>> iter_x0C_2() {
     if (this->hdr->ll_x0C_2.head == 0) {
       return IterBase<T0CDrillIndicator<version>>(
-          Iter<T0CDrillIndicator<version>>(*this, this->hdr->ll_x0C_2.head, &File::get_x0C),
-          Iter<T0CDrillIndicator<version>>(*this, this->hdr->ll_x0C_2.head, &File::get_x0C));
+          Iter<T0CDrillIndicator<version>>(*this, this->hdr->ll_x0C_2.head,
+                                           &File::get_x0C),
+          Iter<T0CDrillIndicator<version>>(*this, this->hdr->ll_x0C_2.head,
+                                           &File::get_x0C));
     } else {
       return IterBase<T0CDrillIndicator<version>>(
-          Iter<T0CDrillIndicator<version>>(*this, this->hdr->ll_x0C_2.head, &File::get_x0C),
-          Iter<T0CDrillIndicator<version>>(*this, this->hdr->ll_x0C_2.tail, &File::get_x0C));
+          Iter<T0CDrillIndicator<version>>(*this, this->hdr->ll_x0C_2.head,
+                                           &File::get_x0C),
+          Iter<T0CDrillIndicator<version>>(*this, this->hdr->ll_x0C_2.tail,
+                                           &File::get_x0C));
     }
   };
 
