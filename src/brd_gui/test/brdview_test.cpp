@@ -20,6 +20,9 @@ void TestBrdView::drawAllSymbolPaths() {
   // If we don't look through the x24/x28 linked list in the header, we will
   // miss this shape.
   QVERIFY2(brdview.drewKey(0x000016D4), "Shape unexpectedly missing");
+
+  // This item is in the x24/x28 linked list in the header.
+  QVERIFY2(brdview.drewKey(0x0001896A), "T24 rectangle unexpectedly missing");
 }
 
 QTEST_MAIN(TestBrdView)
