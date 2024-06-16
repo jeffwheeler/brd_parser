@@ -798,19 +798,30 @@ void print_x0A(const void *untyped_inst, File<version> *, const int d) {
 }
 
 template <AllegroVersion version>
-void print_x0C(const void *untyped_inst, File<version> *, const int d) {
-  const x0C<version> *inst = (const x0C<version> *)untyped_inst;
-  printf_d(d, "x0C: t=0x%04X subtype=%02X layer=%d k=0x%08X kind=%d\n",
-           ntohl(inst->t), inst->subtype, inst->layer, ntohl(inst->k),
-           inst->kind);
-  printf_d(d + 1,
-           "un=[%08X %08X %08X %08X %08X %08X %08X %08X %08X %08X %08X]\n",
-           ntohl(inst->un[0]), ntohl(inst->un[1]), ntohl(inst->un[2]),
-           ntohl(inst->un[3]), ntohl(inst->un[4]), ntohl(inst->un[5]),
-           ntohl(inst->un[6]), ntohl(inst->un[7]), ntohl(inst->un[8]),
-           ntohl(inst->un[9]), ntohl(inst->un[10]));
-  printf_d(d + 1, "\x1b[2m(%d, %d, %d, %d)\x1b[0m\n", inst->coords[0],
-           inst->coords[1], inst->coords[2], inst->coords[3]);
+void print_x0C(const void *untyped_inst, File<version> *fs, const int d) {
+  const uint32_t k = ((const x0C<version> *)untyped_inst)->k;
+  x0C<version> inst = fs->get_x0C(k);
+  printf_d(d, "x0C: t=0x%04X subtype=%02X layer=%d k=0x%08X backdrill_id=%d\n",
+           ntohl(inst.t), inst.subtype, inst.layer, ntohl(inst.k),
+           inst.backdrill_id);
+  printf_d(d + 1, "un1={%08X %08X}, un5=%08X, un6={%08X %08X}\n",
+           ntohl(inst.un1[0]), ntohl(inst.un1[1]), ntohl(inst.un5),
+           ntohl(inst.un6[0]), ntohl(inst.un6[1]));
+  printf_d(d + 1, "coords=\x1b[2m(%d, %d, %d, %d)\x1b[0m\n", inst.coords[0],
+           inst.coords[1], inst.coords[2], inst.coords[3]);
+
+  printf_d(d + 1, "ptr1:");
+  if (inst.group_ptr == 0) {
+    printf(" \x1b[2mnull\x1b[0m\n");
+  } else {
+    std::printf("\n");
+    if (fs->is_type(inst.group_ptr, 0x26)) {
+      print_struct(inst.group_ptr, *fs, d + 2);
+    } else {
+      printf_d(d + 2, "ptr1 unrecognized: 0x%08X\n", ntohl(inst.group_ptr));
+      exit(0);
+    }
+  }
 }
 
 template <AllegroVersion version>

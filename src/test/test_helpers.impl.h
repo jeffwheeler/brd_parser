@@ -66,6 +66,11 @@ void validate_x08(const x08<version>& i, File<version>& fs) {
 }
 
 template <AllegroVersion version>
+void validate_x0C(const x0C<version>& i, File<version>& fs) {
+  EXPECT_TRUE(CheckNullableType(i, i.group_ptr, fs));
+}
+
+template <AllegroVersion version>
 void validate_x0F(const T0FFootprint<version>& i, File<version>& fs) {}
 
 template <AllegroVersion version>
@@ -257,6 +262,9 @@ void validate_objects(File<version>& fs) {
         break;
       case 0x08:
         validate_x08(fs.get_x08(k), fs);
+        break;
+      case 0x0C:
+        validate_x0C(fs.get_x0C(k), fs);
         break;
       case 0x0F:
         validate_x0F(*reinterpret_cast<T0FFootprint<version>*>(ptr), fs);
