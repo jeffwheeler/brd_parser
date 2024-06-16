@@ -71,9 +71,7 @@ void BrdView::mouseReleaseEvent(QMouseEvent *event) {
       "\x1b[35m-----------------------------------------------\x1b[0m\n");
   for (auto &item : clickedItems) {
     const int ptr = item->data(0).toInt();
-    if (fs->is_type(ptr, 0x14) || fs->is_type(ptr, 0x24)) {
-      continue;
-    } else if (fs->is_type(ptr, 0x32)) {
+    if (fs->is_type(ptr, 0x32)) {
       // const x32<A_MAX> &inst = fs->get_x32(ptr);
       print_struct((const uint32_t)ptr, *fs, 0);
       // qDebug("Printing x32->ptr5");
