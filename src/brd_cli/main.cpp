@@ -46,9 +46,9 @@ int main(int argc, char* argv[]) {
   */
 
   /*
-  LinkedListPtrs pts = parsed_file->hdr->ll_x24_x28;
+  LinkedListPtrs pts = parsed_file->hdr->ll_x0C;
   uint32_t k = pts.head;
-  // k = ntohl(0x2FA3AD00);
+  // k = ntohl(0x008FBE29);
   printf("Chain started at key = 0x %08X, expecting to end at 0x %08X\n",
          ntohl(k), ntohl(pts.tail));
   uint32_t i = 0;

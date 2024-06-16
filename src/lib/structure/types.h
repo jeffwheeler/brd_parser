@@ -467,22 +467,20 @@ struct x0C {
   uint32_t next;
   COND_FIELD(version >= kA172, uint32_t, un2);
   COND_FIELD(version >= kA172, uint32_t, un3);
-  union {
-    uint32_t un[11];
-    struct {
-      uint32_t un1[2];  // Typically (always?) null
-      uint32_t kind;
-      uint32_t un5;
-      int32_t coords[4];
-      uint32_t un6[3];
-    };
-  };
+  uint32_t un1[2];        // Typically (always?) null
+  uint32_t backdrill_id;  // Each backdrill depth (e.g. 12-6) gets its own ID
+  uint32_t un5;
+  int32_t coords[4];
+  uint32_t group_ptr;
+  uint32_t un6[2];
   COND_FIELD(version >= kA174, uint32_t, un4);
 
   uint32_t TAIL;
   operator x0C<kAMax>() const;
-  static constexpr AllegroVersion versions[1] = {kA172};
+  static constexpr AllegroVersion versions[2] = {kA172, kA174};
 };
+
+static_assert(sizeof_until_tail<x0C<kA166>>() == 56);
 
 template <AllegroVersion version>
 struct x0D {
@@ -1783,15 +1781,27 @@ class File {
   };
 
   IterBase<x0C<version>> iter_x0C() {
-    return IterBase<x0C<version>>(
-        Iter<x0C<version>>(*this, this->hdr->ll_x0C.head, &File::get_x0C),
-        Iter<x0C<version>>(*this, this->hdr->ll_x0C.tail, &File::get_x0C));
+    if (this->hdr->ll_x0C.head == 0) {
+      return IterBase<x0C<version>>(
+          Iter<x0C<version>>(*this, this->hdr->ll_x0C.head, &File::get_x0C),
+          Iter<x0C<version>>(*this, this->hdr->ll_x0C.head, &File::get_x0C));
+    } else {
+      return IterBase<x0C<version>>(
+          Iter<x0C<version>>(*this, this->hdr->ll_x0C.head, &File::get_x0C),
+          Iter<x0C<version>>(*this, this->hdr->ll_x0C.tail, &File::get_x0C));
+    }
   };
 
   IterBase<x0C<version>> iter_x0C_2() {
-    return IterBase<x0C<version>>(
-        Iter<x0C<version>>(*this, this->hdr->ll_x0C_2.head, &File::get_x0C),
-        Iter<x0C<version>>(*this, this->hdr->ll_x0C_2.tail, &File::get_x0C));
+    if (this->hdr->ll_x0C_2.head == 0) {
+      return IterBase<x0C<version>>(
+          Iter<x0C<version>>(*this, this->hdr->ll_x0C_2.head, &File::get_x0C),
+          Iter<x0C<version>>(*this, this->hdr->ll_x0C_2.head, &File::get_x0C));
+    } else {
+      return IterBase<x0C<version>>(
+          Iter<x0C<version>>(*this, this->hdr->ll_x0C_2.head, &File::get_x0C),
+          Iter<x0C<version>>(*this, this->hdr->ll_x0C_2.tail, &File::get_x0C));
+    }
   };
 
   IterBase<T14Path<version>> iter_x14() {

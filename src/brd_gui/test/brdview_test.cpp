@@ -25,4 +25,17 @@ void TestBrdView::drawAllSymbolPaths() {
   QVERIFY2(brdview.drewKey(0x0001896A), "T24 rectangle unexpectedly missing");
 }
 
+void TestBrdView::handleBackdrills() {
+  BrdView brdview;
+
+  auto parsed_file = parse_file(
+      "../../test/data/opencellular_sdr/OC_CONNECT_1_SDR_LIFE-3.brd");
+  if (parsed_file) {
+    brdview.loadFile(&parsed_file.value());
+  }
+
+  // Should draw backdrill chart symbols
+  QVERIFY2(brdview.drewKey(0x0FD563C0), "Did not draw DRILL_LEGEND_7_10 key");
+}
+
 QTEST_MAIN(TestBrdView)

@@ -200,8 +200,16 @@ x0C<kA160>::operator x0C<kAMax>() const {
   new_inst.layer = this->layer;
   new_inst.k = this->k;
   new_inst.next = this->next;
-  for (int i = 0; i < 11; i++) {
-    new_inst.un[i] = this->un[i];
+  new_inst.un1[0] = this->un1[0];
+  new_inst.un1[1] = this->un1[1];
+  new_inst.backdrill_id = this->backdrill_id;
+  new_inst.un5 = this->un5;
+  for (int i = 0; i < 4; i++) {
+    new_inst.coords[i] = this->coords[i];
+  }
+  new_inst.group_ptr = this->group_ptr;
+  for (int i = 0; i < 2; i++) {
+    new_inst.un6[i] = this->un6[i];
   }
   return new_inst;
 }
@@ -214,11 +222,39 @@ x0C<kA172>::operator x0C<kAMax>() const {
   new_inst.layer = this->layer;
   new_inst.k = this->k;
   new_inst.next = this->next;
-  for (int i = 0; i < 11; i++) {
-    new_inst.un[i] = this->un[i];
+  new_inst.un1[0] = this->un1[0];
+  new_inst.un1[1] = this->un1[1];
+  new_inst.backdrill_id = this->backdrill_id;
+  new_inst.un5 = this->un5;
+  for (int i = 0; i < 4; i++) {
+    new_inst.coords[i] = this->coords[i];
   }
-  new_inst.un2 = this->un2;
-  new_inst.un3 = this->un3;
+  new_inst.group_ptr = this->group_ptr;
+  for (int i = 0; i < 2; i++) {
+    new_inst.un6[i] = this->un6[i];
+  }
+  return new_inst;
+}
+
+template <>
+x0C<kA174>::operator x0C<kAMax>() const {
+  x0C<kAMax> new_inst;
+  new_inst.t = this->t;
+  new_inst.subtype = this->subtype;
+  new_inst.layer = this->layer;
+  new_inst.k = this->k;
+  new_inst.next = this->next;
+  new_inst.un1[0] = this->un1[0];
+  new_inst.un1[1] = this->un1[1];
+  new_inst.backdrill_id = this->backdrill_id;
+  new_inst.un5 = this->un5;
+  for (int i = 0; i < 4; i++) {
+    new_inst.coords[i] = this->coords[i];
+  }
+  new_inst.group_ptr = this->group_ptr;
+  for (int i = 0; i < 2; i++) {
+    new_inst.un6[i] = this->un6[i];
+  }
   return new_inst;
 }
 

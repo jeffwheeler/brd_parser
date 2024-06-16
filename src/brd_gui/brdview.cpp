@@ -174,6 +174,18 @@ void BrdView::drawX05(const T05Line<kAMax> *inst, QPen *pen_) {
   item->setData(0, inst->k);
 }
 
+void BrdView::drawX0C(const x0C<kAMax> *inst, QPen *pen) {
+  if (!onSelectedLayer(inst->subtype, inst->layer)) {
+    return;
+  }
+
+  int32_t w = inst->coords[2], h = inst->coords[3];
+  QGraphicsItem *item = scene->addRect((inst->coords[0] - w / 2.) / factor,
+                                       (inst->coords[1] - h / 2.) / factor,
+                                       w / factor, h / factor, *pen);
+  item->setData(0, inst->k);
+}
+
 void BrdView::drawX14(const T14Path<kAMax> *inst, QPen *pen_) {
   if (!onSelectedLayer(inst->subtype, inst->layer) ||
       fs->is_type(inst->ptr1, 0x2B)) {
@@ -686,6 +698,9 @@ void BrdView::drawShape(const uint32_t ptr, QPen *pen) {
     // std::printf("Trying to draw x05\n");
     const T05Line<kAMax> inst = fs->get_x05(ptr);
     drawX05(&inst, pen);
+  } else if (fs->is_type(ptr, 0x0C)) {
+    const x0C<kAMax> inst = fs->get_x0C(ptr);
+    drawX0C(&inst, pen);
   } else if (fs->is_type(ptr, 0x10)) {
     const x10<kAMax> inst = fs->get_x10(ptr);
     drawShape(inst.ptr1, darkerPen);
@@ -773,7 +788,7 @@ void BrdView::drawFile() {
   QPen *pen3 = new QPen(QColor(235, 235, 235, 127), 0);
   QPen *pen4 = new QPen(QColor(202, 210, 197, 127), 0);
   QPen *pen5 = new QPen(QColor(132, 169, 140, 127), 0);
-  // QPen *pen6 = new QPen(QColor(237, 211, 130, 127), 0);
+  QPen *pen6 = new QPen(QColor(237, 211, 130, 127), 0);
 
   for (auto &i_x1B : fs->iter_t1B_net()) {
     for (auto &i_x04 : fs->iter_x04(i_x1B.k)) {
@@ -813,6 +828,13 @@ void BrdView::drawFile() {
         }
       }
     }
+  }
+
+  for (auto &inst : fs->iter_x0C()) {
+    drawShape(inst.k, pen5);
+  }
+  for (auto &inst : fs->iter_x0C_2()) {
+    drawShape(inst.k, pen6);
   }
 
   // for (const auto& [k, x14_inst] : *fs.x14_map) {
@@ -886,18 +908,21 @@ void BrdView::drawFile() {
   // Draw some additional shapes in an extra linked list
   LinkedListPtrs text_ll = fs->hdr->ll_x24_x28;
   uint32_t k = text_ll.head;
-  while (k != text_ll.tail) {
-    if (fs->is_type(k, 0x28)) {
-      auto &i = fs->get_x28(k);
-      drawShape(k, pen4);
-      k = i.next;
-    } else if (fs->is_type(k, 0x24)) {
-      auto &i = fs->get_x24(k);
-      drawShape(k, pen5);
-      k = i.next;
-    } else {
-      qDebug() << "Unexpected end of list?";
-      break;
+  if (k != 0) {
+    while (k != text_ll.tail) {
+      if (fs->is_type(k, 0x28)) {
+        auto &i = fs->get_x28(k);
+        drawShape(k, pen4);
+        k = i.next;
+      } else if (fs->is_type(k, 0x24)) {
+        auto &i = fs->get_x24(k);
+        drawShape(k, pen5);
+        k = i.next;
+      } else {
+        printf("Unexpected end of x24/x28 list, found item k=0x %08X\n",
+               ntohl(k));
+        break;
+      }
     }
   }
 
