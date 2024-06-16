@@ -75,7 +75,7 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x0B
     {},
     // 0x0C
-    {&default_parser<x0C, version>},
+    {&default_parser<T0CDrillIndicator, version>},
     // 0x0D
     {&default_parser<x0D, version>},
     // 0x0E

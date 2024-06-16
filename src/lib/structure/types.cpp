@@ -193,8 +193,8 @@ T0ADRC<kA172>::operator T0ADRC<kAMax>() const {
 }
 
 template <>
-x0C<kA160>::operator x0C<kAMax>() const {
-  x0C<kAMax> new_inst;
+T0CDrillIndicator<kA160>::operator T0CDrillIndicator<kAMax>() const {
+  T0CDrillIndicator<kAMax> new_inst;
   new_inst.t = this->t;
   new_inst.subtype = this->subtype;
   new_inst.layer = this->layer;
@@ -203,20 +203,23 @@ x0C<kA160>::operator x0C<kAMax>() const {
   new_inst.un1[0] = this->un1[0];
   new_inst.un1[1] = this->un1[1];
   new_inst.backdrill_id = this->backdrill_id;
-  new_inst.un5 = this->un5;
+  new_inst.un2 = 0;
+  for (uint8_t i = 0; i < 4; i++) {
+    new_inst.label[i] = this->label[i];
+  }
+  new_inst.un5 = 0;
   for (int i = 0; i < 4; i++) {
     new_inst.coords[i] = this->coords[i];
   }
   new_inst.group_ptr = this->group_ptr;
-  for (int i = 0; i < 2; i++) {
-    new_inst.un6[i] = this->un6[i];
-  }
+  new_inst.un6 = this->un6;
+  new_inst.rotation = this->rotation;
   return new_inst;
 }
 
 template <>
-x0C<kA172>::operator x0C<kAMax>() const {
-  x0C<kAMax> new_inst;
+T0CDrillIndicator<kA172>::operator T0CDrillIndicator<kAMax>() const {
+  T0CDrillIndicator<kAMax> new_inst;
   new_inst.t = this->t;
   new_inst.subtype = this->subtype;
   new_inst.layer = this->layer;
@@ -225,20 +228,24 @@ x0C<kA172>::operator x0C<kAMax>() const {
   new_inst.un1[0] = this->un1[0];
   new_inst.un1[1] = this->un1[1];
   new_inst.backdrill_id = this->backdrill_id;
-  new_inst.un5 = this->un5;
+  new_inst.un2 = this->un2;
+  new_inst.un4 = this->un4;
+  for (uint8_t i = 0; i < 4; i++) {
+    new_inst.label[i] = this->label[i];
+  }
+  new_inst.un5 = 0;
   for (int i = 0; i < 4; i++) {
     new_inst.coords[i] = this->coords[i];
   }
   new_inst.group_ptr = this->group_ptr;
-  for (int i = 0; i < 2; i++) {
-    new_inst.un6[i] = this->un6[i];
-  }
+  new_inst.un6 = this->un6;
+  new_inst.rotation = this->rotation;
   return new_inst;
 }
 
 template <>
-x0C<kA174>::operator x0C<kAMax>() const {
-  x0C<kAMax> new_inst;
+T0CDrillIndicator<kA174>::operator T0CDrillIndicator<kAMax>() const {
+  T0CDrillIndicator<kAMax> new_inst;
   new_inst.t = this->t;
   new_inst.subtype = this->subtype;
   new_inst.layer = this->layer;
@@ -247,14 +254,17 @@ x0C<kA174>::operator x0C<kAMax>() const {
   new_inst.un1[0] = this->un1[0];
   new_inst.un1[1] = this->un1[1];
   new_inst.backdrill_id = this->backdrill_id;
+  new_inst.un2 = this->un2;
+  for (uint8_t i = 0; i < 4; i++) {
+    new_inst.label[i] = this->label[i];
+  }
   new_inst.un5 = this->un5;
   for (int i = 0; i < 4; i++) {
     new_inst.coords[i] = this->coords[i];
   }
   new_inst.group_ptr = this->group_ptr;
-  for (int i = 0; i < 2; i++) {
-    new_inst.un6[i] = this->un6[i];
-  }
+  new_inst.un6 = this->un6;
+  new_inst.rotation = this->rotation;
   return new_inst;
 }
 
@@ -1005,7 +1015,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x08_upgrade = new_upgrade<kA160, kAMax, x08>;
       this->x09_upgrade = new_upgrade<kA160, kAMax, x09>;
       this->x0A_upgrade = new_upgrade<kA160, kAMax, T0ADRC>;
-      this->x0C_upgrade = new_upgrade<kA160, kAMax, x0C>;
+      this->x0C_upgrade = new_upgrade<kA160, kAMax, T0CDrillIndicator>;
       this->x0D_upgrade = new_upgrade<kA160, kAMax, x0D>;
       this->x0E_upgrade = new_upgrade<kA160, kAMax, x0E>;
       this->x10_upgrade = new_upgrade<kA160, kAMax, x10>;
@@ -1047,7 +1057,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x08_upgrade = new_upgrade<kA162, kAMax, x08>;
       this->x09_upgrade = new_upgrade<kA162, kAMax, x09>;
       this->x0A_upgrade = new_upgrade<kA162, kAMax, T0ADRC>;
-      this->x0C_upgrade = new_upgrade<kA162, kAMax, x0C>;
+      this->x0C_upgrade = new_upgrade<kA162, kAMax, T0CDrillIndicator>;
       this->x0D_upgrade = new_upgrade<kA162, kAMax, x0D>;
       this->x0E_upgrade = new_upgrade<kA162, kAMax, x0E>;
       this->x10_upgrade = new_upgrade<kA162, kAMax, x10>;
@@ -1089,7 +1099,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x08_upgrade = new_upgrade<kA164, kAMax, x08>;
       this->x09_upgrade = new_upgrade<kA164, kAMax, x09>;
       this->x0A_upgrade = new_upgrade<kA164, kAMax, T0ADRC>;
-      this->x0C_upgrade = new_upgrade<kA164, kAMax, x0C>;
+      this->x0C_upgrade = new_upgrade<kA164, kAMax, T0CDrillIndicator>;
       this->x0D_upgrade = new_upgrade<kA164, kAMax, x0D>;
       this->x0E_upgrade = new_upgrade<kA164, kAMax, x0E>;
       this->x10_upgrade = new_upgrade<kA164, kAMax, x10>;
@@ -1131,7 +1141,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x08_upgrade = new_upgrade<kA165, kAMax, x08>;
       this->x09_upgrade = new_upgrade<kA165, kAMax, x09>;
       this->x0A_upgrade = new_upgrade<kA165, kAMax, T0ADRC>;
-      this->x0C_upgrade = new_upgrade<kA165, kAMax, x0C>;
+      this->x0C_upgrade = new_upgrade<kA165, kAMax, T0CDrillIndicator>;
       this->x0D_upgrade = new_upgrade<kA165, kAMax, x0D>;
       this->x0E_upgrade = new_upgrade<kA165, kAMax, x0E>;
       this->x10_upgrade = new_upgrade<kA165, kAMax, x10>;
@@ -1174,7 +1184,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x08_upgrade = new_upgrade<kA166, kAMax, x08>;
       this->x09_upgrade = new_upgrade<kA166, kAMax, x09>;
       this->x0A_upgrade = new_upgrade<kA166, kAMax, T0ADRC>;
-      this->x0C_upgrade = new_upgrade<kA166, kAMax, x0C>;
+      this->x0C_upgrade = new_upgrade<kA166, kAMax, T0CDrillIndicator>;
       this->x0D_upgrade = new_upgrade<kA166, kAMax, x0D>;
       this->x0E_upgrade = new_upgrade<kA166, kAMax, x0E>;
       this->x10_upgrade = new_upgrade<kA166, kAMax, x10>;
@@ -1221,7 +1231,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x08_upgrade = new_upgrade<kA172, kAMax, x08>;
       this->x09_upgrade = new_upgrade<kA172, kAMax, x09>;
       this->x0A_upgrade = new_upgrade<kA172, kAMax, T0ADRC>;
-      this->x0C_upgrade = new_upgrade<kA172, kAMax, x0C>;
+      this->x0C_upgrade = new_upgrade<kA172, kAMax, T0CDrillIndicator>;
       this->x0D_upgrade = new_upgrade<kA172, kAMax, x0D>;
       this->x0E_upgrade = new_upgrade<kA172, kAMax, x0E>;
       this->x10_upgrade = new_upgrade<kA172, kAMax, x10>;
@@ -1266,7 +1276,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x08_upgrade = new_upgrade<kA174, kAMax, x08>;
       this->x09_upgrade = new_upgrade<kA174, kAMax, x09>;
       this->x0A_upgrade = new_upgrade<kA174, kAMax, T0ADRC>;
-      this->x0C_upgrade = new_upgrade<kA174, kAMax, x0C>;
+      this->x0C_upgrade = new_upgrade<kA174, kAMax, T0CDrillIndicator>;
       this->x0D_upgrade = new_upgrade<kA174, kAMax, x0D>;
       this->x0E_upgrade = new_upgrade<kA174, kAMax, x0E>;
       this->x10_upgrade = new_upgrade<kA174, kAMax, x10>;
@@ -1308,7 +1318,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x08_upgrade = new_upgrade<kAMax, kAMax, x08>;
       this->x09_upgrade = new_upgrade<kAMax, kAMax, x09>;
       this->x0A_upgrade = new_upgrade<kAMax, kAMax, T0ADRC>;
-      this->x0C_upgrade = new_upgrade<kAMax, kAMax, x0C>;
+      this->x0C_upgrade = new_upgrade<kAMax, kAMax, T0CDrillIndicator>;
       this->x0D_upgrade = new_upgrade<kAMax, kAMax, x0D>;
       this->x0E_upgrade = new_upgrade<kAMax, kAMax, x0E>;
       this->x10_upgrade = new_upgrade<kAMax, kAMax, x10>;
@@ -1455,7 +1465,7 @@ const T0ADRC<kAMax> File<kAMax>::get_x0A(uint32_t k) {
 }
 
 template <>
-const x0C<kAMax> File<kAMax>::get_x0C(uint32_t k) {
+const T0CDrillIndicator<kAMax> File<kAMax>::get_x0C(uint32_t k) {
   return this->x0C_upgrade(this->ptrs[k]);
 }
 

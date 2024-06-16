@@ -458,29 +458,40 @@ struct T0ADRC {
   static constexpr AllegroVersion versions[2] = {kA172, kA174};
 };
 
+enum DrillSymbol : uint8_t {
+  NoSymbol = 0,
+  Circle = 0x02,
+  RoundedRect = 0x0B,
+  HexagonA = 0x0F,
+  HexagonB = 0x10,
+};
+
 template <AllegroVersion version>
-struct x0C {
+struct T0CDrillIndicator {
   uint16_t t;
   uint8_t subtype;
   uint8_t layer;
   uint32_t k;
   uint32_t next;
-  COND_FIELD(version >= kA172, uint32_t, un2);
-  COND_FIELD(version >= kA172, uint32_t, un3);
   uint32_t un1[2];        // Typically (always?) null
   uint32_t backdrill_id;  // Each backdrill depth (e.g. 12-6) gets its own ID
-  uint32_t un5;
-  COND_FIELD(version >= kA174, uint32_t, un4);
+  char label[4];
+  COND_FIELD(version >= kA172, uint32_t, un2);
+  COND_FIELD(version >= kA172, uint32_t, un4);
+  COND_FIELD(version >= kA174, uint32_t, un5);
   int32_t coords[4];
   ExpectRefType<0x26> group_ptr;
-  uint32_t un6[2];
+  uint32_t un6;
+  int32_t rotation;
 
   uint32_t TAIL;
-  operator x0C<kAMax>() const;
+  operator T0CDrillIndicator<kAMax>() const;
   static constexpr AllegroVersion versions[2] = {kA172, kA174};
 };
 
-static_assert(sizeof_until_tail<x0C<kA166>>() == 56);
+static_assert(sizeof_until_tail<T0CDrillIndicator<kA166>>() == 56);
+static_assert(offsetof(T0CDrillIndicator<kA166>, label) == 24);
+static_assert(offsetof(T0CDrillIndicator<kA175>, label) == 24);
 
 template <AllegroVersion version>
 struct x0D {
@@ -1668,7 +1679,7 @@ class File {
   const x08<kAMax> get_x08(uint32_t k);
   const x09<kAMax> get_x09(uint32_t k);
   const T0ADRC<kAMax> get_x0A(uint32_t k);
-  const x0C<kAMax> get_x0C(uint32_t k);
+  const T0CDrillIndicator<kAMax> get_x0C(uint32_t k);
   const x0D<kAMax> get_x0D(uint32_t k);
   const x0E<kAMax> get_x0E(uint32_t k);
   const x10<kAMax> get_x10(uint32_t k);
@@ -1780,27 +1791,27 @@ class File {
         Iter<T0ADRC<version>>(*this, this->hdr->ll_x0A_2.tail, &File::get_x0A));
   };
 
-  IterBase<x0C<version>> iter_x0C() {
+  IterBase<T0CDrillIndicator<version>> iter_x0C() {
     if (this->hdr->ll_x0C.head == 0) {
-      return IterBase<x0C<version>>(
-          Iter<x0C<version>>(*this, this->hdr->ll_x0C.head, &File::get_x0C),
-          Iter<x0C<version>>(*this, this->hdr->ll_x0C.head, &File::get_x0C));
+      return IterBase<T0CDrillIndicator<version>>(
+          Iter<T0CDrillIndicator<version>>(*this, this->hdr->ll_x0C.head, &File::get_x0C),
+          Iter<T0CDrillIndicator<version>>(*this, this->hdr->ll_x0C.head, &File::get_x0C));
     } else {
-      return IterBase<x0C<version>>(
-          Iter<x0C<version>>(*this, this->hdr->ll_x0C.head, &File::get_x0C),
-          Iter<x0C<version>>(*this, this->hdr->ll_x0C.tail, &File::get_x0C));
+      return IterBase<T0CDrillIndicator<version>>(
+          Iter<T0CDrillIndicator<version>>(*this, this->hdr->ll_x0C.head, &File::get_x0C),
+          Iter<T0CDrillIndicator<version>>(*this, this->hdr->ll_x0C.tail, &File::get_x0C));
     }
   };
 
-  IterBase<x0C<version>> iter_x0C_2() {
+  IterBase<T0CDrillIndicator<version>> iter_x0C_2() {
     if (this->hdr->ll_x0C_2.head == 0) {
-      return IterBase<x0C<version>>(
-          Iter<x0C<version>>(*this, this->hdr->ll_x0C_2.head, &File::get_x0C),
-          Iter<x0C<version>>(*this, this->hdr->ll_x0C_2.head, &File::get_x0C));
+      return IterBase<T0CDrillIndicator<version>>(
+          Iter<T0CDrillIndicator<version>>(*this, this->hdr->ll_x0C_2.head, &File::get_x0C),
+          Iter<T0CDrillIndicator<version>>(*this, this->hdr->ll_x0C_2.head, &File::get_x0C));
     } else {
-      return IterBase<x0C<version>>(
-          Iter<x0C<version>>(*this, this->hdr->ll_x0C_2.head, &File::get_x0C),
-          Iter<x0C<version>>(*this, this->hdr->ll_x0C_2.tail, &File::get_x0C));
+      return IterBase<T0CDrillIndicator<version>>(
+          Iter<T0CDrillIndicator<version>>(*this, this->hdr->ll_x0C_2.head, &File::get_x0C),
+          Iter<T0CDrillIndicator<version>>(*this, this->hdr->ll_x0C_2.tail, &File::get_x0C));
     }
   };
 
@@ -1949,7 +1960,7 @@ class File {
   x08<kAMax> (*x08_upgrade)(void *);
   x09<kAMax> (*x09_upgrade)(void *);
   T0ADRC<kAMax> (*x0A_upgrade)(void *);
-  x0C<kAMax> (*x0C_upgrade)(void *);
+  T0CDrillIndicator<kAMax> (*x0C_upgrade)(void *);
   x0D<kAMax> (*x0D_upgrade)(void *);
   x0E<kAMax> (*x0E_upgrade)(void *);
   x10<kAMax> (*x10_upgrade)(void *);

@@ -25,7 +25,7 @@ class BrdView : public QGraphicsView {
 
   void drawX01(const T01ArcSegment<kAMax> *inst, QPainterPath *path);
   void drawX05(const T05Line<kAMax> *inst, QPen *pen);
-  void drawX0C(const x0C<kAMax> *inst, QPen *pen);
+  void drawX0C(const T0CDrillIndicator<kAMax> *inst, QPen *pen);
   void drawX14(const T14Path<kAMax> *inst, QPen *pen);
   void drawX15(const T15LineSegment<kAMax> *inst, QPainterPath *path);
   void drawX16(const T16LineSegment<kAMax> *inst, QPainterPath *path);
