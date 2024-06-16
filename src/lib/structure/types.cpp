@@ -502,11 +502,11 @@ T24Rectangle<kA160>::operator T24Rectangle<kAMax>() const {
   new_inst.next = this->next;
   new_inst.ptr1 = this->ptr1;
   new_inst.un1 = this->un1;
-  for (uint8_t i=0; i<4; i++) {
+  for (uint8_t i = 0; i < 4; i++) {
     new_inst.coords[i] = this->coords[i];
   }
   new_inst.ptr2 = this->ptr2;
-  for (uint8_t i=0; i<3; i++) {
+  for (uint8_t i = 0; i < 3; i++) {
     new_inst.un[i] = this->un[i];
   }
 
