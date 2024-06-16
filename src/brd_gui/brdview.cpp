@@ -174,16 +174,50 @@ void BrdView::drawX05(const T05Line<kAMax> *inst, QPen *pen_) {
   item->setData(0, inst->k);
 }
 
-void BrdView::drawX0C(const x0C<kAMax> *inst, QPen *pen) {
+void BrdView::drawX0C(const T0CDrillIndicator<kAMax> *inst, QPen *pen) {
   if (!onSelectedLayer(inst->subtype, inst->layer)) {
     return;
   }
 
   int32_t w = inst->coords[2], h = inst->coords[3];
-  QGraphicsItem *item = scene->addRect((inst->coords[0] - w / 2.) / factor,
-                                       (inst->coords[1] - h / 2.) / factor,
-                                       w / factor, h / factor, *pen);
-  item->setData(0, inst->k);
+  QPointF center = QPointF(inst->coords[0] / factor, inst->coords[1] / factor);
+
+  if (inst->backdrill_id != DrillSymbol::NoSymbol) {
+    QTransform t = QTransform()
+                       .translate(center.x(), center.y())
+                       .rotate(inst->rotation / 1000.);
+    QGraphicsItem *item = nullptr;
+    if (inst->backdrill_id == DrillSymbol::Circle ||
+        inst->backdrill_id == DrillSymbol::RoundedRect) {
+      item = scene->addEllipse((-w / 2.) / factor, (-h / 2.) / factor,
+                               w / factor, h / factor, *pen);
+    } else {
+      item = scene->addRect((-w / 2.) / factor, (-h / 2.) / factor, w / factor,
+                            h / factor, *pen);
+    }
+    item->setTransform(t);
+    item->setData(0, inst->k);
+  }
+
+  if (strlen(inst->label) > 0) {
+    QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
+    font.setFixedPitch(true);
+    font.setKerning(false);
+    font.setPixelSize(h / factor);
+    QGraphicsTextItem *text =
+        scene->addText(QString::fromStdString(inst->label), font);
+    QRectF boundingBox = text->boundingRect();
+    QTransform t =
+        QTransform()
+            .translate(center.x(), center.y())
+            .rotate(inst->rotation / 1000.)
+            .scale(1, -1)
+            .translate(boundingBox.width() * -0.5, boundingBox.height() * -0.5);
+
+    text->setDefaultTextColor(pen->color());
+    text->setTransform(t);
+    text->setData(0, inst->k);
+  }
 }
 
 void BrdView::drawX14(const T14Path<kAMax> *inst, QPen *pen_) {
@@ -699,7 +733,7 @@ void BrdView::drawShape(const uint32_t ptr, QPen *pen) {
     const T05Line<kAMax> inst = fs->get_x05(ptr);
     drawX05(&inst, pen);
   } else if (fs->is_type(ptr, 0x0C)) {
-    const x0C<kAMax> inst = fs->get_x0C(ptr);
+    const T0CDrillIndicator<kAMax> inst = fs->get_x0C(ptr);
     drawX0C(&inst, pen);
   } else if (fs->is_type(ptr, 0x10)) {
     const x10<kAMax> inst = fs->get_x10(ptr);

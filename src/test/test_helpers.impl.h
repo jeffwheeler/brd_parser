@@ -66,7 +66,7 @@ void validate_x08(const x08<version>& i, File<version>& fs) {
 }
 
 template <AllegroVersion version>
-void validate_x0C(const x0C<version>& i, File<version>& fs) {
+void validate_x0C(const T0CDrillIndicator<version>& i, File<version>& fs) {
   EXPECT_TRUE(CheckNullableType(i, i.group_ptr, fs));
 }
 

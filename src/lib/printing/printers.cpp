@@ -799,18 +799,26 @@ void print_x0A(const void *untyped_inst, File<version> *, const int d) {
 
 template <AllegroVersion version>
 void print_x0C(const void *untyped_inst, File<version> *fs, const int d) {
-  const uint32_t k = ((const x0C<version> *)untyped_inst)->k;
-  x0C<version> inst = fs->get_x0C(k);
-  printf_d(d, "x0C: t=0x%04X subtype=%02X layer=%d k=0x%08X backdrill_id=%d\n",
-           ntohl(inst.t), inst.subtype, inst.layer, ntohl(inst.k),
-           inst.backdrill_id);
-  printf_d(d + 1, "un1={%08X %08X}, un5=%08X, un6={%08X %08X}\n",
-           ntohl(inst.un1[0]), ntohl(inst.un1[1]), ntohl(inst.un5),
-           ntohl(inst.un6[0]), ntohl(inst.un6[1]));
-  printf_d(d + 1, "coords=\x1b[2m(%d, %d, %d, %d)\x1b[0m\n", inst.coords[0],
-           inst.coords[1], inst.coords[2], inst.coords[3]);
+  const uint32_t k = ((const T0CDrillIndicator<version> *)untyped_inst)->k;
+  T0CDrillIndicator<version> inst = fs->get_x0C(k);
+  printf_d(d,
+           "x0C: t=0x%04X subtype=%02X layer=%d k=0x%08X "
+           "label=\x1b[34m\"%s\"\x1b[0m backdrill_id=%08X\n",
+           ntohl(inst.t), inst.subtype, inst.layer, ntohl(inst.k), inst.label,
+           ntohl(inst.backdrill_id));
+  if constexpr (!std::is_same_v<decltype(inst.un2), std::monostate>) {
+    printf_d(d + 1, "un2=%08X un4=%08X\n", ntohl(inst.un2), ntohl(inst.un4));
+  }
+  if constexpr (!std::is_same_v<decltype(inst.un5), std::monostate>) {
+    printf_d(d + 1, "un5=%08X\n", ntohl(inst.un5));
+  }
+  printf_d(d + 1, "un1={%08X %08X}, un5=%08X, un6=0x%08X\n", ntohl(inst.un1[0]),
+           ntohl(inst.un1[1]), ntohl(inst.un5), ntohl(inst.un6));
+  printf_d(d + 1, "\x1b[2m(%d, %d, %d, %d, %0.1f deg)\x1b[0m\n", inst.coords[0],
+           inst.coords[1], inst.coords[2], inst.coords[3],
+           inst.rotation / 1000.);
 
-  printf_d(d + 1, "ptr1:");
+  printf_d(d + 1, "group_ptr:");
   if (inst.group_ptr == 0) {
     printf(" \x1b[2mnull\x1b[0m\n");
   } else {
@@ -2387,21 +2395,22 @@ void print_x30(const void *untyped_inst, File<version> *fs, const int d) {
 
 template <AllegroVersion version>
 void print_x31(const void *untyped_inst, File<version> *fs, const int d) {
-  const T31String<version> *inst = (const T31String<version> *)untyped_inst;
+  const uint32_t k = ((const T31String<version> *)untyped_inst)->k;
+  T31String<version> inst = fs->get_x31(k);
   printf_d(d,
            "x31: \x1b[36;3mString Graphic\x1b[0m"
            " t=0x%04X subtype=%02X layer=%d k=0x%08X un=%08X "
            "\x1b[34m\"%s\"\x1b[0m"
            " \x1b[2m(%d, %d)\x1b[0m\n",
-           ntohs(inst->t), inst->subtype, inst->layer, ntohl(inst->k),
-           ntohl(inst->un), inst->s.c_str(), inst->coords[0], inst->coords[1]);
+           ntohs(inst.t), inst.subtype, inst.layer, ntohl(inst.k),
+           ntohl(inst.un), inst.s.c_str(), inst.coords[0], inst.coords[1]);
 
   printf_d(d + 1, "str_graphic_wrapper_ptr:\n");
-  if (fs->is_type(inst->str_graphic_wrapper_ptr, 0x30)) {
-    print_struct(inst->str_graphic_wrapper_ptr, *fs, d + 2);
+  if (fs->is_type(inst.str_graphic_wrapper_ptr, 0x30)) {
+    print_struct(inst.str_graphic_wrapper_ptr, *fs, d + 2);
   } else {
     printf_d(d + 2, "str_graphic_wrapper_ptr unrecognized: 0x%08X\n",
-             ntohl(inst->str_graphic_wrapper_ptr));
+             ntohl(inst.str_graphic_wrapper_ptr));
     exit(0);
   }
 }
@@ -2793,55 +2802,19 @@ void print_x36(const void *untyped_inst, File<version> *fs, const int d) {
 }
 
 template <AllegroVersion version>
-void print_x37(const void *untyped_inst, File<version> *, const int d) {
+void print_x37(const void *untyped_inst, File<version> *fs, const int d) {
   const x37<version> *inst = (const x37<version> *)untyped_inst;
   const int MAX_TO_PRINT = 5;
   printf_d(d, "x37: t=0x%08X k=0x%08X %08X \x1b[2m(%d/%d)\x1b[0m\n",
            ntohl(inst->t), ntohl(inst->k), ntohl(inst->un2), inst->count,
            inst->capacity);
 
-  /*
-  printf_d(d+1, "ptr1:\n");
-  if (fs->x37_map->count(inst->ptr1) > 0) {
-      print_struct((const void*)&fs->x37_map->at(inst->ptr1), fs, d+2);
-  } else if (fs->x2C_map->count(inst->ptr1) > 0) {
-      print_struct((const void*)&fs->x2C_map->at(inst->ptr1), fs, d+2);
-  } else {
-      printf_d(d+2, "ptr1 unrecognized: 0x%08X\n", ntohl(inst->ptr1));
-      exit(0);
-  }
-  */
-
-  /*
   for (uint32_t i = 0; i < MAX_TO_PRINT && i < inst->count; i++) {
-      printf_d(d + 1, "ptr[% 3d] = 0x%08X\n", i, ntohl(inst->ptrs[i]));
-      if (fs->is_type(inst->ptrs[i], 0x30)) {
-          print_struct((const void *)fs->ptrs[inst->ptrs[i]], fs,
-                       d + 2);
-      } else if (fs->is_type(inst->ptrs[i], 0x2D)) {
-          print_struct((const void *)fs->ptrs[inst->ptrs[i]], fs,
-                       d + 2);
-      } else if (fs->is_type(inst->ptrs[i], 0x2C)) {
-          print_struct((const void *)fs->ptrs[inst->ptrs[i]], fs,
-                       d + 2);
-      } else if (fs->is_type(inst->ptrs[i], 0x28)) {
-          print_struct((const void *)fs->ptrs[inst->ptrs[i]], fs,
-                       d + 2);
-      } else if (fs->is_type(inst->ptrs[i], 0x24)) {
-          print_struct((const void *)fs->ptrs[inst->ptrs[i]], fs,
-                       d + 2);
-      } else if (fs->x1B_map.count(inst->ptrs[i]) > 0) {
-          print_struct((const void *)&fs->x1B_map.at(inst->ptrs[i]), fs,
-                       d + 2);
-      } else if (fs->x14_map.count(inst->ptrs[i]) > 0) {
-          print_struct((const void *)&fs->x14_map.at(inst->ptrs[i]), fs,
-                       d + 2);
-      } else if (fs->x0C_map.count(inst->ptrs[i]) > 0) {
-          print_struct((const void *)&fs->x0C_map.at(inst->ptrs[i]), fs,
-                       d + 2);
-      }
+    printf_d(d + 1, "ptr[% 3d] = 0x%08X\n", i, ntohl(inst->ptrs[i]));
+    if (inst->ptrs[i] != 0) {
+      print_struct(inst->ptrs[i], *fs, d + 2);
+    }
   }
-  */
 
   if (inst->count > MAX_TO_PRINT) {
     printf_d(d + 1, "⋮\n");
