@@ -225,6 +225,9 @@ TEST(ParseFile, BeagleYParsed) {
       x03_str_lookup(fs.get_x1B(0x00002337).path_str_ptr, fs).c_str(),
       "@\\beagley ai_sch_v1.0_240105\\.\\beagley ai\\(sch_1):pmic_reset");
 
+  // Verifies field alignment is sane
+  EXPECT_EQ(fs.get_x0C(0x00050FC5).coords[0], -1198000);
+
   check_header_values(fs);
   validate_objects(fs);
 }

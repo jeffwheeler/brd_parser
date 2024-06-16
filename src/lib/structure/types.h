@@ -470,10 +470,10 @@ struct x0C {
   uint32_t un1[2];        // Typically (always?) null
   uint32_t backdrill_id;  // Each backdrill depth (e.g. 12-6) gets its own ID
   uint32_t un5;
-  int32_t coords[4];
-  uint32_t group_ptr;
-  uint32_t un6[2];
   COND_FIELD(version >= kA174, uint32_t, un4);
+  int32_t coords[4];
+  ExpectRefType<0x26> group_ptr;
+  uint32_t un6[2];
 
   uint32_t TAIL;
   operator x0C<kAMax>() const;
