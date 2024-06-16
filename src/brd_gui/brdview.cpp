@@ -265,6 +265,18 @@ void BrdView::drawX23(const T23Rat<kAMax> *inst, QPen *pen) {
   item->setData(0, inst->k);
 }
 
+void BrdView::drawX24(const T24Rectangle<kAMax> *inst, QPen *pen) {
+  if (!onSelectedLayer(inst->subtype, inst->layer)) {
+    return;
+  }
+
+  QGraphicsItem *item =
+      scene->addRect((inst->coords[0]) / factor, (inst->coords[1]) / factor,
+                     (inst->coords[2] - inst->coords[0]) / factor,
+                     (inst->coords[3] - inst->coords[1]) / factor, *pen);
+  item->setData(0, inst->k);
+}
+
 // Shapes
 void BrdView::drawX28(const T28Shape<kAMax> *inst, QPen *pen) {
   if (!onSelectedLayer(inst->subtype, inst->layer) ||
@@ -700,6 +712,9 @@ void BrdView::drawShape(const uint32_t ptr, QPen *pen) {
   } else if (fs->is_type(ptr, 0x23)) {
     const T23Rat<kAMax> inst = fs->get_x23(ptr);
     drawX23(&inst, pen);
+  } else if (fs->is_type(ptr, 0x24)) {
+    const T24Rectangle<kAMax> inst = fs->get_x24(ptr);
+    drawX24(&inst, pen);
   } else if (fs->is_type(ptr, 0x28)) {
     const T28Shape<kAMax> inst = fs->get_x28(ptr);
     drawX28(&inst, pen);
@@ -757,7 +772,7 @@ void BrdView::drawFile() {
   pen2->setCapStyle(Qt::RoundCap);
   QPen *pen3 = new QPen(QColor(235, 235, 235, 127), 0);
   QPen *pen4 = new QPen(QColor(202, 210, 197, 127), 0);
-  // QPen *pen5 = new QPen(QColor(132, 169, 140, 127), 0);
+  QPen *pen5 = new QPen(QColor(132, 169, 140, 127), 0);
   // QPen *pen6 = new QPen(QColor(237, 211, 130, 127), 0);
 
   for (auto &i_x1B : fs->iter_t1B_net()) {
@@ -878,7 +893,8 @@ void BrdView::drawFile() {
       k = i.next;
     } else if (fs->is_type(k, 0x24)) {
       auto &i = fs->get_x24(k);
-      k = i.un[0];
+      drawShape(k, pen5);
+      k = i.next;
     } else {
       qDebug() << "Unexpected end of list?";
       break;

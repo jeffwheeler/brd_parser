@@ -81,7 +81,7 @@ sfs<kAMax> SFS_TABLE[] = {
     // 0x23
     {&print_x23},
     // 0x24
-    {&default_printer},
+    {&print_x24},
     // 0x25
     {},
     // 0x26
@@ -1548,6 +1548,34 @@ void print_x23(const void *untyped_inst, File<version> *fs, const int d) {
       printf_d(d + 1, "un[%d] expected to be 0, but is actually 0x%08X\n", i,
                ntohl(inst->un[i]));
       // exit(1);
+    }
+  }
+}
+
+template <AllegroVersion version>
+void print_x24(const void *untyped_inst, File<version> *fs, const int d) {
+  const uint32_t k = ((const T24Rectangle<version> *)untyped_inst)->k;
+  T24Rectangle<version> inst = fs->get_x24(k);
+  printf_d(
+      d,
+      "x24: t=0x%04X subtype=%02X layer=%02X k=0x%08X ptr1=0x %08X un1=0x%08X"
+      " \x1b[2m(%d, %d, %d, %d)\x1b[0m\n",
+      ntohs(inst.type), inst.subtype, inst.layer, ntohl(inst.k),
+      ntohl(inst.ptr1), ntohl(inst.un1), inst.coords[0], inst.coords[1],
+      inst.coords[2], inst.coords[3]);
+  printf_d(d + 1, "un={0x%08X 0x%08X 0x%08X}\n", ntohl(inst.un[0]),
+           ntohl(inst.un[1]), ntohl(inst.un[2]));
+
+  printf_d(d + 1, "ptr2:");
+  if (inst.ptr2 == 0) {
+    printf(" \x1b[2mnull\x1b[0m\n");
+  } else {
+    std::printf("\n");
+    if (fs->is_type(inst.ptr2, 0x03)) {
+      print_struct(inst.ptr2, *fs, d + 2);
+    } else {
+      printf_d(d + 2, "ptr2 unrecognized: 0x%08X\n", ntohl(inst.ptr2));
+      exit(0);
     }
   }
 }

@@ -123,7 +123,7 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x23
     {&default_parser<T23Rat, version>},
     // 0x24
-    {&default_parser<x24, version>},
+    {&default_parser<T24Rectangle, version>},
     // 0x25
     {},
     // 0x26

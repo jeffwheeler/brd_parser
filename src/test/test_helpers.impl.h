@@ -96,6 +96,11 @@ void validate_x23(const T23Rat<version>& i, File<version>& fs) {
 }
 
 template <AllegroVersion version>
+void validate_x24(const T24Rectangle<version>& i, File<version>& fs) {
+  EXPECT_TRUE(CheckNullableType(i, i.ptr2, fs));
+}
+
+template <AllegroVersion version>
 void validate_x28(const T28Shape<version>& i, File<version>& fs) {
   EXPECT_TRUE(CheckNullableType(i, i.ptr4, fs));
 }
@@ -264,6 +269,9 @@ void validate_objects(File<version>& fs) {
         break;
       case 0x1B:
         validate_x1B(fs.get_x1B(k), fs);
+        break;
+      case 0x24:
+        validate_x24(fs.get_x24(k), fs);
         break;
       case 0x28:
         validate_x28(fs.get_x28(k), fs);

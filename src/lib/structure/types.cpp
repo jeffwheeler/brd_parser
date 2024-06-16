@@ -492,8 +492,25 @@ T23Rat<kA164>::operator T23Rat<kAMax>() const {
 }
 
 template <>
-x24<kA160>::operator x24<kAMax>() const {
-  return *reinterpret_cast<const x24<kAMax> *>(this);
+T24Rectangle<kA160>::operator T24Rectangle<kAMax>() const {
+  T24Rectangle<kAMax> new_inst;
+  new_inst.type = this->type;
+  new_inst.subtype = this->subtype;
+  new_inst.layer = this->layer;
+
+  new_inst.k = this->k;
+  new_inst.next = this->next;
+  new_inst.ptr1 = this->ptr1;
+  new_inst.un1 = this->un1;
+  for (uint8_t i = 0; i < 4; i++) {
+    new_inst.coords[i] = this->coords[i];
+  }
+  new_inst.ptr2 = this->ptr2;
+  for (uint8_t i = 0; i < 3; i++) {
+    new_inst.un[i] = this->un[i];
+  }
+
+  return new_inst;
 }
 
 template <>
@@ -966,7 +983,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x1D_upgrade = new_upgrade<kA160, kAMax, x1D>;
       this->x1F_upgrade = new_upgrade<kA160, kAMax, x1F>;
       this->x23_upgrade = new_upgrade<kA160, kAMax, T23Rat>;
-      this->x24_upgrade = new_upgrade<kA160, kAMax, x24>;
+      this->x24_upgrade = new_upgrade<kA160, kAMax, T24Rectangle>;
       this->x26_upgrade = new_upgrade<kA160, kAMax, x26>;
       this->x28_upgrade = new_upgrade<kA160, kAMax, T28Shape>;
       this->x2B_upgrade = new_upgrade<kA160, kAMax, T2BSymbol>;
@@ -1008,7 +1025,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x1D_upgrade = new_upgrade<kA162, kAMax, x1D>;
       this->x1F_upgrade = new_upgrade<kA162, kAMax, x1F>;
       this->x23_upgrade = new_upgrade<kA162, kAMax, T23Rat>;
-      this->x24_upgrade = new_upgrade<kA162, kAMax, x24>;
+      this->x24_upgrade = new_upgrade<kA162, kAMax, T24Rectangle>;
       this->x26_upgrade = new_upgrade<kA162, kAMax, x26>;
       this->x28_upgrade = new_upgrade<kA162, kAMax, T28Shape>;
       this->x2B_upgrade = new_upgrade<kA162, kAMax, T2BSymbol>;
@@ -1050,7 +1067,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x1D_upgrade = new_upgrade<kA164, kAMax, x1D>;
       this->x1F_upgrade = new_upgrade<kA164, kAMax, x1F>;
       this->x23_upgrade = new_upgrade<kA164, kAMax, T23Rat>;
-      this->x24_upgrade = new_upgrade<kA164, kAMax, x24>;
+      this->x24_upgrade = new_upgrade<kA164, kAMax, T24Rectangle>;
       this->x26_upgrade = new_upgrade<kA164, kAMax, x26>;
       this->x28_upgrade = new_upgrade<kA164, kAMax, T28Shape>;
       this->x2B_upgrade = new_upgrade<kA164, kAMax, T2BSymbol>;
@@ -1092,7 +1109,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x1D_upgrade = new_upgrade<kA165, kAMax, x1D>;
       this->x1F_upgrade = new_upgrade<kA165, kAMax, x1F>;
       this->x23_upgrade = new_upgrade<kA165, kAMax, T23Rat>;
-      this->x24_upgrade = new_upgrade<kA165, kAMax, x24>;
+      this->x24_upgrade = new_upgrade<kA165, kAMax, T24Rectangle>;
       this->x26_upgrade = new_upgrade<kA165, kAMax, x26>;
       this->x28_upgrade = new_upgrade<kA165, kAMax, T28Shape>;
       this->x2B_upgrade = new_upgrade<kA165, kAMax, T2BSymbol>;
@@ -1135,7 +1152,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x1D_upgrade = new_upgrade<kA166, kAMax, x1D>;
       this->x1F_upgrade = new_upgrade<kA166, kAMax, x1F>;
       this->x23_upgrade = new_upgrade<kA166, kAMax, T23Rat>;
-      this->x24_upgrade = new_upgrade<kA166, kAMax, x24>;
+      this->x24_upgrade = new_upgrade<kA166, kAMax, T24Rectangle>;
       this->x26_upgrade = new_upgrade<kA166, kAMax, x26>;
       this->x28_upgrade = new_upgrade<kA166, kAMax, T28Shape>;
       this->x2B_upgrade = new_upgrade<kA166, kAMax, T2BSymbol>;
@@ -1182,7 +1199,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x1D_upgrade = new_upgrade<kA172, kAMax, x1D>;
       this->x1F_upgrade = new_upgrade<kA172, kAMax, x1F>;
       this->x23_upgrade = new_upgrade<kA172, kAMax, T23Rat>;
-      this->x24_upgrade = new_upgrade<kA172, kAMax, x24>;
+      this->x24_upgrade = new_upgrade<kA172, kAMax, T24Rectangle>;
       this->x26_upgrade = new_upgrade<kA172, kAMax, x26>;
       this->x28_upgrade = new_upgrade<kA172, kAMax, T28Shape>;
       this->x2B_upgrade = new_upgrade<kA172, kAMax, T2BSymbol>;
@@ -1227,7 +1244,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x1D_upgrade = new_upgrade<kA174, kAMax, x1D>;
       this->x1F_upgrade = new_upgrade<kA174, kAMax, x1F>;
       this->x23_upgrade = new_upgrade<kA174, kAMax, T23Rat>;
-      this->x24_upgrade = new_upgrade<kA174, kAMax, x24>;
+      this->x24_upgrade = new_upgrade<kA174, kAMax, T24Rectangle>;
       this->x26_upgrade = new_upgrade<kA174, kAMax, x26>;
       this->x28_upgrade = new_upgrade<kA174, kAMax, T28Shape>;
       this->x2B_upgrade = new_upgrade<kA174, kAMax, T2BSymbol>;
@@ -1269,7 +1286,7 @@ void File<version>::cache_upgrade_funcs() {
       this->x1D_upgrade = new_upgrade<kAMax, kAMax, x1D>;
       this->x1F_upgrade = new_upgrade<kAMax, kAMax, x1F>;
       this->x23_upgrade = new_upgrade<kAMax, kAMax, T23Rat>;
-      this->x24_upgrade = new_upgrade<kAMax, kAMax, x24>;
+      this->x24_upgrade = new_upgrade<kAMax, kAMax, T24Rectangle>;
       this->x26_upgrade = new_upgrade<kAMax, kAMax, x26>;
       this->x28_upgrade = new_upgrade<kAMax, kAMax, T28Shape>;
       this->x2B_upgrade = new_upgrade<kAMax, kAMax, T2BSymbol>;
@@ -1496,7 +1513,7 @@ const T23Rat<kAMax> File<kAMax>::get_x23(uint32_t k) {
 }
 
 template <>
-const x24<kAMax> File<kAMax>::get_x24(uint32_t k) {
+const T24Rectangle<kAMax> File<kAMax>::get_x24(uint32_t k) {
   return this->x24_upgrade(this->ptrs[k]);
 }
 

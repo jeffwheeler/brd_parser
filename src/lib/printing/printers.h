@@ -97,6 +97,9 @@ template <AllegroVersion version>
 void print_x23(const void *untyped_inst, File<version> *fs, const int d);
 
 template <AllegroVersion version>
+void print_x24(const void *untyped_inst, File<version> *fs, const int d);
+
+template <AllegroVersion version>
 void print_x26(const void *untyped_inst, File<version> *fs, const int d);
 
 template <AllegroVersion version>
