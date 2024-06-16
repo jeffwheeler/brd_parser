@@ -96,7 +96,7 @@ void validate_x23(const T23Rat<version>& i, File<version>& fs) {
 }
 
 template <AllegroVersion version>
-void validate_x24(const x24<version>& i, File<version>& fs) {
+void validate_x24(const T24Rectangle<version>& i, File<version>& fs) {
   EXPECT_TRUE(CheckNullableType(i, i.ptr2, fs));
 }
 

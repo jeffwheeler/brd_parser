@@ -265,7 +265,7 @@ void BrdView::drawX23(const T23Rat<kAMax> *inst, QPen *pen) {
   item->setData(0, inst->k);
 }
 
-void BrdView::drawX24(const x24<kAMax> *inst, QPen *pen) {
+void BrdView::drawX24(const T24Rectangle<kAMax> *inst, QPen *pen) {
   if (!onSelectedLayer(inst->subtype, inst->layer)) {
     return;
   }
@@ -713,7 +713,7 @@ void BrdView::drawShape(const uint32_t ptr, QPen *pen) {
     const T23Rat<kAMax> inst = fs->get_x23(ptr);
     drawX23(&inst, pen);
   } else if (fs->is_type(ptr, 0x24)) {
-    const x24<kAMax> inst = fs->get_x24(ptr);
+    const T24Rectangle<kAMax> inst = fs->get_x24(ptr);
     drawX24(&inst, pen);
   } else if (fs->is_type(ptr, 0x28)) {
     const T28Shape<kAMax> inst = fs->get_x28(ptr);

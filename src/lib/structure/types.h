@@ -967,7 +967,7 @@ struct T23Rat {
 };
 
 template <AllegroVersion version>
-struct x24 {
+struct T24Rectangle {
   uint16_t type;
   uint8_t subtype;
   uint8_t layer;
@@ -982,13 +982,13 @@ struct x24 {
   uint32_t un[3];
 
   uint32_t TAIL;
-  operator x24<kAMax>() const;
+  operator T24Rectangle<kAMax>() const;
   static constexpr AllegroVersion versions[1] = {kA172};
 };
 
-static_assert(offsetof(x24<kA164>, coords) == 20);
-static_assert(offsetof(x24<kA172>, coords) == 24);
-static_assert(offsetof(x24<kA164>, ptr2) == 36);
+static_assert(offsetof(T24Rectangle<kA164>, coords) == 20);
+static_assert(offsetof(T24Rectangle<kA172>, coords) == 24);
+static_assert(offsetof(T24Rectangle<kA164>, ptr2) == 36);
 
 template <AllegroVersion version>
 struct x26 {
@@ -1683,7 +1683,7 @@ class File {
   const x1D<kAMax> get_x1D(uint32_t k);
   const x1F<kAMax> get_x1F(uint32_t k);
   const T23Rat<kAMax> get_x23(uint32_t k);
-  const x24<kAMax> get_x24(uint32_t k);
+  const T24Rectangle<kAMax> get_x24(uint32_t k);
   const x26<kAMax> get_x26(uint32_t k);
   const T28Shape<kAMax> get_x28(uint32_t k);
   const T2BSymbol<kAMax> get_x2B(uint32_t k);
@@ -1953,7 +1953,7 @@ class File {
   x1D<kAMax> (*x1D_upgrade)(void *);
   x1F<kAMax> (*x1F_upgrade)(void *);
   T23Rat<kAMax> (*x23_upgrade)(void *);
-  x24<kAMax> (*x24_upgrade)(void *);
+  T24Rectangle<kAMax> (*x24_upgrade)(void *);
   x26<kAMax> (*x26_upgrade)(void *);
   T28Shape<kAMax> (*x28_upgrade)(void *);
   T2BSymbol<kAMax> (*x2B_upgrade)(void *);
