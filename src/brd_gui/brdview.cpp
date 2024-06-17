@@ -210,7 +210,6 @@ void BrdView::drawX0C(const T0CDrillIndicator<kAMax> *inst, QPen *pen) {
     QTransform t =
         QTransform()
             .translate(center.x(), center.y())
-            .rotate(inst->rotation / 1000.)
             .scale(1, -1)
             .translate(boundingBox.width() * -0.5, boundingBox.height() * -0.5);
 
