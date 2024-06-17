@@ -458,7 +458,7 @@ struct T0ADRC {
   static constexpr AllegroVersion versions[2] = {kA172, kA174};
 };
 
-enum DrillSymbol : uint8_t {
+enum DrillSymbol : uint32_t {
   NoSymbol = 0,
   Circle = 0x02,
   RoundedRect = 0x0B,
@@ -473,8 +473,8 @@ struct T0CDrillIndicator {
   uint8_t layer;
   uint32_t k;
   uint32_t next;
-  uint32_t un1[2];        // Typically (always?) null
-  uint32_t backdrill_id;  // Each backdrill depth (e.g. 12-6) gets its own ID
+  uint32_t un1[2];  // Typically (always?) null
+  DrillSymbol drill_chart_symbol;
   char label[4];
   COND_FIELD(version >= kA172, uint32_t, un2);
   COND_FIELD(version >= kA172, uint32_t, un4);
@@ -825,8 +825,13 @@ struct T1CPad {
   COND_FIELD(version < kA172, uint16_t, un6);
   uint16_t layer_count;
   COND_FIELD(version >= kA172, uint16_t, un7);
-  uint32_t un8[7];
-  COND_FIELD(version >= kA172, uint32_t[28], un9);
+  uint32_t un8[3];
+  COND_FIELD(version >= kA172, uint32_t[8], un9);
+  uint32_t symbol_w;
+  uint32_t symbol_h;
+  DrillSymbol drill_chart_symbol;
+  char drill_label[4];
+  COND_FIELD(version >= kA172, uint32_t[20], un11);
   COND_FIELD(version == kA165 || version == kA166, uint32_t[8], un10);
 
   uint32_t TAIL;
@@ -844,6 +849,7 @@ static_assert(offsetof(T1CPad<kA164>, layer_count) == 50);
 static_assert(offsetof(T1CPad<kA172>, layer_count) == 44);
 static_assert(offsetof(T1CPad<kA164>, pad_info) == 44);
 static_assert(offsetof(T1CPad<kA172>, pad_info) == 28);
+static_assert(offsetof(T1CPad<kA175>, drill_label) == 104);
 
 template <AllegroVersion version>
 struct x1D {

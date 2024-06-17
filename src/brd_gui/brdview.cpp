@@ -182,13 +182,13 @@ void BrdView::drawX0C(const T0CDrillIndicator<kAMax> *inst, QPen *pen) {
   int32_t w = inst->coords[2], h = inst->coords[3];
   QPointF center = QPointF(inst->coords[0] / factor, inst->coords[1] / factor);
 
-  if (inst->backdrill_id != DrillSymbol::NoSymbol) {
+  if (inst->drill_chart_symbol != DrillSymbol::NoSymbol) {
     QTransform t = QTransform()
                        .translate(center.x(), center.y())
                        .rotate(inst->rotation / 1000.);
     QGraphicsItem *item = nullptr;
-    if (inst->backdrill_id == DrillSymbol::Circle ||
-        inst->backdrill_id == DrillSymbol::RoundedRect) {
+    if (inst->drill_chart_symbol == DrillSymbol::Circle ||
+        inst->drill_chart_symbol == DrillSymbol::RoundedRect) {
       item = scene->addEllipse((-w / 2.) / factor, (-h / 2.) / factor,
                                w / factor, h / factor, *pen);
     } else {
