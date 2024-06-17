@@ -202,7 +202,7 @@ T0CDrillIndicator<kA160>::operator T0CDrillIndicator<kAMax>() const {
   new_inst.next = this->next;
   new_inst.un1[0] = this->un1[0];
   new_inst.un1[1] = this->un1[1];
-  new_inst.backdrill_id = this->backdrill_id;
+  new_inst.drill_chart_symbol = this->drill_chart_symbol;
   new_inst.un2 = 0;
   for (uint8_t i = 0; i < 4; i++) {
     new_inst.label[i] = this->label[i];
@@ -227,7 +227,7 @@ T0CDrillIndicator<kA172>::operator T0CDrillIndicator<kAMax>() const {
   new_inst.next = this->next;
   new_inst.un1[0] = this->un1[0];
   new_inst.un1[1] = this->un1[1];
-  new_inst.backdrill_id = this->backdrill_id;
+  new_inst.drill_chart_symbol = this->drill_chart_symbol;
   new_inst.un2 = this->un2;
   new_inst.un4 = this->un4;
   for (uint8_t i = 0; i < 4; i++) {
@@ -253,7 +253,7 @@ T0CDrillIndicator<kA174>::operator T0CDrillIndicator<kAMax>() const {
   new_inst.next = this->next;
   new_inst.un1[0] = this->un1[0];
   new_inst.un1[1] = this->un1[1];
-  new_inst.backdrill_id = this->backdrill_id;
+  new_inst.drill_chart_symbol = this->drill_chart_symbol;
   new_inst.un2 = this->un2;
   for (uint8_t i = 0; i < 4; i++) {
     new_inst.label[i] = this->label[i];

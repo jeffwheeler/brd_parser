@@ -803,9 +803,9 @@ void print_x0C(const void *untyped_inst, File<version> *fs, const int d) {
   T0CDrillIndicator<version> inst = fs->get_x0C(k);
   printf_d(d,
            "x0C: t=0x%04X subtype=%02X layer=%d k=0x%08X "
-           "label=\x1b[34m\"%s\"\x1b[0m backdrill_id=%08X\n",
+           "label=\x1b[34m\"%s\"\x1b[0m drill_chart_symbol=%08X\n",
            ntohl(inst.t), inst.subtype, inst.layer, ntohl(inst.k), inst.label,
-           ntohl(inst.backdrill_id));
+           ntohl(inst.drill_chart_symbol));
   if constexpr (!std::is_same_v<decltype(inst.un2), std::monostate>) {
     printf_d(d + 1, "un2=%08X un4=%08X\n", ntohl(inst.un2), ntohl(inst.un4));
   }
@@ -814,8 +814,8 @@ void print_x0C(const void *untyped_inst, File<version> *fs, const int d) {
   }
   printf_d(d + 1, "un1={%08X %08X}, un5=%08X, un6=0x%08X\n", ntohl(inst.un1[0]),
            ntohl(inst.un1[1]), ntohl(inst.un5), ntohl(inst.un6));
-  printf_d(d + 1, "\x1b[2m(%d, %d, %d, %d, %0.1f deg)\x1b[0m\n", inst.coords[0],
-           inst.coords[1], inst.coords[2], inst.coords[3],
+  printf_d(d + 1, "\x1b[2m(%d, %d, w=%d, h=%d, %0.1f deg)\x1b[0m\n",
+           inst.coords[0], inst.coords[1], inst.coords[2], inst.coords[3],
            inst.rotation / 1000.);
 
   printf_d(d + 1, "group_ptr:");
@@ -993,17 +993,22 @@ void print_x11(const void *untyped_inst, File<version> *fs, const int d) {
     exit(0);
   }
 
-  printf_d(d + 1, "ptr3 \x1b[3m(matching footprint pin)\x1b[0m:\n");
-  if (fs->is_type(inst->ptr3, 0x08)) {
-    print_struct(inst->ptr3, *fs, d + 2);
+  printf_d(d + 1, "ptr3 \x1b[3m(matching footprint pin)\x1b[0m:");
+  if (inst->ptr3 == 0) {
+    printf(" \x1b[2mnull\x1b[0m\n");
   } else {
-    printf_d(d + 2, "ptr3 unrecognized: 0x%08X\n", ntohl(inst->ptr3));
-    exit(0);
+    std::printf("\n");
+    if (fs->is_type(inst->ptr3, 0x08)) {
+      print_struct(inst->ptr3, *fs, d + 2);
+    } else {
+      printf_d(d + 2, "ptr3 unrecognized: 0x%08X\n", ntohl(inst->ptr3));
+      exit(0);
+    }
   }
 
   if (inst->un != 0) {
     printf_d(d + 1, "expected un to be 0, but = %08X\n", ntohl(inst->un));
-    exit(1);
+    // exit(1);
   }
 }
 
@@ -1442,6 +1447,11 @@ void print_x1C(const void *untyped_inst, File<version> *fs, const int d) {
            padtype(inst.pad_info.pad_type).c_str(), inst.pad_info.pad_type,
            inst.pad_info.a, inst.pad_info.b, inst.pad_info.c, inst.pad_info.d,
            ntohl(inst.pad_str), str_lookup(inst.pad_str, *fs));
+  printf_d(d + 1,
+           "drill_chart_symbol=%08X label=\x1b[34m\"%s\"\x1b[0m (symbol_w=%d, "
+           "symbol_h=%d)\n",
+           ntohl(inst.drill_chart_symbol), inst.drill_label, inst.symbol_w,
+           inst.symbol_h);
 
   printf_d(d + 1, "layer_count=%d len(parts)=%d\n", inst.layer_count,
            inst.parts.size());
@@ -2443,6 +2453,7 @@ void print_x32(const void *untyped_inst, File<version> *fs, const int d) {
     }
   }
 
+  /*
   printf_d(d + 1, "next:\n");
   if (fs->is_type(inst.next, 0x32)) {
     print_struct(inst.next, *fs, d + 2);
@@ -2454,6 +2465,7 @@ void print_x32(const void *untyped_inst, File<version> *fs, const int d) {
     printf_d(d + 2, "next unrecognized: 0x%08X\n", ntohl(inst.next));
     exit(0);
   }
+  */
 
   printf_d(d + 1, "ptr3 \x1b[3m(placed symbol)\x1b[0m:\n");
   if (fs->is_type(inst.ptr3, 0x2D)) {
