@@ -473,7 +473,7 @@ struct T0CDrillIndicator {
   uint8_t layer;
   uint32_t k;
   uint32_t next;
-  uint32_t un1[2];        // Typically (always?) null
+  uint32_t un1[2];  // Typically (always?) null
   DrillSymbol drill_chart_symbol;
   char label[4];
   COND_FIELD(version >= kA172, uint32_t, un2);
