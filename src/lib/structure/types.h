@@ -458,12 +458,17 @@ struct T0ADRC {
   static constexpr AllegroVersion versions[2] = {kA172, kA174};
 };
 
-enum DrillSymbol : uint32_t {
+enum DrillSymbolShape : uint8_t {
   NoSymbol = 0,
   Circle = 0x02,
   RoundedRect = 0x0B,
   HexagonA = 0x0F,
   HexagonB = 0x10,
+};
+
+struct DrillSymbol {
+  DrillSymbolShape shape;
+  uint8_t unknown[3];
 };
 
 template <AllegroVersion version>
@@ -818,21 +823,24 @@ struct T1CPad {
   uint32_t pad_str;
   uint32_t un2;
   uint32_t un3;
+  COND_FIELD(version < kA172, uint32_t, symbol_w_16x);
+  COND_FIELD(version < kA172, uint32_t, symbol_h_16x);
   uint32_t pad_path;
-  COND_FIELD(version < kA172, uint32_t[4], un4);
+  COND_FIELD(version < kA172, uint32_t[2], un4);
   PadInfo pad_info;
   COND_FIELD(version >= kA172, uint32_t[3], un5);
   COND_FIELD(version < kA172, uint16_t, un6);
   uint16_t layer_count;
   COND_FIELD(version >= kA172, uint16_t, un7);
-  uint32_t un8[3];
-  COND_FIELD(version >= kA172, uint32_t[8], un9);
+  uint32_t un8[1];
+  COND_FIELD(version >= kA172, uint32_t[10], un9);
   uint32_t symbol_w;
   uint32_t symbol_h;
   DrillSymbol drill_chart_symbol;
   char drill_label[4];
   COND_FIELD(version >= kA172, uint32_t[20], un11);
   COND_FIELD(version == kA165 || version == kA166, uint32_t[8], un10);
+  COND_FIELD(version < kA172, uint32_t[2], un12);
 
   uint32_t TAIL;
   operator T1CPad<kAMax>() const;
@@ -849,7 +857,9 @@ static_assert(offsetof(T1CPad<kA164>, layer_count) == 50);
 static_assert(offsetof(T1CPad<kA172>, layer_count) == 44);
 static_assert(offsetof(T1CPad<kA164>, pad_info) == 44);
 static_assert(offsetof(T1CPad<kA172>, pad_info) == 28);
+static_assert(offsetof(T1CPad<kA166>, drill_label) == 68);
 static_assert(offsetof(T1CPad<kA175>, drill_label) == 104);
+static_assert(offsetof(T1CPad<kA166>, symbol_w_16x) == 24);
 
 template <AllegroVersion version>
 struct x1D {

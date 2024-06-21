@@ -492,6 +492,12 @@ T1CPad<kA160>::operator T1CPad<kAMax>() const {
   new_inst.pad_path = this->pad_path;
   new_inst.pad_info = this->pad_info;
   new_inst.layer_count = this->layer_count;
+  new_inst.symbol_w = this->symbol_w_16x;
+  new_inst.symbol_h = this->symbol_h_16x;
+  new_inst.drill_chart_symbol = this->drill_chart_symbol;
+  for (uint8_t i = 0; i < 4; i++) {
+    new_inst.drill_label[i] = this->drill_label[i];
+  }
   new_inst.un1 = this->un1;
   new_inst.un2 = this->un2;
   new_inst.un3 = this->un3;
@@ -509,6 +515,12 @@ T1CPad<kA165>::operator T1CPad<kAMax>() const {
   new_inst.pad_path = this->pad_path;
   new_inst.pad_info = this->pad_info;
   new_inst.layer_count = this->layer_count;
+  new_inst.symbol_w = this->symbol_w_16x;
+  new_inst.symbol_h = this->symbol_h_16x;
+  new_inst.drill_chart_symbol = this->drill_chart_symbol;
+  for (uint8_t i = 0; i < 4; i++) {
+    new_inst.drill_label[i] = this->drill_label[i];
+  }
   new_inst.un1 = this->un1;
   new_inst.un2 = this->un2;
   new_inst.un3 = this->un3;
