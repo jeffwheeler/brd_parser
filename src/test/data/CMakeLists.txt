@@ -31,7 +31,7 @@ download_brd(beaglebone_ai
 
 # License: CC-BY-4.0 (https://openbeagle.org/beagley-ai/beagley-ai/-/blob/c4c30e13adfb64c1feea3d927340288f7a261591/LICENSE)
 download_brd(beagle_y
-    URL https://openbeagle.org/beagley-ai/beagley-ai/-/raw/main/design/BeagleY-AI_PCB_V1.0_240105.brd
+    URL https://openbeagle.org/beagley-ai/beagley-ai/-/raw/199032128b71deebb1d44704243b08cc79142642/design/BeagleY-AI_PCB_V1.0_240105.brd
     URL_HASH MD5=adf96848a307076dca3ef09063179fc1
 )
 

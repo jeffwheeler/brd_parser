@@ -182,13 +182,13 @@ void BrdView::drawX0C(const T0CDrillIndicator<kAMax> *inst, QPen *pen) {
   int32_t w = inst->coords[2], h = inst->coords[3];
   QPointF center = QPointF(inst->coords[0] / factor, inst->coords[1] / factor);
 
-  if (inst->drill_chart_symbol != DrillSymbol::NoSymbol) {
+  if (inst->drill_chart_symbol.shape != DrillSymbolShape::NoSymbol) {
     QTransform t = QTransform()
                        .translate(center.x(), center.y())
                        .rotate(inst->rotation / 1000.);
     QGraphicsItem *item = nullptr;
-    if (inst->drill_chart_symbol == DrillSymbol::Circle ||
-        inst->drill_chart_symbol == DrillSymbol::RoundedRect) {
+    if (inst->drill_chart_symbol.shape == DrillSymbolShape::Circle ||
+        inst->drill_chart_symbol.shape == DrillSymbolShape::RoundedRect) {
       item = scene->addEllipse((-w / 2.) / factor, (-h / 2.) / factor,
                                w / factor, h / factor, *pen);
     } else {
@@ -570,6 +570,46 @@ void BrdView::drawX32(const T32SymbolPin<kAMax> *inst, QPen *pen,
   QPointF center = QPointF((inst->coords[0] + inst->coords[2]) / 2. / factor,
                            (inst->coords[1] + inst->coords[3]) / 2. / factor);
 
+  if (x1C_inst.drill_chart_symbol.shape != DrillSymbolShape::NoSymbol) {
+    QTransform t = QTransform()
+                       .translate(center.x(), center.y())
+                       .rotate((x0D_inst.rotation + sym_rotation) / 1000.);
+    QGraphicsItem *item = nullptr;
+    QPen p = QPen(Qt::yellow, 0, Qt::DotLine);
+    if (x1C_inst.drill_chart_symbol.shape == DrillSymbolShape::Circle ||
+        x1C_inst.drill_chart_symbol.shape == DrillSymbolShape::RoundedRect) {
+      item = scene->addEllipse((-1. * x1C_inst.symbol_w / 2.) / factor,
+                               (-1. * x1C_inst.symbol_h / 2.) / factor,
+                               x1C_inst.symbol_w / factor,
+                               x1C_inst.symbol_h / factor, p);
+    } else {
+      item = scene->addRect((-1. * x1C_inst.symbol_w / 2.) / factor,
+                            (-1. * x1C_inst.symbol_h / 2.) / factor,
+                            x1C_inst.symbol_w / factor,
+                            x1C_inst.symbol_h / factor, p);
+    }
+    item->setTransform(t);
+    item->setData(0, x1C_inst.k);
+  }
+
+  if (strlen(x1C_inst.drill_label) > 0) {
+    QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
+    font.setFixedPitch(true);
+    font.setKerning(false);
+    font.setPixelSize(x1C_inst.symbol_h / factor);
+    QGraphicsTextItem *text =
+        scene->addText(QString::fromStdString(x1C_inst.drill_label), font);
+    QRectF boundingBox = text->boundingRect();
+    QTransform t =
+        QTransform()
+            .translate(center.x(), center.y())
+            .scale(1, -1)
+            .translate(boundingBox.width() * -0.5, boundingBox.height() * -0.5);
+
+    text->setDefaultTextColor(pen->color());
+    text->setTransform(t);
+    text->setData(0, inst->k);
+  }
   // Just draw the first part
   const t13<kAMax> *first_part = &x1C_inst.parts[0];
   QGraphicsItem *pad;

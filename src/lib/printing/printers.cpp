@@ -805,7 +805,7 @@ void print_x0C(const void *untyped_inst, File<version> *fs, const int d) {
            "x0C: t=0x%04X subtype=%02X layer=%d k=0x%08X "
            "label=\x1b[34m\"%s\"\x1b[0m drill_chart_symbol=%08X\n",
            ntohl(inst.t), inst.subtype, inst.layer, ntohl(inst.k), inst.label,
-           ntohl(inst.drill_chart_symbol));
+           ntohl(inst.drill_chart_symbol.shape));
   if constexpr (!std::is_same_v<decltype(inst.un2), std::monostate>) {
     printf_d(d + 1, "un2=%08X un4=%08X\n", ntohl(inst.un2), ntohl(inst.un4));
   }
@@ -1450,8 +1450,8 @@ void print_x1C(const void *untyped_inst, File<version> *fs, const int d) {
   printf_d(d + 1,
            "drill_chart_symbol=%08X label=\x1b[34m\"%s\"\x1b[0m (symbol_w=%d, "
            "symbol_h=%d)\n",
-           ntohl(inst.drill_chart_symbol), inst.drill_label, inst.symbol_w,
-           inst.symbol_h);
+           ntohl(inst.drill_chart_symbol.shape), inst.drill_label,
+           inst.symbol_w, inst.symbol_h);
 
   printf_d(d + 1, "layer_count=%d len(parts)=%d\n", inst.layer_count,
            inst.parts.size());

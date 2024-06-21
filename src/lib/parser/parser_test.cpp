@@ -159,6 +159,8 @@ TEST(ParseFile, OpenCellularGbc) {
 
   const auto via = fs.get_x1C(0x1453A1A0);
   EXPECT_EQ(via.pad_info.pad_type, PadType::ThroughVia);
+  EXPECT_EQ(via.symbol_w, 70000);
+  EXPECT_EQ(via.symbol_h, 70000);
 }
 
 // Magic is 0x00131504
@@ -227,6 +229,7 @@ TEST(ParseFile, BeagleYParsed) {
 
   // Verifies field alignment is sane
   EXPECT_EQ(fs.get_x0C(0x00050FC5).coords[0], -1198000);
+  EXPECT_EQ(fs.get_x1C(0x000025D9).symbol_w, 7874);
 
   check_header_values(fs);
   validate_objects(fs);
