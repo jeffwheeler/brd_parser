@@ -65,6 +65,10 @@ class BrdView : public QGraphicsView {
   void updatePathWidth(QPainterPath *path, QPen **pen, QPen *base_pen,
                        uint32_t *prev_width, uint32_t new_width);
 
+  void drawDrillSymbol(uint32_t k, DrillSymbol symbol, const char *label,
+                       int32_t w, int32_t h, QPointF center, uint32_t rotation,
+                       QPen &pen);
+
   QGraphicsScene *scene;
   qreal centerX, centerY;
   std::unordered_set<uint32_t> already_drawn;

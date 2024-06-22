@@ -461,9 +461,12 @@ struct T0ADRC {
 enum DrillSymbolShape : uint8_t {
   NoSymbol = 0,
   Circle = 0x02,
+  Diamond = 0x07,
   RoundedRect = 0x0B,
-  HexagonA = 0x0F,
-  HexagonB = 0x10,
+
+  // Naming from https://www.redblobgames.com/grids/hexagons/
+  HexagonFlatTop = 0x0F,
+  HexagonPointyTop = 0x10,
 };
 
 struct DrillSymbol {
