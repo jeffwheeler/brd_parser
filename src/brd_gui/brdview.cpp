@@ -182,41 +182,8 @@ void BrdView::drawX0C(const T0CDrillIndicator<kAMax> *inst, QPen *pen) {
   int32_t w = inst->coords[2], h = inst->coords[3];
   QPointF center = QPointF(inst->coords[0] / factor, inst->coords[1] / factor);
 
-  if (inst->drill_chart_symbol.shape != DrillSymbolShape::NoSymbol) {
-    QTransform t = QTransform()
-                       .translate(center.x(), center.y())
-                       .rotate(inst->rotation / 1000.);
-    QGraphicsItem *item = nullptr;
-    if (inst->drill_chart_symbol.shape == DrillSymbolShape::Circle ||
-        inst->drill_chart_symbol.shape == DrillSymbolShape::RoundedRect) {
-      item = scene->addEllipse((-w / 2.) / factor, (-h / 2.) / factor,
-                               w / factor, h / factor, *pen);
-    } else {
-      item = scene->addRect((-w / 2.) / factor, (-h / 2.) / factor, w / factor,
-                            h / factor, *pen);
-    }
-    item->setTransform(t);
-    item->setData(0, inst->k);
-  }
-
-  if (strlen(inst->label) > 0) {
-    QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
-    font.setFixedPitch(true);
-    font.setKerning(false);
-    font.setPixelSize(h / factor);
-    QGraphicsTextItem *text =
-        scene->addText(QString::fromStdString(inst->label), font);
-    QRectF boundingBox = text->boundingRect();
-    QTransform t =
-        QTransform()
-            .translate(center.x(), center.y())
-            .scale(1, -1)
-            .translate(boundingBox.width() * -0.5, boundingBox.height() * -0.5);
-
-    text->setDefaultTextColor(pen->color());
-    text->setTransform(t);
-    text->setData(0, inst->k);
-  }
+  drawDrillSymbol(inst->k, inst->drill_chart_symbol, inst->label, w, h, center,
+                  inst->rotation, *pen);
 }
 
 void BrdView::drawX14(const T14Path<kAMax> *inst, QPen *pen_) {
@@ -570,46 +537,10 @@ void BrdView::drawX32(const T32SymbolPin<kAMax> *inst, QPen *pen,
   QPointF center = QPointF((inst->coords[0] + inst->coords[2]) / 2. / factor,
                            (inst->coords[1] + inst->coords[3]) / 2. / factor);
 
-  if (x1C_inst.drill_chart_symbol.shape != DrillSymbolShape::NoSymbol) {
-    QTransform t = QTransform()
-                       .translate(center.x(), center.y())
-                       .rotate((x0D_inst.rotation + sym_rotation) / 1000.);
-    QGraphicsItem *item = nullptr;
-    QPen p = QPen(Qt::yellow, 0, Qt::DotLine);
-    if (x1C_inst.drill_chart_symbol.shape == DrillSymbolShape::Circle ||
-        x1C_inst.drill_chart_symbol.shape == DrillSymbolShape::RoundedRect) {
-      item = scene->addEllipse((-1. * x1C_inst.symbol_w / 2.) / factor,
-                               (-1. * x1C_inst.symbol_h / 2.) / factor,
-                               x1C_inst.symbol_w / factor,
-                               x1C_inst.symbol_h / factor, p);
-    } else {
-      item = scene->addRect((-1. * x1C_inst.symbol_w / 2.) / factor,
-                            (-1. * x1C_inst.symbol_h / 2.) / factor,
-                            x1C_inst.symbol_w / factor,
-                            x1C_inst.symbol_h / factor, p);
-    }
-    item->setTransform(t);
-    item->setData(0, x1C_inst.k);
-  }
+  drawDrillSymbol(x1C_inst.k, x1C_inst.drill_chart_symbol, x1C_inst.drill_label,
+                  x1C_inst.symbol_w, x1C_inst.symbol_h, center,
+                  x0D_inst.rotation + sym_rotation, *pen);
 
-  if (strlen(x1C_inst.drill_label) > 0) {
-    QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
-    font.setFixedPitch(true);
-    font.setKerning(false);
-    font.setPixelSize(x1C_inst.symbol_h / factor);
-    QGraphicsTextItem *text =
-        scene->addText(QString::fromStdString(x1C_inst.drill_label), font);
-    QRectF boundingBox = text->boundingRect();
-    QTransform t =
-        QTransform()
-            .translate(center.x(), center.y())
-            .scale(1, -1)
-            .translate(boundingBox.width() * -0.5, boundingBox.height() * -0.5);
-
-    text->setDefaultTextColor(pen->color());
-    text->setTransform(t);
-    text->setData(0, inst->k);
-  }
   // Just draw the first part
   const t13<kAMax> *first_part = &x1C_inst.parts[0];
   QGraphicsItem *pad;
@@ -1218,4 +1149,67 @@ char *BrdView::netName(uint32_t k) {
   }
 
   return nullptr;
+}
+
+void BrdView::drawDrillSymbol(uint32_t k, const DrillSymbol symbol,
+                              const char *label, int32_t w, int32_t h,
+                              QPointF center, uint32_t rotation, QPen &pen) {
+  if (symbol.shape != DrillSymbolShape::NoSymbol) {
+    QTransform t =
+        QTransform().translate(center.x(), center.y()).rotate(rotation / 1000.);
+    QGraphicsItem *item = nullptr;
+    if (symbol.shape == DrillSymbolShape::Circle ||
+        symbol.shape == DrillSymbolShape::RoundedRect) {
+      item = scene->addEllipse((-w / 2.) / factor, (-h / 2.) / factor,
+                               w / factor, h / factor, pen);
+    } else if (symbol.shape == HexagonFlatTop ||
+               symbol.shape == HexagonPointyTop) {
+      QPolygonF polygon;
+      // Adjust height to form actual hexagon
+      h = std::sqrt(3) / 2. * h;
+      polygon << QPointF(-1. * w / 4., h / 2.) / factor;
+      polygon << QPointF(-1. * w / 2., 0) / factor;
+      polygon << QPointF(-1. * w / 4., -1. * h / 2.) / factor;
+      polygon << QPointF(w / 4., -1. * h / 2.) / factor;
+      polygon << QPointF(w / 2., 0.) / factor;
+      polygon << QPointF(w / 4., h / 2.) / factor;
+      polygon << QPointF(-1. * w / 4., h / 2.) / factor;
+      if (symbol.shape == HexagonPointyTop) {
+        t = t.rotate(30.);
+      }
+      item = scene->addPolygon(polygon, pen);
+    } else if (symbol.shape == Diamond) {
+      QPolygonF polygon;
+      polygon << QPointF(0., h / 2.) / factor;
+      polygon << QPointF(-1. * w / 2., 0.) / factor;
+      polygon << QPointF(0., -1. * h / 2.) / factor;
+      polygon << QPointF(w / 2., 0.) / factor;
+      polygon << QPointF(0., h / 2.) / factor;
+      item = scene->addPolygon(polygon, pen);
+    } else {
+      item = scene->addRect((-w / 2.) / factor, (-h / 2.) / factor, w / factor,
+                            h / factor, pen);
+    }
+    item->setTransform(t);
+    item->setData(0, k);
+  }
+
+  if (strlen(label) > 0) {
+    QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
+    font.setFixedPitch(true);
+    font.setKerning(false);
+    font.setPixelSize(h / factor);
+    QGraphicsTextItem *text =
+        scene->addText(QString::fromStdString(label), font);
+    QRectF boundingBox = text->boundingRect();
+    QTransform t =
+        QTransform()
+            .translate(center.x(), center.y())
+            .scale(1, -1)
+            .translate(boundingBox.width() * -0.5, boundingBox.height() * -0.5);
+
+    text->setDefaultTextColor(pen.color());
+    text->setTransform(t);
+    text->setData(0, k);
+  }
 }
