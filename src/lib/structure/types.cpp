@@ -1367,7 +1367,7 @@ void File<version>::cache_upgrade_funcs() {
 
 template <>
 std::ptrdiff_t File<kAMax>::offset(void *p) {
-  return (char *)p - (char *)region.get_address();
+  return static_cast<char *>(p) - static_cast<char *>(region.get_address());
 }
 
 template <>
@@ -1417,7 +1417,7 @@ const x03<kAMax> File<kAMax>::get_x03(uint32_t k) {
 
   void *p = this->ptrs[k];
   x03<kAMax> i = this->x03_upgrade(p);
-  void *next_ptr = ((char *)p) + size;
+  void *next_ptr = static_cast<char *>(p) + size;
   switch (i.subtype.t & 0xFF) {
     case 0x64:
     case 0x66:
@@ -1545,11 +1545,11 @@ const T1CPad<kAMax> File<kAMax>::get_x1C(uint32_t k) {
     count = 21 + i.layer_count * 4;
   }
 
-  void *next_ptr = ((char *)p) + obj_size;
+  void *next_ptr = static_cast<char *>(p) + obj_size;
   for (uint32_t j = 0; j < count; j++) {
     t13<kAMax> t13_inst = this->t13_upgrade(next_ptr);
     i.parts.push_back(t13_inst);
-    next_ptr = ((char *)next_ptr) + t13_size;
+    next_ptr = static_cast<char *>(next_ptr) + t13_size;
   }
 
   return i;
@@ -1620,7 +1620,7 @@ const T31String<kAMax> File<kAMax>::get_x31(uint32_t k) {
   } else {
     size = sizeof_until_tail<T31String<kA174>>();
   }
-  void *next_ptr = ((char *)p) + size;
+  void *next_ptr = static_cast<char *>(p) + size;
   i.s = std::string(static_cast<char *>(next_ptr));
   return i;
 }
@@ -1670,7 +1670,8 @@ const x3C<kAMax> File<kAMax>::get_x3C(uint32_t k) {
   } else {
     size = sizeof_until_tail<x3C<kA174>>();
   }
-  uint32_t *next_ptr = (uint32_t *)(((char *)p) + size);
+  uint32_t *next_ptr =
+      reinterpret_cast<uint32_t *>(static_cast<char *>(p) + size);
   for (uint32_t i = 0; i < inst.size; i++) {
     inst.ptrs.push_back(*next_ptr);
     next_ptr++;
@@ -1680,7 +1681,8 @@ const x3C<kAMax> File<kAMax>::get_x3C(uint32_t k) {
 
 template <>
 bool File<kAMax>::is_type(uint32_t k, uint8_t t) {
-  return (this->ptrs.count(k) > 0) && (*(uint8_t *)this->ptrs[k] == t);
+  return (this->ptrs.count(k) > 0) &&
+         (*static_cast<uint8_t *>(this->ptrs[k]) == t);
 }
 
 /*
