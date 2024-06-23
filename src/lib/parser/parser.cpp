@@ -8,10 +8,8 @@
 #include "lib/printing/utils.h"
 #include "lib/structure/utils.h"
 
-using namespace boost::interprocess;
-
 void skip(void*& address, std::size_t n) {
-  address = (void*)(((char*)address) + n);
+  address = static_cast<void*>(static_cast<char*>(address) + n);
 }
 
 uint32_t round_to_word(uint32_t len) {
@@ -82,15 +80,15 @@ uint32_t parse_x03(File<kAMax>& fs, void*& address) {
       skip(address, 8);
       break;
     case 0x6C:
-      size = *(static_cast<uint32_t*>((void*)address));
+      size = *static_cast<uint32_t*>(static_cast<void*>(address));
       skip(address, 4 + 4 * size);
       break;
     case 0x70:
     case 0x74:
       uint16_t x[2];
-      x[0] = *(static_cast<uint16_t*>((void*)address));
+      x[0] = *static_cast<uint16_t*>(static_cast<void*>(address));
       skip(address, 2);
-      x[1] = *(static_cast<uint16_t*>((void*)address));
+      x[1] = *static_cast<uint16_t*>(static_cast<void*>(address));
       skip(address, 2);
       skip(address, x[1] + 4 * x[0]);
       break;
@@ -160,7 +158,7 @@ uint32_t parse_x1E(File<kAMax>& fs, void*& address) {
   memcpy(x1E_inst, address, sizeof(x1E_hdr));
   skip(address, sizeof(x1E_hdr));
   // f.read((char*)x1E_inst, sizeof(x1E_hdr));
-  x1E_inst->s = (char*)address;
+  x1E_inst->s = static_cast<char*>(address);
   skip(address, round_to_word(x1E_inst->hdr.size));
   // f.read(x1E_inst->s, round_to_word(x1E_inst->hdr.size));
   (fs.x1E_map)[x1E_inst->hdr.k] = *x1E_inst;
@@ -226,7 +224,8 @@ uint32_t parse_x21(File<kAMax>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x27(File<kAMax>& fs, void*& address) {
-  address = (char*)fs.region.get_address() + fs.hdr->x27_end_offset - 1;
+  address =
+      static_cast<char*>(fs.region.get_address()) + fs.hdr->x27_end_offset - 1;
   return 0;
 }
 
@@ -248,7 +247,8 @@ uint32_t parse_x2A(File<kAMax>& fs, void*& address) {
       // f.read((char*)buf, 36);
       memcpy(buf, address, 36);
       skip(address, 36);
-      x2A_layer_properties suffix = *((x2A_layer_properties*)&buf[32]);
+      x2A_layer_properties suffix =
+          *reinterpret_cast<x2A_layer_properties*>(&buf[32]);
       x2A_local_entry entry = x2A_local_entry{std::string(buf), suffix};
       x2A_inst.local_entries.push_back(entry);
     }
@@ -278,7 +278,7 @@ uint32_t parse_x2A(File<kAMax>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x31(File<kAMax>& fs, void*& address) {
-  T31String<version>* i = (T31String<version>*)address;
+  T31String<version>* i = static_cast<T31String<version>*>(address);
   default_parser<T31String, version>(fs, address);
 
   if (i->len > 0) {
@@ -428,7 +428,7 @@ uint32_t parse_x36(File<kAMax>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x3B([[maybe_unused]] File<kAMax>& fs, void*& address) {
-  x3B<version>* i = (x3B<version>*)address;
+  x3B<version>* i = static_cast<x3B<version>*>(address);
 
   skip(address, sizeof_until_tail<x3B<version>>());
   skip(address, round_to_word(i->len));
@@ -438,7 +438,7 @@ uint32_t parse_x3B([[maybe_unused]] File<kAMax>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x3C([[maybe_unused]] File<kAMax>& fs, void*& address) {
-  x3C<version>* i = (x3C<version>*)address;
+  x3C<version>* i = static_cast<x3C<version>*>(address);
   default_parser<x3C, version>(fs, address);
   skip(address, i->size * 4);
   return 0;
@@ -467,27 +467,28 @@ File<kAMax> parse_file_raw(mapped_region region) {
 
   // Layer map
   for (uint8_t i = 0; i < 25; i++) {
-    uint32_t xs[2] = {*((uint32_t*)cur_addr), *(((uint32_t*)cur_addr) + 1)};
+    uint32_t xs[2] = {*static_cast<uint32_t*>(cur_addr),
+                      *(static_cast<uint32_t*>(cur_addr) + 1)};
     skip(cur_addr, sizeof(xs));
     fs.layers.push_back(std::make_tuple(xs[0], xs[1]));
   }
 
   // Strings map
-  cur_addr = (char*)base_addr + 0x1200;
+  cur_addr = static_cast<char*>(base_addr) + 0x1200;
   for (uint32_t i = 0; i < fs.hdr->strings_count; i++) {
-    uint32_t id = *((uint32_t*)(cur_addr));
+    uint32_t id = *static_cast<uint32_t*>(cur_addr);
     skip(cur_addr, 4);
 
-    fs.strings[id] = (char*)cur_addr;
+    fs.strings[id] = static_cast<char*>(cur_addr);
 
     // Add one to include the NULL byte that might force the length to one
     // word longer.
-    uint32_t len = strlen((char*)cur_addr);
+    uint32_t len = strlen(static_cast<char*>(cur_addr));
     skip(cur_addr, round_to_word(len + 1));
   }
 
   // All other objects
-  while (cur_addr < (char*)base_addr + size &&
+  while (cur_addr < static_cast<char*>(base_addr) + size &&
          *static_cast<uint8_t*>(cur_addr) != 0x00) {
     uint8_t t = *static_cast<uint8_t*>(cur_addr);
     if (PRINT_ALL_ITEMS) {
@@ -534,7 +535,7 @@ std::optional<File<kAMax>> parse_file(const std::string& filepath) {
 
   void* address = region.get_address();
 
-  uint32_t magic = *((uint32_t*)address);
+  uint32_t magic = *static_cast<uint32_t*>(address);
   switch (magic) {
     case 0x00130000:
     case 0x00130200:
