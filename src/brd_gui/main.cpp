@@ -5,10 +5,10 @@
 #include "lib/parser/parser.h"
 #include "mainwindow.h"
 
-int main(int argc, char *argv[]) {
-  QApplication app(argc, argv);
-  app.setApplicationName("brd_parser");
-  app.setApplicationVersion("0.0.0");
+auto main(int argc, char *argv[]) -> int {
+  QApplication const app(argc, argv);
+  QApplication::setApplicationName("brd_parser");
+  QApplication::setApplicationVersion("0.0.0");
 
   QCommandLineParser parser;
   parser.addPositionalArgument("input", ".brd file to open");
@@ -31,5 +31,5 @@ int main(int argc, char *argv[]) {
   }
 
   window.show();
-  return app.exec();
+  return QApplication::exec();
 }

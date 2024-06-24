@@ -46,7 +46,7 @@ enum AllegroVersion {
 // This alternative to `sizeof` is used where conditional fields are at the end
 // of a `struct`. Without a `uint32_t TAIL` at the end, the size is incorrect.
 template <typename T>
-constexpr size_t sizeof_until_tail() {
+constexpr auto sizeof_until_tail() -> size_t {
   return offsetof(T, TAIL);
 }
 
@@ -57,7 +57,7 @@ class ExpectRefType {
 
   // Allow this object to be used as if it were a `T` directly.
   operator uint32_t() const { return value; };
-  uint8_t expected_type() const { return J; }
+  [[nodiscard]] auto expected_type() const -> uint8_t { return J; }
 };
 
 template <AllegroVersion start, AllegroVersion end,
@@ -115,9 +115,9 @@ enum class Units : uint8_t {
 
 struct Header {
   uint32_t magic;
-  uint32_t un1[4];
+  std::array<uint32_t, 4> un1;
   uint32_t object_count;
-  uint32_t un2[9];
+  std::array<uint32_t, 9> un2;
   LinkedListPtrs ll_x04;
   LinkedListPtrs ll_x06;
   LinkedListPtrs ll_x0C_2;
@@ -149,20 +149,20 @@ struct Header {
   char allegro_version[60];
   uint32_t un4;
   uint32_t max_key;
-  uint32_t un5[17];
+  std::array<uint32_t, 17> un5;
 
   Units units;
   uint8_t un6;
   uint16_t un7;
 
-  uint32_t un8[2];
+  std::array<uint32_t, 2> un8;
   uint32_t x27_end_offset;
   uint32_t un9;
   uint32_t strings_count;
 
-  uint32_t un10[53];
+  std::array<uint32_t, 53> un10;
   uint32_t unit_divisor;
-  uint32_t un11[112];
+  std::array<uint32_t, 112> un11;
 };
 
 static_assert(offsetof(Header, unit_divisor) == 620);

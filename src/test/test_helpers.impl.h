@@ -5,33 +5,33 @@
 #include "lib/structure/types.h"
 
 template <typename T, uint8_t J, AllegroVersion version>
-testing::AssertionResult CheckType(T& i, const ExpectRefType<J>& field,
-                                   File<version>& fs) {
+auto CheckType(T& i, const ExpectRefType<J>& field,
+               File<version>& fs) -> testing::AssertionResult {
   if (fs.is_type(field, field.expected_type())) {
     return testing::AssertionSuccess();
-  } else {
-    // This use of `boost::format` can be changed to `std::format` when
-    // upgrading to C++20.
-    //
-    // Also, the typecast is required to avoid being interpreted as a character
-    // and printing the ASCII representation.
-    return testing::AssertionFailure()
-           << boost::format(
-                  "key 0x%|08X| expected to be of type 0x%|02X|, but isn't "
-                  "(ptr "
-                  "found in obj with k=0x%|08X|)") %
-                  field.value % (uint32_t)field.expected_type() % i.k;
   }
+
+  // This use of `boost::format` can be changed to `std::format` when
+  // upgrading to C++20.
+  //
+  // Also, the typecast is required to avoid being interpreted as a character
+  // and printing the ASCII representation.
+  return testing::AssertionFailure()
+         << boost::format(
+                "key 0x%|08X| expected to be of type 0x%|02X|, but isn't "
+                "(ptr "
+                "found in obj with k=0x%|08X|)") %
+                field.value % static_cast<uint32_t>(field.expected_type()) %
+                i.k;
 }
 
 template <typename T, uint8_t J, AllegroVersion version>
-testing::AssertionResult CheckNullableType(T& i, const ExpectRefType<J>& field,
-                                           File<version>& fs) {
+auto CheckNullableType(T& i, const ExpectRefType<J>& field,
+                       File<version>& fs) -> testing::AssertionResult {
   if (field == 0x0) {
     return testing::AssertionSuccess();
-  } else {
-    return CheckType(i, field, fs);
   }
+  return CheckType(i, field, fs);
 }
 
 template <AllegroVersion version>

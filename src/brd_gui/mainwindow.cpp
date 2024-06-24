@@ -3,6 +3,9 @@
 #include "brdview.h"
 #include "lib/printing/printers.h"
 #include "lib/structure/utils.h"
+
+// This is required behavior for Qt.
+// NOLINTNEXTLINE(bugprone-suspicious-include)
 #include "moc_mainwindow.cpp"
 
 MainWindow::MainWindow(QWidget* parent)
@@ -24,7 +27,7 @@ void MainWindow::dragEnterEvent(QDragEnterEvent* event) {
   if (mimeData->hasUrls()) {
     QList<QUrl> urls = mimeData->urls();
     if (urls.length() == 1) {
-      QUrl url = urls.first();
+      QUrl const url = urls.first();
       if (url.isLocalFile()) {
         event->acceptProposedAction();
       }
@@ -34,13 +37,13 @@ void MainWindow::dragEnterEvent(QDragEnterEvent* event) {
 
 void MainWindow::dropEvent(QDropEvent* event) {
   const QMimeData* mimeData = event->mimeData();
-  QUrl url = mimeData->urls().first();
+  QUrl const url = mimeData->urls().first();
   qDebug() << "URL" << url.toLocalFile();
 
   loadFile(url.toLocalFile().toStdString());
 }
 
-void MainWindow::loadFile(std::string path) {
+void MainWindow::loadFile(const std::string& path) {
   auto parsed_file = parse_file(path);
   if (parsed_file) {
     fs = std::move(parsed_file);
@@ -54,7 +57,7 @@ void MainWindow::loadFile(std::string path) {
 }
 
 void MainWindow::openFile() {
-  QString filename = QFileDialog::getOpenFileName(this, "Open .brd file");
+  QString const filename = QFileDialog::getOpenFileName(this, "Open .brd file");
   loadFile(filename.toStdString());
 }
 
@@ -65,7 +68,7 @@ void MainWindow::zoomOut() { brdView->zoomOut(); }
 void MainWindow::zoomFit() { brdView->zoomFit(); }
 
 void MainWindow::createFilmSelectWidget() {
-  QDockWidget* dock = new QDockWidget("Film Selector", this);
+  auto* dock = new QDockWidget("Film Selector", this);
   dock->setAllowedAreas(Qt::RightDockWidgetArea);
 
   film_tree_widget_ = new QTreeWidget();
@@ -106,27 +109,27 @@ void MainWindow::loadFilms() {
 }
 
 void MainWindow::createToolBar() {
-  QToolBar* toolbar = new QToolBar("Main ToolBar");
+  auto* toolbar = new QToolBar("Main ToolBar");
   toolbar->setFloatable(false);
   toolbar->setMovable(false);
 
   const QIcon openIcon = QIcon::fromTheme("document-open");
-  QAction* openAct = new QAction(openIcon, "Open", this);
+  auto* openAct = new QAction(openIcon, "Open", this);
   openAct->setShortcuts(QKeySequence::Open);
   connect(openAct, &QAction::triggered, this, &MainWindow::openFile);
   toolbar->addAction(openAct);
 
   toolbar->addSeparator();
 
-  QAction* zoomInAct = new QAction("Zoom In", this);
+  auto* zoomInAct = new QAction("Zoom In", this);
   connect(zoomInAct, &QAction::triggered, this, &MainWindow::zoomIn);
   toolbar->addAction(zoomInAct);
 
-  QAction* zoomOutAct = new QAction("Zoom Out", this);
+  auto* zoomOutAct = new QAction("Zoom Out", this);
   connect(zoomOutAct, &QAction::triggered, this, &MainWindow::zoomOut);
   toolbar->addAction(zoomOutAct);
 
-  QAction* zoomFitAct = new QAction("Zoom Fit", this);
+  auto* zoomFitAct = new QAction("Zoom Fit", this);
   connect(zoomFitAct, &QAction::triggered, this, &MainWindow::zoomFit);
   toolbar->addAction(zoomFitAct);
 
@@ -134,7 +137,7 @@ void MainWindow::createToolBar() {
 }
 
 void MainWindow::createDockWidget() {
-  QDockWidget* dock = new QDockWidget("Layer Selector", this);
+  auto* dock = new QDockWidget("Layer Selector", this);
   dock->setAllowedAreas(Qt::RightDockWidgetArea);
 
   // layer_model_ = new LayerModel("ABC");
@@ -184,10 +187,10 @@ void MainWindow::selectFilm() {
   std::set<std::pair<uint16_t, uint16_t>> layers{};
 
   for (QTreeWidgetItem* item : film_tree_widget_->selectedItems()) {
-    QString t = item->text(0);
+    QString const t = item->text(0);
 
     // Lookup layers associated with this film
-    uint32_t x38_k = layer_cache[t.toStdString()];
+    uint32_t const x38_k = layer_cache[t.toStdString()];
     const T38Film<kAMax>& film = fs->get_t38_film(x38_k);
     const T39FilmLayerList<kAMax>& layer_list = fs->get_x39(film.layer_list);
     for (const auto& layer : x39_layers(layer_list, fs.value())) {
@@ -197,7 +200,7 @@ void MainWindow::selectFilm() {
 
   // Select matching layers in layer selection
   QItemSelection selection;
-  for (QModelIndex index : layer_model_->mapLayersToIndices(layers)) {
+  for (QModelIndex const index : layer_model_->mapLayersToIndices(layers)) {
     selection.select(index, index);
   }
   layer_tree_view_->selectionModel()->select(
@@ -211,6 +214,7 @@ void MainWindow::selectFilm() {
 }
 
 void MainWindow::updatePosition(QPointF pos) {
-  statusBar()->showMessage(
-      QString("(%1, %2)").arg((int)pos.x()).arg((int)pos.y()));
+  statusBar()->showMessage(QString("(%1, %2)")
+                               .arg(static_cast<int>(pos.x()))
+                               .arg(static_cast<int>(pos.y())));
 }

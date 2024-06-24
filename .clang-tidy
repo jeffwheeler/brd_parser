@@ -1,1 +1,10 @@
-Checks: 'google-*, bugprone-*, cppcoreguidelines-*, modernize-*, performance-*, readability-*'
+Checks: >
+  google-*,
+  bugprone-*,
+  cppcoreguidelines-*,
+  modernize-*,
+  performance-*,
+  readability-*,
+  -readability-identifier-length,
+  -readability-magic-numbers,
+  -cppcoreguidelines-avoid-magic-numbers,

@@ -19,7 +19,7 @@ class MainWindow : public QMainWindow {
   explicit MainWindow(QWidget *parent = nullptr);
 
   void updatePosition(QPointF pos);
-  void loadFile(std::string path);
+  void loadFile(const std::string &path);
 
  protected:
   void dragEnterEvent(QDragEnterEvent *event) override;
