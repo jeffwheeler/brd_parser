@@ -35,7 +35,7 @@ auto layer_count(File<version>* fs) -> uint8_t {
 }
 
 template <template <AllegroVersion> typename T, AllegroVersion version>
-uint32_t default_parser(File<kAMax>& fs, void*& address) {
+auto default_parser(File<kAMax>& fs, void*& address) -> uint32_t {
   auto* inst = static_cast<T<version>*>(address);
   // fs.ptrs[inst->k] = address;
   // new_find_map<T<A_MAX>>(fs)[inst->k] = address;
@@ -47,7 +47,7 @@ uint32_t default_parser(File<kAMax>& fs, void*& address) {
 
 template <AllegroVersion version>
 auto parse_x03(File<kAMax>& fs, void*& address) -> uint32_t {
-  x03<version>* i = static_cast<x03<version>*>(address);
+  auto* i = static_cast<x03<version>*>(address);
   default_parser<x03, version>(fs, address);
 
   // inst.has_str = false;
@@ -167,7 +167,7 @@ uint32_t parse_x1E(File<kAMax>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x1F(File<kAMax>& fs, void*& address) {
-  x1F<version>* i = static_cast<x1F<version>*>(address);
+  auto* i = static_cast<x1F<version>*>(address);
   uint32_t k = default_parser<x1F, version>(fs, address);
 
   if constexpr (version >= kA175) {

@@ -23,13 +23,13 @@ class BrdView : public QGraphicsView {
   void zoomOut();
   void zoomFit();
 
-  void drawX01(const T01ArcSegment<kAMax> *inst, QPainterPath *path);
+  void drawX01(const T01ArcSegment<kAMax> *inst, QPainterPath *path) const;
   void drawX05(const T05Line<kAMax> *inst, QPen *pen);
   void drawX0C(const T0CDrillIndicator<kAMax> *inst, QPen *pen);
   void drawX14(const T14Path<kAMax> *inst, QPen *pen);
-  void drawX15(const T15LineSegment<kAMax> *inst, QPainterPath *path);
-  void drawX16(const T16LineSegment<kAMax> *inst, QPainterPath *path);
-  void drawX17(const T17LineSegment<kAMax> *inst, QPainterPath *path);
+  void drawX15(const T15LineSegment<kAMax> *inst, QPainterPath *path) const;
+  void drawX16(const T16LineSegment<kAMax> *inst, QPainterPath *path) const;
+  void drawX17(const T17LineSegment<kAMax> *inst, QPainterPath *path) const;
   void drawX23(const T23Rat<kAMax> *inst, QPen *pen);
   void drawX24(const T24Rectangle<kAMax> *inst, QPen *pen);
   void drawX28(const T28Shape<kAMax> *inst, QPen *pen);
@@ -43,7 +43,7 @@ class BrdView : public QGraphicsView {
   void drawShape(const uint32_t ptr, QPen *pen);
   void drawFile();
 
-  void selectLayer(std::set<std::pair<uint16_t, uint16_t>> layers);
+  void selectLayer(const std::set<std::pair<uint16_t, uint16_t>> &layers);
 
   bool drewKey(const uint32_t ptr);
 

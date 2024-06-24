@@ -9,7 +9,7 @@
 #include "lib/structure/types.h"
 
 template <template <AllegroVersion> typename T, AllegroVersion version>
-uint32_t default_parser(File<kAMax>& fs, void*& address);
+auto default_parser(File<kAMax>& fs, void*& address) -> uint32_t;
 
 template <AllegroVersion version>
 uint32_t parse_x03(File<kAMax>& fs, void*& address);

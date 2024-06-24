@@ -46,7 +46,7 @@ enum AllegroVersion {
 // This alternative to `sizeof` is used where conditional fields are at the end
 // of a `struct`. Without a `uint32_t TAIL` at the end, the size is incorrect.
 template <typename T>
-constexpr size_t sizeof_until_tail() {
+constexpr auto sizeof_until_tail() -> size_t {
   return offsetof(T, TAIL);
 }
 
@@ -57,7 +57,7 @@ class ExpectRefType {
 
   // Allow this object to be used as if it were a `T` directly.
   operator uint32_t() const { return value; };
-  uint8_t expected_type() const { return J; }
+  [[nodiscard]] auto expected_type() const -> uint8_t { return J; }
 };
 
 template <AllegroVersion start, AllegroVersion end,
