@@ -11,8 +11,7 @@
 struct CadenceDouble {
   uint32_t x;
   uint32_t y;
+  explicit operator double() const;
 };
-
-auto cfp_to_double(CadenceDouble r) -> double;
 
 #endif

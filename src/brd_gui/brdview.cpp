@@ -85,7 +85,7 @@ void BrdView::mouseReleaseEvent(QMouseEvent *event) {
 
 void BrdView::drawX01(const T01ArcSegment<kAMax> *inst, QPainterPath *path) {
   std::pair<int32_t, int32_t> center = x01_center(inst);
-  double r = cfp_to_double(inst->r);
+  double r = static_cast<double>(inst->r);
 
   /*
   scene->addEllipse(

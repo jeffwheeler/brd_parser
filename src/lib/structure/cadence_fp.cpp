@@ -4,10 +4,8 @@
 #include <cstdint>
 #include <cstring>
 
-auto cfp_to_double(CadenceDouble r) -> double {
-  CadenceDouble swapped;
-  swapped.x = r.y;
-  swapped.y = r.x;
+CadenceDouble::operator double() const {
+  CadenceDouble swapped{.x = this->y, .y = this->x};
   double g;
   std::memcpy(&g, &swapped, 8);
   return g;

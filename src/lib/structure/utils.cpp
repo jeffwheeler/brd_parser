@@ -3,7 +3,7 @@
 #include <algorithm>
 
 auto x01_center(const T01ArcSegment<kAMax>* inst) -> std::pair<double, double> {
-  return {cfp_to_double(inst->x), cfp_to_double(inst->y)};
+  return {static_cast<double>(inst->x), static_cast<double>(inst->y)};
 }
 
 auto ordered_stackup_materials(File<kAMax>& f)
