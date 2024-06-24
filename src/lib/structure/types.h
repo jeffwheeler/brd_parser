@@ -192,9 +192,9 @@ struct T01ArcSegment {
   // Start and end coordinates
   int32_t coords[4];
 
-  cadence_fp x;
-  cadence_fp y;
-  cadence_fp r;
+  CadenceDouble x;
+  CadenceDouble y;
+  CadenceDouble r;
 
   int32_t bbox[4];
 

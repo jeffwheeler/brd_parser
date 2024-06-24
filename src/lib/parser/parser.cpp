@@ -103,7 +103,7 @@ auto parse_x03(File<kAMax>& fs, void*& address) -> uint32_t {
 
 template <AllegroVersion version>
 uint32_t parse_x1C(File<kAMax>& fs, void*& address) {
-  T1CPad<version>* i = static_cast<T1CPad<version>*>(address);
+  auto* i = static_cast<T1CPad<version>*>(address);
   uint32_t k = default_parser<T1CPad, version>(fs, address);
 
   uint16_t size;
