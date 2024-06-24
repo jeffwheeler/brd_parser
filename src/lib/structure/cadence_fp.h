@@ -9,9 +9,10 @@
  * swap them.
  */
 struct CadenceDouble {
-  uint32_t x;
-  uint32_t y;
+  uint32_t x{};
+  uint32_t y{};
 
+  CadenceDouble() = default;
   CadenceDouble(uint32_t x, uint32_t y) : x(x), y(y) {}
   explicit operator double() const;
 };
