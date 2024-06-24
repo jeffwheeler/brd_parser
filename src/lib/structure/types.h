@@ -115,9 +115,9 @@ enum class Units : uint8_t {
 
 struct Header {
   uint32_t magic;
-  uint32_t un1[4];
+  std::array<uint32_t, 4> un1;
   uint32_t object_count;
-  uint32_t un2[9];
+  std::array<uint32_t, 9> un2;
   LinkedListPtrs ll_x04;
   LinkedListPtrs ll_x06;
   LinkedListPtrs ll_x0C_2;
@@ -149,20 +149,20 @@ struct Header {
   char allegro_version[60];
   uint32_t un4;
   uint32_t max_key;
-  uint32_t un5[17];
+  std::array<uint32_t, 17> un5;
 
   Units units;
   uint8_t un6;
   uint16_t un7;
 
-  uint32_t un8[2];
+  std::array<uint32_t, 2> un8;
   uint32_t x27_end_offset;
   uint32_t un9;
   uint32_t strings_count;
 
-  uint32_t un10[53];
+  std::array<uint32_t, 53> un10;
   uint32_t unit_divisor;
-  uint32_t un11[112];
+  std::array<uint32_t, 112> un11;
 };
 
 static_assert(offsetof(Header, unit_divisor) == 620);
