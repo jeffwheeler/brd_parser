@@ -5,7 +5,7 @@
 #include <cstring>
 
 CadenceDouble::operator double() const {
-  CadenceDouble swapped{.x = this->y, .y = this->x};
+  CadenceDouble swapped(this->y, this->x);
   double g;
   std::memcpy(&g, &swapped, 8);
   return g;

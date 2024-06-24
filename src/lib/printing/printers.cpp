@@ -194,7 +194,8 @@ void print_x01(const void *untyped_inst, File<version> *fs, const int d) {
            " center=\x1b[2m(%.0f, %.0f)\x1b[0m"
            " r=%.0f width=%d\n",
            inst->bbox[0], inst->bbox[1], inst->bbox[2], inst->bbox[3],
-           center.first, center.second, static_cast<double>(inst->r), inst->width);
+           center.first, center.second, static_cast<double>(inst->r),
+           inst->width);
 
   printf_d(d + 1, "next:\n");
   if (fs->is_type(inst->next, 0x34)) {
