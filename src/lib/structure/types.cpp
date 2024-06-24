@@ -1000,11 +1000,11 @@ x3C<kA160>::operator x3C<kAMax>() const {
 }
 
 template <AllegroVersion version>
-File<version>::File(mapped_region input_region)
+File<version>::File(boost::interprocess::mapped_region input_region)
     : region(std::move(input_region)) {}
 
 // Explicit instantiation
-template File<kAMax>::File(mapped_region region);
+template File<kAMax>::File(boost::interprocess::mapped_region region);
 
 template <>
 void File<kAMax>::prepare() {
@@ -1670,8 +1670,7 @@ const x3C<kAMax> File<kAMax>::get_x3C(uint32_t k) {
   } else {
     size = sizeof_until_tail<x3C<kA174>>();
   }
-  uint32_t *next_ptr =
-      reinterpret_cast<uint32_t *>(static_cast<char *>(p) + size);
+  auto *next_ptr = reinterpret_cast<uint32_t *>(static_cast<char *>(p) + size);
   for (uint32_t i = 0; i < inst.size; i++) {
     inst.ptrs.push_back(*next_ptr);
     next_ptr++;

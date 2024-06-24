@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <cstring>
 
-double cfp_to_double(cadence_fp r) {
+auto cfp_to_double(cadence_fp r) -> double {
   cadence_fp swapped;
   swapped.x = r.y;
   swapped.y = r.x;
