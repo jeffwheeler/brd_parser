@@ -12,49 +12,46 @@ template <template <AllegroVersion> typename T, AllegroVersion version>
 auto default_parser(File<kAMax>& fs, void*& address) -> uint32_t;
 
 template <AllegroVersion version>
-uint32_t parse_x03(File<kAMax>& fs, void*& address);
+auto parse_x03(File<kAMax>& fs, void*& address) -> uint32_t;
 template <AllegroVersion version>
-uint32_t parse_x12(File<kAMax>& fs, void*& address);
+auto parse_x12(File<kAMax>& fs, void*& address) -> uint32_t;
 template <AllegroVersion version>
-uint32_t parse_x1C(File<kAMax>& fs, void*& address);
+auto parse_x1C(File<kAMax>& fs, void*& address) -> uint32_t;
 template <AllegroVersion version>
-uint32_t parse_x1D(File<kAMax>& fs, void*& address);
+auto parse_x1D(File<kAMax>& fs, void*& address) -> uint32_t;
 template <AllegroVersion version>
-uint32_t parse_x1E(File<kAMax>& fs, void*& address);
+auto parse_x1E(File<kAMax>& fs, void*& address) -> uint32_t;
 template <AllegroVersion version>
-uint32_t parse_x1F(File<kAMax>& fs, void*& address);
+auto parse_x1F(File<kAMax>& fs, void*& address) -> uint32_t;
 template <AllegroVersion version>
-uint32_t parse_x21(File<kAMax>& fs, void*& address);
+auto parse_x21(File<kAMax>& fs, void*& address) -> uint32_t;
 template <AllegroVersion version>
-uint32_t parse_x27(File<kAMax>& fs, void*& address);
+auto parse_x27(File<kAMax>& fs, void*& address) -> uint32_t;
 template <AllegroVersion version>
-uint32_t parse_x2A(File<kAMax>& fs, void*& address);
+auto parse_x2A(File<kAMax>& fs, void*& address) -> uint32_t;
 template <AllegroVersion version>
-uint32_t parse_x31(File<kAMax>& fs, void*& address);
+auto parse_x31(File<kAMax>& fs, void*& address) -> uint32_t;
 template <AllegroVersion version>
-uint32_t parse_x35(File<kAMax>& fs, void*& address);
+auto parse_x35(File<kAMax>& fs, void*& address) -> uint32_t;
 template <AllegroVersion version>
-uint32_t parse_x36(File<kAMax>& fs, void*& address);
+auto parse_x36(File<kAMax>& fs, void*& address) -> uint32_t;
 template <AllegroVersion version>
-uint32_t parse_x3A(File<kAMax>& fs, void*& address);
+auto parse_x3A(File<kAMax>& fs, void*& address) -> uint32_t;
 template <AllegroVersion version>
-uint32_t parse_x3B(File<kAMax>& fs, void*& address);
+auto parse_x3B(File<kAMax>& fs, void*& address) -> uint32_t;
 template <AllegroVersion version>
-uint32_t parse_x3C(File<kAMax>& fs, void*& address);
+auto parse_x3C(File<kAMax>& fs, void*& address) -> uint32_t;
+
+using ParserFunc = uint32_t (*)(File<kAMax>&, void*&);
 
 template <AllegroVersion version>
-struct parser_t {
-  uint32_t (*parse)(File<kAMax>&, void*& cur_addr);
-};
-
-template <AllegroVersion version>
-const parser_t<version> PARSER_TABLE[] = {
+const std::array<ParserFunc, 0x3E> PARSER_TABLE = {
     // 0x00
-    {},
+    nullptr,
     // 0x01
     {&default_parser<T01ArcSegment, version>},
     // 0x02
-    {},
+    nullptr,
     // 0x03
     {&parse_x03<version>},
     // 0x04
@@ -72,7 +69,7 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x0A
     {&default_parser<T0ADRC, version>},
     // 0x0B
-    {},
+    nullptr,
     // 0x0C
     {&default_parser<T0CDrillIndicator, version>},
     // 0x0D
@@ -88,7 +85,7 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x12
     {&default_parser<x12, version>},
     // 0x13
-    {},
+    nullptr,
     // 0x14
     {&default_parser<T14Path, version>},
     // 0x15
@@ -98,11 +95,11 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x17
     {&default_parser<T17LineSegment, version>},
     // 0x18
-    {},
+    nullptr,
     // 0x19
-    {},
+    nullptr,
     // 0x1A
-    {},
+    nullptr,
     // 0x1B
     {&default_parser<T1BNet, version>},
     // 0x1C
@@ -124,7 +121,7 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x24
     {&default_parser<T24Rectangle, version>},
     // 0x25
-    {},
+    nullptr,
     // 0x26
     {&default_parser<x26, version>},
     // 0x27
@@ -132,7 +129,7 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x28
     {&default_parser<T28Shape, version>},
     // 0x29
-    {},
+    nullptr,
     // 0x2A
     {&parse_x2A<version>},
     // 0x2B
@@ -172,7 +169,7 @@ const parser_t<version> PARSER_TABLE[] = {
     // 0x3C
     {&parse_x3C<version>},
     // 0x3D
-    {},
+    nullptr,
 };
 
 void skip(std::ifstream* f, std::ifstream::pos_type n);

@@ -102,7 +102,7 @@ auto parse_x03(File<kAMax>& fs, void*& address) -> uint32_t {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x1C(File<kAMax>& fs, void*& address) {
+auto parse_x1C(File<kAMax>& fs, void*& address) -> uint32_t {
   auto* i = static_cast<T1CPad<version>*>(address);
   uint32_t k = default_parser<T1CPad, version>(fs, address);
 
@@ -137,7 +137,7 @@ uint32_t parse_x1C(File<kAMax>& fs, void*& address) {
 
 template <AllegroVersion version>
 auto parse_x1D(File<kAMax>& fs, void*& address) -> uint32_t {
-  x1D<version>* i = static_cast<x1D<version>*>(address);
+  auto* i = static_cast<x1D<version>*>(address);
   default_parser<x1D, version>(fs, address);
 
   // log(&f, "size_a = %d, size_b = %d\n", size_a, size_b);
@@ -150,7 +150,7 @@ auto parse_x1D(File<kAMax>& fs, void*& address) -> uint32_t {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x1E(File<kAMax>& fs, void*& address) {
+auto parse_x1E(File<kAMax>& fs, void*& address) -> uint32_t {
   x1E* x1E_inst = new x1E;
   memcpy(x1E_inst, address, sizeof(x1E_hdr));
   skip(address, sizeof(x1E_hdr));
@@ -166,7 +166,7 @@ uint32_t parse_x1E(File<kAMax>& fs, void*& address) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x1F(File<kAMax>& fs, void*& address) {
+auto parse_x1F(File<kAMax>& fs, void*& address) -> uint32_t {
   auto* i = static_cast<x1F<version>*>(address);
   uint32_t k = default_parser<x1F, version>(fs, address);
 
@@ -184,10 +184,10 @@ uint32_t parse_x1F(File<kAMax>& fs, void*& address) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x21(File<kAMax>& fs, void*& address) {
+auto parse_x21(File<kAMax>& fs, void*& address) -> uint32_t {
   // x21_header i;
   // f.read((char*)&i, sizeof(x21_header));
-  x21_header* i = static_cast<x21_header*>(address);
+  auto* i = static_cast<x21_header*>(address);
   // skip(address, -sizeof(x21_header));
   // log(&f, "- Next words:");
   // log_n_words(&f, 8);
@@ -220,14 +220,14 @@ uint32_t parse_x21(File<kAMax>& fs, void*& address) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x27(File<kAMax>& fs, void*& address) {
+auto parse_x27(File<kAMax>& fs, void*& address) -> uint32_t {
   address =
       static_cast<char*>(fs.region.get_address()) + fs.hdr->x27_end_offset - 1;
   return 0;
 }
 
 template <AllegroVersion version>
-uint32_t parse_x2A(File<kAMax>& fs, void*& address) {
+auto parse_x2A(File<kAMax>& fs, void*& address) -> uint32_t {
   T2ACustomLayer x2A_inst;
   memcpy(static_cast<void*>(&x2A_inst), address, sizeof(x2A_hdr));
 
@@ -274,8 +274,8 @@ uint32_t parse_x2A(File<kAMax>& fs, void*& address) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x31(File<kAMax>& fs, void*& address) {
-  T31String<version>* i = static_cast<T31String<version>*>(address);
+auto parse_x31(File<kAMax>& fs, void*& address) -> uint32_t {
+  auto* i = static_cast<T31String<version>*>(address);
   default_parser<T31String, version>(fs, address);
 
   if (i->len > 0) {
@@ -287,13 +287,13 @@ uint32_t parse_x31(File<kAMax>& fs, void*& address) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x35([[maybe_unused]] File<kAMax>& fs, void*& address) {
+auto parse_x35([[maybe_unused]] File<kAMax>& fs, void*& address) -> uint32_t {
   skip(address, 124);
   return 0;
 }
 
 template <AllegroVersion version>
-uint32_t parse_x36(File<kAMax>& fs, void*& address) {
+auto parse_x36(File<kAMax>& fs, void*& address) -> uint32_t {
   x36<version> inst;
   memcpy(static_cast<void*>(&inst), address, sizeof_until_tail<x36<version>>());
   skip(address, sizeof_until_tail<x36<version>>());
@@ -424,8 +424,8 @@ uint32_t parse_x36(File<kAMax>& fs, void*& address) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x3B([[maybe_unused]] File<kAMax>& fs, void*& address) {
-  x3B<version>* i = static_cast<x3B<version>*>(address);
+auto parse_x3B([[maybe_unused]] File<kAMax>& fs, void*& address) -> uint32_t {
+  auto* i = static_cast<x3B<version>*>(address);
 
   skip(address, sizeof_until_tail<x3B<version>>());
   skip(address, round_to_word(i->len));
@@ -434,8 +434,8 @@ uint32_t parse_x3B([[maybe_unused]] File<kAMax>& fs, void*& address) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x3C([[maybe_unused]] File<kAMax>& fs, void*& address) {
-  x3C<version>* i = static_cast<x3C<version>*>(address);
+auto parse_x3C([[maybe_unused]] File<kAMax>& fs, void*& address) -> uint32_t {
+  auto* i = static_cast<x3C<version>*>(address);
   default_parser<x3C, version>(fs, address);
   skip(address, i->size * 4);
   return 0;
@@ -493,9 +493,9 @@ auto parse_file_raw(boost::interprocess::mapped_region region) -> File<kAMax> {
       log_n_words(cur_addr, 4);
     }
 
-    const parser_t parser = PARSER_TABLE<version>[t];
-    if (t < 0x3E && parser.parse != 0) {
-      parser.parse(fs, cur_addr);
+    const ParserFunc parser = PARSER_TABLE<version>[t];
+    if (t < 0x3E && parser != nullptr) {
+      parser(fs, cur_addr);
     } else {
       log(base_addr, cur_addr, "Stuck here at t=0x%02X\n", t);
       break;
