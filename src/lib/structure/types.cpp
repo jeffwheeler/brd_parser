@@ -2,7 +2,7 @@
 
 template <>
 T01ArcSegment<kA160>::operator T01ArcSegment<kAMax>() const {
-  T01ArcSegment<kAMax> new_inst;
+  T01ArcSegment<kAMax> new_inst{};
   new_inst.t = this->t;
   new_inst.un0 = this->un0;
   new_inst.subtype = this->subtype;
