@@ -2,11 +2,12 @@
 
 #include <algorithm>
 
-std::pair<double, double> x01_center(const T01ArcSegment<kAMax>* inst) {
-  return std::pair(cfp_to_double(inst->x), cfp_to_double(inst->y));
+auto x01_center(const T01ArcSegment<kAMax>* inst) -> std::pair<double, double> {
+  return {cfp_to_double(inst->x), cfp_to_double(inst->y)};
 }
 
-const std::vector<stackup_material> ordered_stackup_materials(File<kAMax>& f) {
+auto ordered_stackup_materials(File<kAMax>& f)
+    -> const std::vector<stackup_material> {
   std::vector<stackup_material> arr;
   for (auto& [k, stackup_material] : f.stackup_materials) {
     arr.push_back(stackup_material);
@@ -19,7 +20,7 @@ const std::vector<stackup_material> ordered_stackup_materials(File<kAMax>& f) {
   return arr;
 }
 
-std::string padtype(PadType padtype) {
+auto padtype(PadType padtype) -> std::string {
   switch (padtype) {
     case PadType::ThroughVia:
       return "ThroughVia";

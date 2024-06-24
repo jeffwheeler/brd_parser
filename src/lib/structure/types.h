@@ -20,8 +20,6 @@
 
 #include "cadence_fp.h"
 
-using namespace boost::interprocess;
-
 #define HAS_ENTRY(MAP, KEY) (fs->MAP.count(KEY) > 0)
 
 #if _MSC_VER
@@ -194,9 +192,9 @@ struct T01ArcSegment {
   // Start and end coordinates
   int32_t coords[4];
 
-  cadence_fp x;
-  cadence_fp y;
-  cadence_fp r;
+  CadenceDouble x;
+  CadenceDouble y;
+  CadenceDouble r;
 
   int32_t bbox[4];
 
@@ -1664,7 +1662,7 @@ struct x3C {
 template <AllegroVersion version>
 class File {
  public:
-  File(mapped_region input_region);
+  File(boost::interprocess::mapped_region input_region);
 
   Header *hdr;
   std::vector<std::tuple<uint32_t, uint32_t>> layers;
@@ -1972,11 +1970,11 @@ class File {
     }
   };
 
-  mapped_region region;
+  boost::interprocess::mapped_region region;
 
  private:
   void cache_upgrade_funcs();
-  std::ptrdiff_t offset(void *);
+  auto offset(void *) -> std::ptrdiff_t;
 
   T01ArcSegment<kAMax> (*x01_upgrade)(void *);
   x03<kAMax> (*x03_upgrade)(void *);

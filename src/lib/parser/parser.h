@@ -1,9 +1,8 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include <stdint.h>
-
 #include <boost/interprocess/mapped_region.hpp>
+#include <cstdint>
 #include <fstream>
 #include <optional>
 
@@ -180,9 +179,9 @@ void skip(std::ifstream* f, std::ifstream::pos_type n);
 void skip_and_pad(std::ifstream* f, std::ifstream::pos_type n);
 
 template <AllegroVersion version>
-File<kAMax> parse_file_raw(boost::interprocess::mapped_region region);
+auto parse_file_raw(boost::interprocess::mapped_region region) -> File<kAMax>;
 
 // Non-template version automatically upgrades
-std::optional<File<kAMax>> parse_file(const std::string& filepath);
+auto parse_file(const std::string& filepath) -> std::optional<File<kAMax>>;
 
 #endif

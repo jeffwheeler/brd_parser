@@ -12,34 +12,31 @@ void skip(void*& address, std::size_t n) {
   address = static_cast<void*>(static_cast<char*>(address) + n);
 }
 
-uint32_t round_to_word(uint32_t len) {
+auto round_to_word(uint32_t len) -> uint32_t {
   if (len % 4 != 0) {
     return len / 4 * 4 + 4;
-  } else {
-    return len;
   }
+  return len;
 }
 
 template <AllegroVersion version>
-uint8_t layer_count(File<version>* fs) {
+auto layer_count(File<version>* fs) -> uint8_t {
   std::tuple<uint32_t, uint32_t> tup = (fs->layers)[4];
   uint32_t ptr = std::get<1>(tup);
   if (fs->x2A_map.count(ptr) > 0) {
     const T2ACustomLayer* x = &fs->x2A_map.at(ptr);
     if (x->references) {
       return x->reference_entries.size();
-    } else {
-      return x->local_entries.size();
     }
-  } else {
-    std::printf("Unable to determine layer count\n");
-    exit(1);
+    return x->local_entries.size();
   }
+  std::printf("Unable to determine layer count\n");
+  exit(1);
 }
 
 template <template <AllegroVersion> typename T, AllegroVersion version>
 uint32_t default_parser(File<kAMax>& fs, void*& address) {
-  T<version>* inst = static_cast<T<version>*>(address);
+  auto* inst = static_cast<T<version>*>(address);
   // fs.ptrs[inst->k] = address;
   // new_find_map<T<A_MAX>>(fs)[inst->k] = address;
   fs.ptrs[inst->k] = address;
@@ -49,7 +46,7 @@ uint32_t default_parser(File<kAMax>& fs, void*& address) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x03(File<kAMax>& fs, void*& address) {
+auto parse_x03(File<kAMax>& fs, void*& address) -> uint32_t {
   x03<version>* i = static_cast<x03<version>*>(address);
   default_parser<x03, version>(fs, address);
 
@@ -106,7 +103,7 @@ uint32_t parse_x03(File<kAMax>& fs, void*& address) {
 
 template <AllegroVersion version>
 uint32_t parse_x1C(File<kAMax>& fs, void*& address) {
-  T1CPad<version>* i = static_cast<T1CPad<version>*>(address);
+  auto* i = static_cast<T1CPad<version>*>(address);
   uint32_t k = default_parser<T1CPad, version>(fs, address);
 
   uint16_t size;
@@ -139,7 +136,7 @@ uint32_t parse_x1C(File<kAMax>& fs, void*& address) {
 }
 
 template <AllegroVersion version>
-uint32_t parse_x1D(File<kAMax>& fs, void*& address) {
+auto parse_x1D(File<kAMax>& fs, void*& address) -> uint32_t {
   x1D<version>* i = static_cast<x1D<version>*>(address);
   default_parser<x1D, version>(fs, address);
 
@@ -445,7 +442,7 @@ uint32_t parse_x3C([[maybe_unused]] File<kAMax>& fs, void*& address) {
 }
 
 template <AllegroVersion version>
-File<kAMax> parse_file_raw(mapped_region region) {
+auto parse_file_raw(boost::interprocess::mapped_region region) -> File<kAMax> {
   void* base_addr = region.get_address();
   void* cur_addr = base_addr;
   size_t size = region.get_size();
@@ -470,7 +467,7 @@ File<kAMax> parse_file_raw(mapped_region region) {
     uint32_t xs[2] = {*static_cast<uint32_t*>(cur_addr),
                       *(static_cast<uint32_t*>(cur_addr) + 1)};
     skip(cur_addr, sizeof(xs));
-    fs.layers.push_back(std::make_tuple(xs[0], xs[1]));
+    fs.layers.emplace_back(xs[0], xs[1]);
   }
 
   // Strings map
@@ -511,20 +508,22 @@ File<kAMax> parse_file_raw(mapped_region region) {
   return fs;
 }
 
-std::optional<File<kAMax>> parse_file(const std::string& filepath) {
+auto parse_file(const std::string& filepath) -> std::optional<File<kAMax>> {
   if (!std::filesystem::exists(filepath)) {
     printf("Unable to open file because it does not exist.\n");
     return {};
   }
 
-  file_mapping mapped_file;
+  boost::interprocess::file_mapping mapped_file;
   try {
-    mapped_file = file_mapping(filepath.c_str(), read_only);
+    mapped_file = boost::interprocess::file_mapping(
+        filepath.c_str(), boost::interprocess::read_only);
   } catch (const boost::interprocess::interprocess_exception& e) {
     printf("Unable to open file. Exception: %s.\n", e.what());
     return {};
   }
-  mapped_region region(mapped_file, read_only);
+  boost::interprocess::mapped_region region(mapped_file,
+                                            boost::interprocess::read_only);
 
   /*
   if (!f.is_open()) {
