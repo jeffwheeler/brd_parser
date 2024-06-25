@@ -8,7 +8,11 @@ class LayerItem {
   explicit LayerItem(const std::string &root_label, LayerItem *parent = nullptr)
       : is_leaf_(false), label_(root_label), parent_item_(parent){};
   explicit LayerItem(uint8_t x, uint8_t y, std::optional<std::string> label)
-      : is_leaf_(true), x_(x), y_(y), label_(std::move(label)), parent_item_(nullptr){};
+      : is_leaf_(true),
+        x_(x),
+        y_(y),
+        label_(std::move(label)),
+        parent_item_(nullptr){};
 
   void appendChild(std::unique_ptr<LayerItem> &&child);
   auto child(int row) -> LayerItem *;
@@ -17,7 +21,9 @@ class LayerItem {
   [[nodiscard]] auto flags() const -> Qt::ItemFlags;
   [[nodiscard]] auto layer_pair() const -> std::pair<uint16_t, uint16_t>;
 
-  [[nodiscard]] auto childCount() const -> int { return static_cast<int>(child_items_.size()); }
+  [[nodiscard]] auto childCount() const -> int {
+    return static_cast<int>(child_items_.size());
+  }
   auto parentItem() -> LayerItem * { return parent_item_; }
 
  private:

@@ -184,7 +184,8 @@ void BrdView::drawX0C(const T0CDrillIndicator<kAMax> *inst, QPen *pen) {
   }
 
   int32_t w = inst->coords[2], h = inst->coords[3];
-  QPointF const center = QPointF(inst->coords[0] / factor, inst->coords[1] / factor);
+  QPointF const center =
+      QPointF(inst->coords[0] / factor, inst->coords[1] / factor);
 
   drawDrillSymbol(inst->k, inst->drill_chart_symbol, inst->label, w, h, center,
                   inst->rotation, *pen);
