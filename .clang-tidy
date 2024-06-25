@@ -5,6 +5,7 @@ Checks: >
   modernize-*,
   performance-*,
   readability-*,
+  misc-*,
   -readability-identifier-length,
   -readability-magic-numbers,
   -cppcoreguidelines-avoid-magic-numbers,

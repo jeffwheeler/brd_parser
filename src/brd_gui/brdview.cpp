@@ -67,12 +67,12 @@ void BrdView::mouseMoveEvent(QMouseEvent *event) {
 void BrdView::mouseReleaseEvent(QMouseEvent *event) {
   const QPointF pos = mapToScene(event->pos());
   const qreal r = 0.1;
-  QList<QGraphicsItem *> clickedItems =
+  QList<QGraphicsItem *> const clickedItems =
       scene->items(QRectF(pos.x() - r, pos.y() - r, 2 * r, 2 * r),
                    Qt::IntersectsItemShape, Qt::AscendingOrder);
   std::printf(
       "\x1b[35m-----------------------------------------------\x1b[0m\n");
-  for (auto &item : clickedItems) {
+  for (const auto &item : clickedItems) {
     const int ptr = item->data(0).toInt();
     if (fs->is_type(ptr, 0x32)) {
       // const x32<A_MAX> &inst = fs->get_x32(ptr);
@@ -88,8 +88,8 @@ void BrdView::mouseReleaseEvent(QMouseEvent *event) {
 
 void BrdView::drawX01(const T01ArcSegment<kAMax> *inst,
                       QPainterPath *path) const {
-  std::pair<int32_t, int32_t> center = x01_center(inst);
-  double r = static_cast<double>(inst->r);
+  std::pair<int32_t, int32_t> const center = x01_center(inst);
+  auto const r = static_cast<double>(inst->r);
 
   /*
   scene->addEllipse(
@@ -106,9 +106,9 @@ void BrdView::drawX01(const T01ArcSegment<kAMax> *inst,
   );
   */
 
-  QLineF start_line =
+  QLineF const start_line =
       QLineF(center.first, center.second, inst->coords[0], inst->coords[1]);
-  QLineF end_line =
+  QLineF const end_line =
       QLineF(center.first, center.second, inst->coords[2], inst->coords[3]);
 
   path->arcTo((center.first - r) / factor, (center.second - r) / factor,
@@ -127,7 +127,7 @@ void BrdView::updatePathWidth(QPainterPath *path, QPen **pen, QPen *base_pen,
     *prev_width = new_width;
   } else if (*prev_width != new_width) {
     scene->addPath(*path, **pen);
-    QPointF p = path->currentPosition();
+    QPointF const p = path->currentPosition();
     *path = QPainterPath();
     path->moveTo(p);
     *pen = new QPen(base_pen->color(), new_width / factor, Qt::SolidLine,
@@ -184,7 +184,7 @@ void BrdView::drawX0C(const T0CDrillIndicator<kAMax> *inst, QPen *pen) {
   }
 
   int32_t w = inst->coords[2], h = inst->coords[3];
-  QPointF center = QPointF(inst->coords[0] / factor, inst->coords[1] / factor);
+  QPointF const center = QPointF(inst->coords[0] / factor, inst->coords[1] / factor);
 
   drawDrillSymbol(inst->k, inst->drill_chart_symbol, inst->label, w, h, center,
                   inst->rotation, *pen);
