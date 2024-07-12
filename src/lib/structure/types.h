@@ -285,8 +285,8 @@ struct T05Line {
 
   // Points to one of: `x04`, `x05`, `0x09`, `x28`, `x2E`, `x32`, `x33`.
   uint32_t ptr3[2];
-
-  COND_FIELD(version >= kA172, uint32_t, un4[3]);
+  COND_FIELD(version >= kA172, uint32_t[2], un4);
+  uint32_t un5;
 
   // Points to one of: `0x01`, `x15, `x16`, `x17`.
   uint32_t first_segment_ptr;
@@ -304,6 +304,12 @@ struct T05Line {
 
 static_assert(sizeof_until_tail<T05Line<kA160>>() == 60);
 static_assert(sizeof_until_tail<T05Line<kA172>>() == 68);
+
+static_assert(offsetof(T05Line<kA160>, ptr3) == 36);
+static_assert(offsetof(T05Line<kA172>, ptr3) == 36);
+static_assert(offsetof(T05Line<kA172>, un4) == 44);
+static_assert(offsetof(T05Line<kA160>, first_segment_ptr) == 48);
+static_assert(offsetof(T05Line<kA172>, first_segment_ptr) == 56);
 
 template <AllegroVersion version>
 struct x06 {
