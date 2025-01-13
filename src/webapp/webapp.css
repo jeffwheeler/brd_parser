@@ -1,0 +1,47 @@
+html, body {
+  font-family: sans-serif;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  width: 100%;
+}
+
+canvas {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.drop-zone {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  display: none;
+  font-size: 24px;
+  height: 100%;
+  justify-content: center;
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.drop-zone.active {
+  display: flex;
+}
+
+#status {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 4px;
+  color: white;
+  display: none;
+  left: 50%;
+  padding: 8px 16px;
+  position: fixed;
+  top: 10px;
+  transform: translateX(-50%);
+  z-index: 1001;
+}

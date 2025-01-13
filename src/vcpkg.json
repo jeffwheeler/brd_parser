@@ -1,0 +1,15 @@
+{
+  "dependencies": [
+    "boost-container",
+    "boost-format",
+    "boost-interprocess",
+    "boost-unordered",
+    {
+      "name": "imgui",
+      "features": [
+        "opengl3-binding",
+        "sdl2-binding"
+      ]
+    }
+  ]
+}
