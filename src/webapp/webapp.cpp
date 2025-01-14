@@ -29,10 +29,10 @@ BrdViewerApp::BrdViewerApp() {
   //   emscripten_log(EM_LOG_INFO, "parsed successfully");
   //   fs_ = std::make_shared<File<kAMax>>(std::move(*fs));
   // }
-  layer_widget_.UpdateFile(fs_);
-  brd_widget_.UpdateFile(fs_);
+  // layer_widget_.UpdateFile(fs_);
+  // brd_widget_.UpdateFile(fs_);
 
-  emscripten_log(EM_LOG_INFO, "Magic: 0x%08X", fs_->hdr->magic);
+  // emscripten_log(EM_LOG_INFO, "Magic: 0x%08X", fs_->hdr->magic);
   SkGraphics::Init();
 
   // Initialize SDL
