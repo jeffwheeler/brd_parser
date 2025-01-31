@@ -23,7 +23,7 @@ ExternalProject_Add(
   # Not named `skia` to avoid conflict with the library name.
   skia_proj
   GIT_REPOSITORY https://skia.googlesource.com/skia
-  GIT_TAG 58c6de0423bac0a7b65f41c61675834358cb2496
+  GIT_TAG chrome/m133
   GIT_PROGRESS YES
   GIT_SHALLOW YES
   LOG_BUILD YES
