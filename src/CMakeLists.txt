@@ -7,9 +7,15 @@ cmake_policy(SET CMP0167 NEW)
 
 # set(CMAKE_SYSTEM_PROCESSOR "wasm")
 
-project(AllegroParser)
-
 option(BUILD_GUI "Build Qt GUI")
+option(BUILD_WEBAPP "Build WASM web app")
+
+if (BUILD_WEBAPP)
+  # This will add the vcpkg dependencies required for building the webapp.
+  list(APPEND VCPKG_MANIFEST_FEATURES "webapp")
+endif ()
+
+project(AllegroParser)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -26,16 +32,16 @@ add_compile_options("-DSK_DISABLE_TRACING=1")
 add_compile_options("-DSKNX_NO_SIMD=1")
 add_compile_options("-DSK_FORCE_8_BYTE_ALIGNMENT=1")
 
-IF(MSVC)
+if (MSVC)
     # Fix Boost compatibility issue with MSVC:
     # https://stackoverflow.com/a/78034542/647720
     add_compile_options("/EHsc")
 
     # GoogleTest fails with /W3.
     add_compile_options("/W2")
-ELSE()
+else ()
   # add_compile_options("-Werror")
-ENDIF(MSVC)
+endif (MSVC)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
@@ -60,7 +66,6 @@ find_package(boost_format REQUIRED CONFIG)
 find_package(boost_interprocess REQUIRED CONFIG)
 find_package(boost_unordered REQUIRED CONFIG)
 include_directories(${Boost_INCLUDE_DIRS})
-find_package(imgui CONFIG REQUIRED)
 
 # set(WITH_IMGUI ON CACHE BOOL "" FORCE)
 # set(CMAKE_MODULE_PATH "${magnum_integration_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
@@ -74,5 +79,7 @@ add_subdirectory(brd_cli)
 if (BUILD_GUI)
     add_subdirectory(brd_gui)
 endif ()
-add_subdirectory(webapp)
+if (BUILD_WEBAPP)
+    add_subdirectory(webapp)
+endif ()
 add_subdirectory(test)

@@ -1,5 +1,7 @@
 include(skia.cmake)
 
+find_package(imgui CONFIG REQUIRED)
+
 add_executable(webapp main.cpp webapp.cpp layer_widget.cpp brd_renderer.cpp)
 add_dependencies(webapp skia_proj)
 # target_include_directories(webapp PRIVATE ${skia_SOURCE_DIR})
