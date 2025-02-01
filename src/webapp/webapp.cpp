@@ -88,6 +88,12 @@ BrdViewerApp::BrdViewerApp() {
   CreateSkiaSurface();
 };
 
+void BrdViewerApp::Render() {
+  if (app_singleton != nullptr) {
+    app_singleton->RenderImpl();
+  }
+}
+
 void BrdViewerApp::CreateSkiaSurface() {
   // Get device pixel ratio
   device_pixel_ratio_ = EM_ASM_DOUBLE({ return window.devicePixelRatio || 1; });
@@ -127,7 +133,7 @@ void BrdViewerApp::Resize(int width, int height) {
   brd_widget_.MarkDirty();
 }
 
-void BrdViewerApp::Render() {
+void BrdViewerApp::RenderImpl() {
   // Poll and handle events
   SDL_Event event;
   while (SDL_PollEvent(&event) != 0) {
@@ -208,7 +214,7 @@ void BrdViewerApp::RenderImGuiOverlay() {
   }
 }
 
-void BrdViewerApp::handleNewFile(const std::string& filepath) {
+void BrdViewerApp::HandleFileUploadImpl(const std::string& filepath) {
   auto fs = parse_file(filepath.c_str());
   if (fs) {
     emscripten_log(EM_LOG_INFO, "Parsed dropped file successfully");
@@ -220,8 +226,8 @@ void BrdViewerApp::handleNewFile(const std::string& filepath) {
   }
 }
 
-void BrdViewerApp::HandleUploadedFile(const std::string& filepath) {
+void BrdViewerApp::HandleFileUpload(const std::string& filepath) {
   if (app_singleton != nullptr) {
-    app_singleton->handleNewFile(filepath);
+    app_singleton->HandleFileUploadImpl(filepath);
   }
 }
