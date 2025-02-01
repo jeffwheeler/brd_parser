@@ -24,8 +24,6 @@
 #include "lib/parser/parser.h"
 
 BrdViewerApp::BrdViewerApp() {
-  app_singleton = this;
-
   SkGraphics::Init();
 
   // Initialize SDL
@@ -88,10 +86,9 @@ BrdViewerApp::BrdViewerApp() {
   CreateSkiaSurface();
 };
 
-void BrdViewerApp::Render() {
-  if (app_singleton != nullptr) {
-    app_singleton->RenderImpl();
-  }
+auto BrdViewerApp::App() -> BrdViewerApp& {
+  static BrdViewerApp singleton;
+  return singleton;
 }
 
 void BrdViewerApp::CreateSkiaSurface() {
@@ -133,7 +130,7 @@ void BrdViewerApp::Resize(int width, int height) {
   brd_widget_.MarkDirty();
 }
 
-void BrdViewerApp::RenderImpl() {
+void BrdViewerApp::Render() {
   // Poll and handle events
   SDL_Event event;
   while (SDL_PollEvent(&event) != 0) {
@@ -210,12 +207,12 @@ void BrdViewerApp::RenderImGuiOverlay() {
   ImGui::SetNextWindowPos(ImVec2(width_ * 0.15F, height_ * 0.1F),
                           ImGuiCond_FirstUseEver);
   {
-    file_picker_widget_.Draw();
+    FilePickerWidget::Draw();
   }
 }
 
-void BrdViewerApp::HandleFileUploadImpl(const std::string& filepath) {
-  auto fs = parse_file(filepath.c_str());
+void BrdViewerApp::HandleFileUpload(const std::string& filepath) {
+  auto fs = parse_file(filepath);
   if (fs) {
     emscripten_log(EM_LOG_INFO, "Parsed dropped file successfully");
     fs_ = std::make_shared<File<kAMax>>(std::move(*fs));
@@ -223,11 +220,5 @@ void BrdViewerApp::HandleFileUploadImpl(const std::string& filepath) {
     brd_widget_.UpdateFile(fs_);
   } else {
     emscripten_log(EM_LOG_ERROR, "Failed to parse dropped file");
-  }
-}
-
-void BrdViewerApp::HandleFileUpload(const std::string& filepath) {
-  if (app_singleton != nullptr) {
-    app_singleton->HandleFileUploadImpl(filepath);
   }
 }

@@ -13,8 +13,10 @@ class BrdViewerApp {
  public:
   explicit BrdViewerApp();
 
-  static void Render();
-  static void HandleFileUpload(const std::string& filepath);
+  static auto App() -> BrdViewerApp&;
+
+  void Render();
+  void HandleFileUpload(const std::string& filepath);
 
  private:
   SDL_Window* window_;
@@ -23,7 +25,6 @@ class BrdViewerApp {
 
   LayerWidget layer_widget_;
   BrdWidget brd_widget_;
-  FilePickerWidget file_picker_widget_;
 
   std::shared_ptr<File<kAMax>> fs_;
 
@@ -31,13 +32,8 @@ class BrdViewerApp {
   int width_ = 0;
   int height_ = 0;
 
-  void HandleFileUploadImpl(const std::string& filepath);
-  void RenderImpl();
-
   void RenderSkia();
   void RenderImGuiOverlay();
   void Resize(int width, int height);
   void CreateSkiaSurface();
 };
-
-static BrdViewerApp* app_singleton = nullptr;
