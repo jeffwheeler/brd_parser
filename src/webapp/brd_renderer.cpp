@@ -28,6 +28,8 @@ void BrdWidget::UpdateFile(std::shared_ptr<File<kAMax>> fs) {
 
   IterateFile();
   ComposeLayersToDrawable();
+
+  dirty_ = true;
 }
 
 void BrdWidget::ComposeLayersToDrawable() {
@@ -140,7 +142,14 @@ void BrdWidget::Draw(SkSurface *surface, double device_pixel_ratio_,
   }
   if (updated) {
     ComposeLayersToDrawable();
+    dirty_ = true;
   }
+
+  if (!dirty_) {
+    return;
+  }
+
+  dirty_ = false;
 
   canvas->clear(SkColorSetARGB(255, 30, 30, 30));
   canvas->save();
@@ -200,6 +209,8 @@ void BrdWidget::HandleMouseWheel(const SDL_Event &event) {
   SkPoint new_mouse_world =
       ScreenToWorld(SkPoint::Make(mouseX, (cached_height_ / 2.0) - mouseY));
   pan_ += new_mouse_world - mouse_world;
+
+  dirty_ = true;
 }
 
 void BrdWidget::HandleMouseDown(const SDL_Event &event) {
@@ -223,6 +234,8 @@ void BrdWidget::HandleMouseMove(const SDL_Event &event) {
     SkPoint delta = current_pos - last_mouse_pos_;
     pan_ += SkPoint::Make(delta.x() / zoom_, -delta.y() / zoom_);
     last_mouse_pos_ = current_pos;
+
+    dirty_ = true;
   } else {
     // Convert screen coordinates to world coordinates
     current_mouse_pos_ = ScreenToWorld(
@@ -250,8 +263,13 @@ void BrdWidget::HandleMouseMove(const SDL_Event &event) {
     // Redraw if hover state changed
     if (old_hover_index != hover_segment_index_) {
       ComposeLayersToDrawable();
+      dirty_ = true;
     }
   }
+}
+
+void BrdWidget::MarkDirty() {
+  dirty_ = true;
 }
 
 void BrdWidget::IterateFile() {
