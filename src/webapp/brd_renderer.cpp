@@ -268,9 +268,7 @@ void BrdWidget::HandleMouseMove(const SDL_Event &event) {
   }
 }
 
-void BrdWidget::MarkDirty() {
-  dirty_ = true;
-}
+void BrdWidget::MarkDirty() { dirty_ = true; }
 
 void BrdWidget::IterateFile() {
   emscripten_log(EM_LOG_INFO, "IterateFile");
