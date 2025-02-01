@@ -14,6 +14,8 @@ string(JOIN "\n" SKIA_BUILD_ARGS
   skia_use_lua=false
   skia_use_no_webp_encode=true
   skia_use_webgl=true
+  skia_use_wuffs=false
+  skia_use_icu=false
   target_cpu="wasm"
   target_os="emscripten"
 )
