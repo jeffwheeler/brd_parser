@@ -58,7 +58,7 @@ FetchContent_Declare(
 if (BUILD_WEBAPP)
   FetchContent_Declare(
     em_file_browser
-    GIT_REPOSITORY git@github.com:Armchair-Software/emscripten-browser-file.git
+    GIT_REPOSITORY https://github.com/Armchair-Software/emscripten-browser-file.git
     GIT_TAG b7312b42dc92dc791dac53a7df96e231a8751607
   )
   FetchContent_MakeAvailable(googletest em_file_browser)
