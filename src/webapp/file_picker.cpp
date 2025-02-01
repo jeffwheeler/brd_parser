@@ -7,7 +7,6 @@
 #include "emscripten.h"
 #include "emscripten_browser_file.h"
 #include "imgui.h"
-
 #include "webapp.h"
 
 void FilePickerWidget::Draw() {

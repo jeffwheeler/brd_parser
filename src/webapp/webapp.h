@@ -6,8 +6,8 @@
 #include "include/core/SkSurface.h"
 #include "lib/structure/types.h"
 #include "webapp/brd_renderer.h"
-#include "webapp/layer_widget.h"
 #include "webapp/file_picker.h"
+#include "webapp/layer_widget.h"
 
 class BrdViewerApp {
  public:
