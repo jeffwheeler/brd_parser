@@ -11,9 +11,6 @@ function(download_brd name)
         URL_HASH ${DOWNLOAD_BRD_URL_HASH}
         DOWNLOAD_NO_EXTRACT TRUE
         SOURCE_DIR ${name}
-        CONFIGURE_COMMAND ""
-        BUILD_COMMAND ""
-        INSTALL_COMMAND ""
     )
 endfunction()
 

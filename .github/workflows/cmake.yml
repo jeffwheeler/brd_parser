@@ -16,19 +16,15 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Install Boost
-      uses: MarkusJx/install-boost@v2.4.4
-      id: install-boost
+    - uses: seanmiddleditch/gha-setup-ninja@master
+
+    - name: Install vcpkg
+      uses: lukka/run-vcpkg@v11
       with:
-        boost_version: 1.78.0
-        platform_version: 2019
-        toolset: msvc
+        vcpkgGitCommitId: 6f29f12e82a8293156836ad81cc9bf5af41fe836
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -S ${{github.workspace}}/src
-      env:
-        BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
-
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -S ${{github.workspace}}/src
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
@@ -43,11 +39,17 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Install vcpkg
+      uses: lukka/run-vcpkg@v11
+      with:
+        vcpkgGitCommitId: 6f29f12e82a8293156836ad81cc9bf5af41fe836
+
     - name: Install Ubuntu Packages
-      run: sudo apt install libboost-dev
+      run: |
+        sudo apt install ninja-build
 
     - name: Configure CMake
-      run: CXX=g++-9 cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -S ${{github.workspace}}/src
+      run: CXX=g++-9 cmake -B ${{github.workspace}}/build -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -GNinja -S ${{github.workspace}}/src
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
@@ -57,18 +59,22 @@ jobs:
       run: ctest -C ${{env.BUILD_TYPE}}
 
   ubuntu-build:
-    name: Ubuntu 22.04 with G++ 12
+    name: Ubuntu 24.04 with G++ 12 (Qt GUI)
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
 
+    - name: Install vcpkg
+      uses: lukka/run-vcpkg@v11
+      with:
+        vcpkgGitCommitId: 6f29f12e82a8293156836ad81cc9bf5af41fe836
+
     - name: Install Ubuntu Packages
       run: |
         sudo apt update --fix-missing
-        sudo apt install qt6-base-dev libgl1-mesa-dev libboost-dev xvfb
-
+        sudo apt install qt6-base-dev libgl1-mesa-dev xvfb ninja-build
     - name: Configure CMake
-      run: CXX=g++-12 cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_GUI=ON -S ${{github.workspace}}/src
+      run: CXX=g++-12 cmake -B ${{github.workspace}}/build -DBUILD_GUI=ON -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -GNinja -S ${{github.workspace}}/src
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
@@ -78,3 +84,67 @@ jobs:
       with:
         run: ctest -C ${{env.BUILD_TYPE}}
         working-directory: ${{github.workspace}}/build
+
+
+  ubuntu-build-webapp:
+    name: Ubuntu 24.04 (Webapp)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: mymindstorm/setup-emsdk@v14
+
+    - name: Install vcpkg
+      uses: lukka/run-vcpkg@v11
+      with:
+        vcpkgGitCommitId: 6f29f12e82a8293156836ad81cc9bf5af41fe836
+
+    - name: Install Ubuntu Packages
+      run: |
+        sudo apt update --fix-missing
+        sudo apt install ninja-build
+
+    - name: Configure CMake
+      run: |
+        cmake \
+          -B ${{github.workspace}}/build \
+          -DBUILD_WEBAPP=ON \
+          -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake \
+          -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
+          -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake \
+          -GNinja \
+          -DVCPKG_TARGET_TRIPLET=wasm32-emscripten \
+          -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/webapp/ \
+          -S ${{github.workspace}}/src
+
+    - name: Build
+      run: |
+        cmake \
+          --build ${{github.workspace}}/build \
+          --config ${{env.BUILD_TYPE}} \
+          --target webapp
+
+    - name: Install
+      run: cmake --install ${{github.workspace}}/build/webapp/
+
+    - name: Upload
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ${{github.workspace}}/webapp/
+
+  deploy-webapp:
+    name: Deploy Webapp
+    runs-on: ubuntu-latest
+    needs: ubuntu-build-webapp
+
+    # Only deploy for pushes, not PRs
+    if: github.ref == 'refs/heads/main'
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+

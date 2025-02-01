@@ -4,7 +4,7 @@
 
 void print_hex(uint32_t n) { std::printf("0x%X\n", n); }
 
-void log(void* base_addr, void* address, const char* fmt...) {
+void log(const void* base_addr, const void* address, const char* fmt...) {
   va_list args;
   va_start(args, fmt);
 
@@ -14,11 +14,11 @@ void log(void* base_addr, void* address, const char* fmt...) {
   va_end(args);
 }
 
-void log_n_words(void* address, uint8_t n) {
+void log_n_words(const void* address, uint8_t n) {
   uint32_t x;
   std::cout << " 0x";
   for (; n > 0; n--) {
-    x = *static_cast<uint32_t*>(address);
+    x = *static_cast<const uint32_t*>(address);
     address = (void*)((uint32_t*)address + 1);
     // f->read((char *)&x, 4);
     if (x == 0) {
