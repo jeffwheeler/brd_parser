@@ -1750,7 +1750,7 @@ class File {
     using reference = const T &;
 
     Iter(File &f, const pointer k, value_type (File<version>::*func)(pointer))
-        : f(f), func(func), k(k){};
+        : f(f), func(func), k(k) {};
     Iter &operator++() {
       reference inst = (f.*func)(k);
       k = inst.next;
@@ -1769,7 +1769,7 @@ class File {
   template <typename T>
   class IterBase {
    public:
-    IterBase(Iter<T> begin, Iter<T> end) : _begin(begin), _end(end){};
+    IterBase(Iter<T> begin, Iter<T> end) : _begin(begin), _end(end) {};
     Iter<T> begin() { return _begin; }
     Iter<T> end() { return _end; }
 

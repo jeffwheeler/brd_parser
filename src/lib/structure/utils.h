@@ -32,8 +32,8 @@ auto x03_str_lookup(uint32_t id, File<version> &fs) -> const std::string {
 }
 
 template <AllegroVersion version>
-auto x2B_footprint(const T2BSymbol<version> *inst,
-                   File<version> *fs) -> std::optional<std::string> {
+auto x2B_footprint(const T2BSymbol<version> *inst, File<version> *fs)
+    -> std::optional<std::string> {
   if (fs->strings.count(inst->footprint_string_ref) > 0) {
     return fs->strings.at(inst->footprint_string_ref);
   }
@@ -41,14 +41,14 @@ auto x2B_footprint(const T2BSymbol<version> *inst,
 }
 
 template <AllegroVersion version>
-auto inst_refdes(const T07Instance<version> *inst,
-                 File<version> *fs) -> std::string {
+auto inst_refdes(const T07Instance<version> *inst, File<version> *fs)
+    -> std::string {
   return fs->strings.at(inst->refdes_string_ref);
 }
 
 template <AllegroVersion version>
-auto x2B_refdes(const uint32_t k,
-                File<version> *fs) -> std::optional<std::string> {
+auto x2B_refdes(const uint32_t k, File<version> *fs)
+    -> std::optional<std::string> {
   if (!fs->is_type(k, 0x2B)) {
     return {};
   }

@@ -136,6 +136,10 @@ jobs:
     name: Deploy Webapp
     runs-on: ubuntu-latest
     needs: ubuntu-build-webapp
+
+    # Only deploy for pushes, not PRs
+    if: github.ref == 'refs/heads/main'
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

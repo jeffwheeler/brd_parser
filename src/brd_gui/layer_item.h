@@ -5,9 +5,9 @@
 class LayerItem {
  public:
   explicit LayerItem(const std::string &root_label, LayerItem *parent = nullptr)
-      : is_leaf_(false), label_(root_label), parent_item_(parent){};
+      : is_leaf_(false), label_(root_label), parent_item_(parent) {};
   explicit LayerItem(uint8_t x, uint8_t y, std::optional<std::string> label)
-      : is_leaf_(true), x_(x), y_(y), label_(label), parent_item_(nullptr){};
+      : is_leaf_(true), x_(x), y_(y), label_(label), parent_item_(nullptr) {};
 
   void appendChild(std::unique_ptr<LayerItem> &&child);
   LayerItem *child(int row);

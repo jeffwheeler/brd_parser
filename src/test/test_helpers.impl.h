@@ -5,8 +5,8 @@
 #include "lib/structure/types.h"
 
 template <typename T, uint8_t J, AllegroVersion version>
-auto CheckType(T& i, const ExpectRefType<J>& field,
-               File<version>& fs) -> testing::AssertionResult {
+auto CheckType(T& i, const ExpectRefType<J>& field, File<version>& fs)
+    -> testing::AssertionResult {
   if (fs.is_type(field, field.expected_type())) {
     return testing::AssertionSuccess();
   }
@@ -26,8 +26,8 @@ auto CheckType(T& i, const ExpectRefType<J>& field,
 }
 
 template <typename T, uint8_t J, AllegroVersion version>
-auto CheckNullableType(T& i, const ExpectRefType<J>& field,
-                       File<version>& fs) -> testing::AssertionResult {
+auto CheckNullableType(T& i, const ExpectRefType<J>& field, File<version>& fs)
+    -> testing::AssertionResult {
   if (field == 0x0) {
     return testing::AssertionSuccess();
   }
