@@ -8,6 +8,7 @@ void LayerWidget::UpdateFile(std::shared_ptr<File<kAMax>> fs) {
 }
 
 void LayerWidget::Draw() {
+  ImGui::SetNextWindowSize({350., 300.});
   ImGui::Begin("Layers");
   ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
               1000.0F / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
