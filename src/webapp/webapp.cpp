@@ -53,7 +53,7 @@ BrdViewerApp::BrdViewerApp() {
   width_ = EM_ASM_INT({ return window.innerWidth; });
   height_ = EM_ASM_INT({ return window.innerHeight; });
 
-  window_ = SDL_CreateWindow("Skia + ImGui", SDL_WINDOWPOS_CENTERED,
+  window_ = SDL_CreateWindow("PCB Viewer", SDL_WINDOWPOS_CENTERED,
                              SDL_WINDOWPOS_CENTERED, width_, height_,
                              SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
