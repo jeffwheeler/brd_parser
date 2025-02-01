@@ -24,15 +24,8 @@
 #include "lib/parser/parser.h"
 
 BrdViewerApp::BrdViewerApp() {
-  // auto fs = parse_file("/example_file.brd");
-  // if (fs) {
-  //   emscripten_log(EM_LOG_INFO, "parsed successfully");
-  //   fs_ = std::make_shared<File<kAMax>>(std::move(*fs));
-  // }
-  // layer_widget_.UpdateFile(fs_);
-  // brd_widget_.UpdateFile(fs_);
+  app_singleton = this;
 
-  // emscripten_log(EM_LOG_INFO, "Magic: 0x%08X", fs_->hdr->magic);
   SkGraphics::Init();
 
   // Initialize SDL
@@ -81,7 +74,6 @@ BrdViewerApp::BrdViewerApp() {
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
   ImGuiIO& io = ImGui::GetIO();
-  (void)io;
   io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 
   // Setup Platform/Renderer bindings
@@ -207,6 +199,12 @@ void BrdViewerApp::RenderImGuiOverlay() {
   {
     layer_widget_.Draw();
   }
+
+  ImGui::SetNextWindowPos(ImVec2(width_ * 0.15F, height_ * 0.1F),
+                          ImGuiCond_FirstUseEver);
+  {
+    file_picker_widget_.Draw();
+  }
 }
 
 void BrdViewerApp::handleNewFile(const std::string& filepath) {
@@ -218,5 +216,11 @@ void BrdViewerApp::handleNewFile(const std::string& filepath) {
     brd_widget_.UpdateFile(fs_);
   } else {
     emscripten_log(EM_LOG_ERROR, "Failed to parse dropped file");
+  }
+}
+
+void BrdViewerApp::HandleUploadedFile(const std::string& filepath) {
+  if (app_singleton != nullptr) {
+    app_singleton->handleNewFile(filepath);
   }
 }

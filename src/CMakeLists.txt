@@ -1,4 +1,4 @@
-# cmake -DBUILD_GUI=OFF -DCMAKE_TOOLCHAIN_FILE=/Users/jeff/Documents/Source/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=/Users/jeff/Documents/Source/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake --preset=vcpkg -DVCPKG_TARGET_TRIPLET=wasm32-emscripten -DCMAKE_INSTALL_PREFIX=/Users/jeff/Documents/Source/brd_parser/webapp_out/
+# cmake -DBUILD_GUI=OFF -DCMAKE_TOOLCHAIN_FILE=/Users/jeff/Documents/Source/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=/Users/jeff/Documents/Source/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake -DVCPKG_TARGET_TRIPLET=wasm32-emscripten -DCMAKE_INSTALL_PREFIX=/Users/jeff/Documents/Source/brd_parser/webapp_out/
 # cmake --build ../build_clang --target webapp && cmake --install ../build_clang/webapp/
 
 cmake_minimum_required(VERSION 3.15)
@@ -33,14 +33,14 @@ add_compile_options("-DSKNX_NO_SIMD=1")
 add_compile_options("-DSK_FORCE_8_BYTE_ALIGNMENT=1")
 
 if (MSVC)
-    # Fix Boost compatibility issue with MSVC:
-    # https://stackoverflow.com/a/78034542/647720
-    add_compile_options("/EHsc")
+  # Fix Boost compatibility issue with MSVC:
+  # https://stackoverflow.com/a/78034542/647720
+  add_compile_options("/EHsc")
 
-    # GoogleTest fails with /W3.
-    add_compile_options("/W2")
+  # GoogleTest fails with /W3.
+  add_compile_options("/W2")
 else ()
-  # add_compile_options("-Werror")
+  add_compile_options("-Werror")
 endif (MSVC)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
@@ -55,8 +55,16 @@ FetchContent_Declare(
     URL https://github.com/google/googletest/releases/download/v1.15.2/googletest-1.15.2.tar.gz
     DOWNLOAD_EXTRACT_TIMESTAMP YES
 )
-# These come from GitHub because the vcpkg versions are very old and cause issues.
-FetchContent_MakeAvailable(googletest)
+if (BUILD_WEBAPP)
+  FetchContent_Declare(
+    em_file_browser
+    GIT_REPOSITORY https://github.com/Armchair-Software/emscripten-browser-file.git
+    GIT_TAG b7312b42dc92dc791dac53a7df96e231a8751607
+  )
+  FetchContent_MakeAvailable(googletest em_file_browser)
+else ()
+  FetchContent_MakeAvailable(googletest)
+endif ()
 
 enable_testing()
 
