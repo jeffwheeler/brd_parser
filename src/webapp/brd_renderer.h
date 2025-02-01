@@ -25,6 +25,7 @@ class BrdWidget {
   void HandleMouseDown(const SDL_Event& event);
   void HandleMouseUp(const SDL_Event& event);
   void HandleMouseMove(const SDL_Event& event);
+  void MarkDirty();
 
  private:
   void IterateFile();
@@ -82,6 +83,7 @@ class BrdWidget {
   int hover_segment_index_ = -1;
   SkPoint current_mouse_pos_{};
 
+  bool dirty_ = true;
   float factor_ = 1000.;
   int cached_height_ = 0.;
   float zoom_ = 1.0;

@@ -63,8 +63,7 @@ BrdViewerApp::BrdViewerApp() {
   // Initialize WebGL
   EmscriptenWebGLContextAttributes attrs;
   emscripten_webgl_init_context_attributes(&attrs);
-  // attrs.majorVersion = 3;
-  // attrs.minorVersion = 0;
+  attrs.preserveDrawingBuffer = true;
 
   EMSCRIPTEN_WEBGL_CONTEXT_HANDLE ctx =
       emscripten_webgl_create_context("#canvas", &attrs);
@@ -125,6 +124,7 @@ void BrdViewerApp::Resize(int width, int height) {
   height_ = height;
   CreateSkiaSurface();
   emscripten_set_canvas_element_size("#canvas", width_, height_);
+  brd_widget_.MarkDirty();
 }
 
 void BrdViewerApp::Render() {
@@ -135,6 +135,7 @@ void BrdViewerApp::Render() {
 
     ImGuiIO& io = ImGui::GetIO();
     if (io.WantCaptureMouse) {
+      brd_widget_.MarkDirty();
       continue;
     }
 
