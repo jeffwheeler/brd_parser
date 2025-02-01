@@ -12,10 +12,9 @@
 class BrdViewerApp {
  public:
   explicit BrdViewerApp();
-  void Render();
-  void handleNewFile(const std::string& filepath);
 
-  static void HandleUploadedFile(const std::string& filepath);
+  static void Render();
+  static void HandleFileUpload(const std::string& filepath);
 
  private:
   SDL_Window* window_;
@@ -31,6 +30,9 @@ class BrdViewerApp {
   double device_pixel_ratio_ = 1.0;
   int width_ = 0;
   int height_ = 0;
+
+  void HandleFileUploadImpl(const std::string& filepath);
+  void RenderImpl();
 
   void RenderSkia();
   void RenderImGuiOverlay();

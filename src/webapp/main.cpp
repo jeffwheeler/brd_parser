@@ -2,14 +2,11 @@
 
 #include "webapp/webapp.h"
 
-// Global renderer
-BrdViewerApp* g_renderer = nullptr;
-
-void main_loop() { g_renderer->Render(); }
+void main_loop() { BrdViewerApp::Render(); }
 
 auto main() -> int {
   // Create renderer
-  g_renderer = new BrdViewerApp();
+  new BrdViewerApp();
 
   // Set main loop
   emscripten_set_main_loop(main_loop, 0, true);
@@ -20,8 +17,6 @@ auto main() -> int {
 extern "C" {
 EMSCRIPTEN_KEEPALIVE
 void handleDroppedFile(const char* filepath) {
-  if (g_renderer != nullptr) {
-    g_renderer->handleNewFile(filepath);
-  }
+  BrdViewerApp::HandleFileUpload(filepath);
 }
 }

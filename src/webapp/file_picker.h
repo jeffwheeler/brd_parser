@@ -5,7 +5,7 @@
 class FilePickerWidget {
  public:
   FilePickerWidget() = default;
-  void Draw();
+  static void Draw();
 
  private:
   static void UploadFile(std::string const &filename,
