@@ -39,5 +39,5 @@ void FilePickerWidget::UploadFile(std::string const &filename,
   }
   outfile.close();
 
-  BrdViewerApp::HandleFileUpload("uploaded_file.brd");
+  BrdViewerApp::App().HandleFileUpload("uploaded_file.brd");
 }

@@ -2,12 +2,9 @@
 
 #include "webapp/webapp.h"
 
-void main_loop() { BrdViewerApp::Render(); }
+void main_loop() { BrdViewerApp::App().Render(); }
 
 auto main() -> int {
-  // Create renderer
-  new BrdViewerApp();
-
   // Set main loop
   emscripten_set_main_loop(main_loop, 0, true);
 
@@ -17,6 +14,6 @@ auto main() -> int {
 extern "C" {
 EMSCRIPTEN_KEEPALIVE
 void handleDroppedFile(const char* filepath) {
-  BrdViewerApp::HandleFileUpload(filepath);
+  BrdViewerApp::App().HandleFileUpload(filepath);
 }
 }
