@@ -4,17 +4,20 @@
 #include <SDL_mouse.h>
 #include <arpa/inet.h>
 #include <emscripten.h>
-#include <math.h>
+
+#include <cmath>
 
 #include "include/core/SkRect.h"
 #include "include/core/SkStrokeRec.h"
 #include "include/pathops/SkPathOps.h"
 #include "lib/structure/utils.h"
+#include "webapp/app_state.h"
 
-BrdWidget::BrdWidget() : fs_(nullptr) { InitializeShader(); }
+BrdWidget::BrdWidget() { InitializeShader(); }
 
-void BrdWidget::UpdateFile(std::shared_ptr<File<kAMax>> fs) {
-  fs_ = std::move(fs);
+void BrdWidget::UpdateFile() {
+  fs_ = AppState::CurrentFile();
+
   segment_paths_.clear();
   hover_segment_index_ = -1;
   already_drawn_.clear();
