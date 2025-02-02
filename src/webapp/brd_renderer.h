@@ -56,15 +56,14 @@ class BrdWidget {
 
   static constexpr size_t common_width_count_ = 8;
   struct LayerPaths {
-    std::array<SkPath, common_width_count_>
-        common_width_paths;
-    std::vector<std::pair<float, SkPath>>
-        other_width_paths;
+    std::array<SkPath, common_width_count_> common_width_paths;
+    std::vector<std::pair<float, SkPath>> other_width_paths;
 
     SkPath filled_path;
 
     SkColor4f color;
     sk_sp<SkShader> shader;
+    sk_sp<SkShader> fill_shader;
   };
   std::array<LayerPaths, 9> shader_layers_;
 

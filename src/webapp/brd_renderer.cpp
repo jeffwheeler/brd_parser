@@ -69,9 +69,15 @@ void BrdWidget::ComposeLayersToDrawable() {
     if (!shader_layer.filled_path.isEmpty()) {
       SkPaint fill_paint;
       fill_paint.setStyle(SkPaint::kFill_Style);
-      fill_paint.setShader(shader_layer.shader);
+      fill_paint.setShader(shader_layer.fill_shader);
       fill_paint.setAntiAlias(true);
       fill_paint.setBlendMode(SkBlendMode::kLighten);
+      recorder.getRecordingCanvas()->drawPath(shader_layer.filled_path,
+                                              fill_paint);
+
+      fill_paint.setStyle(SkPaint::kStroke_Style);
+      fill_paint.setShader(shader_layer.shader);
+      fill_paint.setStrokeWidth(0.05F);
       recorder.getRecordingCanvas()->drawPath(shader_layer.filled_path,
                                               fill_paint);
     }
@@ -117,6 +123,11 @@ void BrdWidget::UpdateLayerShaders() {
     builder.uniform("base_color") = shader_layer.color;
     builder.uniform("opacity") = 1.0F;
     shader_layer.shader = builder.makeShader();
+
+    auto reduced_alpha = shader_layer.color;
+    reduced_alpha.fA = 0.5F;
+    builder.uniform("base_color") = reduced_alpha;
+    shader_layer.fill_shader = builder.makeShader();
   }
 }
 
@@ -126,8 +137,11 @@ void BrdWidget::UpdateLayerAlpha(uint8_t layer, float new_alpha) {
     SkRuntimeShaderBuilder builder(runtime_effect_);
     builder.uniform("base_color") = shader_layers_[layer].color;
     builder.uniform("opacity") = 1.0F;
-    // No need to set opacity uniform if using first shader version
     shader_layers_[layer].shader = builder.makeShader();
+
+    shader_layers_[layer].color.fA = 0.5*new_alpha;
+    builder.uniform("base_color") = shader_layers_[layer].color;
+    shader_layers_[layer].fill_shader = builder.makeShader();
   }
 }
 
