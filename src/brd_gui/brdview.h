@@ -40,12 +40,12 @@ class BrdView : public QGraphicsView {
                uint32_t sym_rotation);
   void drawX33(const x33<kAMax> *inst, QPen *pen);
   void drawX34(const x34<kAMax> *inst, QPen *pen);
-  void drawShape(const uint32_t ptr, QPen *pen);
+  void drawShape(uint32_t ptr, QPen *pen);
   void drawFile();
 
   void selectLayer(const std::set<std::pair<uint16_t, uint16_t>> &layers);
 
-  bool drewKey(const uint32_t ptr);
+  auto drewKey(uint32_t ptr) -> bool;
 
   enum layer_choice { ALL = -1, FAB = -2 };
 
@@ -55,12 +55,12 @@ class BrdView : public QGraphicsView {
   void mouseReleaseEvent(QMouseEvent *event) override;
 
  private:
-  QColor customPenColor(uint32_t x05_k, QColor default_);
-  bool isLineSegment(uint32_t k);
-  std::optional<QPointF> startingPoint(uint32_t k);
-  std::optional<QPointF> endingPoint(uint32_t k);
-  bool onSelectedLayer(uint8_t subtype, uint16_t layer);
-  char *netName(uint32_t k);
+  auto customPenColor(uint32_t x05_k, QColor default_) -> QColor;
+  auto isLineSegment(uint32_t k) -> bool;
+  auto startingPoint(uint32_t k) -> std::optional<QPointF>;
+  auto endingPoint(uint32_t k) -> std::optional<QPointF>;
+  auto onSelectedLayer(uint8_t subtype, uint16_t layer) -> bool;
+  auto netName(uint32_t k) -> char *;
 
   void updatePathWidth(QPainterPath *path, QPen **pen, QPen *base_pen,
                        uint32_t *prev_width, uint32_t new_width);

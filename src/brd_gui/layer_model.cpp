@@ -2,6 +2,8 @@
 
 #include "lib/structure/utils.h"
 
+using std::string;
+
 LayerModel::LayerModel(File<kAMax>& fs, QObject* parent)
     : QAbstractItemModel(parent),
       root_item_(std::make_unique<LayerItem>("Layer")) {
@@ -27,7 +29,7 @@ LayerModel::LayerModel(File<kAMax>& fs, QObject* parent)
       dynamicEntriesLength = inst->hdr.size;
     }
 
-    Layer* layers = new Layer[dynamicEntriesLength + fixedEntriesLength + 1];
+    auto* layers = new Layer[dynamicEntriesLength + fixedEntriesLength + 1];
     uint8_t currentLayer = 0;
 
     if (x2A_k != 0x00 && fs.x2A_map.count(x2A_k) > 0) {
@@ -78,54 +80,59 @@ LayerModel::LayerModel(File<kAMax>& fs, QObject* parent)
   }
 };
 
-Qt::ItemFlags LayerModel::flags(const QModelIndex& index) const {
+auto LayerModel::flags(const QModelIndex& index) const -> Qt::ItemFlags {
   if (!index.isValid()) {
-    return Qt::ItemFlags(Qt::NoItemFlags);
+    return {Qt::NoItemFlags};
   }
 
-  const LayerItem* item =
-      static_cast<const LayerItem*>(index.internalPointer());
+  const auto* item = static_cast<const LayerItem*>(index.internalPointer());
   return item->flags();
 };
 
-QVariant LayerModel::data(const QModelIndex& index, int role) const {
-  if (!index.isValid() || role != Qt::DisplayRole) return {};
+auto LayerModel::data(const QModelIndex& index, int role) const -> QVariant {
+  if (!index.isValid() || role != Qt::DisplayRole) {
+    return {};
+  }
 
-  const LayerItem* item =
-      static_cast<const LayerItem*>(index.internalPointer());
+  const auto* item = static_cast<const LayerItem*>(index.internalPointer());
   return item->data();
 };
 
-std::pair<uint16_t, uint16_t> LayerModel::layer_pair(
-    const QModelIndex& index) const {
-  LayerItem* childItem = static_cast<LayerItem*>(index.internalPointer());
+auto LayerModel::layer_pair(const QModelIndex& index) const
+    -> std::pair<uint16_t, uint16_t> {
+  auto* childItem = static_cast<LayerItem*>(index.internalPointer());
   return childItem->layer_pair();
 }
 
-QVariant LayerModel::headerData(int section, Qt::Orientation orientation,
-                                int role) const {
+auto LayerModel::headerData(int /* unused */, Qt::Orientation orientation,
+                            int role) const -> QVariant {
   return orientation == Qt::Horizontal && role == Qt::DisplayRole
              ? root_item_->data()
              : QVariant{};
 };
 
-QModelIndex LayerModel::index(int row, int col,
-                              const QModelIndex& parent) const {
-  if (!hasIndex(row, col, parent)) return {};
+auto LayerModel::index(int row, int col, const QModelIndex& parent) const
+    -> QModelIndex {
+  if (!hasIndex(row, col, parent)) {
+    return {};
+  }
 
   LayerItem* parentItem =
       parent.isValid() ? static_cast<LayerItem*>(parent.internalPointer())
                        : root_item_.get();
 
-  if (auto* childItem = parentItem->child(row))
+  if (auto* childItem = parentItem->child(row)) {
     return createIndex(row, col, childItem);
+  }
   return {};
 }
 
-QModelIndex LayerModel::parent(const QModelIndex& index) const {
-  if (!index.isValid()) return {};
+auto LayerModel::parent(const QModelIndex& index) const -> QModelIndex {
+  if (!index.isValid()) {
+    return {};
+  }
 
-  LayerItem* childItem = static_cast<LayerItem*>(index.internalPointer());
+  auto* childItem = static_cast<LayerItem*>(index.internalPointer());
   LayerItem* parentItem = childItem->parentItem();
 
   return parentItem != root_item_.get()
@@ -133,8 +140,10 @@ QModelIndex LayerModel::parent(const QModelIndex& index) const {
              : QModelIndex{};
 }
 
-int LayerModel::rowCount(const QModelIndex& parent) const {
-  if (parent.column() > 0) return 0;
+auto LayerModel::rowCount(const QModelIndex& parent) const -> int {
+  if (parent.column() > 0) {
+    return 0;
+  }
 
   const LayerItem* parentItem =
       parent.isValid() ? static_cast<const LayerItem*>(parent.internalPointer())
@@ -143,10 +152,13 @@ int LayerModel::rowCount(const QModelIndex& parent) const {
   return parentItem->childCount();
 };
 
-int LayerModel::columnCount(const QModelIndex& parent) const { return 1; };
+auto LayerModel::columnCount(const QModelIndex& /* unused */) const -> int {
+  return 1;
+};
 
-std::vector<QModelIndex> LayerModel::mapLayersToIndices(
-    const std::set<std::pair<uint16_t, uint16_t>>& layer_pairs) const {
+auto LayerModel::mapLayersToIndices(
+    const std::set<std::pair<uint16_t, uint16_t>>& layer_pairs) const
+    -> std::vector<QModelIndex> {
   std::vector<QModelIndex> indices;
 
   for (uint16_t i = 0; i < root_item_->childCount(); i++) {
@@ -163,13 +175,15 @@ std::vector<QModelIndex> LayerModel::mapLayersToIndices(
   return indices;
 }
 
-void LayerModel::addLayerGroup(const std::string label, const Layer layers[]) {
+void LayerModel::addLayerGroup(const string label, const Layer layers[]) {
   auto group = std::make_unique<LayerItem>(label, root_item_.get());
 
   uint16_t i = 0;
   while (true) {
     const Layer* layer_info = &layers[i];
-    if (layer_info->x == 0 && layer_info->y == 0) break;
+    if (layer_info->x == 0 && layer_info->y == 0) {
+      break;
+    }
 
     const auto label_str = layer_info->label == nullptr
                                ? std::optional<std::string>()

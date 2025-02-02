@@ -9,6 +9,6 @@ class FilePickerWidget {
 
  private:
   static void UploadFile(std::string const &filename,
-                         std::string const &mime_type, std::string_view buffer,
-                         void *);
+                         std::string const & /* unused */,
+                         std::string_view buffer, void * /* unused */);
 };

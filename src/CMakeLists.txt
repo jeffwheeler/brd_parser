@@ -41,6 +41,7 @@ if (MSVC)
   add_compile_options("/W2")
 else ()
   add_compile_options("-Werror")
+  add_compile_options("-Wextra")
 endif (MSVC)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
