@@ -112,8 +112,8 @@ std::string x38_layer_name(const T38Film<version> &inst, File<version> *fs) {
 }
 
 template <AllegroVersion version>
-std::vector<std::pair<uint8_t, uint8_t>> x39_layers(
-    const T39FilmLayerList<version> &inst, File<version> &fs) {
+auto x39_layers(const T39FilmLayerList<version> &inst, File<version> &fs)
+    -> std::vector<std::pair<uint8_t, uint8_t>> {
   std::vector<std::pair<uint8_t, uint8_t>> layers;
 
   uint32_t next_key = inst.head;
@@ -127,7 +127,8 @@ std::vector<std::pair<uint8_t, uint8_t>> x39_layers(
 }
 
 template <AllegroVersion version>
-std::vector<std::pair<std::string, uint32_t>> film_list(File<version> &fs_x) {
+auto film_list(File<version> &fs_x)
+    -> std::vector<std::pair<std::string, uint32_t>> {
   std::vector<std::pair<std::string, uint32_t>> list;
   File<version> *fs = &fs_x;
 
