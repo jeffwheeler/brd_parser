@@ -52,7 +52,7 @@ class BrdWidget {
   std::unordered_set<uint32_t> already_drawn_;
 
   sk_sp<SkPicture> picture_;
-  std::set<uint16_t> visible_layers_cache;
+  std::set<uint16_t> visible_layers_cache_;
 
   static constexpr size_t common_width_count_ = 8;
   struct LayerPaths {
@@ -67,8 +67,7 @@ class BrdWidget {
   };
   std::array<LayerPaths, 9> shader_layers_;
 
-  std::array<float, common_width_count_>
-      common_widths_{};  // Store the actual common width values
+  std::array<float, common_width_count_> common_widths_{};
 
   // Shader-related members
   sk_sp<SkRuntimeEffect> runtime_effect_;

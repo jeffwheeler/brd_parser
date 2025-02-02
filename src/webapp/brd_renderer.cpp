@@ -104,30 +104,31 @@ void BrdWidget::InitializeShader() {
   runtime_effect_ = effect;
 
   // Initialize default colors
-  shader_layers_[0].color = SkColor4f::FromColor(SkColorSetARGB(255, 128, 0, 255));
-  shader_layers_[1].color = SkColor4f::FromColor(SkColorSetARGB(255, 180, 62, 143));
-  shader_layers_[2].color = SkColor4f::FromColor(SkColorSetARGB(255, 160, 175, 132));
-  shader_layers_[3].color = SkColor4f::FromColor(SkColorSetARGB(255, 255, 237, 223));
-  shader_layers_[4].color = SkColor4f::FromColor(SkColorSetARGB(255, 197, 216, 109));
-  shader_layers_[5].color = SkColor4f::FromColor(SkColorSetARGB(255, 134, 97, 92));
-  shader_layers_[6].color = SkColor4f::FromColor(SkColorSetARGB(255, 175, 224, 206));
-  shader_layers_[7].color = SkColor4f::FromColor(SkColorSetARGB(255, 244, 116, 59));
-  shader_layers_[8].color = SkColor4f::FromColor(SkColorSetARGB(255, 59, 0, 134));
+  shader_layers_[0].color =
+      SkColor4f::FromColor(SkColorSetARGB(255, 128, 0, 255));
+  shader_layers_[1].color =
+      SkColor4f::FromColor(SkColorSetARGB(255, 180, 62, 143));
+  shader_layers_[2].color =
+      SkColor4f::FromColor(SkColorSetARGB(255, 160, 175, 132));
+  shader_layers_[3].color =
+      SkColor4f::FromColor(SkColorSetARGB(255, 255, 237, 223));
+  shader_layers_[4].color =
+      SkColor4f::FromColor(SkColorSetARGB(255, 197, 216, 109));
+  shader_layers_[5].color =
+      SkColor4f::FromColor(SkColorSetARGB(255, 134, 97, 92));
+  shader_layers_[6].color =
+      SkColor4f::FromColor(SkColorSetARGB(255, 175, 224, 206));
+  shader_layers_[7].color =
+      SkColor4f::FromColor(SkColorSetARGB(255, 244, 116, 59));
+  shader_layers_[8].color =
+      SkColor4f::FromColor(SkColorSetARGB(255, 59, 0, 134));
 
   UpdateLayerShaders();
 }
 
 void BrdWidget::UpdateLayerShaders() {
-  for (auto& shader_layer : shader_layers_) {
-    SkRuntimeShaderBuilder builder(runtime_effect_);
-    builder.uniform("base_color") = shader_layer.color;
-    builder.uniform("opacity") = 1.0F;
-    shader_layer.shader = builder.makeShader();
-
-    auto reduced_alpha = shader_layer.color;
-    reduced_alpha.fA = 0.5F;
-    builder.uniform("base_color") = reduced_alpha;
-    shader_layer.fill_shader = builder.makeShader();
+  for (uint8_t i = 0; i < shader_layers_.size(); i++) {
+    UpdateLayerAlpha(i, 0.05F);
   }
 }
 
@@ -139,7 +140,7 @@ void BrdWidget::UpdateLayerAlpha(uint8_t layer, float new_alpha) {
     builder.uniform("opacity") = 1.0F;
     shader_layers_[layer].shader = builder.makeShader();
 
-    shader_layers_[layer].color.fA = 0.5*new_alpha;
+    shader_layers_[layer].color.fA = 0.5 * new_alpha;
     builder.uniform("base_color") = shader_layers_[layer].color;
     shader_layers_[layer].fill_shader = builder.makeShader();
   }
@@ -151,19 +152,18 @@ void BrdWidget::Draw(SkSurface *surface) {
   SkCanvas *canvas = surface->getCanvas();
   cached_height_ = surface->height();
 
-  bool updated = (visible_layers_cache != visible_layers);
+  bool updated = (visible_layers_cache_ != visible_layers);
   if (updated) {
+    emscripten_log(EM_LOG_INFO, "updated!");
     std::array<bool, 10> selected = {false};
     for (uint16_t const &visible_layer : visible_layers) {
       uint8_t layer_id = LayerToId(visible_layer >> 8, visible_layer & 0xFF);
-      if (!selected[layer_id]) {
-        selected[layer_id] = true;
-      }
+      selected[layer_id] = true;
     }
     for (uint8_t i = 0; i < 9; i++) {
       UpdateLayerAlpha(i, selected[i] ? 1.0F : 0.05F);
     }
-    visible_layers_cache = visible_layers;
+    visible_layers_cache_ = visible_layers;
 
     ComposeLayersToDrawable();
     dirty_ = true;
@@ -273,7 +273,7 @@ void BrdWidget::HandleMouseMove(const SDL_Event &event) {
     for (size_t i = 0; i < segment_paths_.size(); i++) {
       const auto &segment = segment_paths_[i];
       // Skip if layer is disabled
-      if (visible_layers_cache.count(segment.layer_short) == 0) {
+      if (visible_layers_cache_.count(segment.layer_short) == 0) {
         continue;
       }
 
