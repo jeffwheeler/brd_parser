@@ -35,7 +35,8 @@ auto CheckNullableType(T& i, const ExpectRefType<J>& field, File<version>& fs)
 }
 
 template <AllegroVersion version>
-void validate_x04(const x04<version>& /* unused */, File<version>& /* unused */) {}
+void validate_x04(const x04<version>& /* unused */,
+                  File<version>& /* unused */) {}
 
 template <AllegroVersion version>
 void validate_x05(const T05Line<version>& i, File<version>& fs) {
@@ -71,7 +72,8 @@ void validate_x0C(const T0CDrillIndicator<version>& i, File<version>& fs) {
 }
 
 template <AllegroVersion version>
-void validate_x0F(const T0FFootprint<version>& /* unused */, File<version>& /* unused */) {}
+void validate_x0F(const T0FFootprint<version>& /* unused */,
+                  File<version>& /* unused */) {}
 
 template <AllegroVersion version>
 void validate_x10(const x10<version>& i, File<version>& fs) {
