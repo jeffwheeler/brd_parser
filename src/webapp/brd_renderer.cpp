@@ -21,12 +21,13 @@ void BrdWidget::UpdateFile() {
   segment_paths_.clear();
   hover_segment_index_ = -1;
   already_drawn_.clear();
-  for (auto &layer_path : layer_paths_) {
-    for (uint8_t j = 0; j < common_width_count_; j++) {
-      layer_path.common_width_paths[j].reset();
+
+  for (auto &shader_layer : shader_layers_) {
+    for (auto &path : shader_layer.common_width_paths) {
+      path.reset();
     }
-    layer_path.other_width_paths.clear();
-    layer_path.filled_path.reset();
+    shader_layer.other_width_paths.clear();
+    shader_layer.filled_path.reset();
   }
 
   IterateFile();
@@ -41,11 +42,11 @@ void BrdWidget::ComposeLayersToDrawable() {
   SkRect bbox = {-10000, -10000, 10000, 10000};
   recorder.beginRecording(bbox, nullptr);
 
-  for (uint8_t i = 0; i < 9; i++) {
+  for (const auto &shader_layer : shader_layers_) {
     // Base paint settings for strokes
     SkPaint stroke_paint;
     stroke_paint.setStyle(SkPaint::kStroke_Style);
-    stroke_paint.setShader(layer_shaders_[i]);
+    stroke_paint.setShader(shader_layer.shader);
     stroke_paint.setAntiAlias(true);
     stroke_paint.setStrokeCap(SkPaint::kRound_Cap);
     stroke_paint.setStrokeJoin(SkPaint::kRound_Join);
@@ -53,25 +54,25 @@ void BrdWidget::ComposeLayersToDrawable() {
 
     // Draw stroked paths
     for (size_t w = 0; w < common_width_count_; w++) {
-      if (!layer_paths_[i].common_width_paths[w].isEmpty()) {
+      if (!shader_layer.common_width_paths[w].isEmpty()) {
         stroke_paint.setStrokeWidth(common_widths_[w]);
         recorder.getRecordingCanvas()->drawPath(
-            layer_paths_[i].common_width_paths[w], stroke_paint);
+            shader_layer.common_width_paths[w], stroke_paint);
       }
     }
 
-    for (const auto &[width, path] : layer_paths_[i].other_width_paths) {
+    for (const auto &[width, path] : shader_layer.other_width_paths) {
       stroke_paint.setStrokeWidth(width);
       recorder.getRecordingCanvas()->drawPath(path, stroke_paint);
     }
 
-    if (!layer_paths_[i].filled_path.isEmpty()) {
+    if (!shader_layer.filled_path.isEmpty()) {
       SkPaint fill_paint;
       fill_paint.setStyle(SkPaint::kFill_Style);
-      fill_paint.setShader(layer_shaders_[i]);
+      fill_paint.setShader(shader_layer.shader);
       fill_paint.setAntiAlias(true);
       fill_paint.setBlendMode(SkBlendMode::kLighten);
-      recorder.getRecordingCanvas()->drawPath(layer_paths_[i].filled_path,
+      recorder.getRecordingCanvas()->drawPath(shader_layer.filled_path,
                                               fill_paint);
     }
   }
@@ -97,36 +98,36 @@ void BrdWidget::InitializeShader() {
   runtime_effect_ = effect;
 
   // Initialize default colors
-  layer_colors_[0] = SkColor4f::FromColor(SkColorSetARGB(255, 128, 0, 255));
-  layer_colors_[1] = SkColor4f::FromColor(SkColorSetARGB(255, 180, 62, 143));
-  layer_colors_[2] = SkColor4f::FromColor(SkColorSetARGB(255, 160, 175, 132));
-  layer_colors_[3] = SkColor4f::FromColor(SkColorSetARGB(255, 255, 237, 223));
-  layer_colors_[4] = SkColor4f::FromColor(SkColorSetARGB(255, 197, 216, 109));
-  layer_colors_[5] = SkColor4f::FromColor(SkColorSetARGB(255, 134, 97, 92));
-  layer_colors_[6] = SkColor4f::FromColor(SkColorSetARGB(255, 175, 224, 206));
-  layer_colors_[7] = SkColor4f::FromColor(SkColorSetARGB(255, 244, 116, 59));
-  layer_colors_[8] = SkColor4f::FromColor(SkColorSetARGB(255, 59, 0, 134));
+  shader_layers_[0].color = SkColor4f::FromColor(SkColorSetARGB(255, 128, 0, 255));
+  shader_layers_[1].color = SkColor4f::FromColor(SkColorSetARGB(255, 180, 62, 143));
+  shader_layers_[2].color = SkColor4f::FromColor(SkColorSetARGB(255, 160, 175, 132));
+  shader_layers_[3].color = SkColor4f::FromColor(SkColorSetARGB(255, 255, 237, 223));
+  shader_layers_[4].color = SkColor4f::FromColor(SkColorSetARGB(255, 197, 216, 109));
+  shader_layers_[5].color = SkColor4f::FromColor(SkColorSetARGB(255, 134, 97, 92));
+  shader_layers_[6].color = SkColor4f::FromColor(SkColorSetARGB(255, 175, 224, 206));
+  shader_layers_[7].color = SkColor4f::FromColor(SkColorSetARGB(255, 244, 116, 59));
+  shader_layers_[8].color = SkColor4f::FromColor(SkColorSetARGB(255, 59, 0, 134));
 
   UpdateLayerShaders();
 }
 
 void BrdWidget::UpdateLayerShaders() {
-  for (size_t i = 0; i < layer_colors_.size(); i++) {
+  for (auto& shader_layer : shader_layers_) {
     SkRuntimeShaderBuilder builder(runtime_effect_);
-    builder.uniform("base_color") = layer_colors_[i];
+    builder.uniform("base_color") = shader_layer.color;
     builder.uniform("opacity") = 1.0F;
-    layer_shaders_[i] = builder.makeShader();
+    shader_layer.shader = builder.makeShader();
   }
 }
 
 void BrdWidget::UpdateLayerAlpha(uint8_t layer, float new_alpha) {
-  if (layer < layer_colors_.size()) {
-    layer_colors_[layer].fA = new_alpha;
+  if (layer < shader_layers_.size()) {
+    shader_layers_[layer].color.fA = new_alpha;
     SkRuntimeShaderBuilder builder(runtime_effect_);
-    builder.uniform("base_color") = layer_colors_[layer];
+    builder.uniform("base_color") = shader_layers_[layer].color;
     builder.uniform("opacity") = 1.0F;
     // No need to set opacity uniform if using first shader version
-    layer_shaders_[layer] = builder.makeShader();
+    shader_layers_[layer].shader = builder.makeShader();
   }
 }
 
@@ -489,14 +490,14 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
     // Add to layer paths as before
     size_t width_index = GetWidthIndex(segment_width);
     if (width_index < common_width_count_) {
-      layer_paths_[layer_id].common_width_paths[width_index].addPath(
+      shader_layers_[layer_id].common_width_paths[width_index].addPath(
           segment_path);
     } else {
-      auto &other_paths = layer_paths_[layer_id].other_width_paths;
+      auto &other_paths = shader_layers_[layer_id].other_width_paths;
       auto it =
           std::find_if(other_paths.begin(), other_paths.end(),
                        [segment_width](const auto &pair) {
-                         return std::abs(pair.first - segment_width) < 0.001f;
+                         return std::abs(pair.first - segment_width) < 0.001F;
                        });
       if (it != other_paths.end()) {
         it->second.addPath(segment_path);
@@ -596,15 +597,15 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
       // If width changes, store current path
       if (!current_path.isEmpty()) {
         if (width_index < common_width_count_) {
-          layer_paths_[layer_id].common_width_paths[width_index].addPath(
+          shader_layers_[layer_id].common_width_paths[width_index].addPath(
               current_path);
         } else {
           // Try to find an existing path with this width
-          auto &other_paths = layer_paths_[layer_id].other_width_paths;
+          auto &other_paths = shader_layers_[layer_id].other_width_paths;
           auto it = std::find_if(other_paths.begin(), other_paths.end(),
                                  [current_width](const auto &pair) {
                                    return std::abs(pair.first - current_width) <
-                                          0.001f;
+                                          0.001F;
                                  });
           if (it != other_paths.end()) {
             it->second.addPath(current_path);
@@ -632,7 +633,7 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
   // Force path direction to be consistent
   current_path.setFillType(SkPathFillType::kWinding);
 
-  layer_paths_[layer_id].filled_path.addPath(current_path);
+  shader_layers_[layer_id].filled_path.addPath(current_path);
 }
 
 auto BrdWidget::StartingPoint(uint32_t k) -> std::optional<SkPoint> {
