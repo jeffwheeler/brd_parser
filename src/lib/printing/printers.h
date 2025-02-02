@@ -158,6 +158,6 @@ template <AllegroVersion version>
 void print_struct(const void *untyped_inst, File<version> *fs, int depth);
 
 template <AllegroVersion version>
-void print_struct(uint32_t k, File<version> &fs, int d);
+void print_struct(const uint32_t k, File<version> &fs, int d);
 
 #endif

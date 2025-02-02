@@ -19,7 +19,7 @@ void FilePickerWidget::Draw() {
 }
 
 void FilePickerWidget::UploadFile(std::string const &filename,
-                                  std::string const &mime_type,
+                                  std::string const & /* unused */,
                                   std::string_view buffer, void * /*unused*/) {
   emscripten_log(EM_LOG_INFO, "Receiving %s!", filename.c_str());
 

@@ -97,23 +97,32 @@ class LayerModel : public QAbstractItemModel {
   explicit LayerModel(File<kAMax> &data, QObject *parent = nullptr);
   ~LayerModel() override = default;
 
-  Qt::ItemFlags flags(const QModelIndex &index) const override;
-  QVariant data(const QModelIndex &index, int role) const override;
-  std::pair<uint16_t, uint16_t> layer_pair(const QModelIndex &index) const;
-  QVariant headerData(int section, Qt::Orientation orientation,
-                      int role = Qt::DisplayRole) const override;
+  [[nodiscard]] auto flags(const QModelIndex &index) const
+      -> Qt::ItemFlags override;
+  [[nodiscard]] auto data(const QModelIndex &index, int role) const
+      -> QVariant override;
+  [[nodiscard]] auto layer_pair(const QModelIndex &index) const
+      -> std::pair<uint16_t, uint16_t>;
+  [[nodiscard]] auto headerData(int /* unused */, Qt::Orientation orientation,
+                                int role = Qt::DisplayRole) const
+      -> QVariant override;
 
-  QModelIndex index(int row, int col,
-                    const QModelIndex &parent = {}) const override;
-  QModelIndex parent(const QModelIndex &parent) const override;
+  [[nodiscard]] auto index(int row, int col,
+                           const QModelIndex &parent = {}) const
+      -> QModelIndex override;
+  [[nodiscard]] auto parent(const QModelIndex &parent) const
+      -> QModelIndex override;
 
-  int rowCount(const QModelIndex &parent = {}) const override;
-  int columnCount(const QModelIndex &parent = {}) const override;
+  [[nodiscard]] auto rowCount(const QModelIndex &parent = {}) const
+      -> int override;
+  [[nodiscard]] auto columnCount(const QModelIndex & /* unused */ = {}) const
+      -> int override;
 
-  std::vector<QModelIndex> mapLayersToIndices(
-      const std::set<std::pair<uint16_t, uint16_t>> &layer_pairs) const;
+  [[nodiscard]] auto mapLayersToIndices(
+      const std::set<std::pair<uint16_t, uint16_t>> &layer_pairs) const
+      -> std::vector<QModelIndex>;
 
-  void addLayerGroup(const std::string label, const Layer layers[]);
+  void addLayerGroup(std::string label, const Layer layers[]);
 
  private:
   std::unique_ptr<LayerItem> root_item_;

@@ -43,7 +43,7 @@ void BrdView::zoomOut() { scale(1 / 1.2, 1 / 1.2); }
 
 void BrdView::zoomFit() { fitInView(scene->sceneRect(), Qt::KeepAspectRatio); }
 
-auto BrdView::drewKey(const uint32_t ptr) -> bool {
+auto BrdView::drewKey(uint32_t ptr) -> bool {
   return already_drawn.count(ptr) > 0;
 }
 
@@ -74,14 +74,7 @@ void BrdView::mouseReleaseEvent(QMouseEvent *event) {
       "\x1b[35m-----------------------------------------------\x1b[0m\n");
   for (auto &item : clickedItems) {
     const int ptr = item->data(0).toInt();
-    if (fs->is_type(ptr, 0x32)) {
-      // const x32<A_MAX> &inst = fs->get_x32(ptr);
-      print_struct(static_cast<const uint32_t>(ptr), *fs, 0);
-      // qDebug("Printing x32->ptr5");
-      // print_struct((const uint32_t)inst->ptr5, fs, 0);
-    } else {
-      print_struct(static_cast<const uint32_t>(ptr), *fs, 0);
-    }
+    print_struct(static_cast<const uint32_t>(ptr), *fs, 0);
     std::printf("\n\n");
   }
 };
@@ -89,7 +82,7 @@ void BrdView::mouseReleaseEvent(QMouseEvent *event) {
 void BrdView::drawX01(const T01ArcSegment<kAMax> *inst,
                       QPainterPath *path) const {
   std::pair<int32_t, int32_t> center = x01_center(inst);
-  double r = static_cast<double>(inst->r);
+  auto r = static_cast<double>(inst->r);
 
   /*
   scene->addEllipse(
@@ -270,7 +263,7 @@ void BrdView::drawX17(const T17LineSegment<kAMax> *inst,
 }
 
 // Connectivity (rat)
-void BrdView::drawX23(const T23Rat<kAMax> *inst, QPen *pen) {
+void BrdView::drawX23(const T23Rat<kAMax> *inst, QPen * /* unused */) {
   if (!onSelectedLayer(inst->subtype, inst->layer)) {
     return;
   }
@@ -396,7 +389,8 @@ void BrdView::drawX28(const T28Shape<kAMax> *inst, QPen *pen) {
   // }
 };
 
-void BrdView::drawX2B(const T2BSymbol<kAMax> *inst, QPen *pen) {
+void BrdView::drawX2B(const T2BSymbol<kAMax> * /* unused */,
+                      QPen * /* unused */) {
   // drawShape(inst->ptr2, pen);
   // drawShape(inst->ptr8, pen);
 }
@@ -693,7 +687,7 @@ void BrdView::drawX34(const x34<kAMax> *inst, QPen *pen) {
   item->setData(0, inst->k);
 }
 
-void BrdView::drawShape(const uint32_t ptr, QPen *pen) {
+void BrdView::drawShape(uint32_t ptr, QPen *pen) {
   if (already_drawn.count(ptr) > 0) {
     // std::printf("Already drawn 0x%08X\n", ntohl(ptr));
     return;
