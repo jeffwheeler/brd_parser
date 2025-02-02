@@ -18,8 +18,7 @@ class BrdWidget {
   BrdWidget();
 
   void UpdateFile();
-  void Draw(SkSurface* surface, double device_pixel_ratio_,
-            std::array<bool, 10>& selected_layers);
+  void Draw(SkSurface* surface, std::array<bool, 10>& selected_layers);
 
   void HandleMouseWheel(const SDL_Event& event);
   void HandleMouseDown(const SDL_Event& event);

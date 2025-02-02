@@ -130,7 +130,7 @@ void BrdWidget::UpdateLayerAlpha(uint8_t layer, float new_alpha) {
   }
 }
 
-void BrdWidget::Draw(SkSurface *surface, double device_pixel_ratio_,
+void BrdWidget::Draw(SkSurface *surface,
                      std::array<bool, 10> &selected_layers) {
   SkCanvas *canvas = surface->getCanvas();
   cached_height_ = surface->height();

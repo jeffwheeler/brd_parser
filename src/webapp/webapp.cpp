@@ -194,8 +194,7 @@ void BrdViewerApp::RenderSkia() {
     return;
   }
 
-  brd_widget_.Draw(skia_surface_, device_pixel_ratio_,
-                   layer_widget_.selected_layers_);
+  brd_widget_.Draw(skia_surface_, layer_widget_.selected_layers_);
 
   // Flush the Skia canvas
   gr_context_->flushAndSubmit();
