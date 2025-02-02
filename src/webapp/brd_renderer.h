@@ -52,26 +52,25 @@ class BrdWidget {
   std::unordered_set<uint32_t> already_drawn_;
 
   sk_sp<SkPicture> picture_;
-  std::set<uint16_t> visible_layers_cache;
+  std::set<uint16_t> visible_layers_cache_;
 
   static constexpr size_t common_width_count_ = 8;
   struct LayerPaths {
-    std::array<SkPath, common_width_count_>
-        common_width_paths;  // Paths for most common widths
-    std::vector<std::pair<float, SkPath>>
-        other_width_paths;  // Less common widths
+    std::array<SkPath, common_width_count_> common_width_paths;
+    std::vector<std::pair<float, SkPath>> other_width_paths;
 
-    // For filled paths (shapes) - no width needed
     SkPath filled_path;
+
+    SkColor4f color;
+    sk_sp<SkShader> shader;
+    sk_sp<SkShader> fill_shader;
   };
-  std::array<LayerPaths, 9> layer_paths_;
-  std::array<float, common_width_count_>
-      common_widths_{};  // Store the actual common width values
+  std::array<LayerPaths, 9> shader_layers_;
+
+  std::array<float, common_width_count_> common_widths_{};
 
   // Shader-related members
   sk_sp<SkRuntimeEffect> runtime_effect_;
-  std::array<SkColor4f, 9> layer_colors_{};
-  std::array<sk_sp<SkShader>, 9> layer_shaders_;
 
   // Add new structure to store segment info for hover detection
   struct LineSegmentInfo {
