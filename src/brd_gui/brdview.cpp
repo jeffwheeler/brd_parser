@@ -74,7 +74,7 @@ void BrdView::mouseReleaseEvent(QMouseEvent *event) {
       "\x1b[35m-----------------------------------------------\x1b[0m\n");
   for (auto &item : clickedItems) {
     const int ptr = item->data(0).toInt();
-    print_struct(static_cast<const uint32_t>(ptr), *fs, 0);
+    print_struct(static_cast<uint32_t>(ptr), *fs, 0);
     std::printf("\n\n");
   }
 };
