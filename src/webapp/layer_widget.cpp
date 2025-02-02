@@ -49,8 +49,7 @@ void LayerWidget::Draw() {
               const T39FilmLayerList<kAMax>& layer_list =
                   file->get_x39(film_inst.layer_list);
               for (const auto& [x, y] : x39_layers(layer_list, *file)) {
-                uint16_t z = (static_cast<uint16_t>(x) << 8) | y;
-                visible_layers.insert(z);
+                visible_layers.insert(LayerInfo({.family = x, .id = y}));
               }
             }
           }

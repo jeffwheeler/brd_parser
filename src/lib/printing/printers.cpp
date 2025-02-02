@@ -325,7 +325,7 @@ void print_x05(const void *untyped_inst, File<version> *fs, const int d) {
   const uint32_t k = ((const T05Line<version> *)untyped_inst)->k;
   T05Line<version> inst = fs->get_x05(k);
   printf_d(d, "x05: t=0x%04X subtype=%02X layer=%d k=0x%08X\n", ntohl(inst.t),
-           inst.subtype, inst.layer, ntohl(inst.k));
+           inst.layer.family, inst.layer.id, ntohl(inst.k));
 
   printf_d(d + 1, "ptr0:\n");
   if (fs->is_type(inst.ptr0, 0x34)) {
@@ -1686,7 +1686,7 @@ void print_x28(const void *untyped_inst, File<version> *fs, const int d) {
   printf_d(d,
            "x28: t=0x%04X subtype=%02X layer=%d k=0x%08X 0x%08X"
            " \x1b[2m(%d, %d, %d, %d)\x1b[0m\n",
-           ntohl(inst.type), inst.subtype, inst.layer, ntohl(inst.k),
+           ntohl(inst.type), inst.layer.family, inst.layer.id, ntohl(inst.k),
            ntohl(inst.un4), inst.coords[0], inst.coords[1], inst.coords[2],
            inst.coords[3]);
   print_type_hint(d, "Shape like rect or circle?");

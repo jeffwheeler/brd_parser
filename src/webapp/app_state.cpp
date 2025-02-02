@@ -4,7 +4,7 @@ auto AppState::CurrentFile() -> std::shared_ptr<File<kAMax>>& {
   return State().fs_;
 }
 
-auto AppState::VisibleLayers() -> std::set<uint16_t>& {
+auto AppState::VisibleLayers() -> std::unordered_set<LayerInfo>& {
   return State().visible_layers_;
 }
 
