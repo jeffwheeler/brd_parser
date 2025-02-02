@@ -51,7 +51,6 @@ template <>
 T05Line<kA160>::operator T05Line<kAMax>() const {
   T05Line<kAMax> new_inst;
   new_inst.t = this->t;
-  new_inst.subtype = this->subtype;
   new_inst.layer = this->layer;
   new_inst.k = this->k;
   new_inst.ptr0 = this->ptr0;
@@ -597,7 +596,6 @@ template <>
 T28Shape<kA160>::operator T28Shape<kAMax>() const {
   T28Shape<kAMax> new_inst;
   new_inst.type = this->type;
-  new_inst.subtype = this->subtype;
   new_inst.layer = this->layer;
 
   new_inst.k = this->k;

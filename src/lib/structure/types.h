@@ -102,6 +102,25 @@ constexpr T<end> new_upgrade(void *x) {
   return t;
 }
 
+struct LayerInfo {
+  uint8_t family;
+  uint8_t id;
+
+  auto operator==(const LayerInfo &other) const -> bool {
+    return this->family == other.family && this->id == other.id;
+  }
+};
+
+// Is it acceptable to add this specialization into `std`?
+namespace std {
+template <>
+struct hash<LayerInfo> {
+  auto operator()(const LayerInfo &layer) const noexcept -> std::size_t {
+    return *reinterpret_cast<const uint16_t *>(&layer);
+  }
+};
+}  // namespace std
+
 // Linked list
 struct LinkedListPtrs {
   uint32_t tail;
@@ -265,8 +284,7 @@ struct x04 {
 template <AllegroVersion version>
 struct T05Line {
   uint16_t t;
-  uint8_t subtype;
-  uint8_t layer;
+  LayerInfo layer;
 
   uint32_t k;
 
@@ -1049,8 +1067,7 @@ struct x26 {
 template <AllegroVersion version>
 struct T28Shape {
   uint16_t type;
-  uint8_t subtype;
-  uint8_t layer;
+  LayerInfo layer;
 
   uint32_t k;
   uint32_t next;

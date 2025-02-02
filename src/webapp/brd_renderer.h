@@ -43,8 +43,7 @@ class BrdWidget {
   auto GetWidthIndex(float width) -> size_t;
 
   auto ScreenToWorld(const SkPoint& screen_pos) -> SkPoint;
-  static auto LayerToId(uint8_t subtype, uint8_t layer) -> uint8_t;
-  static auto LayerToShort(uint8_t subtype, uint8_t layer) -> uint16_t;
+  static auto LayerToShader(const LayerInfo layer) -> uint8_t;
   static auto IsPointNearPath(const SkPath& path, const SkPoint& point,
                               float width) -> bool;
 
@@ -52,7 +51,7 @@ class BrdWidget {
   std::unordered_set<uint32_t> already_drawn_;
 
   sk_sp<SkPicture> picture_;
-  std::set<uint16_t> visible_layers_cache_;
+  std::unordered_set<LayerInfo> visible_layers_cache_;
 
   static constexpr size_t common_width_count_ = 8;
   struct LayerPaths {
@@ -77,7 +76,7 @@ class BrdWidget {
     SkPath path;
     float width;
     uint8_t layer_id;
-    uint16_t layer_short;
+    LayerInfo file_layer;
   };
 
   std::vector<LineSegmentInfo> segment_paths_;

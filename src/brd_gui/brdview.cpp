@@ -130,7 +130,7 @@ void BrdView::updatePathWidth(QPainterPath *path, QPen **pen, QPen *base_pen,
 }
 
 void BrdView::drawX05(const T05Line<kAMax> *inst, QPen *pen_) {
-  if (!onSelectedLayer(inst->subtype, inst->layer)) {
+  if (!onSelectedLayer(inst->layer.family, inst->layer.id)) {
     return;
   }
 
@@ -291,7 +291,7 @@ void BrdView::drawX24(const T24Rectangle<kAMax> *inst, QPen *pen) {
 
 // Shapes
 void BrdView::drawX28(const T28Shape<kAMax> *inst, QPen *pen) {
-  if (!onSelectedLayer(inst->subtype, inst->layer) ||
+  if (!onSelectedLayer(inst->layer.family, inst->layer.id) ||
       fs->is_type(inst->ptr1, 0x2B)) {
     return;
   }
@@ -336,7 +336,7 @@ void BrdView::drawX28(const T28Shape<kAMax> *inst, QPen *pen) {
 
   QPen *polyPen;
   QBrush brush;
-  switch (inst->subtype) {
+  switch (inst->layer.family) {
     case 0x01:
       polyPen = new QPen(QColorConstants::Svg::indianred, 0.5);
       brush = QBrush();
@@ -973,7 +973,7 @@ void BrdView::drawFile() {
 auto BrdView::customPenColor(uint32_t x05_k, QColor default_) -> QColor {
   if (fs->is_type(x05_k, 0x05)) {
     const T05Line<kAMax> inst = fs->get_x05(x05_k);
-    if (onSelectedLayer(inst.subtype, inst.layer)) {
+    if (onSelectedLayer(inst.layer.family, inst.layer.id)) {
       return QColorConstants::Svg::palevioletred;
     }
     return QColorConstants::Svg::darkseagreen;
@@ -983,7 +983,7 @@ auto BrdView::customPenColor(uint32_t x05_k, QColor default_) -> QColor {
   }
   if (fs->is_type(x05_k, 0x28)) {
     const T28Shape<kAMax> &inst = fs->get_x28(x05_k);
-    if (onSelectedLayer(inst.subtype, inst.layer)) {
+    if (onSelectedLayer(inst.layer.family, inst.layer.id)) {
       return QColorConstants::Svg::palevioletred;
     }
     return default_;

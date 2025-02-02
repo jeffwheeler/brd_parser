@@ -156,9 +156,8 @@ void BrdWidget::Draw(SkSurface *surface) {
   if (updated) {
     emscripten_log(EM_LOG_INFO, "updated!");
     std::array<bool, 10> selected = {false};
-    for (uint16_t const &visible_layer : visible_layers) {
-      uint8_t layer_id = LayerToId(visible_layer >> 8, visible_layer & 0xFF);
-      selected[layer_id] = true;
+    for (LayerInfo const &visible_layer : visible_layers) {
+      selected[LayerToShader(visible_layer)] = true;
     }
     for (uint8_t i = 0; i < 9; i++) {
       UpdateLayerAlpha(i, selected[i] ? 1.0F : 0.05F);
@@ -190,7 +189,7 @@ void BrdWidget::Draw(SkSurface *surface) {
     hover_paint.setStyle(SkPaint::kStroke_Style);
     hover_paint.setColor(SkColorSetARGB(255, 255, 255, 0));  // Yellow highlight
     hover_paint.setStrokeWidth(segment.width *
-                               1.2F);  // Slightly wider than original
+                               1.1F);  // Slightly wider than original
     hover_paint.setAntiAlias(true);
     hover_paint.setStrokeCap(SkPaint::kRound_Cap);
     hover_paint.setStrokeJoin(SkPaint::kRound_Join);
@@ -273,7 +272,7 @@ void BrdWidget::HandleMouseMove(const SDL_Event &event) {
     for (size_t i = 0; i < segment_paths_.size(); i++) {
       const auto &segment = segment_paths_[i];
       // Skip if layer is disabled
-      if (visible_layers_cache_.count(segment.layer_short) == 0) {
+      if (visible_layers_cache_.count(segment.file_layer) == 0) {
         continue;
       }
 
@@ -423,7 +422,7 @@ void BrdWidget::DrawShape(uint32_t ptr) {
 // Modify DrawX05 to store individual segments
 void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
   uint32_t k = inst->first_segment_ptr;
-  uint8_t layer_id = LayerToId(inst->subtype, inst->layer);
+  uint8_t layer_id = LayerToShader(inst->layer);
 
   SkPoint starting = (*StartingPoint(k)) * (1.0 / factor_);
 
@@ -498,8 +497,8 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
     }
 
     // Store segment info
-    segment_paths_.push_back({segment_path, segment_width, layer_id,
-                              LayerToShort(inst->subtype, inst->layer)});
+    segment_paths_.push_back(
+        {segment_path, segment_width, layer_id, inst->layer});
 
     // Add to layer paths as before
     size_t width_index = GetWidthIndex(segment_width);
@@ -526,7 +525,7 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
 
 void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
   uint32_t k = inst->first_segment_ptr;
-  uint8_t layer_id = LayerToId(inst->subtype, inst->layer);
+  uint8_t layer_id = LayerToShader(inst->layer);
 
   float current_width = -1;
   size_t width_index = common_width_count_;
@@ -701,18 +700,11 @@ auto BrdWidget::ScreenToWorld(const SkPoint &screen_pos) -> SkPoint {
                        (screen_pos.y() / zoom_) - pan_.y());
 }
 
-auto BrdWidget::LayerToId(const uint8_t subtype, const uint8_t layer)
-    -> uint8_t {
-  if (subtype == 6 && layer <= 7) {
-    return layer;
+auto BrdWidget::LayerToShader(const LayerInfo layer) -> uint8_t {
+  if (layer.family == 6 && layer.id <= 7) {
+    return layer.id;
   }
   return 8;
-}
-
-auto BrdWidget::LayerToShort(const uint8_t subtype, const uint8_t layer)
-    -> uint16_t {
-  uint16_t z = (static_cast<uint16_t>(subtype) << 8) | layer;
-  return z;
 }
 
 // Add method to check if point is near path
