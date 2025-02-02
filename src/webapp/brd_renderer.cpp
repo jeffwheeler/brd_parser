@@ -130,20 +130,26 @@ void BrdWidget::UpdateLayerAlpha(uint8_t layer, float new_alpha) {
   }
 }
 
-void BrdWidget::Draw(SkSurface *surface,
-                     std::array<bool, 10> &selected_layers) {
+void BrdWidget::Draw(SkSurface *surface) {
+  const auto &visible_layers = AppState::VisibleLayers();
+
   SkCanvas *canvas = surface->getCanvas();
   cached_height_ = surface->height();
 
-  bool updated = false;
-  for (uint8_t i = 0; i < 9; i++) {
-    UpdateLayerAlpha(i, selected_layers[i] ? 1.0F : 0.05F);
-    if (selected_layers_cache_[i] != selected_layers[i]) {
-      selected_layers_cache_[i] = selected_layers[i];
-      updated = true;
-    }
-  }
+  bool updated = (visible_layers_cache != visible_layers);
   if (updated) {
+    std::array<bool, 10> selected = {false};
+    for (uint16_t const &visible_layer : visible_layers) {
+      uint8_t layer_id = LayerToId(visible_layer >> 8, visible_layer & 0xFF);
+      if (!selected[layer_id]) {
+        selected[layer_id] = true;
+      }
+    }
+    for (uint8_t i = 0; i < 9; i++) {
+      UpdateLayerAlpha(i, selected[i] ? 1.0F : 0.05F);
+    }
+    visible_layers_cache = visible_layers;
+
     ComposeLayersToDrawable();
     dirty_ = true;
   }
@@ -252,7 +258,7 @@ void BrdWidget::HandleMouseMove(const SDL_Event &event) {
     for (size_t i = 0; i < segment_paths_.size(); i++) {
       const auto &segment = segment_paths_[i];
       // Skip if layer is disabled
-      if (!selected_layers_cache_[segment.layer_id]) {
+      if (visible_layers_cache.count(segment.layer_short) == 0) {
         continue;
       }
 
@@ -477,7 +483,8 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
     }
 
     // Store segment info
-    segment_paths_.push_back({segment_path, segment_width, layer_id});
+    segment_paths_.push_back({segment_path, segment_width, layer_id,
+                              LayerToShort(inst->subtype, inst->layer)});
 
     // Add to layer paths as before
     size_t width_index = GetWidthIndex(segment_width);
@@ -685,6 +692,12 @@ auto BrdWidget::LayerToId(const uint8_t subtype, const uint8_t layer)
     return layer;
   }
   return 8;
+}
+
+auto BrdWidget::LayerToShort(const uint8_t subtype, const uint8_t layer)
+    -> uint16_t {
+  uint16_t z = (static_cast<uint16_t>(subtype) << 8) | layer;
+  return z;
 }
 
 // Add method to check if point is near path

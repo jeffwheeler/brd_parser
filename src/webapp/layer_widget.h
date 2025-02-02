@@ -1,14 +1,21 @@
 #pragma once
 
 #include <array>
+#include <vector>
 
 class LayerWidget {
  public:
   LayerWidget() = default;
 
+  void UpdateFile();
   void Draw();
 
-  // Show a few layers by default
-  std::array<bool, 10> selected_layers_ = {true,  false, true,  false, false,
-                                           false, false, false, false, false};
+ private:
+  struct FilmWithSelection {
+    std::string name;
+    uint32_t k;
+    bool selected;
+  };
+
+  std::vector<FilmWithSelection> film_list_;
 };
