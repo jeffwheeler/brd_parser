@@ -4,9 +4,7 @@
 #include <SDL.h>
 
 #include "include/core/SkSurface.h"
-#include "lib/structure/types.h"
 #include "webapp/brd_renderer.h"
-#include "webapp/file_picker.h"
 #include "webapp/layer_widget.h"
 
 class BrdViewerApp {
@@ -25,8 +23,6 @@ class BrdViewerApp {
 
   LayerWidget layer_widget_;
   BrdWidget brd_widget_;
-
-  std::shared_ptr<File<kAMax>> fs_;
 
   double device_pixel_ratio_ = 1.0;
   int width_ = 0;

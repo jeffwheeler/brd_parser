@@ -17,7 +17,7 @@ class BrdWidget {
  public:
   BrdWidget();
 
-  void UpdateFile(std::shared_ptr<File<kAMax>> fs);
+  void UpdateFile();
   void Draw(SkSurface* surface, double device_pixel_ratio_,
             std::array<bool, 10>& selected_layers);
 

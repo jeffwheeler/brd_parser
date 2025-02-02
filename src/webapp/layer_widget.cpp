@@ -2,10 +2,7 @@
 
 #include "emscripten.h"
 #include "imgui.h"
-
-void LayerWidget::UpdateFile(std::shared_ptr<File<kAMax>> fs) {
-  fs_ = std::move(fs);
-}
+#include "webapp/app_state.h"
 
 void LayerWidget::Draw() {
   ImGui::SetNextWindowSize({350., 300.});
@@ -13,7 +10,7 @@ void LayerWidget::Draw() {
   ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
               1000.0F / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 
-  if (fs_) {
+  if (AppState::CurrentFile()) {
     ImGuiMultiSelectFlags flags =
         ImGuiMultiSelectFlags_NoAutoSelect | ImGuiMultiSelectFlags_NoAutoClear;
     ImGuiMultiSelectIO* ms_io =

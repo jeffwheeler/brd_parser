@@ -23,6 +23,11 @@
 #include "imgui_impl_sdl2.h"
 #include "lib/parser/parser.h"
 
+// Local includes
+#include "lib/structure/types.h"
+#include "webapp/app_state.h"
+#include "webapp/file_picker.h"
+
 BrdViewerApp::BrdViewerApp() {
   SkGraphics::Init();
 
@@ -122,7 +127,7 @@ void BrdViewerApp::CreateSkiaSurface() {
 }
 
 void BrdViewerApp::Resize(int width, int height) {
-  emscripten_log(EM_LOG_INFO, "Resize, magic: 0x%08X", fs_->hdr->magic);
+  // emscripten_log(EM_LOG_INFO, "Resize, magic: 0x%08X", fs_->hdr->magic);
   width_ = width;
   height_ = height;
   CreateSkiaSurface();
@@ -214,10 +219,8 @@ void BrdViewerApp::RenderImGuiOverlay() {
 void BrdViewerApp::HandleFileUpload(const std::string& filepath) {
   auto fs = parse_file(filepath);
   if (fs) {
-    emscripten_log(EM_LOG_INFO, "Parsed dropped file successfully");
-    fs_ = std::make_shared<File<kAMax>>(std::move(*fs));
-    layer_widget_.UpdateFile(fs_);
-    brd_widget_.UpdateFile(fs_);
+    AppState::CurrentFile() = std::make_shared<File<kAMax>>(std::move(*fs));
+    brd_widget_.UpdateFile();
   } else {
     emscripten_log(EM_LOG_ERROR, "Failed to parse dropped file");
   }
