@@ -6,6 +6,7 @@
 
 #include "include/core/SkCanvas.h"
 #include "include/core/SkColorSpace.h"
+#include "include/core/SkCapabilities.h"
 #include "include/core/SkGraphics.h"
 #include "include/core/SkImage.h"
 #include "include/core/SkImageInfo.h"
@@ -66,7 +67,7 @@ BrdViewerApp::BrdViewerApp() {
   // Initialize WebGL
   EmscriptenWebGLContextAttributes attrs;
   emscripten_webgl_init_context_attributes(&attrs);
-  attrs.preserveDrawingBuffer = true;
+  attrs.preserveDrawingBuffer = false;
 
   EMSCRIPTEN_WEBGL_CONTEXT_HANDLE ctx =
       emscripten_webgl_create_context("#canvas", &attrs);

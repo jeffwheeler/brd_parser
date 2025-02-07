@@ -12,3 +12,15 @@ auto AppState::State() -> AppState& {
   static AppState state;
   return state;
 }
+
+void AppState::RecordPicture() {
+  State().needs_recording_ = true;
+}
+
+void AppState::PictureRecordingDone() {
+  State().needs_recording_ = false;
+}
+
+auto AppState::PictureNeedsRecording() -> bool {
+  return State().needs_recording_;
+}

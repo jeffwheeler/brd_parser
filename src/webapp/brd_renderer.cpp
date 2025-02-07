@@ -7,6 +7,7 @@
 
 #include <cmath>
 
+#include "emscripten_browser_file.h"
 #include "include/core/SkRect.h"
 #include "include/core/SkStrokeRec.h"
 #include "include/pathops/SkPathOps.h"
@@ -85,6 +86,7 @@ void BrdWidget::ComposeLayersToDrawable() {
 
   picture_ = recorder.finishRecordingAsPicture();
 }
+
 void BrdWidget::InitializeShader() {
   const char *shader_source = R"(
     uniform half4 base_color;
@@ -153,7 +155,7 @@ void BrdWidget::Draw(SkSurface *surface) {
   cached_height_ = surface->height();
 
   bool updated = (visible_layers_cache_ != visible_layers);
-  if (updated) {
+  if (updated || AppState::PictureNeedsRecording()) {
     emscripten_log(EM_LOG_INFO, "updated!");
     std::array<bool, 10> selected = {false};
     for (LayerInfo const &visible_layer : visible_layers) {
@@ -168,19 +170,39 @@ void BrdWidget::Draw(SkSurface *surface) {
     dirty_ = true;
   }
 
-  if (!dirty_) {
-    return;
-  }
+  // if (!dirty_) {
+  //   return;
+  // }
 
   dirty_ = false;
 
   canvas->clear(SkColorSetARGB(255, 30, 30, 30));
   canvas->save();
-  canvas->translate(pan_.x() * zoom_, pan_.y() * zoom_);
-  canvas->scale(zoom_, zoom_);
+
+  SkPictureRecorder recorder;
+  recorder.beginRecording(surface->width(), surface->height(), nullptr);
+  auto *record_canvas = recorder.getRecordingCanvas();
+
+  record_canvas->translate(pan_.x() * zoom_, pan_.y() * zoom_);
+  record_canvas->scale(zoom_, zoom_);
 
   // Draw base picture
-  canvas->drawPicture(picture_.get());
+  record_canvas->drawPicture(picture_.get());
+  auto local_picture = recorder.finishRecordingAsPicture();
+
+  if (AppState::PictureNeedsRecording()) {
+    emscripten_log(EM_LOG_INFO, "Recording one image");
+    AppState::PictureRecordingDone();
+
+    auto data = local_picture->serialize();
+    std::string_view view(static_cast<const char*>(data->data()), data->size());
+
+    std::string filename{"recording.skp"};
+    std::string mime_type{"application/text/plain"};
+    emscripten_browser_file::download(filename, mime_type, view);
+  }
+
+  canvas->drawPicture(local_picture);
 
   // Draw hover effect if applicable
   if (hover_segment_index_ >= 0) {

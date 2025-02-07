@@ -7,6 +7,8 @@
 #include "emscripten.h"
 #include "emscripten_browser_file.h"
 #include "imgui.h"
+
+#include "app_state.h"
 #include "webapp.h"
 
 void FilePickerWidget::Draw() {
@@ -15,6 +17,10 @@ void FilePickerWidget::Draw() {
     emscripten_browser_file::upload(".brd", UploadFile);
   }
   ImGui::Text("You can also drag-and-drop anywhere");
+  if (ImGui::Button("Record Skia picture")) {
+    emscripten_log(EM_LOG_INFO, "needs to record");
+    AppState::RecordPicture();
+  }
   ImGui::End();
 }
 

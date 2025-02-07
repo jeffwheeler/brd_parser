@@ -22,7 +22,7 @@ target_compile_options(webapp PRIVATE "--use-port=sdl2")
 
 target_link_options(webapp PRIVATE "-sALLOW_MEMORY_GROWTH")
 # Enabling DWARF support prevents binaryen optimizations
-# target_link_options(webapp PRIVATE "-g")
+target_link_options(webapp PRIVATE "-g")
 target_link_options(webapp PRIVATE "-sFULL_ES2=1")
 target_link_options(webapp PRIVATE "-sFULL_ES3=1")
 target_link_options(webapp PRIVATE "-sUSE_WEBGL2=1")
