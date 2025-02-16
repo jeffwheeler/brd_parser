@@ -1,14 +1,15 @@
 #pragma once
 
-#include <Magnum/Math/Vector2.h>
-#include <Magnum/Shaders/VertexColorGL.h>
-#include <Magnum/Shaders/LineGL.h>
-#include <imgui_impl_sdl2.h>
-#include <Magnum/Math/Matrix3.h>
 #include <Magnum/GL/Mesh.h>
+#include <Magnum/Math/Matrix3.h>
+#include <Magnum/Math/Vector2.h>
 #include <Magnum/Platform/EmscriptenApplication.h>
+#include <Magnum/Shaders/LineGL.h>
+#include <Magnum/Shaders/VertexColorGL.h>
+#include <Magnum/Trade/MeshData.h>
+#include <imgui_impl_sdl2.h>
 
-#include <memory>
+#include <vector>
 #include <unordered_set>
 
 #include "lib/structure/types.h"
@@ -20,10 +21,14 @@ class BrdWidget {
   void UpdateFile();
   void Draw();
 
-  void HandleMouseWheel(Magnum::Platform::EmscriptenApplication::ScrollEvent& event);
-  void HandleMouseDown(Magnum::Platform::EmscriptenApplication::PointerEvent& event);
-  void HandleMouseUp(Magnum::Platform::EmscriptenApplication::PointerEvent& event);
-  void HandleMouseMove(Magnum::Platform::EmscriptenApplication::PointerMoveEvent& event);
+  void HandleMouseWheel(
+      Magnum::Platform::EmscriptenApplication::ScrollEvent& event);
+  void HandleMouseDown(
+      Magnum::Platform::EmscriptenApplication::PointerEvent& event);
+  void HandleMouseUp(
+      Magnum::Platform::EmscriptenApplication::PointerEvent& event);
+  void HandleMouseMove(
+      Magnum::Platform::EmscriptenApplication::PointerMoveEvent& event);
   void MarkDirty();
 
  private:
@@ -54,6 +59,7 @@ class BrdWidget {
 
   Magnum::GL::Mesh mesh_;
   Magnum::Shaders::LineGL2D shader_;
+  std::vector<Magnum::Trade::MeshData> lines_cache_;
 
   // sk_sp<SkPicture> picture_;
   // std::unordered_set<LayerInfo> visible_layers_cache_;
@@ -91,7 +97,7 @@ class BrdWidget {
   */
 
   bool dirty_ = true;
-  float factor_ = 1000.;
+  float factor_ = 100000.;
   // int cached_height_ = 0.;
   // float zoom_ = 1.0;
   // Magnum::Vector2 pan_{0, 0};

@@ -4,6 +4,7 @@
 #include <Magnum/GL/Buffer.h>
 #include <Magnum/Math/Color.h>
 #include <Magnum/MeshTools/CompileLines.h>
+#include <Magnum/MeshTools/Concatenate.h>
 #include <Magnum/MeshTools/GenerateLines.h>
 #include <Magnum/Primitives/Circle.h>
 #include <Magnum/Trade/MeshData.h>
@@ -15,6 +16,7 @@
 
 #include <cmath>
 
+#include "Magnum/Primitives/Line.h"
 #include "emscripten_browser_file.h"
 #include "lib/structure/utils.h"
 #include "webapp/app_state.h"
@@ -32,6 +34,7 @@ void BrdWidget::UpdateFile() {
   fs_ = AppState::CurrentFile();
 
   already_drawn_.clear();
+  lines_cache_.clear();
 
   IterateFile();
   ComposeLayersToDrawable();
@@ -51,9 +54,11 @@ void BrdWidget::UpdateFile() {
                        Magnum::Shaders::VertexColorGL2D::Position{},
                        Magnum::Shaders::VertexColorGL2D::Color3{});
 
-  Magnum::Trade::MeshData circle = Magnum::Primitives::circle2DWireframe(16);
-  mesh_ =
-      Magnum::MeshTools::compileLines(Magnum::MeshTools::generateLines(circle));
+  // Magnum::Trade::MeshData circle = Magnum::Primitives::circle2DWireframe(16);
+  mesh_ = Magnum::MeshTools::compileLines(Magnum::MeshTools::generateLines(
+      Magnum::MeshTools::concatenate(Corrade::Containers::arrayView(
+          lines_cache_.data(), lines_cache_.size()))));
+  emscripten_log(EM_LOG_INFO, "mesh_ count=%d", mesh_.count());
 
   dirty_ = true;
 }
@@ -334,28 +339,27 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
   uint32_t k = inst->first_segment_ptr;
   // uint8_t layer_id = LayerToShader(inst->layer);
 
-  // Magnum::Vector2 starting = (*StartingPoint(k)) * (1.0 / factor_);
+  Magnum::Vector2 starting = (*StartingPoint(k)) * (1.0 / factor_);
 
   while (IsLineSegment(k)) {
-    break;
-    /*
-    SkPath segment_path;
-    segment_path.moveTo(starting);
-    SkPoint next;
-    float segment_width;
+    // SkPath segment_path;
+    // segment_path.moveTo(starting);
+    Magnum::Vector2 next;
+    // float segment_width;
 
     if (fs_->is_type(k, 0x01)) {
       const T01ArcSegment<kAMax> segment_inst = fs_->get_x01(k);
-      segment_width = segment_inst.width / factor_;
+      // segment_width = segment_inst.width / factor_;
 
+      /*
       auto [cx, cy] = x01_center(&segment_inst);
       float scaled_cx = cx / factor_;
       float scaled_cy = cy / factor_;
       float scaled_r = (static_cast<double>(segment_inst.r)) / factor_;
 
-      SkPoint start{segment_inst.coords[0] / factor_,
+      Magnum::Vector2 start{segment_inst.coords[0] / factor_,
                     segment_inst.coords[1] / factor_};
-      SkPoint end{segment_inst.coords[2] / factor_,
+      Magnum::Vector2 end{segment_inst.coords[2] / factor_,
                   segment_inst.coords[3] / factor_};
 
       float start_angle =
@@ -382,37 +386,42 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
 
       segment_path.arcTo(oval_bounds, start_angle, sweep_angle, false);
       next = end;
+      */
+
       k = segment_inst.next;
     } else if (fs_->is_type(k, 0x15)) {
       const T15LineSegment<kAMax> segment_inst = fs_->get_x15(k);
-      segment_width = segment_inst.width / factor_;
-      next = SkPoint::Make(segment_inst.coords[2] / factor_,
-                           segment_inst.coords[3] / factor_);
-      segment_path.lineTo(next);
+      // segment_width = segment_inst.width / factor_;
+      next = Magnum::Vector2(
+          {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
+      // segment_path.lineTo(next);
       k = segment_inst.next;
     } else if (fs_->is_type(k, 0x16)) {
       const T16LineSegment<kAMax> segment_inst = fs_->get_x16(k);
-      segment_width = segment_inst.width / factor_;
-      next = SkPoint::Make(segment_inst.coords[2] / factor_,
-                           segment_inst.coords[3] / factor_);
-      segment_path.lineTo(next);
+      // segment_width = segment_inst.width / factor_;
+      next = Magnum::Vector2(
+          {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
+      // segment_path.lineTo(next);
       k = segment_inst.next;
     } else if (fs_->is_type(k, 0x17)) {
       const T17LineSegment<kAMax> segment_inst = fs_->get_x17(k);
-      segment_width = segment_inst.width / factor_;
-      next = SkPoint::Make(segment_inst.coords[2] / factor_,
-                           segment_inst.coords[3] / factor_);
-      segment_path.lineTo(next);
+      // segment_width = segment_inst.width / factor_;
+      next = Magnum::Vector2(
+          {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
+      // segment_path.lineTo(next);
       k = segment_inst.next;
     } else {
       return;
     }
 
     // Store segment info
-    segment_paths_.push_back(
-        {segment_path, segment_width, layer_id, inst->layer});
+    emscripten_log(EM_LOG_INFO, "adding line {%f %f}, {%f %f}", starting.x(), starting.y(), next.x(), next.y());
+    lines_cache_.push_back(Magnum::Primitives::line2D(starting, next));
+    // segment_paths_.push_back(
+    //     {segment_path, segment_width, layer_id, inst->layer});
 
     // Add to layer paths as before
+    /*
     size_t width_index = GetWidthIndex(segment_width);
     if (width_index < common_width_count_) {
       shader_layers_[layer_id].common_width_paths[width_index].addPath(
@@ -429,10 +438,9 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
       } else {
         other_paths.emplace_back(segment_width, segment_path);
       }
-    }
+      */
 
     starting = next;
-    */
   }
 }
 
@@ -653,10 +661,10 @@ void BrdWidget::HandleMouseWheel(
   float wheel_y = event.event().deltaY;
 
   // Clamp zoom to reasonable limits
-  if (wheel_y < 0 && projectionMatrix_.scaling().x() > 0.1) {
+  if (wheel_y < 0 && projectionMatrix_.scaling().x() > 0.01) {
     projectionMatrix_ *= pow(zoom_factor, wheel_y);
   }
-  if (wheel_y > 0 && projectionMatrix_.scaling().x() < 5) {
+  if (wheel_y > 0 && projectionMatrix_.scaling().x() < 20) {
     projectionMatrix_ *= pow(zoom_factor, wheel_y);
   }
 
