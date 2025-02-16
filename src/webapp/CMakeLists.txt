@@ -2,27 +2,33 @@
 
 find_package(imgui CONFIG REQUIRED)
 
-set(MAGNUM_WITH_IMGUI ON CACHE BOOL "" FORCE)
-set(MAGNUM_WITH_EMSCRIPTENAPPLICATION ON CACHE BOOL "" FORCE)
+set(MAGNUM_WITH_IMGUI ON)
+set(MAGNUM_WITH_EMSCRIPTENAPPLICATION ON)
+set(MAGNUM_WITH_MESHTOOLS ON)
 
 set(CMAKE_MODULE_PATH "${corrade_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
 set(CMAKE_MODULE_PATH "${magnum_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
 set(CMAKE_MODULE_PATH "${magnum_integration_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
 
 find_package(Corrade REQUIRED)
-find_package(Magnum REQUIRED EmscriptenApplication)
+find_package(Magnum REQUIRED
+  EmscriptenApplication
+  Primitives
+)
 find_package(MagnumIntegration REQUIRED ImGui)
 
 add_executable(webapp
   # main.cpp
   webapp.cpp
   layer_widget.cpp
-  # brd_renderer.cpp
+  brd_renderer.cpp
   file_picker.cpp
   app_state.cpp
 )
 target_link_libraries(webapp PRIVATE
   Magnum::EmscriptenApplication
+  Magnum::MeshTools
+  Magnum::Primitives
   MagnumIntegration::ImGui
 )
 # target_include_directories(webapp PRIVATE ${skia_SOURCE_DIR})

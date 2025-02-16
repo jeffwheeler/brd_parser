@@ -1,43 +1,65 @@
 #include "webapp/brd_renderer.h"
 
+#include <Corrade/Containers/ArrayView.h>
+#include <Magnum/GL/Buffer.h>
+#include <Magnum/Math/Color.h>
+#include <Magnum/MeshTools/CompileLines.h>
+#include <Magnum/MeshTools/GenerateLines.h>
+#include <Magnum/Primitives/Circle.h>
+#include <Magnum/Trade/MeshData.h>
 #include <SDL_events.h>
 #include <SDL_mouse.h>
 #include <arpa/inet.h>
 #include <emscripten.h>
+#include <emscripten/html5.h>
 
 #include <cmath>
 
 #include "emscripten_browser_file.h"
-#include "include/core/SkRect.h"
-#include "include/core/SkStrokeRec.h"
-#include "include/pathops/SkPathOps.h"
 #include "lib/structure/utils.h"
 #include "webapp/app_state.h"
 
-BrdWidget::BrdWidget() { InitializeShader(); }
+using namespace Magnum::Math::Literals;
+
+BrdWidget::BrdWidget() {
+  InitializeShader();
+
+  triangle_mesh_.setCount(0);
+  mesh_.setCount(0);
+}
 
 void BrdWidget::UpdateFile() {
   fs_ = AppState::CurrentFile();
 
-  segment_paths_.clear();
-  hover_segment_index_ = -1;
   already_drawn_.clear();
-
-  for (auto &shader_layer : shader_layers_) {
-    for (auto &path : shader_layer.common_width_paths) {
-      path.reset();
-    }
-    shader_layer.other_width_paths.clear();
-    shader_layer.filled_path.reset();
-  }
 
   IterateFile();
   ComposeLayersToDrawable();
+
+  struct TriangleVertex {
+    Magnum::Vector2 position;
+    Magnum::Color3 color;
+  };
+  const TriangleVertex vertices[3]{
+      {{-0.5F, -0.5F}, 0xff0000_rgbf}, /* Left vertex, red color */
+      {{0.5F, -0.5F}, 0x00ff00_rgbf},  /* Right vertex, green color */
+      {{0.0F, 0.5F}, 0x0000ff_rgbf}    /* Top vertex, blue color */
+  };
+
+  triangle_mesh_.setCount(Corrade::Containers::arraySize(vertices))
+      .addVertexBuffer(Magnum::GL::Buffer{vertices}, 0,
+                       Magnum::Shaders::VertexColorGL2D::Position{},
+                       Magnum::Shaders::VertexColorGL2D::Color3{});
+
+  Magnum::Trade::MeshData circle = Magnum::Primitives::circle2DWireframe(16);
+  mesh_ =
+      Magnum::MeshTools::compileLines(Magnum::MeshTools::generateLines(circle));
 
   dirty_ = true;
 }
 
 void BrdWidget::ComposeLayersToDrawable() {
+  /*
   SkPictureRecorder recorder;
 
   SkRect bbox = {-10000, -10000, 10000, 10000};
@@ -85,72 +107,27 @@ void BrdWidget::ComposeLayersToDrawable() {
   }
 
   picture_ = recorder.finishRecordingAsPicture();
+  */
 }
 
-void BrdWidget::InitializeShader() {
-  const char *shader_source = R"(
-    uniform half4 base_color;
-    uniform float opacity;  // Not used anymore
+void BrdWidget::InitializeShader() {}
 
-    half4 main(vec2 coord) {
-      return half4(base_color.rgb * base_color.a, base_color.a);
-    }
-  )";
+void BrdWidget::UpdateLayerShaders() {}
 
-  auto [effect, error] =
-      SkRuntimeEffect::MakeForShader(SkString(shader_source));
-  if (!effect) {
-    printf("Shader compilation failed: %s\n", error.c_str());
-    return;
-  }
-  runtime_effect_ = effect;
+void BrdWidget::UpdateLayerAlpha(uint8_t /* unused */, float /* unused */) {}
 
-  // Initialize default colors
-  shader_layers_[0].color =
-      SkColor4f::FromColor(SkColorSetARGB(255, 128, 0, 255));
-  shader_layers_[1].color =
-      SkColor4f::FromColor(SkColorSetARGB(255, 180, 62, 143));
-  shader_layers_[2].color =
-      SkColor4f::FromColor(SkColorSetARGB(255, 160, 175, 132));
-  shader_layers_[3].color =
-      SkColor4f::FromColor(SkColorSetARGB(255, 255, 237, 223));
-  shader_layers_[4].color =
-      SkColor4f::FromColor(SkColorSetARGB(255, 197, 216, 109));
-  shader_layers_[5].color =
-      SkColor4f::FromColor(SkColorSetARGB(255, 134, 97, 92));
-  shader_layers_[6].color =
-      SkColor4f::FromColor(SkColorSetARGB(255, 175, 224, 206));
-  shader_layers_[7].color =
-      SkColor4f::FromColor(SkColorSetARGB(255, 244, 116, 59));
-  shader_layers_[8].color =
-      SkColor4f::FromColor(SkColorSetARGB(255, 59, 0, 134));
+void BrdWidget::Draw() {
+  shader_.setViewportSize(Magnum::Vector2{100, 100})
+      .setTransformationProjectionMatrix(projectionMatrix_ *
+                                         transformationMatrix_)
+      .setColor(0x2f83cc_rgbf)
+      .setWidth(0.1F)
+      .draw(mesh_);
+  triangle_shader_.draw(triangle_mesh_);
 
-  UpdateLayerShaders();
-}
+  // const auto &visible_layers = AppState::VisibleLayers();
 
-void BrdWidget::UpdateLayerShaders() {
-  for (uint8_t i = 0; i < shader_layers_.size(); i++) {
-    UpdateLayerAlpha(i, 0.05F);
-  }
-}
-
-void BrdWidget::UpdateLayerAlpha(uint8_t layer, float new_alpha) {
-  if (layer < shader_layers_.size()) {
-    shader_layers_[layer].color.fA = new_alpha;
-    SkRuntimeShaderBuilder builder(runtime_effect_);
-    builder.uniform("base_color") = shader_layers_[layer].color;
-    builder.uniform("opacity") = 1.0F;
-    shader_layers_[layer].shader = builder.makeShader();
-
-    shader_layers_[layer].color.fA = 0.5 * new_alpha;
-    builder.uniform("base_color") = shader_layers_[layer].color;
-    shader_layers_[layer].fill_shader = builder.makeShader();
-  }
-}
-
-void BrdWidget::Draw(SkSurface *surface) {
-  const auto &visible_layers = AppState::VisibleLayers();
-
+  /*
   SkCanvas *canvas = surface->getCanvas();
   cached_height_ = surface->height();
 
@@ -221,96 +198,7 @@ void BrdWidget::Draw(SkSurface *surface) {
   }
 
   canvas->restore();
-}
-
-void BrdWidget::HandleMouseWheel(const SDL_Event &event) {
-  const float zoom_factor = 1.1F;
-  // Get mouse position
-  int mouseX = 0;
-  int mouseY = 0;
-  SDL_GetMouseState(&mouseX, &mouseY);
-
-  // Convert mouse position to world space before zoom
-  SkPoint mouse_world =
-      ScreenToWorld(SkPoint::Make(mouseX, (cached_height_ / 2.0) - mouseY));
-
-  // Adjust zoom based on wheel direction
-  // Use preciseY for high-resolution scroll wheels
-  float wheel_y = event.wheel.preciseY;
-  if (event.wheel.direction == SDL_MOUSEWHEEL_FLIPPED) {
-    wheel_y = -wheel_y;
-  }
-
-  if (wheel_y > 0) {
-    zoom_ *= pow(zoom_factor, wheel_y);
-  } else if (wheel_y < 0) {
-    zoom_ *= pow(1.0F / zoom_factor, -wheel_y);
-  }
-
-  // Clamp zoom to reasonable limits
-  zoom_ = std::max(0.1F, std::min(zoom_, 20.0F));
-
-  // Adjust pan to keep mouse position fixed
-  SkPoint new_mouse_world =
-      ScreenToWorld(SkPoint::Make(mouseX, (cached_height_ / 2.0) - mouseY));
-  pan_ += new_mouse_world - mouse_world;
-
-  dirty_ = true;
-}
-
-void BrdWidget::HandleMouseDown(const SDL_Event &event) {
-  if (event.button.button == SDL_BUTTON_LEFT) {
-    is_panning_ = true;
-    last_mouse_pos_ = SkPoint::Make(event.button.x, event.button.y);
-  }
-}
-
-void BrdWidget::HandleMouseUp(const SDL_Event &event) {
-  if (event.button.button == SDL_BUTTON_LEFT) {
-    is_panning_ = false;
-  }
-}
-
-// Modify HandleMouseMove to detect hover
-void BrdWidget::HandleMouseMove(const SDL_Event &event) {
-  if (is_panning_) {
-    SkPoint current_pos{static_cast<float>(event.motion.x),
-                        static_cast<float>(event.motion.y)};
-    SkPoint delta = current_pos - last_mouse_pos_;
-    pan_ += SkPoint::Make(delta.x() / zoom_, -delta.y() / zoom_);
-    last_mouse_pos_ = current_pos;
-
-    dirty_ = true;
-  } else {
-    // Convert screen coordinates to world coordinates
-    current_mouse_pos_ = ScreenToWorld(
-        SkPoint::Make(event.motion.x, (cached_height_ / 2.0) - event.motion.y));
-
-    // Check for hover
-    int old_hover_index = hover_segment_index_;
-    hover_segment_index_ = -1;
-
-    // Only check segments on enabled layers
-    for (size_t i = 0; i < segment_paths_.size(); i++) {
-      const auto &segment = segment_paths_[i];
-      // Skip if layer is disabled
-      if (visible_layers_cache_.count(segment.file_layer) == 0) {
-        continue;
-      }
-
-      if (IsPointNearPath(segment.path, current_mouse_pos_,
-                          segment.width * 1.5F)) {
-        hover_segment_index_ = i;
-        break;
-      }
-    }
-
-    // Redraw if hover state changed
-    if (old_hover_index != hover_segment_index_) {
-      ComposeLayersToDrawable();
-      dirty_ = true;
-    }
-  }
+  */
 }
 
 void BrdWidget::MarkDirty() { dirty_ = true; }
@@ -444,11 +332,13 @@ void BrdWidget::DrawShape(uint32_t ptr) {
 // Modify DrawX05 to store individual segments
 void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
   uint32_t k = inst->first_segment_ptr;
-  uint8_t layer_id = LayerToShader(inst->layer);
+  // uint8_t layer_id = LayerToShader(inst->layer);
 
-  SkPoint starting = (*StartingPoint(k)) * (1.0 / factor_);
+  // Magnum::Vector2 starting = (*StartingPoint(k)) * (1.0 / factor_);
 
   while (IsLineSegment(k)) {
+    break;
+    /*
     SkPath segment_path;
     segment_path.moveTo(starting);
     SkPoint next;
@@ -542,23 +432,26 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
     }
 
     starting = next;
+    */
   }
 }
 
 void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
   uint32_t k = inst->first_segment_ptr;
-  uint8_t layer_id = LayerToShader(inst->layer);
+  // uint8_t layer_id = LayerToShader(inst->layer);
 
-  float current_width = -1;
-  size_t width_index = common_width_count_;
+  // float current_width = -1;
+  // size_t width_index = common_width_count_;
 
-  SkPath current_path;
-  SkPoint starting = (*StartingPoint(k)) * (1.0 / factor_);
-  SkPoint first_point = starting;
-  current_path.moveTo(starting);
+  // SkPath current_path;
+  Magnum::Vector2 starting = (*StartingPoint(k)) * (1.0 / factor_);
+  Magnum::Vector2 first_point = starting;
+  // current_path.moveTo(starting);
 
   while (IsLineSegment(k)) {
-    SkPoint next;
+    // Magnum::Vector2 next;
+    break;
+    /*
     float segment_width;
 
     if (fs_->is_type(k, 0x01)) {
@@ -657,40 +550,41 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
 
     current_path.lineTo(next);
     starting = next;
+    */
   }
 
   // Ensure the path is properly closed by explicitly returning to start
   if (starting != first_point) {
-    current_path.lineTo(first_point);
+    // current_path.lineTo(first_point);
   }
-  current_path.close();
+  // current_path.close();
 
   // Force path direction to be consistent
-  current_path.setFillType(SkPathFillType::kWinding);
+  // current_path.setFillType(SkPathFillType::kWinding);
 
-  shader_layers_[layer_id].filled_path.addPath(current_path);
+  // shader_layers_[layer_id].filled_path.addPath(current_path);
 }
 
-auto BrdWidget::StartingPoint(uint32_t k) -> std::optional<SkPoint> {
+auto BrdWidget::StartingPoint(uint32_t k) -> std::optional<Magnum::Vector2> {
   if (fs_->is_type(k, 0x01)) {
     const T01ArcSegment<kAMax> segment_inst = fs_->get_x01(k);
-    return SkPoint::Make(static_cast<float>(segment_inst.coords[0]),
-                         static_cast<float>(segment_inst.coords[1]));
+    return Magnum::Vector2({static_cast<float>(segment_inst.coords[0]),
+                            static_cast<float>(segment_inst.coords[1])});
   }
   if (fs_->is_type(k, 0x15)) {
     const T15LineSegment<kAMax> segment_inst = fs_->get_x15(k);
-    return SkPoint::Make(static_cast<float>(segment_inst.coords[0]),
-                         static_cast<float>(segment_inst.coords[1]));
+    return Magnum::Vector2({static_cast<float>(segment_inst.coords[0]),
+                            static_cast<float>(segment_inst.coords[1])});
   }
   if (fs_->is_type(k, 0x16)) {
     const T16LineSegment<kAMax> segment_inst = fs_->get_x16(k);
-    return SkPoint::Make(static_cast<float>(segment_inst.coords[0]),
-                         static_cast<float>(segment_inst.coords[1]));
+    return Magnum::Vector2({static_cast<float>(segment_inst.coords[0]),
+                            static_cast<float>(segment_inst.coords[1])});
   }
   if (fs_->is_type(k, 0x17)) {
     const T17LineSegment<kAMax> segment_inst = fs_->get_x17(k);
-    return SkPoint::Make(static_cast<float>(segment_inst.coords[0]),
-                         static_cast<float>(segment_inst.coords[1]));
+    return Magnum::Vector2({static_cast<float>(segment_inst.coords[0]),
+                            static_cast<float>(segment_inst.coords[1])});
   }
   return {};
 }
@@ -702,7 +596,9 @@ auto BrdWidget::IsLineSegment(uint32_t k) -> bool {
   return r;
 }
 
-auto BrdWidget::GetWidthIndex(float width) -> size_t {
+auto BrdWidget::GetWidthIndex(float /* unused */) -> size_t {
+  return 0;
+  /*
   // First check common widths
   for (size_t i = 0; i < common_width_count_; i++) {
     if (std::abs(common_widths_[i] - width) < 0.001F) {
@@ -715,11 +611,14 @@ auto BrdWidget::GetWidthIndex(float width) -> size_t {
     }
   }
   return common_width_count_;  // Indicate this needs to go in other_width_paths
+  */
 }
 
-auto BrdWidget::ScreenToWorld(const SkPoint &screen_pos) -> SkPoint {
-  return SkPoint::Make((screen_pos.x() / zoom_) - pan_.x(),
-                       (screen_pos.y() / zoom_) - pan_.y());
+auto BrdWidget::ScreenToWorld(const Magnum::Vector2 & /*screen_pos*/)
+    -> Magnum::Vector2 {
+  return Magnum::Vector2{};
+  // return Magnum::Vector2({(screen_pos.x() / zoom_) - pan_.x(),
+  //                         (screen_pos.y() / zoom_) - pan_.y()});
 }
 
 auto BrdWidget::LayerToShader(const LayerInfo layer) -> uint8_t {
@@ -730,6 +629,7 @@ auto BrdWidget::LayerToShader(const LayerInfo layer) -> uint8_t {
 }
 
 // Add method to check if point is near path
+/*
 auto BrdWidget::IsPointNearPath(const SkPath &path, const SkPoint &point,
                                 float width) -> bool {
   SkPath stroke_path;
@@ -744,4 +644,60 @@ auto BrdWidget::IsPointNearPath(const SkPath &path, const SkPoint &point,
   stroke.applyToPath(&result, path);
 
   return result.contains(point.x(), point.y());
+}
+*/
+
+void BrdWidget::HandleMouseWheel(
+    Magnum::Platform::EmscriptenApplication::ScrollEvent &event) {
+  const float zoom_factor = 1.1F;
+  float wheel_y = event.event().deltaY;
+
+  // Clamp zoom to reasonable limits
+  if (wheel_y < 0 && projectionMatrix_.scaling().x() > 0.1) {
+    projectionMatrix_ *= pow(zoom_factor, wheel_y);
+  }
+  if (wheel_y > 0 && projectionMatrix_.scaling().x() < 5) {
+    projectionMatrix_ *= pow(zoom_factor, wheel_y);
+  }
+
+  dirty_ = true;
+}
+
+void BrdWidget::HandleMouseDown(
+    Magnum::Platform::EmscriptenApplication::PointerEvent &event) {
+  if (event.pointer() ==
+      Magnum::Platform::EmscriptenApplication::Pointer::MouseLeft) {
+    is_panning_ = true;
+    last_mouse_pos_ = event.position();
+  }
+}
+
+void BrdWidget::HandleMouseUp(
+    Magnum::Platform::EmscriptenApplication::PointerEvent &event) {
+  if (event.pointer() ==
+      Magnum::Platform::EmscriptenApplication::Pointer::MouseLeft) {
+    is_panning_ = false;
+  }
+}
+
+// Modify HandleMouseMove to detect hover
+void BrdWidget::HandleMouseMove(
+    Magnum::Platform::EmscriptenApplication::PointerMoveEvent &event) {
+  if (is_panning_) {
+    Magnum::Vector2 current_pos = event.position();
+    Magnum::Vector2 delta =
+        Magnum::Vector2({(current_pos.x() - last_mouse_pos_.x()) / 50,
+                         -(current_pos.y() - last_mouse_pos_.y()) / 50});
+    emscripten_log(EM_LOG_INFO, "transform was %f %f",
+                   transformationMatrix_.translation().x(),
+                   transformationMatrix_.translation().y());
+    transformationMatrix_ =
+        Magnum::Matrix3::translation(delta) * transformationMatrix_;
+    emscripten_log(EM_LOG_INFO, "transform now %f %f",
+                   transformationMatrix_.translation().x(),
+                   transformationMatrix_.translation().y());
+    last_mouse_pos_ = current_pos;
+
+    dirty_ = true;
+  }
 }

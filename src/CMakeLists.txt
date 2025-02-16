@@ -25,12 +25,13 @@ add_compile_options("-O3")
 add_compile_options("-Wall")
 
 # https://groups.google.com/g/skia-discuss/c/UZil9nCWGhg
-add_compile_options("-DSK_TRIVIAL_ABI=[[clang::trivial_abi]]")
-add_compile_options("-DCK_ENABLE_WEBGL=1")
-add_compile_options("-DSK_GL=1")
-add_compile_options("-DSK_DISABLE_TRACING=1")
-add_compile_options("-DSKNX_NO_SIMD=1")
-add_compile_options("-DSK_FORCE_8_BYTE_ALIGNMENT=1")
+# add_compile_options("-DSK_TRIVIAL_ABI=[[clang::trivial_abi]]")
+# add_compile_options("-DMAGNUM_TARGET_WEBGL=1")
+# add_compile_options("-DCK_ENABLE_WEBGL=1")
+# add_compile_options("-DSK_GL=1")
+# add_compile_options("-DSK_DISABLE_TRACING=1")
+# add_compile_options("-DSKNX_NO_SIMD=1")
+# add_compile_options("-DSK_FORCE_8_BYTE_ALIGNMENT=1")
 
 if (MSVC)
   # Fix Boost compatibility issue with MSVC:

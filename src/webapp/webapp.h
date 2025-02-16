@@ -15,8 +15,9 @@
 
 #include <Magnum/ImGuiIntegration/Context.hpp>
 
-#include "webapp/layer_widget.h"
 #include "webapp/file_picker.h"
+#include "webapp/brd_renderer.h"
+#include "webapp/layer_widget.h"
 
 using namespace Magnum::Math::Literals;
 
@@ -44,9 +45,7 @@ class BrdViewerApp : public Magnum::Platform::Application {
 
   LayerWidget layer_widget_;
   FilePickerWidget file_picker_widget_;
+  BrdWidget brd_widget_;
 
-  // bool _showDemoWindow = true;
-  // bool _showAnotherWindow = false;
   Magnum::Color4 _clearColor = 0x72909aff_rgbaf;
-  // float _floatValue = 0.0F;
 };

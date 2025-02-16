@@ -44,8 +44,9 @@ void BrdViewerApp::drawEvent() {
     stopTextInput();
   }
 
-  layer_widget_.Draw();
+  brd_widget_.Draw();
 
+  layer_widget_.Draw();
   file_picker_widget_.Draw();
 
   /* Update application cursor */
@@ -94,18 +95,24 @@ void BrdViewerApp::pointerPressEvent(PointerEvent& event) {
   if (_imgui.handlePointerPressEvent(event)) {
     return;
   }
+
+  brd_widget_.HandleMouseDown(event);
 }
 
 void BrdViewerApp::pointerReleaseEvent(PointerEvent& event) {
   if (_imgui.handlePointerReleaseEvent(event)) {
     return;
   }
+
+  brd_widget_.HandleMouseUp(event);
 }
 
 void BrdViewerApp::pointerMoveEvent(PointerMoveEvent& event) {
   if (_imgui.handlePointerMoveEvent(event)) {
     return;
   }
+
+  brd_widget_.HandleMouseMove(event);
 }
 
 void BrdViewerApp::scrollEvent(ScrollEvent& event) {
@@ -114,6 +121,8 @@ void BrdViewerApp::scrollEvent(ScrollEvent& event) {
     event.setAccepted();
     return;
   }
+
+  brd_widget_.HandleMouseWheel(event);
 }
 
 void BrdViewerApp::textInputEvent(TextInputEvent& event) {
@@ -126,7 +135,7 @@ void BrdViewerApp::HandleFileUpload(const std::string& filepath) {
   auto fs = parse_file(filepath);
   if (fs) {
     AppState::CurrentFile() = std::make_shared<File<kAMax>>(std::move(*fs));
-    // brd_widget_.UpdateFile();
+    brd_widget_.UpdateFile();
     layer_widget_.UpdateFile();
   } else {
     emscripten_log(EM_LOG_ERROR, "Failed to parse dropped file");
