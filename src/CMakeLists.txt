@@ -62,7 +62,22 @@ if (BUILD_WEBAPP)
     GIT_REPOSITORY https://github.com/Armchair-Software/emscripten-browser-file.git
     GIT_TAG b7312b42dc92dc791dac53a7df96e231a8751607
   )
-  FetchContent_MakeAvailable(googletest em_file_browser)
+  FetchContent_Declare(
+      corrade
+      GIT_REPOSITORY https://github.com/mosra/corrade.git
+      GIT_TAG 9ade86c04bd4d930b0c897ec82d2833eea8ceaa4
+  )
+  FetchContent_Declare(
+      magnum
+      GIT_REPOSITORY https://github.com/mosra/magnum.git
+      GIT_TAG 15f76e08b68f89f1e971ab57fa9cd6747018fd16
+  )
+  FetchContent_Declare(
+      magnum_integration
+      GIT_REPOSITORY https://github.com/mosra/magnum-integration.git
+      GIT_TAG ed2730d95836fdcbdbb659c5c070bcde2eb07175
+  )
+  FetchContent_MakeAvailable(googletest em_file_browser corrade magnum magnum_integration)
 else ()
   FetchContent_MakeAvailable(googletest)
 endif ()
@@ -77,8 +92,6 @@ find_package(boost_unordered REQUIRED CONFIG)
 include_directories(${Boost_INCLUDE_DIRS})
 
 # set(WITH_IMGUI ON CACHE BOOL "" FORCE)
-# set(CMAKE_MODULE_PATH "${magnum_integration_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
-# find_package(MagnumIntegration REQUIRED ImGui)
 
 # This allows headers to be imported from "lib/.../*.h"
 include_directories(.)

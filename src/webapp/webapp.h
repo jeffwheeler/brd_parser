@@ -1,35 +1,46 @@
 #pragma once
 
-#include <GLES3/gl3.h>
-#include <SDL.h>
+// #include <GLES3/gl3.h>
+// #include <SDL.h>
 
-#include "include/core/SkSurface.h"
-#include "webapp/brd_renderer.h"
-#include "webapp/layer_widget.h"
+// #include "include/core/SkSurface.h"
+// #include "webapp/brd_renderer.h"
+// #include "webapp/layer_widget.h"
 
-class BrdViewerApp {
+#include <Magnum/GL/DefaultFramebuffer.h>
+#include <Magnum/GL/Renderer.h>
+#include <Magnum/Math/Color.h>
+#include <Magnum/Math/Time.h>
+#include <Magnum/Platform/EmscriptenApplication.h>
+
+#include <Magnum/ImGuiIntegration/Context.hpp>
+
+using namespace Magnum::Math::Literals;
+
+class ImGuiExample : public Magnum::Platform::Application {
  public:
-  explicit BrdViewerApp();
+  explicit ImGuiExample(const Arguments& arguments);
 
-  static auto App() -> BrdViewerApp&;
+  void drawEvent() override;
 
-  void Render();
-  void HandleFileUpload(const std::string& filepath);
+  void viewportEvent(ViewportEvent& event) override;
+
+  void keyPressEvent(KeyEvent& event) override;
+  void keyReleaseEvent(KeyEvent& event) override;
+
+  void pointerPressEvent(PointerEvent& event) override;
+  void pointerReleaseEvent(PointerEvent& event) override;
+  void pointerMoveEvent(PointerMoveEvent& event) override;
+  void scrollEvent(ScrollEvent& event) override;
+  void textInputEvent(TextInputEvent& event) override;
 
  private:
-  SDL_Window* window_;
-  SkSurface* skia_surface_ = nullptr;
-  GrDirectContext* gr_context_ = nullptr;
+  Magnum::ImGuiIntegration::Context _imgui{Corrade::NoCreate};
 
-  LayerWidget layer_widget_;
-  BrdWidget brd_widget_;
-
-  double device_pixel_ratio_ = 1.0;
-  int width_ = 0;
-  int height_ = 0;
-
-  void RenderSkia();
-  void RenderImGuiOverlay();
-  void Resize(int width, int height);
-  void CreateSkiaSurface();
+  bool _showDemoWindow = true;
+  bool _showAnotherWindow = false;
+  Magnum::Color4 _clearColor = 0x72909aff_rgbaf;
+  float _floatValue = 0.0F;
 };
+
+MAGNUM_EMSCRIPTENAPPLICATION_MAIN(ImGuiExample)

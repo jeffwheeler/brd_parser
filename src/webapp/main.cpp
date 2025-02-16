@@ -2,11 +2,11 @@
 
 #include "webapp/webapp.h"
 
-void main_loop() { BrdViewerApp::App().Render(); }
+// void main_loop() { BrdViewerApp::App().Render(); }
 
 auto main() -> int {
   // Set main loop
-  emscripten_set_main_loop(main_loop, 0, true);
+  // emscripten_set_main_loop(main_loop, 0, true);
 
   return 0;
 }
