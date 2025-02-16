@@ -2,12 +2,16 @@
 
 #include <emscripten/html5.h>
 
-ImGuiExample::ImGuiExample(const Arguments& arguments)
-    : Magnum::Platform::Application{
-          arguments,
-          Configuration{}
-              .setTitle("Magnum ImGui Example")
-              .setWindowFlags(Configuration::WindowFlag::Resizable)} {
+#include "lib/parser/parser.h"
+#include "webapp/app_state.h"
+
+BrdViewerApp::BrdViewerApp(const Arguments& arguments)
+    : Magnum::Platform::
+          Application{arguments, Configuration{}
+                                     .setTitle("Magnum ImGui Example")
+                                     .setWindowFlags(
+                                         Configuration::WindowFlag::Resizable)},
+      file_picker_widget_(this) {
   _imgui = Magnum::ImGuiIntegration::Context(
       Magnum::Vector2{windowSize()} / dpiScaling(), windowSize(),
       framebufferSize());
@@ -28,7 +32,7 @@ ImGuiExample::ImGuiExample(const Arguments& arguments)
 #endif
 }
 
-void ImGuiExample::drawEvent() {
+void BrdViewerApp::drawEvent() {
   Magnum::GL::defaultFramebuffer.clear(Magnum::GL::FramebufferClear::Color);
 
   _imgui.newFrame();
@@ -40,40 +44,9 @@ void ImGuiExample::drawEvent() {
     stopTextInput();
   }
 
-  /* 1. Show a simple window.
-     Tip: if we don't call ImGui::Begin()/ImGui::End() the widgets appear in
-     a window called "Debug" automatically */
-  {
-    ImGui::Text("Hello, world!");
-    ImGui::SliderFloat("Float", &_floatValue, 0.0F, 1.0F);
-    if (ImGui::ColorEdit3("Clear Color", _clearColor.data())) {
-      Magnum::GL::Renderer::setClearColor(_clearColor);
-    }
-    if (ImGui::Button("Test Window")) {
-      _showDemoWindow ^= 1;
-    }
-    if (ImGui::Button("Another Window")) {
-      _showAnotherWindow ^= 1;
-    }
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
-                1000.0 / static_cast<Magnum::Double>(ImGui::GetIO().Framerate),
-                static_cast<Magnum::Double>(ImGui::GetIO().Framerate));
-  }
+  layer_widget_.Draw();
 
-  /* 2. Show another simple window, now using an explicit Begin/End pair */
-  if (_showAnotherWindow) {
-    ImGui::SetNextWindowSize(ImVec2(500, 100), ImGuiCond_FirstUseEver);
-    ImGui::Begin("Another Window", &_showAnotherWindow);
-    ImGui::Text("Hello");
-    ImGui::End();
-  }
-
-  /* 3. Show the ImGui demo window. Most of the sample code is in
-     ImGui::ShowDemoWindow() */
-  if (_showDemoWindow) {
-    ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver);
-    ImGui::ShowDemoWindow();
-  }
+  file_picker_widget_.Draw();
 
   /* Update application cursor */
   _imgui.updateApplicationCursor(*this);
@@ -98,44 +71,44 @@ void ImGuiExample::drawEvent() {
   redraw();
 }
 
-void ImGuiExample::viewportEvent(ViewportEvent& event) {
+void BrdViewerApp::viewportEvent(ViewportEvent& event) {
   Magnum::GL::defaultFramebuffer.setViewport({{}, event.framebufferSize()});
 
   _imgui.relayout(Magnum::Vector2{event.windowSize()} / event.dpiScaling(),
                   event.windowSize(), event.framebufferSize());
 }
 
-void ImGuiExample::keyPressEvent(KeyEvent& event) {
+void BrdViewerApp::keyPressEvent(KeyEvent& event) {
   if (_imgui.handleKeyPressEvent(event)) {
     return;
   }
 }
 
-void ImGuiExample::keyReleaseEvent(KeyEvent& event) {
+void BrdViewerApp::keyReleaseEvent(KeyEvent& event) {
   if (_imgui.handleKeyReleaseEvent(event)) {
     return;
   }
 }
 
-void ImGuiExample::pointerPressEvent(PointerEvent& event) {
+void BrdViewerApp::pointerPressEvent(PointerEvent& event) {
   if (_imgui.handlePointerPressEvent(event)) {
     return;
   }
 }
 
-void ImGuiExample::pointerReleaseEvent(PointerEvent& event) {
+void BrdViewerApp::pointerReleaseEvent(PointerEvent& event) {
   if (_imgui.handlePointerReleaseEvent(event)) {
     return;
   }
 }
 
-void ImGuiExample::pointerMoveEvent(PointerMoveEvent& event) {
+void BrdViewerApp::pointerMoveEvent(PointerMoveEvent& event) {
   if (_imgui.handlePointerMoveEvent(event)) {
     return;
   }
 }
 
-void ImGuiExample::scrollEvent(ScrollEvent& event) {
+void BrdViewerApp::scrollEvent(ScrollEvent& event) {
   if (_imgui.handleScrollEvent(event)) {
     /* Prevent scrolling the page */
     event.setAccepted();
@@ -143,8 +116,21 @@ void ImGuiExample::scrollEvent(ScrollEvent& event) {
   }
 }
 
-void ImGuiExample::textInputEvent(TextInputEvent& event) {
+void BrdViewerApp::textInputEvent(TextInputEvent& event) {
   if (_imgui.handleTextInputEvent(event)) {
     return;
   }
 }
+
+void BrdViewerApp::HandleFileUpload(const std::string& filepath) {
+  auto fs = parse_file(filepath);
+  if (fs) {
+    AppState::CurrentFile() = std::make_shared<File<kAMax>>(std::move(*fs));
+    // brd_widget_.UpdateFile();
+    layer_widget_.UpdateFile();
+  } else {
+    emscripten_log(EM_LOG_ERROR, "Failed to parse dropped file");
+  }
+}
+
+MAGNUM_EMSCRIPTENAPPLICATION_MAIN(BrdViewerApp)

@@ -16,10 +16,10 @@ find_package(MagnumIntegration REQUIRED ImGui)
 add_executable(webapp
   # main.cpp
   webapp.cpp
-  # layer_widget.cpp
+  layer_widget.cpp
   # brd_renderer.cpp
-  # file_picker.cpp
-  # app_state.cpp
+  file_picker.cpp
+  app_state.cpp
 )
 target_link_libraries(webapp PRIVATE
   Magnum::EmscriptenApplication

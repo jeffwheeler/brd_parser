@@ -15,11 +15,16 @@
 
 #include <Magnum/ImGuiIntegration/Context.hpp>
 
+#include "webapp/layer_widget.h"
+#include "webapp/file_picker.h"
+
 using namespace Magnum::Math::Literals;
 
-class ImGuiExample : public Magnum::Platform::Application {
+class BrdViewerApp : public Magnum::Platform::Application {
  public:
-  explicit ImGuiExample(const Arguments& arguments);
+  explicit BrdViewerApp(const Arguments& arguments);
+
+  void HandleFileUpload(const std::string& filepath);
 
   void drawEvent() override;
 
@@ -37,10 +42,11 @@ class ImGuiExample : public Magnum::Platform::Application {
  private:
   Magnum::ImGuiIntegration::Context _imgui{Corrade::NoCreate};
 
-  bool _showDemoWindow = true;
-  bool _showAnotherWindow = false;
-  Magnum::Color4 _clearColor = 0x72909aff_rgbaf;
-  float _floatValue = 0.0F;
-};
+  LayerWidget layer_widget_;
+  FilePickerWidget file_picker_widget_;
 
-MAGNUM_EMSCRIPTENAPPLICATION_MAIN(ImGuiExample)
+  // bool _showDemoWindow = true;
+  // bool _showAnotherWindow = false;
+  Magnum::Color4 _clearColor = 0x72909aff_rgbaf;
+  // float _floatValue = 0.0F;
+};
