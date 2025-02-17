@@ -46,7 +46,7 @@ class BrdWidget {
   auto IsLineSegment(uint32_t k) -> bool;
   auto GetWidthIndex(float width) -> size_t;
 
-  auto ScreenToWorld(const Magnum::Vector2& screen_pos) -> Magnum::Vector2;
+  auto ScreenToWorld(const Magnum::Vector2& screen_pos, bool center = false) -> Magnum::Vector2;
   static auto LayerToShader(const LayerInfo layer) -> uint8_t;
   // static auto IsPointNearPath(const SkPath& path, const SkPoint& point,
   //                             float width) -> bool;

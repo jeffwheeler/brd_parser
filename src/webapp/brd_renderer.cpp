@@ -624,16 +624,24 @@ auto BrdWidget::GetWidthIndex(float /* unused */) -> size_t {
   */
 }
 
-auto BrdWidget::ScreenToWorld(const Magnum::Vector2 &screen_pos)
+auto BrdWidget::ScreenToWorld(const Magnum::Vector2 &screen_pos, bool center)
     -> Magnum::Vector2 {
-  // FIXME: Cache this?
+  // FIXME: Cache?
   auto viewportSize = Magnum::GL::defaultFramebuffer.viewport();
 
-  Magnum::Vector2 scaled =
-      screen_pos /
-      Magnum::Vector2(viewportSize.sizeX() / 4.0, -viewportSize.sizeY() / 4.0);
+  // FIXME: Why 4?
+  float offset = center ? 1.0F : 0.0F;
+  Magnum::Vector2 normalized =
+      screen_pos / Magnum::Vector2(viewportSize.sizeX() / 4.0F,
+                                   viewportSize.sizeY() / 4.0F) -
+      Magnum::Vector2{offset, offset};
 
-  return projectionMatrix_.inverted().transformVector(scaled);
+  normalized.y() = -normalized.y();
+  Magnum::Matrix3 complete_transform = projectionMatrix_;
+  if (center) {
+    complete_transform *transformationMatrix_;
+  }
+  return complete_transform.inverted().transformPoint(normalized);
 }
 
 auto BrdWidget::LayerToShader(const LayerInfo layer) -> uint8_t {
@@ -664,41 +672,32 @@ auto BrdWidget::IsPointNearPath(const SkPath &path, const SkPoint &point,
 
 void BrdWidget::HandleMouseWheel(
     Magnum::Platform::EmscriptenApplication::ScrollEvent &event) {
-  const float zoom_factor = 1.1f;
+  constexpr float zoom_factor = 1.1F;
   float wheel_y = event.event().deltaY;
 
-  Magnum::Vector2 mouse_screen_pos = event.position();
-
-  Magnum::Vector2 mouse_world_pos =
-      transformationMatrix_.inverted().transformPoint(mouse_screen_pos);
-
-  if (wheel_y < 0 && projectionMatrix_.scaling().x() > 0.01f) {
-    // 1. Translate to mouse position
-    transformationMatrix_ =
-        transformationMatrix_ * Magnum::Matrix3::translation(-mouse_world_pos);
-
-    // 2. Apply scaling
-    projectionMatrix_ =
-        Magnum::Matrix3::scaling(Magnum::Vector2(pow(zoom_factor, wheel_y))) *
-        projectionMatrix_;
-
-    // 3. Translate back
-    transformationMatrix_ =
-        transformationMatrix_ * Magnum::Matrix3::translation(mouse_world_pos);
+  if (wheel_y == 0) {
+    return;
   }
-  if (wheel_y > 0 && projectionMatrix_.scaling().x() < 20.0f) {
-    // 1. Translate to mouse position
-    transformationMatrix_ =
-        transformationMatrix_ * Magnum::Matrix3::translation(-mouse_world_pos);
 
-    // 2. Apply scaling
+  Magnum::Vector2 mouse_screen_pos = event.position();
+  Magnum::Vector2 mouse_world_pos = ScreenToWorld(mouse_screen_pos, true);
+
+  // Compute zoom scale factor
+  float scale = (wheel_y < 0) ? 1.0F / zoom_factor : zoom_factor;
+
+  // Apply zoom limits
+  float current_scale = projectionMatrix_.scaling().x();
+  if ((wheel_y < 0 && current_scale > 0.01F) ||
+      (wheel_y > 0 && current_scale < 20.0F)) {
+    // Apply scaling to the projection matrix
     projectionMatrix_ =
-        Magnum::Matrix3::scaling(Magnum::Vector2(pow(zoom_factor, wheel_y))) *
-        projectionMatrix_;
+        Magnum::Matrix3::scaling(Magnum::Vector2(scale)) * projectionMatrix_;
 
-    // 3. Translate back
+    Magnum::Vector2 new_mouse_world_pos = ScreenToWorld(mouse_screen_pos, true);
+
+    Magnum::Vector2 correction = new_mouse_world_pos - mouse_world_pos;
     transformationMatrix_ =
-        transformationMatrix_ * Magnum::Matrix3::translation(mouse_world_pos);
+        Magnum::Matrix3::translation(correction) * transformationMatrix_;
   }
 
   dirty_ = true;
@@ -730,7 +729,7 @@ void BrdWidget::HandleMouseMove(
     Magnum::Vector2 world_delta = ScreenToWorld(delta);
 
     transformationMatrix_ =
-        transformationMatrix_ * Magnum::Matrix3::translation(world_delta);
+        Magnum::Matrix3::translation(world_delta) * transformationMatrix_;
 
     last_mouse_pos_ = current_pos;
 
