@@ -63,6 +63,8 @@ class BrdWidget {
 
   struct VertexData {
     Magnum::Vector2 position;
+    Magnum::Vector2 next;
+    Magnum::Int step;
     Magnum::Float width;
     Magnum::Color3 color;
   };

@@ -50,7 +50,8 @@ void BrdWidget::UpdateFile() {
   // Configure mesh
   mesh_.setPrimitive(Magnum::GL::MeshPrimitive::Triangles)
       .setCount(lines_cache_.size())
-      .addVertexBuffer(buffer, 0, LineShader::Position{}, LineShader::Width{},
+      .addVertexBuffer(buffer, 0, LineShader::Position{}, LineShader::Next{},
+                       LineShader::Step{}, LineShader::Width{},
                        LineShader::Color{});
 
   dirty_ = true;
@@ -327,19 +328,17 @@ void BrdWidget::DrawShape(uint32_t ptr) {
 
 void BrdWidget::AddSegment(Magnum::Vector2 start, Magnum::Vector2 end,
                            float width) {
-  lines_cache_.emplace_back(
-      VertexData{{start.x(), start.y()}, -width, 0xFF0000_rgbf});
-  lines_cache_.emplace_back(
-      VertexData{{end.x(), end.y()}, -width, 0x0FF00F_rgbf});
-  lines_cache_.emplace_back(
-      VertexData{{end.x(), end.y()}, width, 0x0000FF_rgbf});
-
+  lines_cache_.emplace_back(VertexData{start, end, 0, width, 0xFF0000_rgbf});
+  lines_cache_.emplace_back(VertexData{start, end, 1, width, 0x00FF00_rgbf});
+  lines_cache_.emplace_back(VertexData{start, end, 2, width, 0x0000FF_rgbf});
+  /*
   lines_cache_.emplace_back(
       VertexData{{start.x(), start.y()}, -width, 0x0000FF_rgbf});
   lines_cache_.emplace_back(
       VertexData{{end.x(), end.y()}, width, 0x00FF00_rgbf});
   lines_cache_.emplace_back(
       VertexData{{start.x(), start.y()}, width, 0xFF0000_rgbf});
+  */
 }
 
 // Modify DrawX05 to store individual segments

@@ -8,8 +8,10 @@
 class LineShader : public Magnum::GL::AbstractShaderProgram {
  public:
   using Position = Magnum::GL::Attribute<0, Magnum::Vector2>;
-  using Width = Magnum::GL::Attribute<1, Magnum::Float>;
-  using Color = Magnum::GL::Attribute<2, Magnum::Color3>;
+  using Next = Magnum::GL::Attribute<1, Magnum::Vector2>;
+  using Step = Magnum::GL::Attribute<2, Magnum::Int>;
+  using Width = Magnum::GL::Attribute<3, Magnum::Float>;
+  using Color = Magnum::GL::Attribute<4, Magnum::Color3>;
 
   enum class Uniform : Magnum::Int { TransformationProjectionMatrix = 0 };
 
@@ -23,14 +25,26 @@ class LineShader : public Magnum::GL::AbstractShaderProgram {
       uniform mat3 transformationProjectionMatrix;
 
       layout(location = 0) in vec2 position;
-      layout(location = 1) in float width;
-      layout(location = 2) in vec3 color;
+      layout(location = 1) in vec2 next;
+      layout(location = 2) in int step;
+      layout(location = 3) in float width;
+      layout(location = 4) in vec3 color;
 
       out vec3 fragmentColor;
 
       void main() {
         fragmentColor = color;
-        vec2 adjusted = vec2(position.x, position.y + width);
+        vec2 adjusted;
+        if (step == 0) {
+          adjusted.x = position.x;
+          adjusted.y = position.y - width;
+        } else if (step == 1) {
+          adjusted.x = next.x;
+          adjusted.y = next.y - width;
+        } else {
+          adjusted.x = next.x;
+          adjusted.y = next.y + width;
+        }
         gl_Position = vec4(transformationProjectionMatrix * vec3(adjusted, 1.0), 1.0);
       }
     )");
