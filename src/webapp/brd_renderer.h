@@ -18,6 +18,8 @@
 #include "lib/structure/types.h"
 #include "webapp/line_shader.h"
 
+namespace Mn = Magnum;
+
 class BrdWidget {
  public:
   BrdWidget();
@@ -27,13 +29,13 @@ class BrdWidget {
 
   void UpdateScreenRatio();
   void HandleMouseWheel(
-      Magnum::Platform::EmscriptenApplication::ScrollEvent& event);
+      Mn::Platform::EmscriptenApplication::ScrollEvent& event);
   void HandleMouseDown(
-      Magnum::Platform::EmscriptenApplication::PointerEvent& event);
+      Mn::Platform::EmscriptenApplication::PointerEvent& event);
   void HandleMouseUp(
-      Magnum::Platform::EmscriptenApplication::PointerEvent& event);
+      Mn::Platform::EmscriptenApplication::PointerEvent& event);
   void HandleMouseMove(
-      Magnum::Platform::EmscriptenApplication::PointerMoveEvent& event);
+      Mn::Platform::EmscriptenApplication::PointerMoveEvent& event);
   void MarkDirty();
 
  private:
@@ -47,13 +49,12 @@ class BrdWidget {
   void DrawX05(const T05Line<kAMax>* inst);
   void DrawX28(const T28Shape<kAMax>* inst);
 
-  void AddSegment(Magnum::Vector2 start, Magnum::Vector2 end, float width, uint8_t layer);
-  auto StartingPoint(uint32_t k) -> std::optional<Magnum::Vector2>;
+  void AddSegment(Mn::Vector2 start, Mn::Vector2 end, float width, uint8_t layer);
+  auto StartingPoint(uint32_t k) -> std::optional<Mn::Vector2>;
   auto IsLineSegment(uint32_t k) -> bool;
-  auto GetWidthIndex(float width) -> size_t;
 
-  auto ScreenToWorld(const Magnum::Vector2& screen_pos, bool center = false)
-      -> Magnum::Vector2;
+  auto ScreenToWorld(const Mn::Vector2& screen_pos, bool center = false)
+      -> Mn::Vector2;
   static auto LayerToShader(LayerInfo layer) -> uint8_t;
   // static auto IsPointNearPath(const SkPath& path, const SkPoint& point,
   //                             float width) -> bool;
@@ -62,20 +63,20 @@ class BrdWidget {
   std::unordered_set<uint32_t> already_drawn_;
 
   struct VertexData {
-    Magnum::Vector2 position;
-    Magnum::Vector2 next;
-    Magnum::Int step;
-    Magnum::Float width;
-    Magnum::Color4 color;
+    Mn::Vector2 position;
+    Mn::Vector2 next;
+    Mn::Int step;
+    Mn::Float width;
+    Mn::Color4 color;
   };
 
-  Magnum::GL::Buffer buffer;
-  Magnum::GL::Mesh mesh_;
+  Mn::GL::Buffer buffer;
+  Mn::GL::Mesh mesh_;
   LineShader _lineShader;
 
   std::vector<VertexData> lines_cache_;
 
-  std::array<Magnum::Color4, 9> layer_colors_;
+  std::array<Mn::Color4, 9> layer_colors_;
   // sk_sp<SkPicture> picture_;
   // std::unordered_set<LayerInfo> visible_layers_cache_;
 
@@ -115,10 +116,10 @@ class BrdWidget {
   float factor_ = 100000.;
   // int cached_height_ = 0.;
   // float zoom_ = 1.0;
-  // Magnum::Vector2 pan_{0, 0};
+  // Mn::Vector2 pan_{0, 0};
   bool is_panning_ = false;
-  Magnum::Vector2 last_mouse_pos_{0, 0};
+  Mn::Vector2 last_mouse_pos_{0, 0};
 
-  Magnum::Matrix3 transformation_matrix_, projection_matrix_,
+  Mn::Matrix3 transformation_matrix_, projection_matrix_,
       aspect_ratio_matrix_;
 };

@@ -6,25 +6,25 @@
 #include "webapp/app_state.h"
 
 BrdViewerApp::BrdViewerApp(const Arguments& arguments)
-    : Magnum::Platform::
+    : Mn::Platform::
           Application{arguments, Configuration{}
-                                     .setTitle("Magnum ImGui Example")
+                                     .setTitle("Mn ImGui Example")
                                      .setWindowFlags(
                                          Configuration::WindowFlag::Resizable)},
       file_picker_widget_(this) {
-  _imgui = Magnum::ImGuiIntegration::Context(
-      Magnum::Vector2{windowSize()} / dpiScaling(), windowSize(),
+  _imgui = Mn::ImGuiIntegration::Context(
+      Mn::Vector2{windowSize()} / dpiScaling(), windowSize(),
       framebufferSize());
 
   /* Set up proper blending to be used by ImGui. There's a great chance
      you'll need this exact behavior for the rest of your scene. If not, set
      this only for the drawFrame() call. */
-  Magnum::GL::Renderer::setBlendEquation(
-      Magnum::GL::Renderer::BlendEquation::Add,
-      Magnum::GL::Renderer::BlendEquation::Add);
-  Magnum::GL::Renderer::setBlendFunction(
-      Magnum::GL::Renderer::BlendFunction::SourceAlpha,
-      Magnum::GL::Renderer::BlendFunction::OneMinusSourceAlpha);
+  Mn::GL::Renderer::setBlendEquation(
+      Mn::GL::Renderer::BlendEquation::Add,
+      Mn::GL::Renderer::BlendEquation::Add);
+  Mn::GL::Renderer::setBlendFunction(
+      Mn::GL::Renderer::BlendFunction::SourceAlpha,
+      Mn::GL::Renderer::BlendFunction::OneMinusSourceAlpha);
 
 #if !defined(MAGNUM_TARGET_WEBGL) && !defined(CORRADE_TARGET_ANDROID)
   /* Have some sane speed, please */
@@ -33,7 +33,7 @@ BrdViewerApp::BrdViewerApp(const Arguments& arguments)
 }
 
 void BrdViewerApp::drawEvent() {
-  Magnum::GL::defaultFramebuffer.clear(Magnum::GL::FramebufferClear::Color);
+  Mn::GL::defaultFramebuffer.clear(Mn::GL::FramebufferClear::Color);
 
   _imgui.newFrame();
 
@@ -52,22 +52,22 @@ void BrdViewerApp::drawEvent() {
   /* Update application cursor */
   _imgui.updateApplicationCursor(*this);
 
-  Magnum::GL::Renderer::enable(Magnum::GL::Renderer::Feature::Blending);
-  Magnum::GL::Renderer::enable(Magnum::GL::Renderer::Feature::ScissorTest);
-  Magnum::GL::Renderer::disable(Magnum::GL::Renderer::Feature::FaceCulling);
+  Mn::GL::Renderer::enable(Mn::GL::Renderer::Feature::Blending);
+  Mn::GL::Renderer::enable(Mn::GL::Renderer::Feature::ScissorTest);
+  Mn::GL::Renderer::disable(Mn::GL::Renderer::Feature::FaceCulling);
   _imgui.drawFrame();
-  Magnum::GL::Renderer::enable(Magnum::GL::Renderer::Feature::FaceCulling);
-  Magnum::GL::Renderer::disable(Magnum::GL::Renderer::Feature::ScissorTest);
-  Magnum::GL::Renderer::disable(Magnum::GL::Renderer::Feature::Blending);
+  Mn::GL::Renderer::enable(Mn::GL::Renderer::Feature::FaceCulling);
+  Mn::GL::Renderer::disable(Mn::GL::Renderer::Feature::ScissorTest);
+  Mn::GL::Renderer::disable(Mn::GL::Renderer::Feature::Blending);
 
   swapBuffers();
   redraw();
 }
 
 void BrdViewerApp::viewportEvent(ViewportEvent& event) {
-  Magnum::GL::defaultFramebuffer.setViewport({{}, event.framebufferSize()});
+  Mn::GL::defaultFramebuffer.setViewport({{}, event.framebufferSize()});
 
-  _imgui.relayout(Magnum::Vector2{event.windowSize()} / event.dpiScaling(),
+  _imgui.relayout(Mn::Vector2{event.windowSize()} / event.dpiScaling(),
                   event.windowSize(), event.framebufferSize());
 
   brd_widget_.UpdateScreenRatio();

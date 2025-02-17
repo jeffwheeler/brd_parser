@@ -12,16 +12,18 @@
 #include <Magnum/Math/Color.h>
 #include <Magnum/Math/Time.h>
 #include <Magnum/Platform/EmscriptenApplication.h>
-
 #include <Magnum/ImGuiIntegration/Context.hpp>
 
 #include "webapp/file_picker.h"
 #include "webapp/brd_renderer.h"
 #include "webapp/layer_widget.h"
 
-using namespace Magnum::Math::Literals;
+namespace Cr = Corrade;
+namespace Mn = Magnum;
 
-class BrdViewerApp : public Magnum::Platform::Application {
+using namespace Mn::Math::Literals;
+
+class BrdViewerApp : public Mn::Platform::Application {
  public:
   explicit BrdViewerApp(const Arguments& arguments);
 
@@ -41,11 +43,11 @@ class BrdViewerApp : public Magnum::Platform::Application {
   void textInputEvent(TextInputEvent& event) override;
 
  private:
-  Magnum::ImGuiIntegration::Context _imgui{Corrade::NoCreate};
+  Mn::ImGuiIntegration::Context _imgui{Cr::NoCreate};
 
   LayerWidget layer_widget_;
   FilePickerWidget file_picker_widget_;
   BrdWidget brd_widget_;
 
-  Magnum::Color4 _clearColor = 0x72909aff_rgbaf;
+  Mn::Color4 _clearColor = 0x72909aff_rgbaf;
 };

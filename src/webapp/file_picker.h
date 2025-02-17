@@ -6,7 +6,7 @@ class BrdViewerApp;
 
 class FilePickerWidget {
  public:
-  FilePickerWidget(BrdViewerApp* app) : app_(app) {};
+  explicit FilePickerWidget(BrdViewerApp* app) : app_(app) {};
   void Draw();
 
  private:

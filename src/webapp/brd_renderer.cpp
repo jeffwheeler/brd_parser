@@ -2,6 +2,7 @@
 
 #include <Corrade/Containers/ArrayView.h>
 #include <Magnum/GL/Buffer.h>
+#include <Magnum/GL/DefaultFramebuffer.h>
 #include <Magnum/MeshTools/CompileLines.h>
 #include <Magnum/MeshTools/Concatenate.h>
 #include <Magnum/MeshTools/GenerateLines.h>
@@ -13,19 +14,11 @@
 #include <emscripten.h>
 #include <emscripten/html5.h>
 
-#include <cmath>
-
-#include "Magnum/GL/DefaultFramebuffer.h"
-#include "Magnum/Primitives/Line.h"
-#include "emscripten_browser_file.h"
-#include "lib/structure/utils.h"
 #include "webapp/app_state.h"
 
-using namespace Magnum::Math::Literals;
+using namespace Mn::Math::Literals;
 
 BrdWidget::BrdWidget() : layer_colors_() {
-  using namespace Magnum;
-
   InitializeShader();
   UpdateScreenRatio();
 
@@ -57,7 +50,7 @@ void BrdWidget::UpdateFile() {
       Corrade::Containers::arrayView(lines_cache_.data(), lines_cache_.size()));
 
   // Configure mesh
-  mesh_.setPrimitive(Magnum::GL::MeshPrimitive::Triangles)
+  mesh_.setPrimitive(Mn::GL::MeshPrimitive::Triangles)
       .setCount(lines_cache_.size())
       .addVertexBuffer(buffer, 0, LineShader::Position{}, LineShader::Next{},
                        LineShader::Step{}, LineShader::Width{},
@@ -335,7 +328,8 @@ void BrdWidget::DrawShape(uint32_t ptr) {
   }
 }
 
-void BrdWidget::AddSegment(Magnum::Vector2 start, Magnum::Vector2 end,
+// Implementation inspired by KiCAD, `common/gal/opengl/opengl_gal.cpp`
+void BrdWidget::AddSegment(Mn::Vector2 start, Mn::Vector2 end,
                            float width, uint8_t layer) {
   layer %= layer_colors_.size();
   lines_cache_.emplace_back(
@@ -357,18 +351,18 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
   uint32_t k = inst->first_segment_ptr;
   uint8_t layer_id = LayerToShader(inst->layer);
 
-  Magnum::Vector2 starting = (*StartingPoint(k)) * (1.0 / factor_);
+  Mn::Vector2 starting = (*StartingPoint(k)) * (1.0 / factor_);
 
   while (IsLineSegment(k)) {
     // SkPath segment_path;
     // segment_path.moveTo(starting);
-    Magnum::Vector2 next;
+    Mn::Vector2 next;
     float segment_width;
 
     if (fs_->is_type(k, 0x01)) {
       const T01ArcSegment<kAMax> segment_inst = fs_->get_x01(k);
       segment_width = segment_inst.width / factor_;
-      Magnum::Vector2 end{segment_inst.coords[2] / factor_,
+      Mn::Vector2 end{segment_inst.coords[2] / factor_,
                           segment_inst.coords[3] / factor_};
 
       /*
@@ -377,7 +371,7 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
       float scaled_cy = cy / factor_;
       float scaled_r = (static_cast<double>(segment_inst.r)) / factor_;
 
-      Magnum::Vector2 start{segment_inst.coords[0] / factor_,
+      Mn::Vector2 start{segment_inst.coords[0] / factor_,
                     segment_inst.coords[1] / factor_};
 
       float start_angle =
@@ -410,21 +404,21 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
     } else if (fs_->is_type(k, 0x15)) {
       const T15LineSegment<kAMax> segment_inst = fs_->get_x15(k);
       segment_width = segment_inst.width / factor_;
-      next = Magnum::Vector2(
+      next = Mn::Vector2(
           {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
       // segment_path.lineTo(next);
       k = segment_inst.next;
     } else if (fs_->is_type(k, 0x16)) {
       const T16LineSegment<kAMax> segment_inst = fs_->get_x16(k);
       segment_width = segment_inst.width / factor_;
-      next = Magnum::Vector2(
+      next = Mn::Vector2(
           {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
       // segment_path.lineTo(next);
       k = segment_inst.next;
     } else if (fs_->is_type(k, 0x17)) {
       const T17LineSegment<kAMax> segment_inst = fs_->get_x17(k);
       segment_width = segment_inst.width / factor_;
-      next = Magnum::Vector2(
+      next = Mn::Vector2(
           {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
       // segment_path.lineTo(next);
       k = segment_inst.next;
@@ -468,16 +462,16 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
   // float current_width = -1;
   // size_t width_index = common_width_count_;
 
-  Magnum::Vector2 starting = (*StartingPoint(k)) * (1.0 / factor_);
+  Mn::Vector2 starting = (*StartingPoint(k)) * (1.0 / factor_);
 
   while (IsLineSegment(k)) {
-    Magnum::Vector2 next;
+    Mn::Vector2 next;
     [[maybe_unused]] float segment_width;
 
     if (fs_->is_type(k, 0x01)) {
       const T01ArcSegment<kAMax> segment_inst = fs_->get_x01(k);
       segment_width = segment_inst.width / factor_;
-      Magnum::Vector2 end{segment_inst.coords[2] / factor_,
+      Mn::Vector2 end{segment_inst.coords[2] / factor_,
                           segment_inst.coords[3] / factor_};
 
       /*
@@ -527,19 +521,19 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
     } else if (fs_->is_type(k, 0x15)) {
       const T15LineSegment<kAMax> segment_inst = fs_->get_x15(k);
       segment_width = segment_inst.width / factor_;
-      next = Magnum::Vector2(
+      next = Mn::Vector2(
           {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
       k = segment_inst.next;
     } else if (fs_->is_type(k, 0x16)) {
       const T16LineSegment<kAMax> segment_inst = fs_->get_x16(k);
       segment_width = segment_inst.width / factor_;
-      next = Magnum::Vector2(
+      next = Mn::Vector2(
           {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
       k = segment_inst.next;
     } else if (fs_->is_type(k, 0x17)) {
       const T17LineSegment<kAMax> segment_inst = fs_->get_x17(k);
       segment_width = segment_inst.width / factor_;
-      next = Magnum::Vector2(
+      next = Mn::Vector2(
           {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
       k = segment_inst.next;
     } else {
@@ -552,25 +546,25 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
   }
 }
 
-auto BrdWidget::StartingPoint(uint32_t k) -> std::optional<Magnum::Vector2> {
+auto BrdWidget::StartingPoint(uint32_t k) -> std::optional<Mn::Vector2> {
   if (fs_->is_type(k, 0x01)) {
     const T01ArcSegment<kAMax> segment_inst = fs_->get_x01(k);
-    return Magnum::Vector2({static_cast<float>(segment_inst.coords[0]),
+    return Mn::Vector2({static_cast<float>(segment_inst.coords[0]),
                             static_cast<float>(segment_inst.coords[1])});
   }
   if (fs_->is_type(k, 0x15)) {
     const T15LineSegment<kAMax> segment_inst = fs_->get_x15(k);
-    return Magnum::Vector2({static_cast<float>(segment_inst.coords[0]),
+    return Mn::Vector2({static_cast<float>(segment_inst.coords[0]),
                             static_cast<float>(segment_inst.coords[1])});
   }
   if (fs_->is_type(k, 0x16)) {
     const T16LineSegment<kAMax> segment_inst = fs_->get_x16(k);
-    return Magnum::Vector2({static_cast<float>(segment_inst.coords[0]),
+    return Mn::Vector2({static_cast<float>(segment_inst.coords[0]),
                             static_cast<float>(segment_inst.coords[1])});
   }
   if (fs_->is_type(k, 0x17)) {
     const T17LineSegment<kAMax> segment_inst = fs_->get_x17(k);
-    return Magnum::Vector2({static_cast<float>(segment_inst.coords[0]),
+    return Mn::Vector2({static_cast<float>(segment_inst.coords[0]),
                             static_cast<float>(segment_inst.coords[1])});
   }
   return {};
@@ -583,38 +577,20 @@ auto BrdWidget::IsLineSegment(uint32_t k) -> bool {
   return r;
 }
 
-auto BrdWidget::GetWidthIndex(float /* unused */) -> size_t {
-  return 0;
-  /*
-  // First check common widths
-  for (size_t i = 0; i < common_width_count_; i++) {
-    if (std::abs(common_widths_[i] - width) < 0.001F) {
-      return i;
-    }
-    // If we find an uninitialized slot, use it
-    if (common_widths_[i] == 0.0F) {
-      common_widths_[i] = width;
-      return i;
-    }
-  }
-  return common_width_count_;  // Indicate this needs to go in other_width_paths
-  */
-}
-
-auto BrdWidget::ScreenToWorld(const Magnum::Vector2 &screen_pos, bool center)
-    -> Magnum::Vector2 {
+auto BrdWidget::ScreenToWorld(const Mn::Vector2 &screen_pos, bool center)
+    -> Mn::Vector2 {
   // FIXME: Cache?
-  auto viewportSize = Magnum::GL::defaultFramebuffer.viewport();
+  auto viewportSize = Mn::GL::defaultFramebuffer.viewport();
 
   // FIXME: Why 4?
   float offset = center ? 1.0F : 0.0F;
-  Magnum::Vector2 normalized =
-      screen_pos / Magnum::Vector2(viewportSize.sizeX() / 4.0F,
+  Mn::Vector2 normalized =
+      screen_pos / Mn::Vector2(viewportSize.sizeX() / 4.0F,
                                    viewportSize.sizeY() / 4.0F) -
-      Magnum::Vector2{offset, offset};
+      Mn::Vector2{offset, offset};
 
   normalized.y() = -normalized.y();
-  Magnum::Matrix3 complete_transform =
+  Mn::Matrix3 complete_transform =
       projection_matrix_ * aspect_ratio_matrix_;
   if (center) {
     complete_transform *transformation_matrix_;
@@ -649,7 +625,7 @@ auto BrdWidget::IsPointNearPath(const SkPath &path, const SkPoint &point,
 */
 
 void BrdWidget::HandleMouseWheel(
-    Magnum::Platform::EmscriptenApplication::ScrollEvent &event) {
+    Mn::Platform::EmscriptenApplication::ScrollEvent &event) {
   event.setAccepted(true);
 
   constexpr float zoom_factor = 1.05F;
@@ -659,8 +635,8 @@ void BrdWidget::HandleMouseWheel(
     return;
   }
 
-  Magnum::Vector2 mouse_screen_pos = event.position();
-  Magnum::Vector2 mouse_world_pos = ScreenToWorld(mouse_screen_pos, true);
+  Mn::Vector2 mouse_screen_pos = event.position();
+  Mn::Vector2 mouse_world_pos = ScreenToWorld(mouse_screen_pos, true);
 
   // Compute zoom scale factor
   float scale = (wheel_y < 0) ? 1.0F / zoom_factor : zoom_factor;
@@ -671,45 +647,45 @@ void BrdWidget::HandleMouseWheel(
       (wheel_y > 0 && current_scale < 20.0F)) {
     // Apply scaling to the projection matrix
     projection_matrix_ =
-        Magnum::Matrix3::scaling(Magnum::Vector2(scale)) * projection_matrix_;
+        Mn::Matrix3::scaling(Mn::Vector2(scale)) * projection_matrix_;
 
-    Magnum::Vector2 new_mouse_world_pos = ScreenToWorld(mouse_screen_pos, true);
+    Mn::Vector2 new_mouse_world_pos = ScreenToWorld(mouse_screen_pos, true);
 
-    Magnum::Vector2 correction = new_mouse_world_pos - mouse_world_pos;
+    Mn::Vector2 correction = new_mouse_world_pos - mouse_world_pos;
     transformation_matrix_ =
-        Magnum::Matrix3::translation(correction) * transformation_matrix_;
+        Mn::Matrix3::translation(correction) * transformation_matrix_;
   }
 
   dirty_ = true;
 }
 
 void BrdWidget::HandleMouseDown(
-    Magnum::Platform::EmscriptenApplication::PointerEvent &event) {
+    Mn::Platform::EmscriptenApplication::PointerEvent &event) {
   if (event.pointer() ==
-      Magnum::Platform::EmscriptenApplication::Pointer::MouseLeft) {
+      Mn::Platform::EmscriptenApplication::Pointer::MouseLeft) {
     is_panning_ = true;
     last_mouse_pos_ = event.position();
   }
 }
 
 void BrdWidget::HandleMouseUp(
-    Magnum::Platform::EmscriptenApplication::PointerEvent &event) {
+    Mn::Platform::EmscriptenApplication::PointerEvent &event) {
   if (event.pointer() ==
-      Magnum::Platform::EmscriptenApplication::Pointer::MouseLeft) {
+      Mn::Platform::EmscriptenApplication::Pointer::MouseLeft) {
     is_panning_ = false;
   }
 }
 
 void BrdWidget::HandleMouseMove(
-    Magnum::Platform::EmscriptenApplication::PointerMoveEvent &event) {
+    Mn::Platform::EmscriptenApplication::PointerMoveEvent &event) {
   if (is_panning_) {
-    Magnum::Vector2 current_pos = event.position();
-    Magnum::Vector2 delta = current_pos - last_mouse_pos_;
+    Mn::Vector2 current_pos = event.position();
+    Mn::Vector2 delta = current_pos - last_mouse_pos_;
 
-    Magnum::Vector2 world_delta = ScreenToWorld(delta);
+    Mn::Vector2 world_delta = ScreenToWorld(delta);
 
     transformation_matrix_ =
-        Magnum::Matrix3::translation(world_delta) * transformation_matrix_;
+        Mn::Matrix3::translation(world_delta) * transformation_matrix_;
 
     last_mouse_pos_ = current_pos;
 
@@ -718,10 +694,10 @@ void BrdWidget::HandleMouseMove(
 }
 
 void BrdWidget::UpdateScreenRatio() {
-  auto viewportSize = Magnum::GL::defaultFramebuffer.viewport().size();
+  auto viewportSize = Mn::GL::defaultFramebuffer.viewport().size();
   float aspect = viewportSize.x() / viewportSize.y();
 
   // Adjust scaling to maintain aspect ratio
   aspect_ratio_matrix_ =
-      Magnum::Matrix3::scaling({1, static_cast<float>(1. * aspect)});
+      Mn::Matrix3::scaling({1, static_cast<float>(1. * aspect)});
 }
