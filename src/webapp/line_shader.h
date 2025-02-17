@@ -5,40 +5,47 @@
 #include <Magnum/GL/Version.h>
 #include <Magnum/Math/Matrix3.h>
 
-using namespace Magnum;
-
 class LineShader : public Magnum::GL::AbstractShaderProgram {
  public:
   using Position = Magnum::GL::Attribute<0, Magnum::Vector2>;
-  using Color = Magnum::GL::Attribute<1, Magnum::Color3>;
+  using Width = Magnum::GL::Attribute<1, Magnum::Float>;
+  using Color = Magnum::GL::Attribute<2, Magnum::Color3>;
 
-  enum class Uniform : Int { TransformationProjectionMatrix = 0 };
+  enum class Uniform : Magnum::Int { TransformationProjectionMatrix = 0 };
 
   LineShader() {
-    GL::Shader vert{GL::Version::GLES300, GL::Shader::Type::Vertex};
-    GL::Shader frag{GL::Version::GLES300, GL::Shader::Type::Fragment};
+    Magnum::GL::Shader vert{Magnum::GL::Version::GLES300,
+                            Magnum::GL::Shader::Type::Vertex};
+    Magnum::GL::Shader frag{Magnum::GL::Version::GLES300,
+                            Magnum::GL::Shader::Type::Fragment};
 
     vert.addSource(R"(
-        uniform mat3 transformationProjectionMatrix;
+      uniform mat3 transformationProjectionMatrix;
 
-        layout(location = 0) in vec2 position;
-        layout(location = 1) in vec3 color;
+      layout(location = 0) in vec2 position;
+      layout(location = 1) in float width;
+      layout(location = 2) in vec3 color;
 
-        out vec3 fragmentColor;
+      out vec3 fragmentColor;
 
-        void main() {
-            fragmentColor = color;
-            gl_Position = vec4(transformationProjectionMatrix * vec3(position, 1.0), 1.0);
-        }
+      void main() {
+        fragmentColor = color;
+
+        vec2 normal;
+        normal.x = 1.0;
+        normal.y = 0.0;
+        vec2 p = position.xy + vec2(normal * width/2.0);
+        gl_Position = vec4(transformationProjectionMatrix * vec3(position + p, 1.0), 1.0);
+      }
     )");
 
     frag.addSource(R"(
-        in mediump vec3 fragmentColor;
-        out mediump vec4 fragColor;
+      in mediump vec3 fragmentColor;
+      out mediump vec4 fragColor;
 
-        void main() {
-            fragColor = vec4(fragmentColor, 1.0);
-        }
+      void main() {
+        fragColor = vec4(fragmentColor, 1.0);
+      }
     )");
 
     CORRADE_INTERNAL_ASSERT_OUTPUT(vert.compile() && frag.compile());
@@ -56,5 +63,5 @@ class LineShader : public Magnum::GL::AbstractShaderProgram {
   }
 
  private:
-  Int _transformationProjectionMatrixUniform;
+  Magnum::Int _transformationProjectionMatrixUniform;
 };

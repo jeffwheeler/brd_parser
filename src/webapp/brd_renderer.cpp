@@ -24,7 +24,9 @@
 
 using namespace Magnum::Math::Literals;
 
-BrdWidget::BrdWidget() {
+BrdWidget::BrdWidget()
+    : _lineShader(Magnum::Shaders::MeshVisualizerGL2D::Configuration().setFlags(
+          Magnum::Shaders::MeshVisualizerGL2D::Flag::Wireframe)) {
   using namespace Magnum;
 
   InitializeShader();
@@ -39,25 +41,23 @@ void BrdWidget::UpdateFile() {
   already_drawn_.clear();
   lines_cache_.clear();
 
-  IterateFile();
+  // IterateFile();
   ComposeLayersToDrawable();
 
   // Add a cross to the origin
-  lines_cache_.insert(lines_cache_.begin(),
-                      VertexData{{-1.0F, -1.0F}, 0xff0000_rgbf});
-  lines_cache_.insert(lines_cache_.begin(),
-                      VertexData{{1.0F, 1.0F}, 0xff0000_rgbf});
-  lines_cache_.insert(lines_cache_.begin(),
-                      VertexData{{-1.0F, 1.0F}, 0x00ff00_rgbf});
-  lines_cache_.insert(lines_cache_.begin(),
-                      VertexData{{1.0F, -1.0F}, 0x00ff00_rgbf});
+  lines_cache_.push_back(VertexData{{-1.0F, -1.0F}});
+  lines_cache_.push_back(VertexData{{1.0F, 1.0F}});
+  lines_cache_.push_back(VertexData{{-1.0F, 1.0F}});
+  // lines_cache_.insert(lines_cache_.begin(),
+  //                     VertexData{{1.0F, -1.0F}, 0.1, 0x00ff00_rgbf});
   buffer.setData(
       Corrade::Containers::arrayView(lines_cache_.data(), lines_cache_.size()));
 
   // Configure mesh
-  mesh_.setPrimitive(Magnum::GL::MeshPrimitive::Lines)
+  mesh_.setPrimitive(Magnum::GL::MeshPrimitive::Triangles)
       .setCount(lines_cache_.size())
-      .addVertexBuffer(buffer, 0, LineShader::Position{}, LineShader::Color{});
+      .addVertexBuffer(buffer, 0,
+                       Magnum::Shaders::MeshVisualizerGL2D::Position{});
 
   dirty_ = true;
 }
@@ -122,7 +122,7 @@ void BrdWidget::UpdateLayerAlpha(uint8_t /* unused */, float /* unused */) {}
 
 void BrdWidget::Draw() {
   // Draw
-  _lineShader
+  _lineShader.setColor(0xff0000_rgbf)
       .setTransformationProjectionMatrix(
           projection_matrix_ * aspect_ratio_matrix_ * transformation_matrix_)
       .draw(mesh_);
@@ -411,9 +411,8 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
       return;
     }
 
-    lines_cache_.emplace_back(
-        VertexData{{starting.x(), starting.y()}, 0xff0000_rgbf});
-    lines_cache_.emplace_back(VertexData{{next.x(), next.y()}, 0x0000ff_rgbf});
+    lines_cache_.emplace_back(VertexData{{starting.x(), starting.y()}});
+    lines_cache_.emplace_back(VertexData{{next.x(), next.y()}});
 
     // segment_paths_.push_back(
     //     {segment_path, segment_width, layer_id, inst->layer});
@@ -527,9 +526,8 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
       return;
     }
 
-    lines_cache_.emplace_back(
-        VertexData{{starting.x(), starting.y()}, 0xffff00_rgbf});
-    lines_cache_.emplace_back(VertexData{{next.x(), next.y()}, 0x00ffff_rgbf});
+    lines_cache_.emplace_back(VertexData{{starting.x(), starting.y()}});
+    lines_cache_.emplace_back(VertexData{{next.x(), next.y()}});
 
     starting = next;
   }
@@ -636,7 +634,7 @@ void BrdWidget::HandleMouseWheel(
   event.setAccepted(true);
 
   constexpr float zoom_factor = 1.05F;
-  float wheel_y = event.event().deltaY;
+  float wheel_y = -event.event().deltaY;
 
   if (wheel_y == 0) {
     return;

@@ -6,6 +6,8 @@
 #include <Magnum/Math/Vector2.h>
 #include <Magnum/Platform/EmscriptenApplication.h>
 #include <Magnum/Shaders/LineGL.h>
+#include <Magnum/Shaders/MeshVisualizerGL.h>
+#include <Magnum/Shaders/FlatGL.h>
 #include <Magnum/Shaders/VertexColorGL.h>
 #include <Magnum/Trade/MeshData.h>
 #include <imgui_impl_sdl2.h>
@@ -51,7 +53,7 @@ class BrdWidget {
 
   auto ScreenToWorld(const Magnum::Vector2& screen_pos, bool center = false)
       -> Magnum::Vector2;
-  static auto LayerToShader(const LayerInfo layer) -> uint8_t;
+  static auto LayerToShader(LayerInfo layer) -> uint8_t;
   // static auto IsPointNearPath(const SkPath& path, const SkPoint& point,
   //                             float width) -> bool;
 
@@ -60,12 +62,11 @@ class BrdWidget {
 
   struct VertexData {
     Magnum::Vector2 position;
-    Magnum::Color3 color;
   };
 
   Magnum::GL::Buffer buffer;
   Magnum::GL::Mesh mesh_;
-  LineShader _lineShader;
+  Magnum::Shaders::MeshVisualizerGL2D _lineShader;
 
   std::vector<VertexData> lines_cache_;
 
