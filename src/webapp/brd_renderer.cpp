@@ -347,6 +347,8 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
     if (fs_->is_type(k, 0x01)) {
       const T01ArcSegment<kAMax> segment_inst = fs_->get_x01(k);
       // segment_width = segment_inst.width / factor_;
+      Magnum::Vector2 end{segment_inst.coords[2] / factor_,
+                          segment_inst.coords[3] / factor_};
 
       /*
       auto [cx, cy] = x01_center(&segment_inst);
@@ -356,8 +358,6 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
 
       Magnum::Vector2 start{segment_inst.coords[0] / factor_,
                     segment_inst.coords[1] / factor_};
-      Magnum::Vector2 end{segment_inst.coords[2] / factor_,
-                  segment_inst.coords[3] / factor_};
 
       float start_angle =
           SkRadiansToDegrees(atan2(start.fY - scaled_cy, start.fX - scaled_cx));
@@ -382,9 +382,9 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
                            scaled_r * 2, scaled_r * 2);
 
       segment_path.arcTo(oval_bounds, start_angle, sweep_angle, false);
-      next = end;
       */
 
+      next = end;
       k = segment_inst.next;
     } else if (fs_->is_type(k, 0x15)) {
       const T15LineSegment<kAMax> segment_inst = fs_->get_x15(k);
@@ -411,10 +411,10 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
       return;
     }
 
-    // Store segment info
     lines_cache_.emplace_back(
         VertexData{{starting.x(), starting.y()}, 0xff0000_rgbf});
     lines_cache_.emplace_back(VertexData{{next.x(), next.y()}, 0x0000ff_rgbf});
+
     // segment_paths_.push_back(
     //     {segment_path, segment_width, layer_id, inst->layer});
 
@@ -436,7 +436,7 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
       } else {
         other_paths.emplace_back(segment_width, segment_path);
       }
-      */
+    */
 
     starting = next;
   }
@@ -449,21 +449,19 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
   // float current_width = -1;
   // size_t width_index = common_width_count_;
 
-  // SkPath current_path;
   Magnum::Vector2 starting = (*StartingPoint(k)) * (1.0 / factor_);
-  Magnum::Vector2 first_point = starting;
-  // current_path.moveTo(starting);
 
   while (IsLineSegment(k)) {
-    // Magnum::Vector2 next;
-    break;
-    /*
-    float segment_width;
+    Magnum::Vector2 next;
+    // float segment_width;
 
     if (fs_->is_type(k, 0x01)) {
       const T01ArcSegment<kAMax> segment_inst = fs_->get_x01(k);
-      segment_width = segment_inst.width / factor_;
+      // segment_width = segment_inst.width / factor_;
+      Magnum::Vector2 end{segment_inst.coords[2] / factor_,
+                          segment_inst.coords[3] / factor_};
 
+      /*
       // Calculate center and angles
       auto [cx, cy] = x01_center(&segment_inst);
 
@@ -503,72 +501,38 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
 
       current_path.arcTo(oval_bounds, start_angle, sweep_angle, false);
 
+      */
+
       next = end;
       k = segment_inst.next;
     } else if (fs_->is_type(k, 0x15)) {
       const T15LineSegment<kAMax> segment_inst = fs_->get_x15(k);
-      segment_width = segment_inst.width / factor_;
-      next = SkPoint::Make(segment_inst.coords[2] / factor_,
-                           segment_inst.coords[3] / factor_);
+      // segment_width = segment_inst.width / factor_;
+      next = Magnum::Vector2(
+          {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
       k = segment_inst.next;
     } else if (fs_->is_type(k, 0x16)) {
       const T16LineSegment<kAMax> segment_inst = fs_->get_x16(k);
-      segment_width = segment_inst.width / factor_;
-      next = SkPoint::Make(segment_inst.coords[2] / factor_,
-                           segment_inst.coords[3] / factor_);
+      // segment_width = segment_inst.width / factor_;
+      next = Magnum::Vector2(
+          {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
       k = segment_inst.next;
     } else if (fs_->is_type(k, 0x17)) {
       const T17LineSegment<kAMax> segment_inst = fs_->get_x17(k);
-      segment_width = segment_inst.width / factor_;
-      next = SkPoint::Make(segment_inst.coords[2] / factor_,
-                           segment_inst.coords[3] / factor_);
+      // segment_width = segment_inst.width / factor_;
+      next = Magnum::Vector2(
+          {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
       k = segment_inst.next;
     } else {
       return;
     }
 
-    if (segment_width != current_width) {
-      // If width changes, store current path
-      if (!current_path.isEmpty()) {
-        if (width_index < common_width_count_) {
-          shader_layers_[layer_id].common_width_paths[width_index].addPath(
-              current_path);
-        } else {
-          // Try to find an existing path with this width
-          auto &other_paths = shader_layers_[layer_id].other_width_paths;
-          auto it = std::find_if(other_paths.begin(), other_paths.end(),
-                                 [current_width](const auto &pair) {
-                                   return std::abs(pair.first - current_width) <
-                                          0.001F;
-                                 });
-          if (it != other_paths.end()) {
-            it->second.addPath(current_path);
-          } else {
-            other_paths.emplace_back(current_width, current_path);
-          }
-        }
-        current_path.reset();
-        current_path.moveTo(starting);
-      }
-      current_width = segment_width;
-      width_index = GetWidthIndex(segment_width);
-    }
+    lines_cache_.emplace_back(
+        VertexData{{starting.x(), starting.y()}, 0xffff00_rgbf});
+    lines_cache_.emplace_back(VertexData{{next.x(), next.y()}, 0x00ffff_rgbf});
 
-    current_path.lineTo(next);
     starting = next;
-    */
   }
-
-  // Ensure the path is properly closed by explicitly returning to start
-  if (starting != first_point) {
-    // current_path.lineTo(first_point);
-  }
-  // current_path.close();
-
-  // Force path direction to be consistent
-  // current_path.setFillType(SkPathFillType::kWinding);
-
-  // shader_layers_[layer_id].filled_path.addPath(current_path);
 }
 
 auto BrdWidget::StartingPoint(uint32_t k) -> std::optional<Magnum::Vector2> {
