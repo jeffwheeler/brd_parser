@@ -2,7 +2,6 @@
 
 #include <Corrade/Containers/ArrayView.h>
 #include <Magnum/GL/Buffer.h>
-#include <Magnum/Math/Color.h>
 #include <Magnum/MeshTools/CompileLines.h>
 #include <Magnum/MeshTools/Concatenate.h>
 #include <Magnum/MeshTools/GenerateLines.h>
@@ -24,13 +23,22 @@
 
 using namespace Magnum::Math::Literals;
 
-BrdWidget::BrdWidget() {
+BrdWidget::BrdWidget() : layer_colors_() {
   using namespace Magnum;
 
   InitializeShader();
   UpdateScreenRatio();
 
   mesh_.setCount(0);
+
+  layer_colors_[0] = 0x952233AA_rgbaf;
+  layer_colors_[2] = 0xAC7A8FAA_rgbaf;
+  layer_colors_[3] = 0x4E288BAA_rgbaf;
+  layer_colors_[4] = 0x1F48A6AA_rgbaf;
+  layer_colors_[5] = 0x4E9246AA_rgbaf;
+  layer_colors_[6] = 0xB09A52AA_rgbaf;
+  layer_colors_[7] = 0xAA6635AA_rgbaf;
+  layer_colors_[8] = 0x393B3DAA_rgbaf;
 }
 
 void BrdWidget::UpdateFile() {
@@ -327,19 +335,26 @@ void BrdWidget::DrawShape(uint32_t ptr) {
 }
 
 void BrdWidget::AddSegment(Magnum::Vector2 start, Magnum::Vector2 end,
-                           float width) {
-  lines_cache_.emplace_back(VertexData{start, end, 0, width, 0xFF0000AA_rgbaf});
-  lines_cache_.emplace_back(VertexData{start, end, 1, width, 0x00FF00AA_rgbaf});
-  lines_cache_.emplace_back(VertexData{start, end, 2, width, 0x0000FFAA_rgbaf});
-  lines_cache_.emplace_back(VertexData{start, end, 3, width, 0xFF0000AA_rgbaf});
-  lines_cache_.emplace_back(VertexData{start, end, 4, width, 0x00FF00AA_rgbaf});
-  lines_cache_.emplace_back(VertexData{start, end, 5, width, 0x0000FFAA_rgbaf});
+                           float width, uint8_t layer) {
+  layer %= layer_colors_.size();
+  lines_cache_.emplace_back(
+      VertexData{start, end, 0, width, layer_colors_[layer]});
+  lines_cache_.emplace_back(
+      VertexData{start, end, 1, width, layer_colors_[layer]});
+  lines_cache_.emplace_back(
+      VertexData{start, end, 2, width, layer_colors_[layer]});
+  lines_cache_.emplace_back(
+      VertexData{start, end, 3, width, layer_colors_[layer]});
+  lines_cache_.emplace_back(
+      VertexData{start, end, 4, width, layer_colors_[layer]});
+  lines_cache_.emplace_back(
+      VertexData{start, end, 5, width, layer_colors_[layer]});
 }
 
 // Modify DrawX05 to store individual segments
 void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
   uint32_t k = inst->first_segment_ptr;
-  // uint8_t layer_id = LayerToShader(inst->layer);
+  uint8_t layer_id = LayerToShader(inst->layer);
 
   Magnum::Vector2 starting = (*StartingPoint(k)) * (1.0 / factor_);
 
@@ -416,7 +431,7 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
       return;
     }
 
-    AddSegment(starting, next, segment_width);
+    AddSegment(starting, next, segment_width, layer_id);
 
     // segment_paths_.push_back(
     //     {segment_path, segment_width, layer_id, inst->layer});
@@ -447,7 +462,7 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
 
 void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
   uint32_t k = inst->first_segment_ptr;
-  // uint8_t layer_id = LayerToShader(inst->layer);
+  uint8_t layer_id = LayerToShader(inst->layer);
 
   // float current_width = -1;
   // size_t width_index = common_width_count_;
@@ -530,7 +545,7 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
       return;
     }
 
-    AddSegment(starting, next, segment_width);
+    AddSegment(starting, next, segment_width, layer_id);
 
     starting = next;
   }

@@ -47,7 +47,7 @@ class BrdWidget {
   void DrawX05(const T05Line<kAMax>* inst);
   void DrawX28(const T28Shape<kAMax>* inst);
 
-  void AddSegment(Magnum::Vector2 start, Magnum::Vector2 end, float width);
+  void AddSegment(Magnum::Vector2 start, Magnum::Vector2 end, float width, uint8_t layer);
   auto StartingPoint(uint32_t k) -> std::optional<Magnum::Vector2>;
   auto IsLineSegment(uint32_t k) -> bool;
   auto GetWidthIndex(float width) -> size_t;
@@ -75,6 +75,7 @@ class BrdWidget {
 
   std::vector<VertexData> lines_cache_;
 
+  std::array<Magnum::Color4, 9> layer_colors_;
   // sk_sp<SkPicture> picture_;
   // std::unordered_set<LayerInfo> visible_layers_cache_;
 
