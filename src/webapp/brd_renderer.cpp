@@ -16,6 +16,7 @@
 
 #include <cmath>
 
+#include "Magnum/GL/DefaultFramebuffer.h"
 #include "Magnum/Primitives/Line.h"
 #include "emscripten_browser_file.h"
 #include "lib/structure/utils.h"
@@ -122,11 +123,11 @@ void BrdWidget::UpdateLayerShaders() {}
 void BrdWidget::UpdateLayerAlpha(uint8_t /* unused */, float /* unused */) {}
 
 void BrdWidget::Draw() {
-  shader_.setViewportSize(Magnum::Vector2{100, 100})
+  shader_.setViewportSize(Magnum::Vector2{300, 300})
       .setTransformationProjectionMatrix(projectionMatrix_ *
                                          transformationMatrix_)
       .setColor(0x2f83cc_rgbf)
-      .setWidth(0.1F)
+      .setWidth(1.F)
       .draw(mesh_);
   triangle_shader_.draw(triangle_mesh_);
 
@@ -415,7 +416,8 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
     }
 
     // Store segment info
-    emscripten_log(EM_LOG_INFO, "adding line {%f %f}, {%f %f}", starting.x(), starting.y(), next.x(), next.y());
+    emscripten_log(EM_LOG_INFO, "adding line {%f %f}, {%f %f}", starting.x(),
+                   starting.y(), next.x(), next.y());
     lines_cache_.push_back(Magnum::Primitives::line2D(starting, next));
     // segment_paths_.push_back(
     //     {segment_path, segment_width, layer_id, inst->layer});
@@ -622,11 +624,16 @@ auto BrdWidget::GetWidthIndex(float /* unused */) -> size_t {
   */
 }
 
-auto BrdWidget::ScreenToWorld(const Magnum::Vector2 & /*screen_pos*/)
+auto BrdWidget::ScreenToWorld(const Magnum::Vector2 &screen_pos)
     -> Magnum::Vector2 {
-  return Magnum::Vector2{};
-  // return Magnum::Vector2({(screen_pos.x() / zoom_) - pan_.x(),
-  //                         (screen_pos.y() / zoom_) - pan_.y()});
+  // FIXME: Cache this?
+  auto viewportSize = Magnum::GL::defaultFramebuffer.viewport();
+
+  Magnum::Vector2 scaled =
+      screen_pos /
+      Magnum::Vector2(viewportSize.sizeX() / 4.0, -viewportSize.sizeY() / 4.0);
+
+  return projectionMatrix_.inverted().transformVector(scaled);
 }
 
 auto BrdWidget::LayerToShader(const LayerInfo layer) -> uint8_t {
@@ -657,15 +664,41 @@ auto BrdWidget::IsPointNearPath(const SkPath &path, const SkPoint &point,
 
 void BrdWidget::HandleMouseWheel(
     Magnum::Platform::EmscriptenApplication::ScrollEvent &event) {
-  const float zoom_factor = 1.1F;
+  const float zoom_factor = 1.1f;
   float wheel_y = event.event().deltaY;
 
-  // Clamp zoom to reasonable limits
-  if (wheel_y < 0 && projectionMatrix_.scaling().x() > 0.01) {
-    projectionMatrix_ *= pow(zoom_factor, wheel_y);
+  Magnum::Vector2 mouse_screen_pos = event.position();
+
+  Magnum::Vector2 mouse_world_pos =
+      transformationMatrix_.inverted().transformPoint(mouse_screen_pos);
+
+  if (wheel_y < 0 && projectionMatrix_.scaling().x() > 0.01f) {
+    // 1. Translate to mouse position
+    transformationMatrix_ =
+        transformationMatrix_ * Magnum::Matrix3::translation(-mouse_world_pos);
+
+    // 2. Apply scaling
+    projectionMatrix_ =
+        Magnum::Matrix3::scaling(Magnum::Vector2(pow(zoom_factor, wheel_y))) *
+        projectionMatrix_;
+
+    // 3. Translate back
+    transformationMatrix_ =
+        transformationMatrix_ * Magnum::Matrix3::translation(mouse_world_pos);
   }
-  if (wheel_y > 0 && projectionMatrix_.scaling().x() < 20) {
-    projectionMatrix_ *= pow(zoom_factor, wheel_y);
+  if (wheel_y > 0 && projectionMatrix_.scaling().x() < 20.0f) {
+    // 1. Translate to mouse position
+    transformationMatrix_ =
+        transformationMatrix_ * Magnum::Matrix3::translation(-mouse_world_pos);
+
+    // 2. Apply scaling
+    projectionMatrix_ =
+        Magnum::Matrix3::scaling(Magnum::Vector2(pow(zoom_factor, wheel_y))) *
+        projectionMatrix_;
+
+    // 3. Translate back
+    transformationMatrix_ =
+        transformationMatrix_ * Magnum::Matrix3::translation(mouse_world_pos);
   }
 
   dirty_ = true;
@@ -688,22 +721,17 @@ void BrdWidget::HandleMouseUp(
   }
 }
 
-// Modify HandleMouseMove to detect hover
 void BrdWidget::HandleMouseMove(
     Magnum::Platform::EmscriptenApplication::PointerMoveEvent &event) {
   if (is_panning_) {
     Magnum::Vector2 current_pos = event.position();
-    Magnum::Vector2 delta =
-        Magnum::Vector2({(current_pos.x() - last_mouse_pos_.x()) / 50,
-                         -(current_pos.y() - last_mouse_pos_.y()) / 50});
-    emscripten_log(EM_LOG_INFO, "transform was %f %f",
-                   transformationMatrix_.translation().x(),
-                   transformationMatrix_.translation().y());
+    Magnum::Vector2 delta = current_pos - last_mouse_pos_;
+
+    Magnum::Vector2 world_delta = ScreenToWorld(delta);
+
     transformationMatrix_ =
-        Magnum::Matrix3::translation(delta) * transformationMatrix_;
-    emscripten_log(EM_LOG_INFO, "transform now %f %f",
-                   transformationMatrix_.translation().x(),
-                   transformationMatrix_.translation().y());
+        transformationMatrix_ * Magnum::Matrix3::translation(world_delta);
+
     last_mouse_pos_ = current_pos;
 
     dirty_ = true;

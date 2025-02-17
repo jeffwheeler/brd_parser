@@ -45,6 +45,6 @@ void FilePickerWidget::UploadFile(std::string const &filename,
   }
   outfile.close();
 
-  FilePickerWidget* widget = static_cast<FilePickerWidget*>(data_ptr);
+  auto* widget = static_cast<FilePickerWidget*>(data_ptr);
   widget->app_->HandleFileUpload("uploaded_file.brd");
 }
