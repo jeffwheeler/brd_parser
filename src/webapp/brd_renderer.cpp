@@ -31,6 +31,7 @@ BrdWidget::BrdWidget() : layer_colors_() {
 
   mesh_.setCount(0);
 
+  // https://uchu.style/
   layer_colors_[0] = 0x952233AA_rgbaf;
   layer_colors_[2] = 0xAC7A8FAA_rgbaf;
   layer_colors_[3] = 0x4E288BAA_rgbaf;
