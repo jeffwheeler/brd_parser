@@ -5,9 +5,9 @@
 #include <Magnum/Math/Matrix3.h>
 #include <Magnum/Math/Vector2.h>
 #include <Magnum/Platform/EmscriptenApplication.h>
+#include <Magnum/Shaders/FlatGL.h>
 #include <Magnum/Shaders/LineGL.h>
 #include <Magnum/Shaders/MeshVisualizerGL.h>
-#include <Magnum/Shaders/FlatGL.h>
 #include <Magnum/Shaders/VertexColorGL.h>
 #include <Magnum/Trade/MeshData.h>
 #include <imgui_impl_sdl2.h>
@@ -47,6 +47,7 @@ class BrdWidget {
   void DrawX05(const T05Line<kAMax>* inst);
   void DrawX28(const T28Shape<kAMax>* inst);
 
+  void AddSegment(Magnum::Vector2 start, Magnum::Vector2 end, float width);
   auto StartingPoint(uint32_t k) -> std::optional<Magnum::Vector2>;
   auto IsLineSegment(uint32_t k) -> bool;
   auto GetWidthIndex(float width) -> size_t;
@@ -62,11 +63,13 @@ class BrdWidget {
 
   struct VertexData {
     Magnum::Vector2 position;
+    Magnum::Float width;
+    Magnum::Color3 color;
   };
 
   Magnum::GL::Buffer buffer;
   Magnum::GL::Mesh mesh_;
-  Magnum::Shaders::MeshVisualizerGL2D _lineShader;
+  LineShader _lineShader;
 
   std::vector<VertexData> lines_cache_;
 

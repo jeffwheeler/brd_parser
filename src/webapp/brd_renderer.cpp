@@ -24,9 +24,7 @@
 
 using namespace Magnum::Math::Literals;
 
-BrdWidget::BrdWidget()
-    : _lineShader(Magnum::Shaders::MeshVisualizerGL2D::Configuration().setFlags(
-          Magnum::Shaders::MeshVisualizerGL2D::Flag::Wireframe)) {
+BrdWidget::BrdWidget() {
   using namespace Magnum;
 
   InitializeShader();
@@ -41,23 +39,19 @@ void BrdWidget::UpdateFile() {
   already_drawn_.clear();
   lines_cache_.clear();
 
-  // IterateFile();
+  IterateFile();
   ComposeLayersToDrawable();
 
   // Add a cross to the origin
-  lines_cache_.push_back(VertexData{{-1.0F, -1.0F}});
-  lines_cache_.push_back(VertexData{{1.0F, 1.0F}});
-  lines_cache_.push_back(VertexData{{-1.0F, 1.0F}});
-  // lines_cache_.insert(lines_cache_.begin(),
-  //                     VertexData{{1.0F, -1.0F}, 0.1, 0x00ff00_rgbf});
+  // AddSegment({-0.5, 0}, {0.5, 0}, 0.1);
   buffer.setData(
       Corrade::Containers::arrayView(lines_cache_.data(), lines_cache_.size()));
 
   // Configure mesh
   mesh_.setPrimitive(Magnum::GL::MeshPrimitive::Triangles)
       .setCount(lines_cache_.size())
-      .addVertexBuffer(buffer, 0,
-                       Magnum::Shaders::MeshVisualizerGL2D::Position{});
+      .addVertexBuffer(buffer, 0, LineShader::Position{}, LineShader::Width{},
+                       LineShader::Color{});
 
   dirty_ = true;
 }
@@ -122,7 +116,7 @@ void BrdWidget::UpdateLayerAlpha(uint8_t /* unused */, float /* unused */) {}
 
 void BrdWidget::Draw() {
   // Draw
-  _lineShader.setColor(0xff0000_rgbf)
+  _lineShader
       .setTransformationProjectionMatrix(
           projection_matrix_ * aspect_ratio_matrix_ * transformation_matrix_)
       .draw(mesh_);
@@ -331,6 +325,23 @@ void BrdWidget::DrawShape(uint32_t ptr) {
   }
 }
 
+void BrdWidget::AddSegment(Magnum::Vector2 start, Magnum::Vector2 end,
+                           float width) {
+  lines_cache_.emplace_back(
+      VertexData{{start.x(), start.y()}, -width, 0xFF0000_rgbf});
+  lines_cache_.emplace_back(
+      VertexData{{end.x(), end.y()}, -width, 0x0FF00F_rgbf});
+  lines_cache_.emplace_back(
+      VertexData{{end.x(), end.y()}, width, 0x0000FF_rgbf});
+
+  lines_cache_.emplace_back(
+      VertexData{{start.x(), start.y()}, -width, 0x0000FF_rgbf});
+  lines_cache_.emplace_back(
+      VertexData{{end.x(), end.y()}, width, 0x00FF00_rgbf});
+  lines_cache_.emplace_back(
+      VertexData{{start.x(), start.y()}, width, 0xFF0000_rgbf});
+}
+
 // Modify DrawX05 to store individual segments
 void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
   uint32_t k = inst->first_segment_ptr;
@@ -342,11 +353,11 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
     // SkPath segment_path;
     // segment_path.moveTo(starting);
     Magnum::Vector2 next;
-    // float segment_width;
+    float segment_width;
 
     if (fs_->is_type(k, 0x01)) {
       const T01ArcSegment<kAMax> segment_inst = fs_->get_x01(k);
-      // segment_width = segment_inst.width / factor_;
+      segment_width = segment_inst.width / factor_;
       Magnum::Vector2 end{segment_inst.coords[2] / factor_,
                           segment_inst.coords[3] / factor_};
 
@@ -388,21 +399,21 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
       k = segment_inst.next;
     } else if (fs_->is_type(k, 0x15)) {
       const T15LineSegment<kAMax> segment_inst = fs_->get_x15(k);
-      // segment_width = segment_inst.width / factor_;
+      segment_width = segment_inst.width / factor_;
       next = Magnum::Vector2(
           {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
       // segment_path.lineTo(next);
       k = segment_inst.next;
     } else if (fs_->is_type(k, 0x16)) {
       const T16LineSegment<kAMax> segment_inst = fs_->get_x16(k);
-      // segment_width = segment_inst.width / factor_;
+      segment_width = segment_inst.width / factor_;
       next = Magnum::Vector2(
           {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
       // segment_path.lineTo(next);
       k = segment_inst.next;
     } else if (fs_->is_type(k, 0x17)) {
       const T17LineSegment<kAMax> segment_inst = fs_->get_x17(k);
-      // segment_width = segment_inst.width / factor_;
+      segment_width = segment_inst.width / factor_;
       next = Magnum::Vector2(
           {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
       // segment_path.lineTo(next);
@@ -411,8 +422,7 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
       return;
     }
 
-    lines_cache_.emplace_back(VertexData{{starting.x(), starting.y()}});
-    lines_cache_.emplace_back(VertexData{{next.x(), next.y()}});
+    AddSegment(starting, next, segment_width);
 
     // segment_paths_.push_back(
     //     {segment_path, segment_width, layer_id, inst->layer});
@@ -452,11 +462,11 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
 
   while (IsLineSegment(k)) {
     Magnum::Vector2 next;
-    // float segment_width;
+    float segment_width;
 
     if (fs_->is_type(k, 0x01)) {
       const T01ArcSegment<kAMax> segment_inst = fs_->get_x01(k);
-      // segment_width = segment_inst.width / factor_;
+      segment_width = segment_inst.width / factor_;
       Magnum::Vector2 end{segment_inst.coords[2] / factor_,
                           segment_inst.coords[3] / factor_};
 
@@ -506,19 +516,19 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
       k = segment_inst.next;
     } else if (fs_->is_type(k, 0x15)) {
       const T15LineSegment<kAMax> segment_inst = fs_->get_x15(k);
-      // segment_width = segment_inst.width / factor_;
+      segment_width = segment_inst.width / factor_;
       next = Magnum::Vector2(
           {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
       k = segment_inst.next;
     } else if (fs_->is_type(k, 0x16)) {
       const T16LineSegment<kAMax> segment_inst = fs_->get_x16(k);
-      // segment_width = segment_inst.width / factor_;
+      segment_width = segment_inst.width / factor_;
       next = Magnum::Vector2(
           {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
       k = segment_inst.next;
     } else if (fs_->is_type(k, 0x17)) {
       const T17LineSegment<kAMax> segment_inst = fs_->get_x17(k);
-      // segment_width = segment_inst.width / factor_;
+      segment_width = segment_inst.width / factor_;
       next = Magnum::Vector2(
           {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
       k = segment_inst.next;
@@ -526,8 +536,7 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
       return;
     }
 
-    lines_cache_.emplace_back(VertexData{{starting.x(), starting.y()}});
-    lines_cache_.emplace_back(VertexData{{next.x(), next.y()}});
+    AddSegment(starting, next, segment_width);
 
     starting = next;
   }

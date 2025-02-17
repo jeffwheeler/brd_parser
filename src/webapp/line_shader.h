@@ -30,12 +30,8 @@ class LineShader : public Magnum::GL::AbstractShaderProgram {
 
       void main() {
         fragmentColor = color;
-
-        vec2 normal;
-        normal.x = 1.0;
-        normal.y = 0.0;
-        vec2 p = position.xy + vec2(normal * width/2.0);
-        gl_Position = vec4(transformationProjectionMatrix * vec3(position + p, 1.0), 1.0);
+        vec2 adjusted = vec2(position.x, position.y + width);
+        gl_Position = vec4(transformationProjectionMatrix * vec3(adjusted, 1.0), 1.0);
       }
     )");
 
