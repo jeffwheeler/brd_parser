@@ -52,13 +52,13 @@ void BrdViewerApp::drawEvent() {
   /* Update application cursor */
   _imgui.updateApplicationCursor(*this);
 
-  GL::Renderer::enable(GL::Renderer::Feature::Blending);
-  GL::Renderer::enable(GL::Renderer::Feature::ScissorTest);
-  GL::Renderer::disable(GL::Renderer::Feature::FaceCulling);
+  Magnum::GL::Renderer::enable(Magnum::GL::Renderer::Feature::Blending);
+  Magnum::GL::Renderer::enable(Magnum::GL::Renderer::Feature::ScissorTest);
+  Magnum::GL::Renderer::disable(Magnum::GL::Renderer::Feature::FaceCulling);
   _imgui.drawFrame();
-  GL::Renderer::enable(GL::Renderer::Feature::FaceCulling);
-  GL::Renderer::disable(GL::Renderer::Feature::ScissorTest);
-  GL::Renderer::disable(GL::Renderer::Feature::Blending);
+  Magnum::GL::Renderer::enable(Magnum::GL::Renderer::Feature::FaceCulling);
+  Magnum::GL::Renderer::disable(Magnum::GL::Renderer::Feature::ScissorTest);
+  Magnum::GL::Renderer::disable(Magnum::GL::Renderer::Feature::Blending);
 
   swapBuffers();
   redraw();
