@@ -42,6 +42,7 @@ void BrdWidget::UpdateFile() {
   IterateFile();
   ComposeLayersToDrawable();
 
+  // Add a cross to the origin
   lines_cache_.insert(lines_cache_.begin(),
                       VertexData{{-1.0F, -1.0F}, 0xff0000_rgbf});
   lines_cache_.insert(lines_cache_.begin(),
@@ -411,8 +412,6 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
     }
 
     // Store segment info
-    emscripten_log(EM_LOG_INFO, "adding line {%f %f}, {%f %f}", starting.x(),
-                   starting.y(), next.x(), next.y());
     lines_cache_.emplace_back(
         VertexData{{starting.x(), starting.y()}, 0xff0000_rgbf});
     lines_cache_.emplace_back(VertexData{{next.x(), next.y()}, 0x0000ff_rgbf});
