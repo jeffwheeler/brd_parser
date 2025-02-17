@@ -66,7 +66,7 @@ class BrdWidget {
     Magnum::Vector2 next;
     Magnum::Int step;
     Magnum::Float width;
-    Magnum::Color3 color;
+    Magnum::Color4 color;
   };
 
   Magnum::GL::Buffer buffer;

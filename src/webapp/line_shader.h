@@ -11,7 +11,7 @@ class LineShader : public Magnum::GL::AbstractShaderProgram {
   using Next = Magnum::GL::Attribute<1, Magnum::Vector2>;
   using Step = Magnum::GL::Attribute<2, Magnum::Int>;
   using Width = Magnum::GL::Attribute<3, Magnum::Float>;
-  using Color = Magnum::GL::Attribute<4, Magnum::Color3>;
+  using Color = Magnum::GL::Attribute<4, Magnum::Color4>;
 
   enum class Uniform : Magnum::Int { TransformationProjectionMatrix = 0 };
 
@@ -28,33 +28,53 @@ class LineShader : public Magnum::GL::AbstractShaderProgram {
       layout(location = 1) in vec2 next;
       layout(location = 2) in int step;
       layout(location = 3) in float width;
-      layout(location = 4) in vec3 color;
+      layout(location = 4) in vec4 color;
 
-      out vec3 fragmentColor;
+      out vec4 fragmentColor;
 
       void main() {
         fragmentColor = color;
+
+        vec2 dir = normalize(next - position);
+        vec2 normal = vec2(-dir.y, dir.x);
+        vec2 offset = normal * width;
+
         vec2 adjusted;
         if (step == 0) {
           adjusted.x = position.x;
-          adjusted.y = position.y - width;
+          adjusted.y = position.y;
+          adjusted -= offset;
         } else if (step == 1) {
           adjusted.x = next.x;
-          adjusted.y = next.y - width;
-        } else {
+          adjusted.y = next.y;
+          adjusted -= offset;
+        } else if (step == 2) {
           adjusted.x = next.x;
-          adjusted.y = next.y + width;
+          adjusted.y = next.y;
+          adjusted += offset;
+        } else if (step == 3) {
+          adjusted.x = position.x;
+          adjusted.y = position.y;
+          adjusted -= offset;
+        } else if (step == 4) {
+          adjusted.x = next.x;
+          adjusted.y = next.y;
+          adjusted += offset;
+        } else if (step == 5) {
+          adjusted.x = position.x;
+          adjusted.y = position.y;
+          adjusted += offset;
         }
         gl_Position = vec4(transformationProjectionMatrix * vec3(adjusted, 1.0), 1.0);
       }
     )");
 
     frag.addSource(R"(
-      in mediump vec3 fragmentColor;
+      in mediump vec4 fragmentColor;
       out mediump vec4 fragColor;
 
       void main() {
-        fragColor = vec4(fragmentColor, 1.0);
+        fragColor = fragmentColor;
       }
     )");
 

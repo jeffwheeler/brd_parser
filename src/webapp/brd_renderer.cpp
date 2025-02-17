@@ -328,17 +328,12 @@ void BrdWidget::DrawShape(uint32_t ptr) {
 
 void BrdWidget::AddSegment(Magnum::Vector2 start, Magnum::Vector2 end,
                            float width) {
-  lines_cache_.emplace_back(VertexData{start, end, 0, width, 0xFF0000_rgbf});
-  lines_cache_.emplace_back(VertexData{start, end, 1, width, 0x00FF00_rgbf});
-  lines_cache_.emplace_back(VertexData{start, end, 2, width, 0x0000FF_rgbf});
-  /*
-  lines_cache_.emplace_back(
-      VertexData{{start.x(), start.y()}, -width, 0x0000FF_rgbf});
-  lines_cache_.emplace_back(
-      VertexData{{end.x(), end.y()}, width, 0x00FF00_rgbf});
-  lines_cache_.emplace_back(
-      VertexData{{start.x(), start.y()}, width, 0xFF0000_rgbf});
-  */
+  lines_cache_.emplace_back(VertexData{start, end, 0, width, 0xFF0000AA_rgbaf});
+  lines_cache_.emplace_back(VertexData{start, end, 1, width, 0x00FF00AA_rgbaf});
+  lines_cache_.emplace_back(VertexData{start, end, 2, width, 0x0000FFAA_rgbaf});
+  lines_cache_.emplace_back(VertexData{start, end, 3, width, 0xFF0000AA_rgbaf});
+  lines_cache_.emplace_back(VertexData{start, end, 4, width, 0x00FF00AA_rgbaf});
+  lines_cache_.emplace_back(VertexData{start, end, 5, width, 0x0000FFAA_rgbaf});
 }
 
 // Modify DrawX05 to store individual segments
