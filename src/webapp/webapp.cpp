@@ -77,6 +77,8 @@ void BrdViewerApp::viewportEvent(ViewportEvent& event) {
 
   _imgui.relayout(Magnum::Vector2{event.windowSize()} / event.dpiScaling(),
                   event.windowSize(), event.framebufferSize());
+
+  brd_widget_.UpdateScreenRatio();
 }
 
 void BrdViewerApp::keyPressEvent(KeyEvent& event) {

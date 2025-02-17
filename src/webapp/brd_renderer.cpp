@@ -26,6 +26,7 @@ using namespace Magnum::Math::Literals;
 
 BrdWidget::BrdWidget() {
   InitializeShader();
+  UpdateScreenRatio();
 
   triangle_mesh_.setCount(0);
   mesh_.setCount(0);
@@ -124,8 +125,8 @@ void BrdWidget::UpdateLayerAlpha(uint8_t /* unused */, float /* unused */) {}
 
 void BrdWidget::Draw() {
   shader_.setViewportSize(Magnum::Vector2{300, 300})
-      .setTransformationProjectionMatrix(projectionMatrix_ *
-                                         transformationMatrix_)
+      .setTransformationProjectionMatrix(
+          projection_matrix_ * aspect_ratio_matrix_ * transformation_matrix_)
       .setColor(0x2f83cc_rgbf)
       .setWidth(1.F)
       .draw(mesh_);
@@ -637,9 +638,10 @@ auto BrdWidget::ScreenToWorld(const Magnum::Vector2 &screen_pos, bool center)
       Magnum::Vector2{offset, offset};
 
   normalized.y() = -normalized.y();
-  Magnum::Matrix3 complete_transform = projectionMatrix_;
+  Magnum::Matrix3 complete_transform =
+      projection_matrix_ * aspect_ratio_matrix_;
   if (center) {
-    complete_transform *transformationMatrix_;
+    complete_transform *transformation_matrix_;
   }
   return complete_transform.inverted().transformPoint(normalized);
 }
@@ -672,7 +674,9 @@ auto BrdWidget::IsPointNearPath(const SkPath &path, const SkPoint &point,
 
 void BrdWidget::HandleMouseWheel(
     Magnum::Platform::EmscriptenApplication::ScrollEvent &event) {
-  constexpr float zoom_factor = 1.1F;
+  event.setAccepted(true);
+
+  constexpr float zoom_factor = 1.05F;
   float wheel_y = event.event().deltaY;
 
   if (wheel_y == 0) {
@@ -686,18 +690,18 @@ void BrdWidget::HandleMouseWheel(
   float scale = (wheel_y < 0) ? 1.0F / zoom_factor : zoom_factor;
 
   // Apply zoom limits
-  float current_scale = projectionMatrix_.scaling().x();
+  float current_scale = projection_matrix_.scaling().x();
   if ((wheel_y < 0 && current_scale > 0.01F) ||
       (wheel_y > 0 && current_scale < 20.0F)) {
     // Apply scaling to the projection matrix
-    projectionMatrix_ =
-        Magnum::Matrix3::scaling(Magnum::Vector2(scale)) * projectionMatrix_;
+    projection_matrix_ =
+        Magnum::Matrix3::scaling(Magnum::Vector2(scale)) * projection_matrix_;
 
     Magnum::Vector2 new_mouse_world_pos = ScreenToWorld(mouse_screen_pos, true);
 
     Magnum::Vector2 correction = new_mouse_world_pos - mouse_world_pos;
-    transformationMatrix_ =
-        Magnum::Matrix3::translation(correction) * transformationMatrix_;
+    transformation_matrix_ =
+        Magnum::Matrix3::translation(correction) * transformation_matrix_;
   }
 
   dirty_ = true;
@@ -728,11 +732,20 @@ void BrdWidget::HandleMouseMove(
 
     Magnum::Vector2 world_delta = ScreenToWorld(delta);
 
-    transformationMatrix_ =
-        Magnum::Matrix3::translation(world_delta) * transformationMatrix_;
+    transformation_matrix_ =
+        Magnum::Matrix3::translation(world_delta) * transformation_matrix_;
 
     last_mouse_pos_ = current_pos;
 
     dirty_ = true;
   }
+}
+
+void BrdWidget::UpdateScreenRatio() {
+  auto viewportSize = Magnum::GL::defaultFramebuffer.viewport().size();
+  float aspect = viewportSize.x() / viewportSize.y();
+
+  // Adjust scaling to maintain aspect ratio
+  aspect_ratio_matrix_ =
+      Magnum::Matrix3::scaling({1, static_cast<float>(1. * aspect)});
 }

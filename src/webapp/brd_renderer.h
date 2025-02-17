@@ -21,6 +21,7 @@ class BrdWidget {
   void UpdateFile();
   void Draw();
 
+  void UpdateScreenRatio();
   void HandleMouseWheel(
       Magnum::Platform::EmscriptenApplication::ScrollEvent& event);
   void HandleMouseDown(
@@ -104,5 +105,5 @@ class BrdWidget {
   bool is_panning_ = false;
   Magnum::Vector2 last_mouse_pos_{0, 0};
 
-  Magnum::Matrix3 transformationMatrix_, projectionMatrix_;
+  Magnum::Matrix3 transformation_matrix_, projection_matrix_, aspect_ratio_matrix_;
 };
