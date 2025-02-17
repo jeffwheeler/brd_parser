@@ -471,7 +471,7 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
 
   while (IsLineSegment(k)) {
     Magnum::Vector2 next;
-    float segment_width;
+    [[maybe_unused]] float segment_width;
 
     if (fs_->is_type(k, 0x01)) {
       const T01ArcSegment<kAMax> segment_inst = fs_->get_x01(k);
@@ -545,7 +545,7 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
       return;
     }
 
-    AddSegment(starting, next, segment_width, layer_id);
+    AddSegment(starting, next, 0.005, layer_id);
 
     starting = next;
   }
