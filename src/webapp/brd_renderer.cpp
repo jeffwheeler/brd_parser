@@ -25,10 +25,11 @@
 using namespace Magnum::Math::Literals;
 
 BrdWidget::BrdWidget() {
+  using namespace Magnum;
+
   InitializeShader();
   UpdateScreenRatio();
 
-  triangle_mesh_.setCount(0);
   mesh_.setCount(0);
 }
 
@@ -41,26 +42,21 @@ void BrdWidget::UpdateFile() {
   IterateFile();
   ComposeLayersToDrawable();
 
-  struct TriangleVertex {
-    Magnum::Vector2 position;
-    Magnum::Color3 color;
-  };
-  const TriangleVertex vertices[3]{
-      {{-0.5F, -0.5F}, 0xff0000_rgbf}, /* Left vertex, red color */
-      {{0.5F, -0.5F}, 0x00ff00_rgbf},  /* Right vertex, green color */
-      {{0.0F, 0.5F}, 0x0000ff_rgbf}    /* Top vertex, blue color */
-  };
+  lines_cache_.insert(lines_cache_.begin(),
+                      VertexData{{-1.0F, -1.0F}, 0xff0000_rgbf});
+  lines_cache_.insert(lines_cache_.begin(),
+                      VertexData{{1.0F, 1.0F}, 0xff0000_rgbf});
+  lines_cache_.insert(lines_cache_.begin(),
+                      VertexData{{-1.0F, 1.0F}, 0x00ff00_rgbf});
+  lines_cache_.insert(lines_cache_.begin(),
+                      VertexData{{1.0F, -1.0F}, 0x00ff00_rgbf});
+  buffer.setData(
+      Corrade::Containers::arrayView(lines_cache_.data(), lines_cache_.size()));
 
-  triangle_mesh_.setCount(Corrade::Containers::arraySize(vertices))
-      .addVertexBuffer(Magnum::GL::Buffer{vertices}, 0,
-                       Magnum::Shaders::VertexColorGL2D::Position{},
-                       Magnum::Shaders::VertexColorGL2D::Color3{});
-
-  // Magnum::Trade::MeshData circle = Magnum::Primitives::circle2DWireframe(16);
-  mesh_ = Magnum::MeshTools::compileLines(Magnum::MeshTools::generateLines(
-      Magnum::MeshTools::concatenate(Corrade::Containers::arrayView(
-          lines_cache_.data(), lines_cache_.size()))));
-  emscripten_log(EM_LOG_INFO, "mesh_ count=%d", mesh_.count());
+  // Configure mesh
+  mesh_.setPrimitive(Magnum::GL::MeshPrimitive::Lines)
+      .setCount(lines_cache_.size())
+      .addVertexBuffer(buffer, 0, LineShader::Position{}, LineShader::Color{});
 
   dirty_ = true;
 }
@@ -124,13 +120,11 @@ void BrdWidget::UpdateLayerShaders() {}
 void BrdWidget::UpdateLayerAlpha(uint8_t /* unused */, float /* unused */) {}
 
 void BrdWidget::Draw() {
-  shader_.setViewportSize(Magnum::Vector2{300, 300})
+  // Draw
+  _lineShader
       .setTransformationProjectionMatrix(
           projection_matrix_ * aspect_ratio_matrix_ * transformation_matrix_)
-      .setColor(0x2f83cc_rgbf)
-      .setWidth(1.F)
       .draw(mesh_);
-  triangle_shader_.draw(triangle_mesh_);
 
   // const auto &visible_layers = AppState::VisibleLayers();
 
@@ -419,7 +413,9 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
     // Store segment info
     emscripten_log(EM_LOG_INFO, "adding line {%f %f}, {%f %f}", starting.x(),
                    starting.y(), next.x(), next.y());
-    lines_cache_.push_back(Magnum::Primitives::line2D(starting, next));
+    lines_cache_.emplace_back(
+        VertexData{{starting.x(), starting.y()}, 0xff0000_rgbf});
+    lines_cache_.emplace_back(VertexData{{next.x(), next.y()}, 0x0000ff_rgbf});
     // segment_paths_.push_back(
     //     {segment_path, segment_width, layer_id, inst->layer});
 

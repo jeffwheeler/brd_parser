@@ -52,21 +52,7 @@ void BrdViewerApp::drawEvent() {
   /* Update application cursor */
   _imgui.updateApplicationCursor(*this);
 
-  /* Set appropriate states. If you only draw ImGui, it is sufficient to
-     just enable blending and scissor test in the constructor. */
-  Magnum::GL::Renderer::enable(Magnum::GL::Renderer::Feature::Blending);
-  Magnum::GL::Renderer::enable(Magnum::GL::Renderer::Feature::ScissorTest);
-  Magnum::GL::Renderer::disable(Magnum::GL::Renderer::Feature::FaceCulling);
-  Magnum::GL::Renderer::disable(Magnum::GL::Renderer::Feature::DepthTest);
-
   _imgui.drawFrame();
-
-  /* Reset state. Only needed if you want to draw something else with
-     different state after. */
-  Magnum::GL::Renderer::enable(Magnum::GL::Renderer::Feature::DepthTest);
-  Magnum::GL::Renderer::enable(Magnum::GL::Renderer::Feature::FaceCulling);
-  Magnum::GL::Renderer::disable(Magnum::GL::Renderer::Feature::ScissorTest);
-  Magnum::GL::Renderer::disable(Magnum::GL::Renderer::Feature::Blending);
 
   swapBuffers();
   redraw();

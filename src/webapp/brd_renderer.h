@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Magnum/GL/Mesh.h>
+#include <Magnum/Math/Color.h>
 #include <Magnum/Math/Matrix3.h>
 #include <Magnum/Math/Vector2.h>
 #include <Magnum/Platform/EmscriptenApplication.h>
@@ -9,10 +10,11 @@
 #include <Magnum/Trade/MeshData.h>
 #include <imgui_impl_sdl2.h>
 
-#include <vector>
 #include <unordered_set>
+#include <vector>
 
 #include "lib/structure/types.h"
+#include "webapp/line_shader.h"
 
 class BrdWidget {
  public:
@@ -47,7 +49,8 @@ class BrdWidget {
   auto IsLineSegment(uint32_t k) -> bool;
   auto GetWidthIndex(float width) -> size_t;
 
-  auto ScreenToWorld(const Magnum::Vector2& screen_pos, bool center = false) -> Magnum::Vector2;
+  auto ScreenToWorld(const Magnum::Vector2& screen_pos, bool center = false)
+      -> Magnum::Vector2;
   static auto LayerToShader(const LayerInfo layer) -> uint8_t;
   // static auto IsPointNearPath(const SkPath& path, const SkPoint& point,
   //                             float width) -> bool;
@@ -55,12 +58,16 @@ class BrdWidget {
   std::shared_ptr<File<kAMax>> fs_;
   std::unordered_set<uint32_t> already_drawn_;
 
-  Magnum::GL::Mesh triangle_mesh_;
-  Magnum::Shaders::VertexColorGL2D triangle_shader_;
+  struct VertexData {
+    Magnum::Vector2 position;
+    Magnum::Color3 color;
+  };
 
+  Magnum::GL::Buffer buffer;
   Magnum::GL::Mesh mesh_;
-  Magnum::Shaders::LineGL2D shader_;
-  std::vector<Magnum::Trade::MeshData> lines_cache_;
+  LineShader _lineShader;
+
+  std::vector<VertexData> lines_cache_;
 
   // sk_sp<SkPicture> picture_;
   // std::unordered_set<LayerInfo> visible_layers_cache_;
@@ -105,5 +112,6 @@ class BrdWidget {
   bool is_panning_ = false;
   Magnum::Vector2 last_mouse_pos_{0, 0};
 
-  Magnum::Matrix3 transformation_matrix_, projection_matrix_, aspect_ratio_matrix_;
+  Magnum::Matrix3 transformation_matrix_, projection_matrix_,
+      aspect_ratio_matrix_;
 };

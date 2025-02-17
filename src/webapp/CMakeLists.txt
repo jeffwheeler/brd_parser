@@ -20,6 +20,7 @@ find_package(MagnumIntegration REQUIRED ImGui)
 add_executable(webapp
   # main.cpp
   webapp.cpp
+  line_shader.cpp
   layer_widget.cpp
   brd_renderer.cpp
   file_picker.cpp
