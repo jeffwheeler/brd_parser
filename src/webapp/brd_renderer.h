@@ -44,14 +44,14 @@ class BrdWidget {
   void UpdateLayerShaders();
   void UpdateLayerAlpha(uint8_t layer, float new_alpha);
 
-void TriangulateArc(const T01ArcSegment<kAMax> &segment_inst,
-                               uint8_t layer_id);
   void DrawShape(uint32_t ptr);
   void DrawX05(const T05Line<kAMax>* inst);
   void DrawX28(const T28Shape<kAMax>* inst);
 
   void AddSegment(Mn::Vector2 start, Mn::Vector2 end, float width,
                   uint8_t layer);
+  void AddArc(const T01ArcSegment<kAMax>& segment_inst, float width,
+                      uint8_t layer_id);
   void AddLineCap(Mn::Vector2 start, Mn::Vector2 end, float width,
                   uint8_t layer);
   auto StartingPoint(uint32_t k) -> std::optional<Mn::Vector2>;
@@ -84,6 +84,8 @@ void TriangulateArc(const T01ArcSegment<kAMax> &segment_inst,
   std::array<float, 32> layer_opacities_{};
   // sk_sp<SkPicture> picture_;
   std::unordered_set<LayerInfo> visible_layers_cache_;
+
+  constexpr static float kBorderWidth = 0.005;
 
   constexpr static float kNormalOpacity = 0.9F;
   constexpr static float kShadowOpacity = 0.15F;

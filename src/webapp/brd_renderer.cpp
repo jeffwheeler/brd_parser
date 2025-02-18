@@ -261,8 +261,8 @@ void BrdWidget::IterateFile() {
   }
 }
 
-void BrdWidget::TriangulateArc(const T01ArcSegment<kAMax> &segment_inst,
-                               [[maybe_unused]] uint8_t layer_id) {
+void BrdWidget::AddArc(const T01ArcSegment<kAMax> &segment_inst,
+                               float width, uint8_t layer_id) {
   auto [cx, cy] = x01_center(&segment_inst);
 
   float scaled_cx = cx / factor_;
@@ -279,17 +279,16 @@ void BrdWidget::TriangulateArc(const T01ArcSegment<kAMax> &segment_inst,
 
   if (segment_inst.subtype == 0) {  // Clockwise or counterclockwise
     if (end_angle < start_angle) {
-      // end_angle += Mn::Math::Constants<float>::tau();
+      end_angle = end_angle + Mn::Radd{Mn::Math::Constants<float>::tau()};
     }
   } else {
     if (end_angle > start_angle) {
-      // end_angle -= Mn::Math::Constants<float>::tau();
+      end_angle = end_angle - Mn::Radd{Mn::Math::Constants<float>::tau()};
     }
   }
 
-  [[maybe_unused]] constexpr int segments = 8;
-  [[maybe_unused]] Magnum::Radd angle_step =
-      (end_angle - start_angle) / segments;
+  constexpr int segments = 8;
+  Magnum::Radd angle_step = (end_angle - start_angle) / segments;
 
   Mn::Vector2 prev_point = {
       static_cast<float>(scaled_cx + (scaled_r * Mn::Math::cos(start_angle))),
@@ -300,7 +299,7 @@ void BrdWidget::TriangulateArc(const T01ArcSegment<kAMax> &segment_inst,
         static_cast<float>(scaled_cx + (scaled_r * Mn::Math::cos(theta))),
         static_cast<float>(scaled_cy + (scaled_r * Mn::Math::sin(theta)))};
 
-    AddSegment(prev_point, next_point, 0.01, layer_id);
+    AddSegment(prev_point, next_point, width, layer_id);
     prev_point = next_point;
   }
 }
@@ -429,9 +428,9 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
 
     if (fs_->is_type(k, 0x01)) {
       const T01ArcSegment<kAMax> segment_inst = fs_->get_x01(k);
-      TriangulateArc(segment_inst, layer_id);
+      segment_width = segment_inst.width / factor_;
+      AddArc(segment_inst, segment_width, layer_id);
       k = segment_inst.next;
-      continue;
     } else if (fs_->is_type(k, 0x15)) {
       const T15LineSegment<kAMax> segment_inst = fs_->get_x15(k);
       segment_width = segment_inst.width / factor_;
@@ -439,6 +438,7 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
           {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
       // segment_path.lineTo(next);
       k = segment_inst.next;
+      AddSegment(starting, next, segment_width, layer_id);
     } else if (fs_->is_type(k, 0x16)) {
       const T16LineSegment<kAMax> segment_inst = fs_->get_x16(k);
       segment_width = segment_inst.width / factor_;
@@ -446,6 +446,7 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
           {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
       // segment_path.lineTo(next);
       k = segment_inst.next;
+      AddSegment(starting, next, segment_width, layer_id);
     } else if (fs_->is_type(k, 0x17)) {
       const T17LineSegment<kAMax> segment_inst = fs_->get_x17(k);
       segment_width = segment_inst.width / factor_;
@@ -453,11 +454,10 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
           {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
       // segment_path.lineTo(next);
       k = segment_inst.next;
+      AddSegment(starting, next, segment_width, layer_id);
     } else {
       return;
     }
-
-    AddSegment(starting, next, segment_width, layer_id);
 
     // segment_paths_.push_back(
     //     {segment_path, segment_width, layer_id, inst->layer});
@@ -502,7 +502,7 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
     if (fs_->is_type(k, 0x01)) {
       const T01ArcSegment<kAMax> segment_inst = fs_->get_x01(k);
       segment_width = segment_inst.width / factor_;
-      TriangulateArc(segment_inst, layer_id);
+      AddArc(segment_inst, kBorderWidth, layer_id);
       next = {segment_inst.coords[2] / factor_,
               segment_inst.coords[3] / factor_};
       k = segment_inst.next;
@@ -512,21 +512,21 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
       next = Mn::Vector2(
           {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
       k = segment_inst.next;
-      AddSegment(starting, next, 0.005, layer_id);
+      AddSegment(starting, next, kBorderWidth, layer_id);
     } else if (fs_->is_type(k, 0x16)) {
       const T16LineSegment<kAMax> segment_inst = fs_->get_x16(k);
       segment_width = segment_inst.width / factor_;
       next = Mn::Vector2(
           {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
       k = segment_inst.next;
-      AddSegment(starting, next, 0.005, layer_id);
+      AddSegment(starting, next, kBorderWidth, layer_id);
     } else if (fs_->is_type(k, 0x17)) {
       const T17LineSegment<kAMax> segment_inst = fs_->get_x17(k);
       segment_width = segment_inst.width / factor_;
       next = Mn::Vector2(
           {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
       k = segment_inst.next;
-      AddSegment(starting, next, 0.005, layer_id);
+      AddSegment(starting, next, kBorderWidth, layer_id);
     } else {
       return;
     }
