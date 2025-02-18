@@ -26,6 +26,7 @@ BrdWidget::BrdWidget() : layer_colors_() {
 
   // https://uchu.style/
   layer_colors_[0] = 0x952233AA_rgbaf;
+  layer_colors_[1] = 0x00FF00AA_rgbaf;
   layer_colors_[2] = 0xAC7A8FAA_rgbaf;
   layer_colors_[3] = 0x4E288BAA_rgbaf;
   layer_colors_[4] = 0x1F48A6AA_rgbaf;
@@ -35,6 +36,10 @@ BrdWidget::BrdWidget() : layer_colors_() {
   layer_colors_[8] = 0x393B3DAA_rgbaf;
 
   _lineShader.setLayerColors(layer_colors_);
+
+  for (float& layer_opacity : layer_opacities_) {
+    layer_opacity = kShadowOpacity;
+  }
   _lineShader.setLayerOpacities(layer_opacities_);
 }
 
@@ -133,7 +138,7 @@ void BrdWidget::Draw() {
       selected[LayerToShader(visible_layer)] = true;
     }
     for (uint8_t i = 0; i < 9; i++) {
-      UpdateLayerAlpha(i, selected[i] ? 1.0F : 0.05F);
+      UpdateLayerAlpha(i, selected[i] ? kNormalOpacity : kShadowOpacity);
     }
     visible_layers_cache_ = visible_layers;
 

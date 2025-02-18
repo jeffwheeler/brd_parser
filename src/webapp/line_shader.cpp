@@ -7,6 +7,8 @@ LineShader::LineShader() {
   Mn::GL::Shader frag{Mn::GL::Version::GLES300, Mn::GL::Shader::Type::Fragment};
 
   vert.addSource(R"(
+      precision mediump float;
+
       uniform mat3 transformationProjectionMatrix;
       uniform vec4 layerColors[32];  // Assuming max 32 layers
       uniform float layerOpacities[32];
@@ -54,9 +56,13 @@ LineShader::LineShader() {
         }
 
         fragLayerId = layerId;
+        float z_offset = 0.;
+        if (layerOpacities[layerId] < 0.9) {
+          z_offset = 0.5;
+        }
         gl_Position = vec4(
           (transformationProjectionMatrix * vec3(adjusted, 1.0)).xy,
-          float(layerId) / 32.,
+          z_offset + float(layerId) / 64.,
           1.0
         );
       }
@@ -82,7 +88,7 @@ LineShader::LineShader() {
             float opacity = layerOpacities[fragLayerId];
             fragColor = vec4(layerColor.rgb, opacity);
           } else {
-            fragColor = vec4(0.1, 0.1, 0.1, 1.0);
+            fragColor = vec4(0.0, 0.0, 1.0, 1.0);
           }
         } else {
           discard;
@@ -96,7 +102,7 @@ LineShader::LineShader() {
             float opacity = layerOpacities[fragLayerId];
             fragColor = vec4(layerColor.rgb, opacity);
           } else {
-            fragColor = vec4(0.1, 0.1, 0.1, 1.0);
+            fragColor = vec4(0.0, 0.0, 1.0, 1.0);
           }
         } else {
           filled_circle(circle_coords);

@@ -83,6 +83,9 @@ class BrdWidget {
   // sk_sp<SkPicture> picture_;
   std::unordered_set<LayerInfo> visible_layers_cache_;
 
+  constexpr static float kNormalOpacity = 0.9F;
+  constexpr static float kShadowOpacity = 0.15F;
+
   /*
   static constexpr size_t common_width_count_ = 8;
   struct LayerPaths {

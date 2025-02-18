@@ -6,26 +6,26 @@
 #include "webapp/app_state.h"
 
 BrdViewerApp::BrdViewerApp(const Arguments& arguments)
-    : Mn::Platform::
-          Application{arguments, Configuration{}
-                                     .setTitle("Mn ImGui Example")
-                                     .setWindowFlags(
-                                         Configuration::WindowFlag::Resizable)},
+    : Mn::Platform::Application{arguments,
+                                Configuration{}
+                                    .setTitle("Mn ImGui Example")
+                                    .setWindowFlags(
+                                        Configuration::WindowFlag::Resizable)},
       file_picker_widget_(this) {
-  _imgui = Mn::ImGuiIntegration::Context(
-      Mn::Vector2{windowSize()} / dpiScaling(), windowSize(),
-      framebufferSize());
+  _imgui =
+      Mn::ImGuiIntegration::Context(Mn::Vector2{windowSize()} / dpiScaling(),
+                                    windowSize(), framebufferSize());
 
   /* Set up proper blending to be used by ImGui. There's a great chance
      you'll need this exact behavior for the rest of your scene. If not, set
      this only for the drawFrame() call. */
-  Mn::GL::Renderer::setBlendEquation(
-      Mn::GL::Renderer::BlendEquation::Add,
-      Mn::GL::Renderer::BlendEquation::Add);
+  Mn::GL::Renderer::setBlendEquation(Mn::GL::Renderer::BlendEquation::Add,
+                                     Mn::GL::Renderer::BlendEquation::Add);
   Mn::GL::Renderer::setBlendFunction(
       Mn::GL::Renderer::BlendFunction::SourceAlpha,
       Mn::GL::Renderer::BlendFunction::OneMinusSourceAlpha);
   Mn::GL::Renderer::disable(Mn::GL::Renderer::Feature::FaceCulling);
+  Mn::GL::Renderer::enable(Mn::GL::Renderer::Feature::Blending);
 
 #if !defined(MAGNUM_TARGET_WEBGL) && !defined(CORRADE_TARGET_ANDROID)
   /* Have some sane speed, please */
@@ -53,13 +53,11 @@ void BrdViewerApp::drawEvent() {
   /* Update application cursor */
   _imgui.updateApplicationCursor(*this);
 
-  Mn::GL::Renderer::enable(Mn::GL::Renderer::Feature::Blending);
   Mn::GL::Renderer::enable(Mn::GL::Renderer::Feature::ScissorTest);
   Mn::GL::Renderer::disable(Mn::GL::Renderer::Feature::DepthTest);
   _imgui.drawFrame();
   Mn::GL::Renderer::enable(Mn::GL::Renderer::Feature::DepthTest);
   Mn::GL::Renderer::disable(Mn::GL::Renderer::Feature::ScissorTest);
-  Mn::GL::Renderer::disable(Mn::GL::Renderer::Feature::Blending);
 
   swapBuffers();
   redraw();
