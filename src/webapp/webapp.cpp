@@ -55,7 +55,9 @@ void BrdViewerApp::drawEvent() {
 
   Mn::GL::Renderer::enable(Mn::GL::Renderer::Feature::Blending);
   Mn::GL::Renderer::enable(Mn::GL::Renderer::Feature::ScissorTest);
+  Mn::GL::Renderer::disable(Mn::GL::Renderer::Feature::DepthTest);
   _imgui.drawFrame();
+  Mn::GL::Renderer::enable(Mn::GL::Renderer::Feature::DepthTest);
   Mn::GL::Renderer::disable(Mn::GL::Renderer::Feature::ScissorTest);
   Mn::GL::Renderer::disable(Mn::GL::Renderer::Feature::Blending);
 

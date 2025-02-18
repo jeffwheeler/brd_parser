@@ -54,7 +54,11 @@ LineShader::LineShader() {
         }
 
         fragLayerId = layerId;
-        gl_Position = vec4(transformationProjectionMatrix * vec3(adjusted, 1.0), 1.0);
+        gl_Position = vec4(
+          (transformationProjectionMatrix * vec3(adjusted, 1.0)).xy,
+          float(layerId) / 32.,
+          1.0
+        );
       }
     )");
 
