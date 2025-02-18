@@ -44,6 +44,8 @@ class BrdWidget {
   void UpdateLayerShaders();
   void UpdateLayerAlpha(uint8_t layer, float new_alpha);
 
+void TriangulateArc(const T01ArcSegment<kAMax> &segment_inst,
+                               uint8_t layer_id);
   void DrawShape(uint32_t ptr);
   void DrawX05(const T05Line<kAMax>* inst);
   void DrawX28(const T28Shape<kAMax>* inst);

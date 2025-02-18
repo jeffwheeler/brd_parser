@@ -3,6 +3,8 @@
 #include <Corrade/Containers/ArrayView.h>
 #include <Magnum/GL/Buffer.h>
 #include <Magnum/GL/DefaultFramebuffer.h>
+#include <Magnum/Math/Constants.h>
+#include <Magnum/Math/Functions.h>
 #include <Magnum/MeshTools/CompileLines.h>
 #include <Magnum/MeshTools/Concatenate.h>
 #include <Magnum/MeshTools/GenerateLines.h>
@@ -14,6 +16,7 @@
 #include <emscripten.h>
 #include <emscripten/html5.h>
 
+#include "lib/structure/utils.h"
 #include "webapp/app_state.h"
 
 using namespace Mn::Math::Literals;
@@ -37,7 +40,7 @@ BrdWidget::BrdWidget() : layer_colors_() {
 
   _lineShader.setLayerColors(layer_colors_);
 
-  for (float& layer_opacity : layer_opacities_) {
+  for (float &layer_opacity : layer_opacities_) {
     layer_opacity = kShadowOpacity;
   }
   _lineShader.setLayerOpacities(layer_opacities_);
@@ -258,6 +261,50 @@ void BrdWidget::IterateFile() {
   }
 }
 
+void BrdWidget::TriangulateArc(const T01ArcSegment<kAMax> &segment_inst,
+                               [[maybe_unused]] uint8_t layer_id) {
+  auto [cx, cy] = x01_center(&segment_inst);
+
+  float scaled_cx = cx / factor_;
+  float scaled_cy = cy / factor_;
+  float scaled_r = (static_cast<double>(segment_inst.r)) / factor_;
+
+  Magnum::Vector2 start{segment_inst.coords[0] / factor_,
+                        segment_inst.coords[1] / factor_};
+  Magnum::Vector2 end{segment_inst.coords[2] / factor_,
+                      segment_inst.coords[3] / factor_};
+
+  Mn::Radd start_angle{atan2(start.y() - scaled_cy, start.x() - scaled_cx)};
+  Mn::Radd end_angle{atan2(end.y() - scaled_cy, end.x() - scaled_cx)};
+
+  if (segment_inst.subtype == 0) {  // Clockwise or counterclockwise
+    if (end_angle < start_angle) {
+      // end_angle += Mn::Math::Constants<float>::tau();
+    }
+  } else {
+    if (end_angle > start_angle) {
+      // end_angle -= Mn::Math::Constants<float>::tau();
+    }
+  }
+
+  [[maybe_unused]] constexpr int segments = 8;
+  [[maybe_unused]] Magnum::Radd angle_step =
+      (end_angle - start_angle) / segments;
+
+  Mn::Vector2 prev_point = {
+      static_cast<float>(scaled_cx + (scaled_r * Mn::Math::cos(start_angle))),
+      static_cast<float>(scaled_cy + (scaled_r * Mn::Math::sin(start_angle)))};
+  for (uint8_t i = 1; i <= segments; i++) {
+    Magnum::Radd theta = start_angle + angle_step * i;
+    Mn::Vector2 next_point = {
+        static_cast<float>(scaled_cx + (scaled_r * Mn::Math::cos(theta))),
+        static_cast<float>(scaled_cy + (scaled_r * Mn::Math::sin(theta)))};
+
+    AddSegment(prev_point, next_point, 0.01, layer_id);
+    prev_point = next_point;
+  }
+}
+
 void BrdWidget::DrawShape(uint32_t ptr) {
   if (already_drawn_.count(ptr) > 0) {
     return;
@@ -382,46 +429,9 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
 
     if (fs_->is_type(k, 0x01)) {
       const T01ArcSegment<kAMax> segment_inst = fs_->get_x01(k);
-      segment_width = segment_inst.width / factor_;
-      Mn::Vector2 end{segment_inst.coords[2] / factor_,
-                      segment_inst.coords[3] / factor_};
-
-      /*
-      auto [cx, cy] = x01_center(&segment_inst);
-      float scaled_cx = cx / factor_;
-      float scaled_cy = cy / factor_;
-      float scaled_r = (static_cast<double>(segment_inst.r)) / factor_;
-
-      Mn::Vector2 start{segment_inst.coords[0] / factor_,
-                    segment_inst.coords[1] / factor_};
-
-      float start_angle =
-          SkRadiansToDegrees(atan2(start.fY - scaled_cy, start.fX - scaled_cx));
-      float end_angle =
-          SkRadiansToDegrees(atan2(end.fY - scaled_cy, end.fX - scaled_cx));
-
-      float sweep_angle = NAN;
-      if (segment_inst.subtype != 0) {
-        sweep_angle = end_angle - start_angle;
-        if (sweep_angle > 0) {
-          sweep_angle -= 360;
-        }
-      } else {
-        sweep_angle = end_angle - start_angle;
-        if (sweep_angle < 0) {
-          sweep_angle += 360;
-        }
-      }
-
-      SkRect oval_bounds =
-          SkRect::MakeXYWH(scaled_cx - scaled_r, scaled_cy - scaled_r,
-                           scaled_r * 2, scaled_r * 2);
-
-      segment_path.arcTo(oval_bounds, start_angle, sweep_angle, false);
-      */
-
-      next = end;
+      TriangulateArc(segment_inst, layer_id);
       k = segment_inst.next;
+      continue;
     } else if (fs_->is_type(k, 0x15)) {
       const T15LineSegment<kAMax> segment_inst = fs_->get_x15(k);
       segment_width = segment_inst.width / factor_;
@@ -492,52 +502,9 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
     if (fs_->is_type(k, 0x01)) {
       const T01ArcSegment<kAMax> segment_inst = fs_->get_x01(k);
       segment_width = segment_inst.width / factor_;
-      Mn::Vector2 end{segment_inst.coords[2] / factor_,
-                      segment_inst.coords[3] / factor_};
-
-      /*
-      // Calculate center and angles
-      auto [cx, cy] = x01_center(&segment_inst);
-
-      // Convert to drawing coordinates
-      float scaled_cx = cx / factor_;
-      float scaled_cy = cy / factor_;
-      float scaled_r = (static_cast<double>(segment_inst.r)) / factor_;
-
-      // Calculate start and sweep angles
-      SkPoint start{segment_inst.coords[0] / factor_,
-                    segment_inst.coords[1] / factor_};
-      SkPoint end{segment_inst.coords[2] / factor_,
-                  segment_inst.coords[3] / factor_};
-
-      float start_angle =
-          SkRadiansToDegrees(atan2(start.fY - scaled_cy, start.fX - scaled_cx));
-      float end_angle =
-          SkRadiansToDegrees(atan2(end.fY - scaled_cy, end.fX - scaled_cx));
-
-      float sweep_angle = NAN;
-      if (segment_inst.subtype != 0) {
-        sweep_angle = end_angle - start_angle;
-        if (sweep_angle > 0) {
-          sweep_angle -= 360;
-        }
-      } else {
-        sweep_angle = end_angle - start_angle;
-        if (sweep_angle < 0) {
-          sweep_angle += 360;
-        }
-      }
-
-      // Draw the arc
-      SkRect oval_bounds =
-          SkRect::MakeXYWH(scaled_cx - scaled_r, scaled_cy - scaled_r,
-                           scaled_r * 2, scaled_r * 2);
-
-      current_path.arcTo(oval_bounds, start_angle, sweep_angle, false);
-
-      */
-
-      next = end;
+      TriangulateArc(segment_inst, layer_id);
+      next = {segment_inst.coords[2] / factor_,
+              segment_inst.coords[3] / factor_};
       k = segment_inst.next;
     } else if (fs_->is_type(k, 0x15)) {
       const T15LineSegment<kAMax> segment_inst = fs_->get_x15(k);
@@ -545,23 +512,24 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
       next = Mn::Vector2(
           {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
       k = segment_inst.next;
+      AddSegment(starting, next, 0.005, layer_id);
     } else if (fs_->is_type(k, 0x16)) {
       const T16LineSegment<kAMax> segment_inst = fs_->get_x16(k);
       segment_width = segment_inst.width / factor_;
       next = Mn::Vector2(
           {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
       k = segment_inst.next;
+      AddSegment(starting, next, 0.005, layer_id);
     } else if (fs_->is_type(k, 0x17)) {
       const T17LineSegment<kAMax> segment_inst = fs_->get_x17(k);
       segment_width = segment_inst.width / factor_;
       next = Mn::Vector2(
           {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
       k = segment_inst.next;
+      AddSegment(starting, next, 0.005, layer_id);
     } else {
       return;
     }
-
-    AddSegment(starting, next, 0.005, layer_id);
 
     starting = next;
   }
