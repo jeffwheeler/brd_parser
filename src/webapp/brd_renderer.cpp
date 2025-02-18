@@ -710,7 +710,7 @@ void BrdWidget::HandleMouseMove(
 
 void BrdWidget::UpdateScreenRatio() {
   auto viewportSize = Mn::GL::defaultFramebuffer.viewport().size();
-  float aspect = viewportSize.x() / viewportSize.y();
+  float aspect = 1.0F * viewportSize.x() / viewportSize.y();
 
   // Adjust scaling to maintain aspect ratio
   aspect_ratio_matrix_ =
