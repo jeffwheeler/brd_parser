@@ -332,18 +332,35 @@ void BrdWidget::DrawShape(uint32_t ptr) {
 void BrdWidget::AddSegment(Mn::Vector2 start, Mn::Vector2 end,
                            float width, uint8_t layer) {
   layer %= layer_colors_.size();
+  Magnum::Color4 color = layer_colors_[layer];
   lines_cache_.emplace_back(
-      VertexData{start, end, 0, width, layer_colors_[layer]});
+      VertexData{start, end, 0, width, color});
   lines_cache_.emplace_back(
-      VertexData{start, end, 1, width, layer_colors_[layer]});
+      VertexData{start, end, 1, width, color});
   lines_cache_.emplace_back(
-      VertexData{start, end, 2, width, layer_colors_[layer]});
+      VertexData{start, end, 2, width, color});
   lines_cache_.emplace_back(
-      VertexData{start, end, 3, width, layer_colors_[layer]});
+      VertexData{start, end, 3, width, color});
   lines_cache_.emplace_back(
-      VertexData{start, end, 4, width, layer_colors_[layer]});
+      VertexData{start, end, 4, width, color});
   lines_cache_.emplace_back(
-      VertexData{start, end, 5, width, layer_colors_[layer]});
+      VertexData{start, end, 5, width, color});
+
+  // float offset = 0.005;
+  AddLineCap(start, end, width, layer);
+  AddLineCap(end, start, width, layer);
+}
+
+void BrdWidget::AddLineCap(Mn::Vector2 start, Mn::Vector2 end, float width, uint8_t layer) {
+  layer %= layer_colors_.size();
+  Magnum::Color4 color = layer_colors_[layer];
+
+  lines_cache_.emplace_back(
+      VertexData{start, end, 6, width, color});
+  lines_cache_.emplace_back(
+      VertexData{start, end, 7, width, color});
+  lines_cache_.emplace_back(
+      VertexData{start, end, 8, width, color});
 }
 
 // Modify DrawX05 to store individual segments

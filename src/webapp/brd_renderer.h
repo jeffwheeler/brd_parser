@@ -50,6 +50,7 @@ class BrdWidget {
   void DrawX28(const T28Shape<kAMax>* inst);
 
   void AddSegment(Mn::Vector2 start, Mn::Vector2 end, float width, uint8_t layer);
+  void AddLineCap(Mn::Vector2 start, Mn::Vector2 end, float width, uint8_t layer);
   auto StartingPoint(uint32_t k) -> std::optional<Mn::Vector2>;
   auto IsLineSegment(uint32_t k) -> bool;
 
