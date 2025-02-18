@@ -25,6 +25,7 @@ BrdViewerApp::BrdViewerApp(const Arguments& arguments)
   Mn::GL::Renderer::setBlendFunction(
       Mn::GL::Renderer::BlendFunction::SourceAlpha,
       Mn::GL::Renderer::BlendFunction::OneMinusSourceAlpha);
+  Mn::GL::Renderer::disable(Mn::GL::Renderer::Feature::FaceCulling);
 
 #if !defined(MAGNUM_TARGET_WEBGL) && !defined(CORRADE_TARGET_ANDROID)
   /* Have some sane speed, please */
@@ -54,9 +55,7 @@ void BrdViewerApp::drawEvent() {
 
   Mn::GL::Renderer::enable(Mn::GL::Renderer::Feature::Blending);
   Mn::GL::Renderer::enable(Mn::GL::Renderer::Feature::ScissorTest);
-  Mn::GL::Renderer::disable(Mn::GL::Renderer::Feature::FaceCulling);
   _imgui.drawFrame();
-  // Mn::GL::Renderer::enable(Mn::GL::Renderer::Feature::FaceCulling);
   Mn::GL::Renderer::disable(Mn::GL::Renderer::Feature::ScissorTest);
   Mn::GL::Renderer::disable(Mn::GL::Renderer::Feature::Blending);
 
