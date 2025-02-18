@@ -2,11 +2,13 @@
 
 #include <array>
 
+#include <Corrade/Containers/ArrayView.h>
 #include <Magnum/GL/AbstractShaderProgram.h>
 #include <Magnum/GL/Shader.h>
 #include <Magnum/GL/Version.h>
 #include <Magnum/Math/Matrix3.h>
 
+namespace Cr = Corrade;
 namespace Mn = Magnum;
 
 class LineShader : public Mn::GL::AbstractShaderProgram {

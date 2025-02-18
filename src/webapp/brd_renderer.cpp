@@ -1,6 +1,5 @@
 #include "webapp/brd_renderer.h"
 
-#include <Corrade/Containers/ArrayView.h>
 #include <Magnum/GL/Buffer.h>
 #include <Magnum/GL/DefaultFramebuffer.h>
 #include <Magnum/Math/Constants.h>
@@ -50,7 +49,7 @@ void BrdWidget::UpdateFile() {
   fs_ = AppState::CurrentFile();
 
   already_drawn_.clear();
-  lines_cache_.clear();
+  lines_cache_count_ = 0;
 
   IterateFile();
   ComposeLayersToDrawable();
@@ -58,11 +57,11 @@ void BrdWidget::UpdateFile() {
   // Add a cross to the origin
   // AddSegment({-0.5, 0}, {0.5, 0}, 0.1);
   buffer.setData(
-      Corrade::Containers::arrayView(lines_cache_.data(), lines_cache_.size()));
+      Cr::Containers::arrayView(lines_cache_.data(), lines_cache_count_));
 
   // Configure mesh
   mesh_.setPrimitive(Mn::GL::MeshPrimitive::Triangles)
-      .setCount(lines_cache_.size())
+      .setCount(lines_cache_count_)
       .addVertexBuffer(buffer, 0, LineShader::Position{}, LineShader::Next{},
                        LineShader::Step{}, LineShader::Width{},
                        LineShader::LayerId{});
@@ -261,10 +260,9 @@ void BrdWidget::IterateFile() {
   }
 }
 
-void BrdWidget::AddArc(const T01ArcSegment<kAMax> &segment_inst,
-                               float width, uint8_t layer_id) {
+void BrdWidget::AddArc(const T01ArcSegment<kAMax> &segment_inst, float width,
+                       uint8_t layer_id) {
   auto [cx, cy] = x01_center(&segment_inst);
-
   float scaled_cx = cx / factor_;
   float scaled_cy = cy / factor_;
   float scaled_r = (static_cast<double>(segment_inst.r)) / factor_;
@@ -287,7 +285,7 @@ void BrdWidget::AddArc(const T01ArcSegment<kAMax> &segment_inst,
     }
   }
 
-  constexpr int segments = 8;
+  constexpr int segments = 5;
   Magnum::Radd angle_step = (end_angle - start_angle) / segments;
 
   Mn::Vector2 prev_point = {
@@ -390,27 +388,48 @@ void BrdWidget::DrawShape(uint32_t ptr) {
 void BrdWidget::AddSegment(Mn::Vector2 start, Mn::Vector2 end, float width,
                            uint8_t layer) {
   layer %= layer_colors_.size();
-  // Magnum::Color4 color = layer_colors_[layer];
-  lines_cache_.emplace_back(VertexData{start, end, 0, width, layer});
-  lines_cache_.emplace_back(VertexData{start, end, 1, width, layer});
-  lines_cache_.emplace_back(VertexData{start, end, 2, width, layer});
-  lines_cache_.emplace_back(VertexData{start, end, 3, width, layer});
-  lines_cache_.emplace_back(VertexData{start, end, 4, width, layer});
-  lines_cache_.emplace_back(VertexData{start, end, 5, width, layer});
+  if (lines_cache_count_ + 6 > kLinesMax) {
+    emscripten_log(EM_LOG_INFO, "Run out of memory");
+    return;
+  }
 
-  // float offset = 0.005;
-  AddLineCap(start, end, width, layer);
-  AddLineCap(end, start, width, layer);
+  // Magnum::Color4 color = layer_colors_[layer];
+  lines_cache_[lines_cache_count_++] =
+      (VertexData{start, end, 0, width, layer});
+  lines_cache_[lines_cache_count_++] =
+      (VertexData{start, end, 1, width, layer});
+  lines_cache_[lines_cache_count_++] =
+      (VertexData{start, end, 2, width, layer});
+  lines_cache_[lines_cache_count_++] =
+      (VertexData{start, end, 3, width, layer});
+  lines_cache_[lines_cache_count_++] =
+      (VertexData{start, end, 4, width, layer});
+  lines_cache_[lines_cache_count_++] =
+      (VertexData{start, end, 5, width, layer});
+
+  // AddLineCap(start, end, width, layer);
+  // AddLineCap(end, start, width, layer);
 }
 
+static long r = 0;
 void BrdWidget::AddLineCap(Mn::Vector2 start, Mn::Vector2 end, float width,
                            uint8_t layer) {
   layer %= layer_colors_.size();
   // Magnum::Color4 color = layer_colors_[layer];
+  if (lines_cache_count_ + 3 > kLinesMax) {
+    return;
+  }
+  lines_cache_[lines_cache_count_++] =
+      (VertexData{start, end, 6, width, layer});
+  lines_cache_[lines_cache_count_++] =
+      (VertexData{start, end, 7, width, layer});
+  lines_cache_[lines_cache_count_++] =
+      (VertexData{start, end, 8, width, layer});
 
-  lines_cache_.emplace_back(VertexData{start, end, 6, width, layer});
-  lines_cache_.emplace_back(VertexData{start, end, 7, width, layer});
-  lines_cache_.emplace_back(VertexData{start, end, 8, width, layer});
+  if (r++ % 1000 == 0) {
+    emscripten_log(EM_LOG_INFO, "size: %d * %d", lines_cache_count_,
+                   sizeof(VertexData));
+  }
 }
 
 // Modify DrawX05 to store individual segments
@@ -418,120 +437,79 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
   uint32_t k = inst->first_segment_ptr;
   uint8_t layer_id = LayerToShader(inst->layer);
 
-  Mn::Vector2 starting = (*StartingPoint(k)) * (1.0 / factor_);
-
   while (IsLineSegment(k)) {
     // SkPath segment_path;
     // segment_path.moveTo(starting);
-    Mn::Vector2 next;
-    float segment_width;
-
     if (fs_->is_type(k, 0x01)) {
       const T01ArcSegment<kAMax> segment_inst = fs_->get_x01(k);
-      segment_width = segment_inst.width / factor_;
+      float segment_width = segment_inst.width / factor_;
       AddArc(segment_inst, segment_width, layer_id);
       k = segment_inst.next;
     } else if (fs_->is_type(k, 0x15)) {
       const T15LineSegment<kAMax> segment_inst = fs_->get_x15(k);
-      segment_width = segment_inst.width / factor_;
-      next = Mn::Vector2(
-          {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
-      // segment_path.lineTo(next);
+      float segment_width = segment_inst.width / factor_;
+      DrawX15(&segment_inst, segment_width, layer_id);
       k = segment_inst.next;
-      AddSegment(starting, next, segment_width, layer_id);
     } else if (fs_->is_type(k, 0x16)) {
       const T16LineSegment<kAMax> segment_inst = fs_->get_x16(k);
-      segment_width = segment_inst.width / factor_;
-      next = Mn::Vector2(
-          {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
-      // segment_path.lineTo(next);
+      float segment_width = segment_inst.width / factor_;
+      DrawX16(&segment_inst, segment_width, layer_id);
       k = segment_inst.next;
-      AddSegment(starting, next, segment_width, layer_id);
     } else if (fs_->is_type(k, 0x17)) {
       const T17LineSegment<kAMax> segment_inst = fs_->get_x17(k);
-      segment_width = segment_inst.width / factor_;
-      next = Mn::Vector2(
-          {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
-      // segment_path.lineTo(next);
+      float segment_width = segment_inst.width / factor_;
+      DrawX17(&segment_inst, segment_width, layer_id);
       k = segment_inst.next;
-      AddSegment(starting, next, segment_width, layer_id);
     } else {
       return;
     }
-
-    // segment_paths_.push_back(
-    //     {segment_path, segment_width, layer_id, inst->layer});
-
-    // Add to layer paths as before
-    /*
-    size_t width_index = GetWidthIndex(segment_width);
-    if (width_index < common_width_count_) {
-      shader_layers_[layer_id].common_width_paths[width_index].addPath(
-          segment_path);
-    } else {
-      auto &other_paths = shader_layers_[layer_id].other_width_paths;
-      auto it =
-          std::find_if(other_paths.begin(), other_paths.end(),
-                       [segment_width](const auto &pair) {
-                         return std::abs(pair.first - segment_width) < 0.001F;
-                       });
-      if (it != other_paths.end()) {
-        it->second.addPath(segment_path);
-      } else {
-        other_paths.emplace_back(segment_width, segment_path);
-      }
-    */
-
-    starting = next;
   }
+}
+
+void BrdWidget::DrawX15(const T15LineSegment<kAMax> *inst, float width,
+                        uint8_t layer_id) {
+  Mn::Vector2 start = {inst->coords[0] / factor_, inst->coords[1] / factor_};
+  Mn::Vector2 end = {inst->coords[2] / factor_, inst->coords[3] / factor_};
+  AddSegment(start, end, width, layer_id);
+}
+
+void BrdWidget::DrawX16(const T16LineSegment<kAMax> *inst, float width,
+                        uint8_t layer_id) {
+  Mn::Vector2 start = {inst->coords[0] / factor_, inst->coords[1] / factor_};
+  Mn::Vector2 end = {inst->coords[2] / factor_, inst->coords[3] / factor_};
+  AddSegment(start, end, width, layer_id);
+}
+void BrdWidget::DrawX17(const T17LineSegment<kAMax> *inst, float width,
+                        uint8_t layer_id) {
+  Mn::Vector2 start = {inst->coords[0] / factor_, inst->coords[1] / factor_};
+  Mn::Vector2 end = {inst->coords[2] / factor_, inst->coords[3] / factor_};
+  AddSegment(start, end, width, layer_id);
 }
 
 void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
   uint32_t k = inst->first_segment_ptr;
   uint8_t layer_id = LayerToShader(inst->layer);
 
-  // float current_width = -1;
-  // size_t width_index = common_width_count_;
-
-  Mn::Vector2 starting = (*StartingPoint(k)) * (1.0 / factor_);
-
   while (IsLineSegment(k)) {
-    Mn::Vector2 next;
-    [[maybe_unused]] float segment_width;
-
     if (fs_->is_type(k, 0x01)) {
       const T01ArcSegment<kAMax> segment_inst = fs_->get_x01(k);
-      segment_width = segment_inst.width / factor_;
       AddArc(segment_inst, kBorderWidth, layer_id);
-      next = {segment_inst.coords[2] / factor_,
-              segment_inst.coords[3] / factor_};
       k = segment_inst.next;
     } else if (fs_->is_type(k, 0x15)) {
       const T15LineSegment<kAMax> segment_inst = fs_->get_x15(k);
-      segment_width = segment_inst.width / factor_;
-      next = Mn::Vector2(
-          {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
+      DrawX15(&segment_inst, kBorderWidth, layer_id);
       k = segment_inst.next;
-      AddSegment(starting, next, kBorderWidth, layer_id);
     } else if (fs_->is_type(k, 0x16)) {
       const T16LineSegment<kAMax> segment_inst = fs_->get_x16(k);
-      segment_width = segment_inst.width / factor_;
-      next = Mn::Vector2(
-          {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
+      DrawX16(&segment_inst, kBorderWidth, layer_id);
       k = segment_inst.next;
-      AddSegment(starting, next, kBorderWidth, layer_id);
     } else if (fs_->is_type(k, 0x17)) {
       const T17LineSegment<kAMax> segment_inst = fs_->get_x17(k);
-      segment_width = segment_inst.width / factor_;
-      next = Mn::Vector2(
-          {segment_inst.coords[2] / factor_, segment_inst.coords[3] / factor_});
+      DrawX17(&segment_inst, kBorderWidth, layer_id);
       k = segment_inst.next;
-      AddSegment(starting, next, kBorderWidth, layer_id);
     } else {
       return;
     }
-
-    starting = next;
   }
 }
 
