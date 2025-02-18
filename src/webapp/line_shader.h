@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 #include <Magnum/GL/AbstractShaderProgram.h>
 #include <Magnum/GL/Shader.h>
 #include <Magnum/GL/Version.h>
@@ -13,14 +15,25 @@ class LineShader : public Mn::GL::AbstractShaderProgram {
   using Next = Mn::GL::Attribute<1, Mn::Vector2>;
   using Step = Mn::GL::Attribute<2, Mn::Int>;
   using Width = Mn::GL::Attribute<3, Mn::Float>;
-  using Color = Mn::GL::Attribute<4, Mn::Color4>;
+  using LayerId = Mn::GL::Attribute<4, Mn::Int>;
 
-  enum class Uniform : Mn::Int { TransformationProjectionMatrix = 0 };
+  enum class Uniform : Mn::Int {
+    TransformationProjectionMatrix = 0,
+    LayerColors = 1,
+    LayerOpacities = 2,
+    NumLayers = 3
+  };
 
-  LineShader();
+  explicit LineShader();
+
   auto setTransformationProjectionMatrix(const Mn::Matrix3& matrix)
       -> LineShader&;
+  auto setLayerColors(std::array<Mn::Color4, 32> colors) -> LineShader&;
+  auto setLayerOpacities(std::array<float, 32> opacities) -> LineShader&;
 
  private:
   Mn::Int _transformationProjectionMatrixUniform;
+  Mn::Int _layerColorsUniform;
+  Mn::Int _layerOpacitiesUniform;
+  Mn::Int _numLayersUniform;
 };

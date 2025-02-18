@@ -33,6 +33,9 @@ BrdWidget::BrdWidget() : layer_colors_() {
   layer_colors_[6] = 0xB09A52AA_rgbaf;
   layer_colors_[7] = 0xAA6635AA_rgbaf;
   layer_colors_[8] = 0x393B3DAA_rgbaf;
+
+  _lineShader.setLayerColors(layer_colors_);
+  _lineShader.setLayerOpacities(layer_opacities_);
 }
 
 void BrdWidget::UpdateFile() {
@@ -54,7 +57,7 @@ void BrdWidget::UpdateFile() {
       .setCount(lines_cache_.size())
       .addVertexBuffer(buffer, 0, LineShader::Position{}, LineShader::Next{},
                        LineShader::Step{}, LineShader::Width{},
-                       LineShader::Color{});
+                       LineShader::LayerId{});
 
   dirty_ = true;
 }
@@ -115,9 +118,29 @@ void BrdWidget::InitializeShader() {}
 
 void BrdWidget::UpdateLayerShaders() {}
 
-void BrdWidget::UpdateLayerAlpha(uint8_t /* unused */, float /* unused */) {}
+void BrdWidget::UpdateLayerAlpha(uint8_t layer, float alpha) {
+  layer_opacities_[layer] = alpha;
+  _lineShader.setLayerOpacities(layer_opacities_);
+}
 
 void BrdWidget::Draw() {
+  const auto &visible_layers = AppState::VisibleLayers();
+  bool updated = (visible_layers_cache_ != visible_layers);
+  if (updated) {
+    emscripten_log(EM_LOG_INFO, "updated!");
+    std::array<bool, 10> selected = {false};
+    for (LayerInfo const &visible_layer : visible_layers) {
+      selected[LayerToShader(visible_layer)] = true;
+    }
+    for (uint8_t i = 0; i < 9; i++) {
+      UpdateLayerAlpha(i, selected[i] ? 1.0F : 0.05F);
+    }
+    visible_layers_cache_ = visible_layers;
+
+    // ComposeLayersToDrawable();
+    dirty_ = true;
+  }
+
   // Draw
   _lineShader
       .setTransformationProjectionMatrix(
@@ -129,22 +152,6 @@ void BrdWidget::Draw() {
   /*
   SkCanvas *canvas = surface->getCanvas();
   cached_height_ = surface->height();
-
-  bool updated = (visible_layers_cache_ != visible_layers);
-  if (updated || AppState::PictureNeedsRecording()) {
-    emscripten_log(EM_LOG_INFO, "updated!");
-    std::array<bool, 10> selected = {false};
-    for (LayerInfo const &visible_layer : visible_layers) {
-      selected[LayerToShader(visible_layer)] = true;
-    }
-    for (uint8_t i = 0; i < 9; i++) {
-      UpdateLayerAlpha(i, selected[i] ? 1.0F : 0.05F);
-    }
-    visible_layers_cache_ = visible_layers;
-
-    ComposeLayersToDrawable();
-    dirty_ = true;
-  }
 
   // if (!dirty_) {
   //   return;
@@ -329,38 +336,30 @@ void BrdWidget::DrawShape(uint32_t ptr) {
 }
 
 // Implementation inspired by KiCAD, `common/gal/opengl/opengl_gal.cpp`
-void BrdWidget::AddSegment(Mn::Vector2 start, Mn::Vector2 end,
-                           float width, uint8_t layer) {
+void BrdWidget::AddSegment(Mn::Vector2 start, Mn::Vector2 end, float width,
+                           uint8_t layer) {
   layer %= layer_colors_.size();
-  Magnum::Color4 color = layer_colors_[layer];
-  lines_cache_.emplace_back(
-      VertexData{start, end, 0, width, color});
-  lines_cache_.emplace_back(
-      VertexData{start, end, 1, width, color});
-  lines_cache_.emplace_back(
-      VertexData{start, end, 2, width, color});
-  lines_cache_.emplace_back(
-      VertexData{start, end, 3, width, color});
-  lines_cache_.emplace_back(
-      VertexData{start, end, 4, width, color});
-  lines_cache_.emplace_back(
-      VertexData{start, end, 5, width, color});
+  // Magnum::Color4 color = layer_colors_[layer];
+  lines_cache_.emplace_back(VertexData{start, end, 0, width, layer});
+  lines_cache_.emplace_back(VertexData{start, end, 1, width, layer});
+  lines_cache_.emplace_back(VertexData{start, end, 2, width, layer});
+  lines_cache_.emplace_back(VertexData{start, end, 3, width, layer});
+  lines_cache_.emplace_back(VertexData{start, end, 4, width, layer});
+  lines_cache_.emplace_back(VertexData{start, end, 5, width, layer});
 
   // float offset = 0.005;
   AddLineCap(start, end, width, layer);
   AddLineCap(end, start, width, layer);
 }
 
-void BrdWidget::AddLineCap(Mn::Vector2 start, Mn::Vector2 end, float width, uint8_t layer) {
+void BrdWidget::AddLineCap(Mn::Vector2 start, Mn::Vector2 end, float width,
+                           uint8_t layer) {
   layer %= layer_colors_.size();
-  Magnum::Color4 color = layer_colors_[layer];
+  // Magnum::Color4 color = layer_colors_[layer];
 
-  lines_cache_.emplace_back(
-      VertexData{start, end, 6, width, color});
-  lines_cache_.emplace_back(
-      VertexData{start, end, 7, width, color});
-  lines_cache_.emplace_back(
-      VertexData{start, end, 8, width, color});
+  lines_cache_.emplace_back(VertexData{start, end, 6, width, layer});
+  lines_cache_.emplace_back(VertexData{start, end, 7, width, layer});
+  lines_cache_.emplace_back(VertexData{start, end, 8, width, layer});
 }
 
 // Modify DrawX05 to store individual segments
@@ -380,7 +379,7 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
       const T01ArcSegment<kAMax> segment_inst = fs_->get_x01(k);
       segment_width = segment_inst.width / factor_;
       Mn::Vector2 end{segment_inst.coords[2] / factor_,
-                          segment_inst.coords[3] / factor_};
+                      segment_inst.coords[3] / factor_};
 
       /*
       auto [cx, cy] = x01_center(&segment_inst);
@@ -489,7 +488,7 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
       const T01ArcSegment<kAMax> segment_inst = fs_->get_x01(k);
       segment_width = segment_inst.width / factor_;
       Mn::Vector2 end{segment_inst.coords[2] / factor_,
-                          segment_inst.coords[3] / factor_};
+                      segment_inst.coords[3] / factor_};
 
       /*
       // Calculate center and angles
@@ -567,22 +566,22 @@ auto BrdWidget::StartingPoint(uint32_t k) -> std::optional<Mn::Vector2> {
   if (fs_->is_type(k, 0x01)) {
     const T01ArcSegment<kAMax> segment_inst = fs_->get_x01(k);
     return Mn::Vector2({static_cast<float>(segment_inst.coords[0]),
-                            static_cast<float>(segment_inst.coords[1])});
+                        static_cast<float>(segment_inst.coords[1])});
   }
   if (fs_->is_type(k, 0x15)) {
     const T15LineSegment<kAMax> segment_inst = fs_->get_x15(k);
     return Mn::Vector2({static_cast<float>(segment_inst.coords[0]),
-                            static_cast<float>(segment_inst.coords[1])});
+                        static_cast<float>(segment_inst.coords[1])});
   }
   if (fs_->is_type(k, 0x16)) {
     const T16LineSegment<kAMax> segment_inst = fs_->get_x16(k);
     return Mn::Vector2({static_cast<float>(segment_inst.coords[0]),
-                            static_cast<float>(segment_inst.coords[1])});
+                        static_cast<float>(segment_inst.coords[1])});
   }
   if (fs_->is_type(k, 0x17)) {
     const T17LineSegment<kAMax> segment_inst = fs_->get_x17(k);
     return Mn::Vector2({static_cast<float>(segment_inst.coords[0]),
-                            static_cast<float>(segment_inst.coords[1])});
+                        static_cast<float>(segment_inst.coords[1])});
   }
   return {};
 }
@@ -603,12 +602,11 @@ auto BrdWidget::ScreenToWorld(const Mn::Vector2 &screen_pos, bool center)
   float offset = center ? 1.0F : 0.0F;
   Mn::Vector2 normalized =
       screen_pos / Mn::Vector2(viewportSize.sizeX() / 4.0F,
-                                   viewportSize.sizeY() / 4.0F) -
+                               viewportSize.sizeY() / 4.0F) -
       Mn::Vector2{offset, offset};
 
   normalized.y() = -normalized.y();
-  Mn::Matrix3 complete_transform =
-      projection_matrix_ * aspect_ratio_matrix_;
+  Mn::Matrix3 complete_transform = projection_matrix_ * aspect_ratio_matrix_;
   if (center) {
     complete_transform *transformation_matrix_;
   }

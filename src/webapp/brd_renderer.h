@@ -32,8 +32,7 @@ class BrdWidget {
       Mn::Platform::EmscriptenApplication::ScrollEvent& event);
   void HandleMouseDown(
       Mn::Platform::EmscriptenApplication::PointerEvent& event);
-  void HandleMouseUp(
-      Mn::Platform::EmscriptenApplication::PointerEvent& event);
+  void HandleMouseUp(Mn::Platform::EmscriptenApplication::PointerEvent& event);
   void HandleMouseMove(
       Mn::Platform::EmscriptenApplication::PointerMoveEvent& event);
   void MarkDirty();
@@ -49,8 +48,10 @@ class BrdWidget {
   void DrawX05(const T05Line<kAMax>* inst);
   void DrawX28(const T28Shape<kAMax>* inst);
 
-  void AddSegment(Mn::Vector2 start, Mn::Vector2 end, float width, uint8_t layer);
-  void AddLineCap(Mn::Vector2 start, Mn::Vector2 end, float width, uint8_t layer);
+  void AddSegment(Mn::Vector2 start, Mn::Vector2 end, float width,
+                  uint8_t layer);
+  void AddLineCap(Mn::Vector2 start, Mn::Vector2 end, float width,
+                  uint8_t layer);
   auto StartingPoint(uint32_t k) -> std::optional<Mn::Vector2>;
   auto IsLineSegment(uint32_t k) -> bool;
 
@@ -68,7 +69,7 @@ class BrdWidget {
     Mn::Vector2 next;
     Mn::Int step;
     Mn::Float width;
-    Mn::Color4 color;
+    Mn::Int layer_id;
   };
 
   Mn::GL::Buffer buffer;
@@ -77,9 +78,10 @@ class BrdWidget {
 
   std::vector<VertexData> lines_cache_;
 
-  std::array<Mn::Color4, 9> layer_colors_;
+  std::array<Mn::Color4, 32> layer_colors_{};
+  std::array<float, 32> layer_opacities_{};
   // sk_sp<SkPicture> picture_;
-  // std::unordered_set<LayerInfo> visible_layers_cache_;
+  std::unordered_set<LayerInfo> visible_layers_cache_;
 
   /*
   static constexpr size_t common_width_count_ = 8;
@@ -121,6 +123,5 @@ class BrdWidget {
   bool is_panning_ = false;
   Mn::Vector2 last_mouse_pos_{0, 0};
 
-  Mn::Matrix3 transformation_matrix_, projection_matrix_,
-      aspect_ratio_matrix_;
+  Mn::Matrix3 transformation_matrix_, projection_matrix_, aspect_ratio_matrix_;
 };
