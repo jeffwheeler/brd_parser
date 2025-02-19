@@ -24,10 +24,13 @@ BrdWidget::BrdWidget() : layer_colors_() {
   InitializeShader();
   UpdateScreenRatio();
 
-  emscripten_log(EM_LOG_INFO, "Lines cache: %d MiB available",
-                 sizeof(lines_cache_) / 1024 / 1024);
-
   mesh_.setCount(0);
+
+  // Reserve 500 MiB to start
+  lines_cache_.reserve(500 * 1024 * 1024 / sizeof(VertexData));
+
+  emscripten_log(EM_LOG_INFO, "Lines cache: %d MiB available",
+                 sizeof(VertexData) * lines_cache_.capacity() / 1024 / 1024);
 
   // https://uchu.style/
   layer_colors_[0] = 0x952233AA_rgbaf;
@@ -50,22 +53,22 @@ BrdWidget::BrdWidget() : layer_colors_() {
 
 void BrdWidget::UpdateFile() {
   already_drawn_.clear();
-  lines_cache_count_ = 0;
+  lines_cache_.clear();
 
   IterateFile();
   ComposeLayersToDrawable();
 
-  emscripten_log(EM_LOG_INFO, "Line cache: %d MiB used",
-                 lines_cache_count_ * sizeof(VertexData) / 1024 / 1024);
-
   // Add a cross to the origin
   // AddSegment({-0.5, 0}, {0.5, 0}, 0.1);
   buffer.setData(
-      Cr::Containers::arrayView(lines_cache_.data(), lines_cache_count_));
+      Cr::Containers::arrayView(lines_cache_.data(), lines_cache_.size()));
+
+  emscripten_log(EM_LOG_INFO, "Line cache: %d MiB used",
+                 buffer.size() / 1024 / 1024);
 
   // Configure mesh
   mesh_.setPrimitive(Mn::GL::MeshPrimitive::Triangles)
-      .setCount(lines_cache_count_)
+      .setCount(lines_cache_.size())
       .addVertexBuffer(buffer, 0, LineShader::Position{}, LineShader::Next{},
                        LineShader::Step{}, LineShader::Width{},
                        LineShader::LayerId{});
@@ -317,8 +320,8 @@ void BrdWidget::DrawShape(uint32_t ptr) {
     const T05Line<kAMax> inst = AppState::CurrentFile()->get_x05(ptr);
     DrawX05(&inst);
   } else if (AppState::CurrentFile()->is_type(ptr, 0x0C)) {
-    // const T0CDrillIndicator<kAMax> inst = AppState::CurrentFile()->get_x0C(ptr);
-    // drawX0C(&inst, pen);
+    // const T0CDrillIndicator<kAMax> inst =
+    // AppState::CurrentFile()->get_x0C(ptr); drawX0C(&inst, pen);
   } else if (AppState::CurrentFile()->is_type(ptr, 0x10)) {
     // const x10<kAMax> inst = AppState::CurrentFile()->get_x10(ptr);
     // drawShape(inst.ptr1, darkerPen);
@@ -328,18 +331,18 @@ void BrdWidget::DrawShape(uint32_t ptr) {
     // const T14Path<kAMax> inst = AppState::CurrentFile()->get_x14(ptr);
     // drawX14(&inst, pen);
     // } else if (AppState::CurrentFile()->x15_map.count(ptr) > 0) {
-    // const x15<A_MAX> *inst = (const x15<A_MAX> *)&AppState::CurrentFile()->x15_map.at(ptr);
-    // drawX15(inst, pen);
+    // const x15<A_MAX> *inst = (const x15<A_MAX>
+    // *)&AppState::CurrentFile()->x15_map.at(ptr); drawX15(inst, pen);
     // drawShape(inst->un1, darkerPen);
     // drawShape(inst->ptr, darkerPen);
     // } else if (AppState::CurrentFile()->x16_map.count(ptr) > 0) {
-    // const x16<A_MAX> *inst = (const x16<A_MAX> *)&AppState::CurrentFile()->x16_map.at(ptr);
-    // drawX16(inst, pen);
+    // const x16<A_MAX> *inst = (const x16<A_MAX>
+    // *)&AppState::CurrentFile()->x16_map.at(ptr); drawX16(inst, pen);
     // drawShape(inst->un1, darkerPen);
     // drawShape(inst->ptr, darkerPen);
     // } else if (AppState::CurrentFile()->x17_map.count(ptr) > 0) {
-    // const x17<A_MAX> *inst = (const x17<A_MAX> *)&AppState::CurrentFile()->x17_map.at(ptr);
-    // drawX17(inst, pen);
+    // const x17<A_MAX> *inst = (const x17<A_MAX>
+    // *)&AppState::CurrentFile()->x17_map.at(ptr); drawX17(inst, pen);
     // drawShape(inst->un1, darkerPen);
     // drawShape(inst->ptr, darkerPen);
   } else if (AppState::CurrentFile()->is_type(ptr, 0x23)) {
@@ -356,12 +359,12 @@ void BrdWidget::DrawShape(uint32_t ptr) {
     // drawShape(inst->ptr2, darkerPen);
     // drawShape(inst->ptr5, darkerPen);
   } else if (AppState::CurrentFile()->is_type(ptr, 0x2D)) {
-    // const T2DSymbolInstance<kAMax> inst = AppState::CurrentFile()->get_x2D(ptr);
-    // drawX2D(&inst, pen);
+    // const T2DSymbolInstance<kAMax> inst =
+    // AppState::CurrentFile()->get_x2D(ptr); drawX2D(&inst, pen);
   } else if (AppState::CurrentFile()->is_type(ptr, 0x30)) {
-    // const T30StringGraphic<kAMax> &inst = AppState::CurrentFile()->get_x30(ptr);
-    // drawX30(&inst, pen);
-    // } else if (fs.x31_map->count(ptr) > 0) {
+    // const T30StringGraphic<kAMax> &inst =
+    // AppState::CurrentFile()->get_x30(ptr); drawX30(&inst, pen); } else if
+    // (fs.x31_map->count(ptr) > 0) {
     //     const x31 *inst = (const x31*)&fs.x31_map->at(ptr);
     //     drawX31((const x31*)&fs.x31_map->at(ptr), pen);
   } else if (AppState::CurrentFile()->is_type(ptr, 0x32)) {
@@ -388,51 +391,50 @@ void BrdWidget::DrawShape(uint32_t ptr) {
 }
 
 // Implementation inspired by KiCAD, `common/gal/opengl/opengl_gal.cpp`
+static int r = 0;
 void BrdWidget::AddSegment(Mn::Vector2 start, Mn::Vector2 end, float width,
                            uint8_t layer) {
   layer %= layer_colors_.size();
-  if (lines_cache_count_ + 6 > kLinesMax) {
-    emscripten_log(EM_LOG_INFO, "Run out of memory");
-    return;
-  }
+  // if (lines_cache_count_ + 6 > kLinesMax) {
+  //   emscripten_log(EM_LOG_INFO, "Run out of memory");
+  //   return;
+  // }
 
   // Magnum::Color4 color = layer_colors_[layer];
-  lines_cache_[lines_cache_count_++] =
-      (VertexData{start, end, 0, width, layer});
-  lines_cache_[lines_cache_count_++] =
-      (VertexData{start, end, 1, width, layer});
-  lines_cache_[lines_cache_count_++] =
-      (VertexData{start, end, 2, width, layer});
-  lines_cache_[lines_cache_count_++] =
-      (VertexData{start, end, 3, width, layer});
-  lines_cache_[lines_cache_count_++] =
-      (VertexData{start, end, 4, width, layer});
-  lines_cache_[lines_cache_count_++] =
-      (VertexData{start, end, 5, width, layer});
+  if (lines_cache_.size() < 0.0001 * lines_cache_.capacity()) {
+    emscripten_log(EM_LOG_INFO, "New memory, %f MiB used out of %f MiB",
+        sizeof(VertexData) * lines_cache_.size() / 1024. / 1024,
+        sizeof(VertexData) * lines_cache_.capacity() / 1024. / 1024);
+  }
+  if (lines_cache_.size() > 0.9999 * lines_cache_.capacity()) {
+    emscripten_log(EM_LOG_INFO, "Almost out of memory, %f MiB used out of %f MiB",
+        sizeof(VertexData) * lines_cache_.size() / 1024. / 1024,
+        sizeof(VertexData) * lines_cache_.capacity() / 1024. / 1024);
+  }
 
-  // AddLineCap(start, end, width, layer);
-  // AddLineCap(end, start, width, layer);
+  lines_cache_.emplace_back(start, end, 0, width, layer);
+  lines_cache_.emplace_back(start, end, 1, width, layer);
+  lines_cache_.emplace_back(start, end, 2, width, layer);
+  lines_cache_.emplace_back(start, end, 3, width, layer);
+  lines_cache_.emplace_back(start, end, 4, width, layer);
+  lines_cache_.emplace_back(start, end, 5, width, layer);
+
+  AddLineCap(start, end, width, layer);
+  AddLineCap(end, start, width, layer);
+
+  if (r++ % 5000 == 0) {
+    emscripten_log(EM_LOG_INFO, "%f MiB used out of %f MiB",
+        sizeof(VertexData) * lines_cache_.size() / 1024. / 1024,
+        sizeof(VertexData) * lines_cache_.capacity() / 1024. / 1024);
+  }
 }
 
-static long r = 0;
-void BrdWidget::AddLineCap(Mn::Vector2 start, Mn::Vector2 end, float width,
-                           uint8_t layer) {
+inline void BrdWidget::AddLineCap(Mn::Vector2 start, Mn::Vector2 end,
+                                  float width, uint8_t layer) {
   layer %= layer_colors_.size();
-  // Magnum::Color4 color = layer_colors_[layer];
-  if (lines_cache_count_ + 3 > kLinesMax) {
-    return;
-  }
-  lines_cache_[lines_cache_count_++] =
-      (VertexData{start, end, 6, width, layer});
-  lines_cache_[lines_cache_count_++] =
-      (VertexData{start, end, 7, width, layer});
-  lines_cache_[lines_cache_count_++] =
-      (VertexData{start, end, 8, width, layer});
-
-  if (r++ % 1000 == 0) {
-    emscripten_log(EM_LOG_INFO, "size: %d * %d", lines_cache_count_,
-                   sizeof(VertexData));
-  }
+  lines_cache_.emplace_back(start, end, 6, width, layer);
+  lines_cache_.emplace_back(start, end, 7, width, layer);
+  lines_cache_.emplace_back(start, end, 8, width, layer);
 }
 
 // Modify DrawX05 to store individual segments
@@ -444,22 +446,26 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
     // SkPath segment_path;
     // segment_path.moveTo(starting);
     if (AppState::CurrentFile()->is_type(k, 0x01)) {
-      const T01ArcSegment<kAMax> segment_inst = AppState::CurrentFile()->get_x01(k);
+      const T01ArcSegment<kAMax> segment_inst =
+          AppState::CurrentFile()->get_x01(k);
       float segment_width = segment_inst.width / factor_;
       AddArc(segment_inst, segment_width, layer_id);
       k = segment_inst.next;
     } else if (AppState::CurrentFile()->is_type(k, 0x15)) {
-      const T15LineSegment<kAMax> segment_inst = AppState::CurrentFile()->get_x15(k);
+      const T15LineSegment<kAMax> segment_inst =
+          AppState::CurrentFile()->get_x15(k);
       float segment_width = segment_inst.width / factor_;
       DrawX15(&segment_inst, segment_width, layer_id);
       k = segment_inst.next;
     } else if (AppState::CurrentFile()->is_type(k, 0x16)) {
-      const T16LineSegment<kAMax> segment_inst = AppState::CurrentFile()->get_x16(k);
+      const T16LineSegment<kAMax> segment_inst =
+          AppState::CurrentFile()->get_x16(k);
       float segment_width = segment_inst.width / factor_;
       DrawX16(&segment_inst, segment_width, layer_id);
       k = segment_inst.next;
     } else if (AppState::CurrentFile()->is_type(k, 0x17)) {
-      const T17LineSegment<kAMax> segment_inst = AppState::CurrentFile()->get_x17(k);
+      const T17LineSegment<kAMax> segment_inst =
+          AppState::CurrentFile()->get_x17(k);
       float segment_width = segment_inst.width / factor_;
       DrawX17(&segment_inst, segment_width, layer_id);
       k = segment_inst.next;
@@ -495,19 +501,23 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
 
   while (IsLineSegment(k)) {
     if (AppState::CurrentFile()->is_type(k, 0x01)) {
-      const T01ArcSegment<kAMax> segment_inst = AppState::CurrentFile()->get_x01(k);
+      const T01ArcSegment<kAMax> segment_inst =
+          AppState::CurrentFile()->get_x01(k);
       AddArc(segment_inst, kBorderWidth, layer_id);
       k = segment_inst.next;
     } else if (AppState::CurrentFile()->is_type(k, 0x15)) {
-      const T15LineSegment<kAMax> segment_inst = AppState::CurrentFile()->get_x15(k);
+      const T15LineSegment<kAMax> segment_inst =
+          AppState::CurrentFile()->get_x15(k);
       DrawX15(&segment_inst, kBorderWidth, layer_id);
       k = segment_inst.next;
     } else if (AppState::CurrentFile()->is_type(k, 0x16)) {
-      const T16LineSegment<kAMax> segment_inst = AppState::CurrentFile()->get_x16(k);
+      const T16LineSegment<kAMax> segment_inst =
+          AppState::CurrentFile()->get_x16(k);
       DrawX16(&segment_inst, kBorderWidth, layer_id);
       k = segment_inst.next;
     } else if (AppState::CurrentFile()->is_type(k, 0x17)) {
-      const T17LineSegment<kAMax> segment_inst = AppState::CurrentFile()->get_x17(k);
+      const T17LineSegment<kAMax> segment_inst =
+          AppState::CurrentFile()->get_x17(k);
       DrawX17(&segment_inst, kBorderWidth, layer_id);
       k = segment_inst.next;
     } else {
@@ -518,22 +528,26 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
 
 auto BrdWidget::StartingPoint(uint32_t k) -> std::optional<Mn::Vector2> {
   if (AppState::CurrentFile()->is_type(k, 0x01)) {
-    const T01ArcSegment<kAMax> segment_inst = AppState::CurrentFile()->get_x01(k);
+    const T01ArcSegment<kAMax> segment_inst =
+        AppState::CurrentFile()->get_x01(k);
     return Mn::Vector2({static_cast<float>(segment_inst.coords[0]),
                         static_cast<float>(segment_inst.coords[1])});
   }
   if (AppState::CurrentFile()->is_type(k, 0x15)) {
-    const T15LineSegment<kAMax> segment_inst = AppState::CurrentFile()->get_x15(k);
+    const T15LineSegment<kAMax> segment_inst =
+        AppState::CurrentFile()->get_x15(k);
     return Mn::Vector2({static_cast<float>(segment_inst.coords[0]),
                         static_cast<float>(segment_inst.coords[1])});
   }
   if (AppState::CurrentFile()->is_type(k, 0x16)) {
-    const T16LineSegment<kAMax> segment_inst = AppState::CurrentFile()->get_x16(k);
+    const T16LineSegment<kAMax> segment_inst =
+        AppState::CurrentFile()->get_x16(k);
     return Mn::Vector2({static_cast<float>(segment_inst.coords[0]),
                         static_cast<float>(segment_inst.coords[1])});
   }
   if (AppState::CurrentFile()->is_type(k, 0x17)) {
-    const T17LineSegment<kAMax> segment_inst = AppState::CurrentFile()->get_x17(k);
+    const T17LineSegment<kAMax> segment_inst =
+        AppState::CurrentFile()->get_x17(k);
     return Mn::Vector2({static_cast<float>(segment_inst.coords[0]),
                         static_cast<float>(segment_inst.coords[1])});
   }
@@ -541,8 +555,10 @@ auto BrdWidget::StartingPoint(uint32_t k) -> std::optional<Mn::Vector2> {
 }
 
 auto BrdWidget::IsLineSegment(uint32_t k) -> bool {
-  bool r = (AppState::CurrentFile()->is_type(k, 0x01)) || (AppState::CurrentFile()->is_type(k, 0x15)) ||
-           (AppState::CurrentFile()->is_type(k, 0x16)) || (AppState::CurrentFile()->is_type(k, 0x17));
+  bool r = (AppState::CurrentFile()->is_type(k, 0x01)) ||
+           (AppState::CurrentFile()->is_type(k, 0x15)) ||
+           (AppState::CurrentFile()->is_type(k, 0x16)) ||
+           (AppState::CurrentFile()->is_type(k, 0x17));
   // std::printf("isLineSegment k = 0x%08X, r = %d\n", ntohl(k), r);
   return r;
 }

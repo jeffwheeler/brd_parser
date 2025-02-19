@@ -46,14 +46,18 @@ class BrdWidget {
 
   void DrawShape(uint32_t ptr);
   void DrawX05(const T05Line<kAMax>* inst);
-  void DrawX15(const T15LineSegment<kAMax>* inst, float width, uint8_t layer_id);
-  void DrawX16(const T16LineSegment<kAMax>* inst, float width, uint8_t layer_id);
-  void DrawX17(const T17LineSegment<kAMax>* inst, float width, uint8_t layer_id);
+  void DrawX15(const T15LineSegment<kAMax>* inst, float width,
+               uint8_t layer_id);
+  void DrawX16(const T16LineSegment<kAMax>* inst, float width,
+               uint8_t layer_id);
+  void DrawX17(const T17LineSegment<kAMax>* inst, float width,
+               uint8_t layer_id);
   void DrawX28(const T28Shape<kAMax>* inst);
 
   void AddSegment(Mn::Vector2 start, Mn::Vector2 end, float width,
                   uint8_t layer);
-  void AddArc(const T01ArcSegment<kAMax>& segment_inst, float width, uint8_t layer_id);
+  void AddArc(const T01ArcSegment<kAMax>& segment_inst, float width,
+              uint8_t layer_id);
   void AddLineCap(Mn::Vector2 start, Mn::Vector2 end, float width,
                   uint8_t layer);
   auto StartingPoint(uint32_t k) -> std::optional<Mn::Vector2>;
@@ -80,16 +84,14 @@ class BrdWidget {
   Mn::GL::Mesh mesh_;
   LineShader _lineShader;
 
-  constexpr static int kLinesMax = 10000000;
-  std::array<VertexData, kLinesMax> lines_cache_;
-  uint32_t lines_cache_count_ = 0;
+  std::vector<VertexData> lines_cache_;
 
   std::array<Mn::Color4, 32> layer_colors_{};
   std::array<float, 32> layer_opacities_{};
   // sk_sp<SkPicture> picture_;
   std::unordered_set<LayerInfo> visible_layers_cache_;
 
-  constexpr static float kBorderWidth = 0.005;
+  constexpr static float kBorderWidth = 0.003;
   constexpr static float kNormalOpacity = 0.9F;
   constexpr static float kShadowOpacity = 0.15F;
 

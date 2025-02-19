@@ -17,7 +17,7 @@ endif ()
 
 project(AllegroParser)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 add_compile_options("-g")
 # add_compile_options("-O0")
