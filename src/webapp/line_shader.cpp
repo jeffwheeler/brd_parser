@@ -16,8 +16,8 @@ LineShader::LineShader() {
 
       layout(location = 0) in vec2 position;
       layout(location = 1) in vec2 next;
-      layout(location = 2) in int step;
-      layout(location = 3) in float width;
+      layout(location = 2) in float width;
+      layout(location = 3) in int step;
       layout(location = 4) in int layerId;
 
       out vec2 circle_coords;

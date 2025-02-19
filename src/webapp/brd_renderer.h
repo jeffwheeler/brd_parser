@@ -75,10 +75,9 @@ class BrdWidget {
   struct VertexData {
     Mn::Vector2 position;
     Mn::Vector2 next;
-    Mn::Int step;
     Mn::Float width;
+    Mn::Byte step;
     Mn::Byte layer_id;
-    Mn::Byte : 8;
     Mn::Byte : 8;
     Mn::Byte : 8;
   };

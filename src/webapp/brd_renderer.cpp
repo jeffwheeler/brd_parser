@@ -70,12 +70,13 @@ void BrdWidget::UpdateFile() {
   // Configure mesh
   mesh_.setPrimitive(Mn::GL::MeshPrimitive::Triangles)
       .setCount(lines_cache_.size())
-      .addVertexBuffer(
-          buffer, 0, LineShader::Position{}, LineShader::Next{},
-          LineShader::Step{}, LineShader::Width{},
-          LineShader::LayerId{LineShader::LayerId::Components::One,
-                              LineShader::LayerId::DataType::Byte},
-          3);
+      .addVertexBuffer(buffer, 0, LineShader::Position{}, LineShader::Next{},
+                       LineShader::Width{},
+                       LineShader::Step{LineShader::Step::Components::One,
+                                        LineShader::Step::DataType::Byte},
+                       LineShader::LayerId{LineShader::LayerId::Components::One,
+                                           LineShader::LayerId::DataType::Byte},
+                       2);
 
   dirty_ = true;
 }
@@ -417,12 +418,12 @@ void BrdWidget::AddSegment(Mn::Vector2 start, Mn::Vector2 end, float width,
                    sizeof(VertexData) * lines_cache_.capacity() / 1024. / 1024);
   }
 
-  lines_cache_.emplace_back(start, end, 0, width, layer);
-  lines_cache_.emplace_back(start, end, 1, width, layer);
-  lines_cache_.emplace_back(start, end, 2, width, layer);
-  lines_cache_.emplace_back(start, end, 3, width, layer);
-  lines_cache_.emplace_back(start, end, 4, width, layer);
-  lines_cache_.emplace_back(start, end, 5, width, layer);
+  lines_cache_.emplace_back(start, end, width, 0, layer);
+  lines_cache_.emplace_back(start, end, width, 1, layer);
+  lines_cache_.emplace_back(start, end, width, 2, layer);
+  lines_cache_.emplace_back(start, end, width, 3, layer);
+  lines_cache_.emplace_back(start, end, width, 4, layer);
+  lines_cache_.emplace_back(start, end, width, 5, layer);
 
   AddLineCap(start, end, width, layer);
   AddLineCap(end, start, width, layer);
@@ -437,9 +438,9 @@ void BrdWidget::AddSegment(Mn::Vector2 start, Mn::Vector2 end, float width,
 inline void BrdWidget::AddLineCap(Mn::Vector2 start, Mn::Vector2 end,
                                   float width, uint8_t layer) {
   layer %= layer_colors_.size();
-  lines_cache_.emplace_back(start, end, 6, width, layer);
-  lines_cache_.emplace_back(start, end, 7, width, layer);
-  lines_cache_.emplace_back(start, end, 8, width, layer);
+  lines_cache_.emplace_back(start, end, width, 6, layer);
+  lines_cache_.emplace_back(start, end, width, 7, layer);
+  lines_cache_.emplace_back(start, end, width, 8, layer);
 }
 
 // Modify DrawX05 to store individual segments
