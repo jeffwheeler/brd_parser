@@ -396,27 +396,9 @@ void BrdWidget::DrawShape(uint32_t ptr) {
 }
 
 // Implementation inspired by KiCAD, `common/gal/opengl/opengl_gal.cpp`
-static int r = 0;
 void BrdWidget::AddSegment(Mn::Vector2 start, Mn::Vector2 end, float width,
                            uint8_t layer) {
   layer %= layer_colors_.size();
-  // if (lines_cache_count_ + 6 > kLinesMax) {
-  //   emscripten_log(EM_LOG_INFO, "Run out of memory");
-  //   return;
-  // }
-
-  // Magnum::Color4 color = layer_colors_[layer];
-  if (lines_cache_.size() < 0.0001 * lines_cache_.capacity()) {
-    emscripten_log(EM_LOG_INFO, "New memory, %f MiB used out of %f MiB",
-                   sizeof(VertexData) * lines_cache_.size() / 1024. / 1024,
-                   sizeof(VertexData) * lines_cache_.capacity() / 1024. / 1024);
-  }
-  if (lines_cache_.size() > 0.9999 * lines_cache_.capacity()) {
-    emscripten_log(EM_LOG_INFO,
-                   "Almost out of memory, %f MiB used out of %f MiB",
-                   sizeof(VertexData) * lines_cache_.size() / 1024. / 1024,
-                   sizeof(VertexData) * lines_cache_.capacity() / 1024. / 1024);
-  }
 
   lines_cache_.emplace_back(start, end, width, 0, layer);
   lines_cache_.emplace_back(start, end, width, 1, layer);
@@ -427,12 +409,6 @@ void BrdWidget::AddSegment(Mn::Vector2 start, Mn::Vector2 end, float width,
 
   AddLineCap(start, end, width, layer);
   AddLineCap(end, start, width, layer);
-
-  if (r++ % 5000 == 0) {
-    emscripten_log(EM_LOG_INFO, "%f MiB used out of %f MiB",
-                   sizeof(VertexData) * lines_cache_.size() / 1024. / 1024,
-                   sizeof(VertexData) * lines_cache_.capacity() / 1024. / 1024);
-  }
 }
 
 inline void BrdWidget::AddLineCap(Mn::Vector2 start, Mn::Vector2 end,
