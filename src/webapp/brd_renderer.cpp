@@ -403,13 +403,14 @@ void BrdWidget::AddSegment(Mn::Vector2 start, Mn::Vector2 end, float width,
   // Magnum::Color4 color = layer_colors_[layer];
   if (lines_cache_.size() < 0.0001 * lines_cache_.capacity()) {
     emscripten_log(EM_LOG_INFO, "New memory, %f MiB used out of %f MiB",
-        sizeof(VertexData) * lines_cache_.size() / 1024. / 1024,
-        sizeof(VertexData) * lines_cache_.capacity() / 1024. / 1024);
+                   sizeof(VertexData) * lines_cache_.size() / 1024. / 1024,
+                   sizeof(VertexData) * lines_cache_.capacity() / 1024. / 1024);
   }
   if (lines_cache_.size() > 0.9999 * lines_cache_.capacity()) {
-    emscripten_log(EM_LOG_INFO, "Almost out of memory, %f MiB used out of %f MiB",
-        sizeof(VertexData) * lines_cache_.size() / 1024. / 1024,
-        sizeof(VertexData) * lines_cache_.capacity() / 1024. / 1024);
+    emscripten_log(EM_LOG_INFO,
+                   "Almost out of memory, %f MiB used out of %f MiB",
+                   sizeof(VertexData) * lines_cache_.size() / 1024. / 1024,
+                   sizeof(VertexData) * lines_cache_.capacity() / 1024. / 1024);
   }
 
   lines_cache_.emplace_back(start, end, 0, width, layer);
@@ -424,8 +425,8 @@ void BrdWidget::AddSegment(Mn::Vector2 start, Mn::Vector2 end, float width,
 
   if (r++ % 5000 == 0) {
     emscripten_log(EM_LOG_INFO, "%f MiB used out of %f MiB",
-        sizeof(VertexData) * lines_cache_.size() / 1024. / 1024,
-        sizeof(VertexData) * lines_cache_.capacity() / 1024. / 1024);
+                   sizeof(VertexData) * lines_cache_.size() / 1024. / 1024,
+                   sizeof(VertexData) * lines_cache_.capacity() / 1024. / 1024);
   }
 }
 

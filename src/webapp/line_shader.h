@@ -1,12 +1,12 @@
 #pragma once
 
-#include <array>
-
 #include <Corrade/Containers/ArrayView.h>
 #include <Magnum/GL/AbstractShaderProgram.h>
 #include <Magnum/GL/Shader.h>
 #include <Magnum/GL/Version.h>
 #include <Magnum/Math/Matrix3.h>
+
+#include <array>
 
 namespace Cr = Corrade;
 namespace Mn = Magnum;
