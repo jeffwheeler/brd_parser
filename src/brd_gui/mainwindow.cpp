@@ -49,7 +49,7 @@ void MainWindow::loadFile(const std::string& path) {
     fs = std::move(parsed_file);
     qDebug("File version: %08X -> \"%s\"", ntohl(fs->hdr->magic),
            fs->hdr->allegro_version);
-    brdView->loadFile(&fs.value());
+    brdView->loadFile(fs.get());
     loadFilms();
   } else {
     qDebug() << "Failed to parse file";
@@ -98,7 +98,7 @@ void MainWindow::loadFilms() {
 
   film_tree_widget_->clear();
 
-  std::vector<std::pair<std::string, uint32_t>> layers = film_list(fs.value());
+  std::vector<std::pair<std::string, uint32_t>> layers = film_list(*fs);
   for (const auto& pair : layers) {
     layer_cache[pair.first] = pair.second;
     film_tree_widget_->insertTopLevelItem(
@@ -193,7 +193,7 @@ void MainWindow::selectFilm() {
     uint32_t const x38_k = layer_cache[t.toStdString()];
     const T38Film<kAMax>& film = fs->get_t38_film(x38_k);
     const T39FilmLayerList<kAMax>& layer_list = fs->get_x39(film.layer_list);
-    for (const auto& layer : x39_layers(layer_list, fs.value())) {
+    for (const auto& layer : x39_layers(layer_list, *fs)) {
       layers.insert(layer);
     }
   }

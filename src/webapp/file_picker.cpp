@@ -16,11 +16,6 @@ void FilePickerWidget::Draw() {
   if (ImGui::Button("Open file")) {
     emscripten_browser_file::upload(".brd", UploadFile, this);
   }
-  ImGui::Text("You can also drag-and-drop anywhere");
-  if (ImGui::Button("Record Skia picture")) {
-    emscripten_log(EM_LOG_INFO, "needs to record");
-    AppState::RecordPicture();
-  }
   ImGui::End();
 }
 

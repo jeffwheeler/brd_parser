@@ -82,7 +82,7 @@ class BrdWidget {
 
   constexpr static int kLinesMax = 10000000;
   std::array<VertexData, kLinesMax> lines_cache_;
-  uint32_t lines_cache_count_;
+  uint32_t lines_cache_count_ = 0;
 
   std::array<Mn::Color4, 32> layer_colors_{};
   std::array<float, 32> layer_opacities_{};
@@ -90,9 +90,11 @@ class BrdWidget {
   std::unordered_set<LayerInfo> visible_layers_cache_;
 
   constexpr static float kBorderWidth = 0.005;
-
   constexpr static float kNormalOpacity = 0.9F;
   constexpr static float kShadowOpacity = 0.15F;
+
+  // FIXME: Could this be max radians instead?
+  constexpr static uint8_t kArcSegmentDivision = 8;
 
   /*
   static constexpr size_t common_width_count_ = 8;

@@ -11,9 +11,8 @@ void LayerWidget::UpdateFile() {
   // Reload film list cache
   film_list_.clear();
 
-  auto file = AppState::CurrentFile();
-  if (file) {
-    for (const auto& [name, k] : film_list(*file)) {
+  if (AppState::CurrentFile()) {
+    for (const auto& [name, k] : film_list(*AppState::CurrentFile())) {
       film_list_.emplace_back(
           FilmWithSelection{.name = name, .k = k, .selected = false});
     }
@@ -39,16 +38,17 @@ void LayerWidget::Draw() {
           array[n].selected = selected;
 
           // Reset the visible layers cache
-          auto file = AppState::CurrentFile();
           auto& visible_layers = AppState::VisibleLayers();
           visible_layers.clear();
 
           for (auto const& film : array) {
             if (film.selected) {
-              const T38Film<kAMax>& film_inst = file->get_t38_film(film.k);
+              const T38Film<kAMax>& film_inst =
+                  AppState::CurrentFile()->get_t38_film(film.k);
               const T39FilmLayerList<kAMax>& layer_list =
-                  file->get_x39(film_inst.layer_list);
-              for (const auto& [x, y] : x39_layers(layer_list, *file)) {
+                  AppState::CurrentFile()->get_x39(film_inst.layer_list);
+              for (const auto& [x, y] :
+                   x39_layers(layer_list, *AppState::CurrentFile())) {
                 visible_layers.insert(LayerInfo({.family = x, .id = y}));
               }
             }

@@ -1,6 +1,6 @@
 #include "app_state.h"
 
-auto AppState::CurrentFile() -> std::shared_ptr<File<kAMax>>& {
+auto AppState::CurrentFile() -> std::unique_ptr<File<kAMax>>& {
   return State().fs_;
 }
 

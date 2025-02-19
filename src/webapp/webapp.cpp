@@ -127,7 +127,7 @@ void BrdViewerApp::textInputEvent(TextInputEvent& event) {
 void BrdViewerApp::HandleFileUpload(const std::string& filepath) {
   auto fs = parse_file(filepath);
   if (fs) {
-    AppState::CurrentFile() = std::make_shared<File<kAMax>>(std::move(*fs));
+    AppState::CurrentFile() = std::move(fs);
     brd_widget_.UpdateFile();
     layer_widget_.UpdateFile();
   } else {

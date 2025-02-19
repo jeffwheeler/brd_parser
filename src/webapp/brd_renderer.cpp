@@ -24,6 +24,9 @@ BrdWidget::BrdWidget() : layer_colors_() {
   InitializeShader();
   UpdateScreenRatio();
 
+  emscripten_log(EM_LOG_INFO, "Lines cache: %d MiB available",
+                 sizeof(lines_cache_) / 1024 / 1024);
+
   mesh_.setCount(0);
 
   // https://uchu.style/
@@ -46,13 +49,14 @@ BrdWidget::BrdWidget() : layer_colors_() {
 }
 
 void BrdWidget::UpdateFile() {
-  fs_ = AppState::CurrentFile();
-
   already_drawn_.clear();
   lines_cache_count_ = 0;
 
   IterateFile();
   ComposeLayersToDrawable();
+
+  emscripten_log(EM_LOG_INFO, "Line cache: %d MiB used",
+                 lines_cache_count_ * sizeof(VertexData) / 1024 / 1024);
 
   // Add a cross to the origin
   // AddSegment({-0.5, 0}, {0.5, 0}, 0.1);
@@ -219,37 +223,37 @@ void BrdWidget::MarkDirty() { dirty_ = true; }
 void BrdWidget::IterateFile() {
   emscripten_log(EM_LOG_INFO, "IterateFile");
 
-  for (const auto &i_x1B : fs_->iter_t1B_net()) {
-    for (const auto &i_x04 : fs_->iter_x04(i_x1B.k)) {
+  for (const auto &i_x1B : AppState::CurrentFile()->iter_t1B_net()) {
+    for (const auto &i_x04 : AppState::CurrentFile()->iter_x04(i_x1B.k)) {
       uint32_t k = i_x04.ptr2;
       while (true) {
-        if (fs_->is_type(k, 0x33)) {
-          const auto &i = fs_->get_x33(k);
+        if (AppState::CurrentFile()->is_type(k, 0x33)) {
+          const auto &i = AppState::CurrentFile()->get_x33(k);
           // printf("- - Found x33 w/ key = 0x %08X\n", ntohl(k));
           // drawShape(k, pen3);
           k = i.un1;
-        } else if (fs_->is_type(k, 0x32)) {
-          const auto &i = fs_->get_x32(k);
+        } else if (AppState::CurrentFile()->is_type(k, 0x32)) {
+          const auto &i = AppState::CurrentFile()->get_x32(k);
           // printf("- - Found x32 w/ key = 0x %08X\n", ntohl(k));
           k = i.un1;
-        } else if (fs_->is_type(k, 0x2E)) {
-          const auto &i = fs_->get_x2E(k);
+        } else if (AppState::CurrentFile()->is_type(k, 0x2E)) {
+          const auto &i = AppState::CurrentFile()->get_x2E(k);
           // printf("- - Found x2E w/ key = 0x %08X\n", ntohl(k));
           k = i.un[0];
-        } else if (fs_->is_type(k, 0x28)) {
-          const auto &x = fs_->get_x28(k);
+        } else if (AppState::CurrentFile()->is_type(k, 0x28)) {
+          const auto &x = AppState::CurrentFile()->get_x28(k);
           DrawShape(x.k);
           k = x.next;
-        } else if (fs_->is_type(k, 0x1B)) {
+        } else if (AppState::CurrentFile()->is_type(k, 0x1B)) {
           break;
-        } else if (fs_->is_type(k, 0x0E)) {
-          const auto &x = fs_->get_x0E(k);
+        } else if (AppState::CurrentFile()->is_type(k, 0x0E)) {
+          const auto &x = AppState::CurrentFile()->get_x0E(k);
           k = x.un[0];
-        } else if (fs_->is_type(k, 0x05)) {
-          const auto &x = fs_->get_x05(k);
+        } else if (AppState::CurrentFile()->is_type(k, 0x05)) {
+          const auto &x = AppState::CurrentFile()->get_x05(k);
           DrawShape(x.k);
           k = x.ptr0;
-        } else if (fs_->is_type(k, 0x04)) {
+        } else if (AppState::CurrentFile()->is_type(k, 0x04)) {
           break;
         } else {
           printf("- - \x1b[31mUnexpected key\x1b[0m = 0x %08X :(\n", ntohl(k));
@@ -285,13 +289,12 @@ void BrdWidget::AddArc(const T01ArcSegment<kAMax> &segment_inst, float width,
     }
   }
 
-  constexpr int segments = 5;
-  Magnum::Radd angle_step = (end_angle - start_angle) / segments;
+  Magnum::Radd angle_step = (end_angle - start_angle) / kArcSegmentDivision;
 
   Mn::Vector2 prev_point = {
       static_cast<float>(scaled_cx + (scaled_r * Mn::Math::cos(start_angle))),
       static_cast<float>(scaled_cy + (scaled_r * Mn::Math::sin(start_angle)))};
-  for (uint8_t i = 1; i <= segments; i++) {
+  for (uint8_t i = 1; i <= kArcSegmentDivision; i++) {
     Magnum::Radd theta = start_angle + angle_step * i;
     Mn::Vector2 next_point = {
         static_cast<float>(scaled_cx + (scaled_r * Mn::Math::cos(theta))),
@@ -309,71 +312,71 @@ void BrdWidget::DrawShape(uint32_t ptr) {
 
   already_drawn_.insert(ptr);
 
-  if (fs_->is_type(ptr, 0x05)) {
+  if (AppState::CurrentFile()->is_type(ptr, 0x05)) {
     // std::printf("Trying to draw x05\n");
-    const T05Line<kAMax> inst = fs_->get_x05(ptr);
+    const T05Line<kAMax> inst = AppState::CurrentFile()->get_x05(ptr);
     DrawX05(&inst);
-  } else if (fs_->is_type(ptr, 0x0C)) {
-    // const T0CDrillIndicator<kAMax> inst = fs_->get_x0C(ptr);
+  } else if (AppState::CurrentFile()->is_type(ptr, 0x0C)) {
+    // const T0CDrillIndicator<kAMax> inst = AppState::CurrentFile()->get_x0C(ptr);
     // drawX0C(&inst, pen);
-  } else if (fs_->is_type(ptr, 0x10)) {
-    // const x10<kAMax> inst = fs_->get_x10(ptr);
+  } else if (AppState::CurrentFile()->is_type(ptr, 0x10)) {
+    // const x10<kAMax> inst = AppState::CurrentFile()->get_x10(ptr);
     // drawShape(inst.ptr1, darkerPen);
     // drawShape(inst.ptr2, darkerPen);
     // drawShape(inst.ptr3, darkerPen);
-  } else if (fs_->is_type(ptr, 0x14)) {
-    // const T14Path<kAMax> inst = fs_->get_x14(ptr);
+  } else if (AppState::CurrentFile()->is_type(ptr, 0x14)) {
+    // const T14Path<kAMax> inst = AppState::CurrentFile()->get_x14(ptr);
     // drawX14(&inst, pen);
-    // } else if (fs_->x15_map.count(ptr) > 0) {
-    // const x15<A_MAX> *inst = (const x15<A_MAX> *)&fs_->x15_map.at(ptr);
+    // } else if (AppState::CurrentFile()->x15_map.count(ptr) > 0) {
+    // const x15<A_MAX> *inst = (const x15<A_MAX> *)&AppState::CurrentFile()->x15_map.at(ptr);
     // drawX15(inst, pen);
     // drawShape(inst->un1, darkerPen);
     // drawShape(inst->ptr, darkerPen);
-    // } else if (fs_->x16_map.count(ptr) > 0) {
-    // const x16<A_MAX> *inst = (const x16<A_MAX> *)&fs_->x16_map.at(ptr);
+    // } else if (AppState::CurrentFile()->x16_map.count(ptr) > 0) {
+    // const x16<A_MAX> *inst = (const x16<A_MAX> *)&AppState::CurrentFile()->x16_map.at(ptr);
     // drawX16(inst, pen);
     // drawShape(inst->un1, darkerPen);
     // drawShape(inst->ptr, darkerPen);
-    // } else if (fs_->x17_map.count(ptr) > 0) {
-    // const x17<A_MAX> *inst = (const x17<A_MAX> *)&fs_->x17_map.at(ptr);
+    // } else if (AppState::CurrentFile()->x17_map.count(ptr) > 0) {
+    // const x17<A_MAX> *inst = (const x17<A_MAX> *)&AppState::CurrentFile()->x17_map.at(ptr);
     // drawX17(inst, pen);
     // drawShape(inst->un1, darkerPen);
     // drawShape(inst->ptr, darkerPen);
-  } else if (fs_->is_type(ptr, 0x23)) {
-    // const T23Rat<kAMax> inst = fs_->get_x23(ptr);
+  } else if (AppState::CurrentFile()->is_type(ptr, 0x23)) {
+    // const T23Rat<kAMax> inst = AppState::CurrentFile()->get_x23(ptr);
     // drawX23(&inst, pen);
-  } else if (fs_->is_type(ptr, 0x24)) {
-    // const T24Rectangle<kAMax> inst = fs_->get_x24(ptr);
+  } else if (AppState::CurrentFile()->is_type(ptr, 0x24)) {
+    // const T24Rectangle<kAMax> inst = AppState::CurrentFile()->get_x24(ptr);
     // drawX24(&inst, pen);
-  } else if (fs_->is_type(ptr, 0x28)) {
-    const T28Shape<kAMax> inst = fs_->get_x28(ptr);
+  } else if (AppState::CurrentFile()->is_type(ptr, 0x28)) {
+    const T28Shape<kAMax> inst = AppState::CurrentFile()->get_x28(ptr);
     DrawX28(&inst);
     // drawShape(inst->ptr5, darkerPen);
     // drawShape(inst->ptr1, darkerPen);
     // drawShape(inst->ptr2, darkerPen);
     // drawShape(inst->ptr5, darkerPen);
-  } else if (fs_->is_type(ptr, 0x2D)) {
-    // const T2DSymbolInstance<kAMax> inst = fs_->get_x2D(ptr);
+  } else if (AppState::CurrentFile()->is_type(ptr, 0x2D)) {
+    // const T2DSymbolInstance<kAMax> inst = AppState::CurrentFile()->get_x2D(ptr);
     // drawX2D(&inst, pen);
-  } else if (fs_->is_type(ptr, 0x30)) {
-    // const T30StringGraphic<kAMax> &inst = fs_->get_x30(ptr);
+  } else if (AppState::CurrentFile()->is_type(ptr, 0x30)) {
+    // const T30StringGraphic<kAMax> &inst = AppState::CurrentFile()->get_x30(ptr);
     // drawX30(&inst, pen);
     // } else if (fs.x31_map->count(ptr) > 0) {
     //     const x31 *inst = (const x31*)&fs.x31_map->at(ptr);
     //     drawX31((const x31*)&fs.x31_map->at(ptr), pen);
-  } else if (fs_->is_type(ptr, 0x32)) {
-    // const T32SymbolPin<kAMax> &inst = fs_->get_x32(ptr);
+  } else if (AppState::CurrentFile()->is_type(ptr, 0x32)) {
+    // const T32SymbolPin<kAMax> &inst = AppState::CurrentFile()->get_x32(ptr);
     // drawX32(&inst, pen, 0);
-  } else if (fs_->is_type(ptr, 0x33)) {
-    // const x33<kAMax> &inst = fs_->get_x33(ptr);
+  } else if (AppState::CurrentFile()->is_type(ptr, 0x33)) {
+    // const x33<kAMax> &inst = AppState::CurrentFile()->get_x33(ptr);
     // drawX33(&inst, pen);
     // drawShape(inst->un1, darkerPen);
     // drawShape(inst->ptr1, darkerPen);
-  } else if (fs_->is_type(ptr, 0x34)) {
-    // const x34<kAMax> &inst = fs_->get_x34(ptr);
+  } else if (AppState::CurrentFile()->is_type(ptr, 0x34)) {
+    // const x34<kAMax> &inst = AppState::CurrentFile()->get_x34(ptr);
     // drawX34(&inst, pen);
-  } else if (fs_->is_type(ptr, 0x37)) {
-    // const x37<kAMax> &inst = fs_->get_x37(ptr);
+  } else if (AppState::CurrentFile()->is_type(ptr, 0x37)) {
+    // const x37<kAMax> &inst = AppState::CurrentFile()->get_x37(ptr);
     // drawShape(inst.ptr1, darkerPen);
     // for (uint8_t i; i<inst->count; i++) {
     // for (uint8_t i=0; i<inst->capacity; i++) {
@@ -440,23 +443,23 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
   while (IsLineSegment(k)) {
     // SkPath segment_path;
     // segment_path.moveTo(starting);
-    if (fs_->is_type(k, 0x01)) {
-      const T01ArcSegment<kAMax> segment_inst = fs_->get_x01(k);
+    if (AppState::CurrentFile()->is_type(k, 0x01)) {
+      const T01ArcSegment<kAMax> segment_inst = AppState::CurrentFile()->get_x01(k);
       float segment_width = segment_inst.width / factor_;
       AddArc(segment_inst, segment_width, layer_id);
       k = segment_inst.next;
-    } else if (fs_->is_type(k, 0x15)) {
-      const T15LineSegment<kAMax> segment_inst = fs_->get_x15(k);
+    } else if (AppState::CurrentFile()->is_type(k, 0x15)) {
+      const T15LineSegment<kAMax> segment_inst = AppState::CurrentFile()->get_x15(k);
       float segment_width = segment_inst.width / factor_;
       DrawX15(&segment_inst, segment_width, layer_id);
       k = segment_inst.next;
-    } else if (fs_->is_type(k, 0x16)) {
-      const T16LineSegment<kAMax> segment_inst = fs_->get_x16(k);
+    } else if (AppState::CurrentFile()->is_type(k, 0x16)) {
+      const T16LineSegment<kAMax> segment_inst = AppState::CurrentFile()->get_x16(k);
       float segment_width = segment_inst.width / factor_;
       DrawX16(&segment_inst, segment_width, layer_id);
       k = segment_inst.next;
-    } else if (fs_->is_type(k, 0x17)) {
-      const T17LineSegment<kAMax> segment_inst = fs_->get_x17(k);
+    } else if (AppState::CurrentFile()->is_type(k, 0x17)) {
+      const T17LineSegment<kAMax> segment_inst = AppState::CurrentFile()->get_x17(k);
       float segment_width = segment_inst.width / factor_;
       DrawX17(&segment_inst, segment_width, layer_id);
       k = segment_inst.next;
@@ -491,20 +494,20 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
   uint8_t layer_id = LayerToShader(inst->layer);
 
   while (IsLineSegment(k)) {
-    if (fs_->is_type(k, 0x01)) {
-      const T01ArcSegment<kAMax> segment_inst = fs_->get_x01(k);
+    if (AppState::CurrentFile()->is_type(k, 0x01)) {
+      const T01ArcSegment<kAMax> segment_inst = AppState::CurrentFile()->get_x01(k);
       AddArc(segment_inst, kBorderWidth, layer_id);
       k = segment_inst.next;
-    } else if (fs_->is_type(k, 0x15)) {
-      const T15LineSegment<kAMax> segment_inst = fs_->get_x15(k);
+    } else if (AppState::CurrentFile()->is_type(k, 0x15)) {
+      const T15LineSegment<kAMax> segment_inst = AppState::CurrentFile()->get_x15(k);
       DrawX15(&segment_inst, kBorderWidth, layer_id);
       k = segment_inst.next;
-    } else if (fs_->is_type(k, 0x16)) {
-      const T16LineSegment<kAMax> segment_inst = fs_->get_x16(k);
+    } else if (AppState::CurrentFile()->is_type(k, 0x16)) {
+      const T16LineSegment<kAMax> segment_inst = AppState::CurrentFile()->get_x16(k);
       DrawX16(&segment_inst, kBorderWidth, layer_id);
       k = segment_inst.next;
-    } else if (fs_->is_type(k, 0x17)) {
-      const T17LineSegment<kAMax> segment_inst = fs_->get_x17(k);
+    } else if (AppState::CurrentFile()->is_type(k, 0x17)) {
+      const T17LineSegment<kAMax> segment_inst = AppState::CurrentFile()->get_x17(k);
       DrawX17(&segment_inst, kBorderWidth, layer_id);
       k = segment_inst.next;
     } else {
@@ -514,23 +517,23 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
 }
 
 auto BrdWidget::StartingPoint(uint32_t k) -> std::optional<Mn::Vector2> {
-  if (fs_->is_type(k, 0x01)) {
-    const T01ArcSegment<kAMax> segment_inst = fs_->get_x01(k);
+  if (AppState::CurrentFile()->is_type(k, 0x01)) {
+    const T01ArcSegment<kAMax> segment_inst = AppState::CurrentFile()->get_x01(k);
     return Mn::Vector2({static_cast<float>(segment_inst.coords[0]),
                         static_cast<float>(segment_inst.coords[1])});
   }
-  if (fs_->is_type(k, 0x15)) {
-    const T15LineSegment<kAMax> segment_inst = fs_->get_x15(k);
+  if (AppState::CurrentFile()->is_type(k, 0x15)) {
+    const T15LineSegment<kAMax> segment_inst = AppState::CurrentFile()->get_x15(k);
     return Mn::Vector2({static_cast<float>(segment_inst.coords[0]),
                         static_cast<float>(segment_inst.coords[1])});
   }
-  if (fs_->is_type(k, 0x16)) {
-    const T16LineSegment<kAMax> segment_inst = fs_->get_x16(k);
+  if (AppState::CurrentFile()->is_type(k, 0x16)) {
+    const T16LineSegment<kAMax> segment_inst = AppState::CurrentFile()->get_x16(k);
     return Mn::Vector2({static_cast<float>(segment_inst.coords[0]),
                         static_cast<float>(segment_inst.coords[1])});
   }
-  if (fs_->is_type(k, 0x17)) {
-    const T17LineSegment<kAMax> segment_inst = fs_->get_x17(k);
+  if (AppState::CurrentFile()->is_type(k, 0x17)) {
+    const T17LineSegment<kAMax> segment_inst = AppState::CurrentFile()->get_x17(k);
     return Mn::Vector2({static_cast<float>(segment_inst.coords[0]),
                         static_cast<float>(segment_inst.coords[1])});
   }
@@ -538,8 +541,8 @@ auto BrdWidget::StartingPoint(uint32_t k) -> std::optional<Mn::Vector2> {
 }
 
 auto BrdWidget::IsLineSegment(uint32_t k) -> bool {
-  bool r = (fs_->is_type(k, 0x01)) || (fs_->is_type(k, 0x15)) ||
-           (fs_->is_type(k, 0x16)) || (fs_->is_type(k, 0x17));
+  bool r = (AppState::CurrentFile()->is_type(k, 0x01)) || (AppState::CurrentFile()->is_type(k, 0x15)) ||
+           (AppState::CurrentFile()->is_type(k, 0x16)) || (AppState::CurrentFile()->is_type(k, 0x17));
   // std::printf("isLineSegment k = 0x%08X, r = %d\n", ntohl(k), r);
   return r;
 }

@@ -35,7 +35,7 @@ class MainWindow : public QMainWindow {
   void selectFilm();
 
  private:
-  std::optional<File<kAMax>> fs;
+  std::unique_ptr<File<kAMax>> fs;
   BrdView *brdView;
   QTreeWidget *film_tree_widget_;
   QTreeView *layer_tree_view_;
