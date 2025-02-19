@@ -63,15 +63,19 @@ void BrdWidget::UpdateFile() {
   buffer.setData(
       Cr::Containers::arrayView(lines_cache_.data(), lines_cache_.size()));
 
-  emscripten_log(EM_LOG_INFO, "Line cache: %d MiB used",
-                 buffer.size() / 1024 / 1024);
+  emscripten_log(EM_LOG_INFO,
+                 "Line cache: %d MiB used, sizeof(VertexData) = %d",
+                 buffer.size() / 1024 / 1024, sizeof(VertexData));
 
   // Configure mesh
   mesh_.setPrimitive(Mn::GL::MeshPrimitive::Triangles)
       .setCount(lines_cache_.size())
-      .addVertexBuffer(buffer, 0, LineShader::Position{}, LineShader::Next{},
-                       LineShader::Step{}, LineShader::Width{},
-                       LineShader::LayerId{});
+      .addVertexBuffer(
+          buffer, 0, LineShader::Position{}, LineShader::Next{},
+          LineShader::Step{}, LineShader::Width{},
+          LineShader::LayerId{LineShader::LayerId::Components::One,
+                              LineShader::LayerId::DataType::Byte},
+          3);
 
   dirty_ = true;
 }
