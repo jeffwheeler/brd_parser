@@ -125,6 +125,10 @@ void BrdViewerApp::textInputEvent(TextInputEvent& event) {
 }
 
 void BrdViewerApp::HandleFileUpload(const std::string& filepath) {
+  // Clear the existing file to ensure there is plenty of memory for the next
+  // file.
+  AppState::CurrentFile() = nullptr;
+
   auto fs = parse_file(filepath);
   if (fs) {
     AppState::CurrentFile() = std::move(fs);
