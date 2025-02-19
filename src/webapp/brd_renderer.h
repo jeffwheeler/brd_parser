@@ -77,7 +77,7 @@ class BrdWidget {
     Mn::Vector2 next;
     Mn::Int step;
     Mn::Float width;
-    Mn::Int layer_id;
+    Mn::UnsignedByte layer_id;
   };
 
   Mn::GL::Buffer buffer;
