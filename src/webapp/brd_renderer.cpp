@@ -18,8 +18,6 @@
 #include "lib/structure/utils.h"
 #include "webapp/app_state.h"
 
-using namespace Mn::Math::Literals;
-
 BrdWidget::BrdWidget() : layer_colors_() {
   InitializeShader();
   UpdateScreenRatio();
@@ -70,13 +68,14 @@ void BrdWidget::UpdateFile() {
   // Configure mesh
   mesh_.setPrimitive(Mn::GL::MeshPrimitive::Triangles)
       .setCount(lines_cache_.size())
-      .addVertexBuffer(buffer, 0, LineShader::Position{}, LineShader::Next{},
-                       LineShader::Width{},
-                       LineShader::Step{LineShader::Step::Components::One,
-                                        LineShader::Step::DataType::Byte},
-                       LineShader::LayerId{LineShader::LayerId::Components::One,
-                                           LineShader::LayerId::DataType::Byte},
-                       2);
+      .addVertexBuffer(
+          buffer, 0, LineShader::Position{}, LineShader::Next{},
+          LineShader::Width{LineShader::Width::Components::One,
+                            LineShader::Width::DataType::Half},
+          LineShader::Step{LineShader::Step::Components::One,
+                           LineShader::Step::DataType::Byte},
+          LineShader::LayerId{LineShader::LayerId::Components::One,
+                              LineShader::LayerId::DataType::Byte});
 
   dirty_ = true;
 }
@@ -272,7 +271,7 @@ void BrdWidget::IterateFile() {
   }
 }
 
-void BrdWidget::AddArc(const T01ArcSegment<kAMax> &segment_inst, float width,
+void BrdWidget::AddArc(const T01ArcSegment<kAMax> &segment_inst, Mn::Half width,
                        uint8_t layer_id) {
   auto [cx, cy] = x01_center(&segment_inst);
   float scaled_cx = cx / factor_;
@@ -396,7 +395,7 @@ void BrdWidget::DrawShape(uint32_t ptr) {
 }
 
 // Implementation inspired by KiCAD, `common/gal/opengl/opengl_gal.cpp`
-void BrdWidget::AddSegment(Mn::Vector2 start, Mn::Vector2 end, float width,
+void BrdWidget::AddSegment(Mn::Vector2 start, Mn::Vector2 end, Mn::Half width,
                            uint8_t layer) {
   layer %= layer_colors_.size();
 
@@ -412,7 +411,7 @@ void BrdWidget::AddSegment(Mn::Vector2 start, Mn::Vector2 end, float width,
 }
 
 inline void BrdWidget::AddLineCap(Mn::Vector2 start, Mn::Vector2 end,
-                                  float width, uint8_t layer) {
+                                  Mn::Half width, uint8_t layer) {
   layer %= layer_colors_.size();
   lines_cache_.emplace_back(start, end, width, 6, layer);
   lines_cache_.emplace_back(start, end, width, 7, layer);
@@ -430,25 +429,25 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
     if (AppState::CurrentFile()->is_type(k, 0x01)) {
       const T01ArcSegment<kAMax> segment_inst =
           AppState::CurrentFile()->get_x01(k);
-      float segment_width = segment_inst.width / factor_;
+      Mn::Half segment_width{segment_inst.width / factor_};
       AddArc(segment_inst, segment_width, layer_id);
       k = segment_inst.next;
     } else if (AppState::CurrentFile()->is_type(k, 0x15)) {
       const T15LineSegment<kAMax> segment_inst =
           AppState::CurrentFile()->get_x15(k);
-      float segment_width = segment_inst.width / factor_;
+      Mn::Half segment_width{segment_inst.width / factor_};
       DrawX15(&segment_inst, segment_width, layer_id);
       k = segment_inst.next;
     } else if (AppState::CurrentFile()->is_type(k, 0x16)) {
       const T16LineSegment<kAMax> segment_inst =
           AppState::CurrentFile()->get_x16(k);
-      float segment_width = segment_inst.width / factor_;
+      Mn::Half segment_width{segment_inst.width / factor_};
       DrawX16(&segment_inst, segment_width, layer_id);
       k = segment_inst.next;
     } else if (AppState::CurrentFile()->is_type(k, 0x17)) {
       const T17LineSegment<kAMax> segment_inst =
           AppState::CurrentFile()->get_x17(k);
-      float segment_width = segment_inst.width / factor_;
+      Mn::Half segment_width{segment_inst.width / factor_};
       DrawX17(&segment_inst, segment_width, layer_id);
       k = segment_inst.next;
     } else {
@@ -457,20 +456,21 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
   }
 }
 
-void BrdWidget::DrawX15(const T15LineSegment<kAMax> *inst, float width,
+void BrdWidget::DrawX15(const T15LineSegment<kAMax> *inst, Mn::Half width,
                         uint8_t layer_id) {
   Mn::Vector2 start = {inst->coords[0] / factor_, inst->coords[1] / factor_};
   Mn::Vector2 end = {inst->coords[2] / factor_, inst->coords[3] / factor_};
   AddSegment(start, end, width, layer_id);
 }
 
-void BrdWidget::DrawX16(const T16LineSegment<kAMax> *inst, float width,
+void BrdWidget::DrawX16(const T16LineSegment<kAMax> *inst, Mn::Half width,
                         uint8_t layer_id) {
   Mn::Vector2 start = {inst->coords[0] / factor_, inst->coords[1] / factor_};
   Mn::Vector2 end = {inst->coords[2] / factor_, inst->coords[3] / factor_};
   AddSegment(start, end, width, layer_id);
 }
-void BrdWidget::DrawX17(const T17LineSegment<kAMax> *inst, float width,
+
+void BrdWidget::DrawX17(const T17LineSegment<kAMax> *inst, Mn::Half width,
                         uint8_t layer_id) {
   Mn::Vector2 start = {inst->coords[0] / factor_, inst->coords[1] / factor_};
   Mn::Vector2 end = {inst->coords[2] / factor_, inst->coords[3] / factor_};
@@ -485,22 +485,22 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
     if (AppState::CurrentFile()->is_type(k, 0x01)) {
       const T01ArcSegment<kAMax> segment_inst =
           AppState::CurrentFile()->get_x01(k);
-      AddArc(segment_inst, kBorderWidth, layer_id);
+      AddArc(segment_inst, border_width_, layer_id);
       k = segment_inst.next;
     } else if (AppState::CurrentFile()->is_type(k, 0x15)) {
       const T15LineSegment<kAMax> segment_inst =
           AppState::CurrentFile()->get_x15(k);
-      DrawX15(&segment_inst, kBorderWidth, layer_id);
+      DrawX15(&segment_inst, border_width_, layer_id);
       k = segment_inst.next;
     } else if (AppState::CurrentFile()->is_type(k, 0x16)) {
       const T16LineSegment<kAMax> segment_inst =
           AppState::CurrentFile()->get_x16(k);
-      DrawX16(&segment_inst, kBorderWidth, layer_id);
+      DrawX16(&segment_inst, border_width_, layer_id);
       k = segment_inst.next;
     } else if (AppState::CurrentFile()->is_type(k, 0x17)) {
       const T17LineSegment<kAMax> segment_inst =
           AppState::CurrentFile()->get_x17(k);
-      DrawX17(&segment_inst, kBorderWidth, layer_id);
+      DrawX17(&segment_inst, border_width_, layer_id);
       k = segment_inst.next;
     } else {
       return;

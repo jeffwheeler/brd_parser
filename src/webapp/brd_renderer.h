@@ -2,6 +2,7 @@
 
 #include <Magnum/GL/Mesh.h>
 #include <Magnum/Math/Color.h>
+#include <Magnum/Math/Half.h>
 #include <Magnum/Math/Matrix3.h>
 #include <Magnum/Math/Vector2.h>
 #include <Magnum/Platform/EmscriptenApplication.h>
@@ -19,6 +20,8 @@
 #include "webapp/line_shader.h"
 
 namespace Mn = Magnum;
+
+using namespace Mn::Math::Literals;
 
 class BrdWidget {
  public:
@@ -46,19 +49,19 @@ class BrdWidget {
 
   void DrawShape(uint32_t ptr);
   void DrawX05(const T05Line<kAMax>* inst);
-  void DrawX15(const T15LineSegment<kAMax>* inst, float width,
+  void DrawX15(const T15LineSegment<kAMax>* inst, Mn::Half width,
                uint8_t layer_id);
-  void DrawX16(const T16LineSegment<kAMax>* inst, float width,
+  void DrawX16(const T16LineSegment<kAMax>* inst, Mn::Half width,
                uint8_t layer_id);
-  void DrawX17(const T17LineSegment<kAMax>* inst, float width,
+  void DrawX17(const T17LineSegment<kAMax>* inst, Mn::Half width,
                uint8_t layer_id);
   void DrawX28(const T28Shape<kAMax>* inst);
 
-  void AddSegment(Mn::Vector2 start, Mn::Vector2 end, float width,
+  void AddSegment(Mn::Vector2 start, Mn::Vector2 end, Mn::Half width,
                   uint8_t layer);
-  void AddArc(const T01ArcSegment<kAMax>& segment_inst, float width,
+  void AddArc(const T01ArcSegment<kAMax>& segment_inst, Mn::Half width,
               uint8_t layer_id);
-  void AddLineCap(Mn::Vector2 start, Mn::Vector2 end, float width,
+  void AddLineCap(Mn::Vector2 start, Mn::Vector2 end, Mn::Half width,
                   uint8_t layer);
   auto StartingPoint(uint32_t k) -> std::optional<Mn::Vector2>;
   auto IsLineSegment(uint32_t k) -> bool;
@@ -75,11 +78,9 @@ class BrdWidget {
   struct VertexData {
     Mn::Vector2 position;
     Mn::Vector2 next;
-    Mn::Float width;
+    Mn::Half width;
     Mn::Byte step;
     Mn::Byte layer_id;
-    Mn::Byte : 8;
-    Mn::Byte : 8;
   };
 
   Mn::GL::Buffer buffer;
@@ -93,7 +94,9 @@ class BrdWidget {
   // sk_sp<SkPicture> picture_;
   std::unordered_set<LayerInfo> visible_layers_cache_;
 
-  constexpr static float kBorderWidth = 0.003;
+  // This cannot be `constexpr` because the `Half` literal is not `constexpr`.
+  Mn::Half border_width_ = 0.003_h;
+
   constexpr static float kNormalOpacity = 0.9F;
   constexpr static float kShadowOpacity = 0.15F;
 
