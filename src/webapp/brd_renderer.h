@@ -6,10 +6,6 @@
 #include <Magnum/Math/Matrix3.h>
 #include <Magnum/Math/Vector2.h>
 #include <Magnum/Platform/EmscriptenApplication.h>
-#include <Magnum/Shaders/FlatGL.h>
-#include <Magnum/Shaders/LineGL.h>
-#include <Magnum/Shaders/MeshVisualizerGL.h>
-#include <Magnum/Shaders/VertexColorGL.h>
 #include <Magnum/Trade/MeshData.h>
 #include <imgui_impl_sdl2.h>
 
