@@ -1,5 +1,7 @@
 #include "webapp/brd_renderer.h"
 
+#include <chrono>
+
 #include <Magnum/GL/Buffer.h>
 #include <Magnum/GL/DefaultFramebuffer.h>
 #include <Magnum/Math/Constants.h>
@@ -19,7 +21,6 @@
 #include "webapp/app_state.h"
 
 BrdWidget::BrdWidget() : layer_colors_() {
-  InitializeShader();
   UpdateScreenRatio();
 
   mesh_.setCount(0);
@@ -53,8 +54,13 @@ void BrdWidget::UpdateFile() {
   already_drawn_.clear();
   lines_cache_.clear();
 
+  auto start = std::chrono::steady_clock::now();
   IterateFile();
-  ComposeLayersToDrawable();
+  auto end = std::chrono::steady_clock::now();
+  auto duration =
+      std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+  emscripten_log(EM_LOG_INFO, "Iterate: %d ms", duration.count());
 
   // Add a cross to the origin
   // AddSegment({-0.5, 0}, {0.5, 0}, 0.1);
@@ -79,62 +85,6 @@ void BrdWidget::UpdateFile() {
 
   dirty_ = true;
 }
-
-void BrdWidget::ComposeLayersToDrawable() {
-  /*
-  SkPictureRecorder recorder;
-
-  SkRect bbox = {-10000, -10000, 10000, 10000};
-  recorder.beginRecording(bbox, nullptr);
-
-  for (const auto &shader_layer : shader_layers_) {
-    // Base paint settings for strokes
-    SkPaint stroke_paint;
-    stroke_paint.setStyle(SkPaint::kStroke_Style);
-    stroke_paint.setShader(shader_layer.shader);
-    stroke_paint.setAntiAlias(true);
-    stroke_paint.setStrokeCap(SkPaint::kRound_Cap);
-    stroke_paint.setStrokeJoin(SkPaint::kRound_Join);
-    stroke_paint.setBlendMode(SkBlendMode::kLighten);
-
-    // Draw stroked paths
-    for (size_t w = 0; w < common_width_count_; w++) {
-      if (!shader_layer.common_width_paths[w].isEmpty()) {
-        stroke_paint.setStrokeWidth(common_widths_[w]);
-        recorder.getRecordingCanvas()->drawPath(
-            shader_layer.common_width_paths[w], stroke_paint);
-      }
-    }
-
-    for (const auto &[width, path] : shader_layer.other_width_paths) {
-      stroke_paint.setStrokeWidth(width);
-      recorder.getRecordingCanvas()->drawPath(path, stroke_paint);
-    }
-
-    if (!shader_layer.filled_path.isEmpty()) {
-      SkPaint fill_paint;
-      fill_paint.setStyle(SkPaint::kFill_Style);
-      fill_paint.setShader(shader_layer.fill_shader);
-      fill_paint.setAntiAlias(true);
-      fill_paint.setBlendMode(SkBlendMode::kLighten);
-      recorder.getRecordingCanvas()->drawPath(shader_layer.filled_path,
-                                              fill_paint);
-
-      fill_paint.setStyle(SkPaint::kStroke_Style);
-      fill_paint.setShader(shader_layer.shader);
-      fill_paint.setStrokeWidth(0.05F);
-      recorder.getRecordingCanvas()->drawPath(shader_layer.filled_path,
-                                              fill_paint);
-    }
-  }
-
-  picture_ = recorder.finishRecordingAsPicture();
-  */
-}
-
-void BrdWidget::InitializeShader() {}
-
-void BrdWidget::UpdateLayerShaders() {}
 
 void BrdWidget::UpdateLayerAlpha(uint8_t layer, float alpha) {
   layer_opacities_[layer] = alpha;
@@ -228,8 +178,6 @@ void BrdWidget::Draw() {
 void BrdWidget::MarkDirty() { dirty_ = true; }
 
 void BrdWidget::IterateFile() {
-  emscripten_log(EM_LOG_INFO, "IterateFile");
-
   for (const auto &i_x1B : AppState::CurrentFile()->iter_t1B_net()) {
     for (const auto &i_x04 : AppState::CurrentFile()->iter_x04(i_x1B.k)) {
       uint32_t k = i_x04.ptr2;

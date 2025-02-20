@@ -42,9 +42,6 @@ class BrdWidget {
 
  private:
   void IterateFile();
-  void ComposeLayersToDrawable();
-  void InitializeShader();
-  void UpdateLayerShaders();
   void UpdateLayerAlpha(uint8_t layer, float new_alpha);
 
   void DrawShape(uint32_t ptr);
