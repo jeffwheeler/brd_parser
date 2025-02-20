@@ -54,7 +54,7 @@ install(FILES
   ${MAGNUM_WEBAPPLICATION_CSS}
   DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(FILES
-  ${CMAKE_BINARY_DIR}/bin/webapp.wasm
+  ${CMAKE_BINARY_DIR}/webapp/webapp.wasm
   DESTINATION ${CMAKE_INSTALL_PREFIX})
 # install(FILES
 #   # ${CMAKE_BINARY_DIR}/webapp/webapp.data
