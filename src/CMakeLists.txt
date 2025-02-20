@@ -51,6 +51,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 # suppresses the colors. See https://stackoverflow.com/a/73349744/647720.
 set(CMAKE_COLOR_DIAGNOSTICS ON)
 
+set(MAGNUM_WITH_IMGUI ON)
+set(MAGNUM_WITH_EMSCRIPTENAPPLICATION ON)
+set(MAGNUM_WITH_MESHTOOLS ON)
+
 include(FetchContent)
 FetchContent_Declare(
     googletest
