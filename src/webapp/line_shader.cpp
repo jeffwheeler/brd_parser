@@ -131,14 +131,15 @@ auto LineShader::setTransformationProjectionMatrix(const Mn::Matrix3& matrix)
 
 auto LineShader::setLayerColors(const std::array<Mn::Color4, 32> colors)
     -> LineShader& {
-  setUniform(_layerColorsUniform, Corrade::Containers::arrayView(colors.data(), colors.size()));
+  setUniform(_layerColorsUniform,
+             Corrade::Containers::arrayView(colors.data(), colors.size()));
   // setUniform(_numLayersUniform, numLayers);
   return *this;
 }
 
 auto LineShader::setLayerOpacities(const std::array<float, 32> opacities)
     -> LineShader& {
-  setUniform(_layerOpacitiesUniform,
-             Corrade::Containers::arrayView(opacities.data(), opacities.size()));
+  setUniform(_layerOpacitiesUniform, Corrade::Containers::arrayView(
+                                         opacities.data(), opacities.size()));
   return *this;
 }

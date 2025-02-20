@@ -13,13 +13,9 @@ auto AppState::State() -> AppState& {
   return state;
 }
 
-void AppState::RecordPicture() {
-  State().needs_recording_ = true;
-}
+void AppState::RecordPicture() { State().needs_recording_ = true; }
 
-void AppState::PictureRecordingDone() {
-  State().needs_recording_ = false;
-}
+void AppState::PictureRecordingDone() { State().needs_recording_ = false; }
 
 auto AppState::PictureNeedsRecording() -> bool {
   return State().needs_recording_;

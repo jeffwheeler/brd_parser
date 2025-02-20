@@ -176,7 +176,8 @@ void skip(std::ifstream* f, std::ifstream::pos_type n);
 void skip_and_pad(std::ifstream* f, std::ifstream::pos_type n);
 
 template <AllegroVersion version>
-auto parse_file_raw(boost::interprocess::mapped_region region) -> std::unique_ptr<File<kAMax>>;
+auto parse_file_raw(boost::interprocess::mapped_region region)
+    -> std::unique_ptr<File<kAMax>>;
 
 // Non-template version automatically upgrades
 auto parse_file(const std::string& filepath) -> std::unique_ptr<File<kAMax>>;

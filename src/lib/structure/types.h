@@ -1686,7 +1686,7 @@ template <AllegroVersion version>
 class File {
  public:
   File(boost::interprocess::mapped_region input_region);
-  File(const File<version>&) = delete;
+  File(const File<version> &) = delete;
 
   Header *hdr;
   std::vector<std::tuple<uint32_t, uint32_t>> layers;

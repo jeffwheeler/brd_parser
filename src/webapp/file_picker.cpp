@@ -4,11 +4,10 @@
 #include <fstream>
 #include <iostream>
 
+#include "app_state.h"
 #include "emscripten.h"
 #include "emscripten_browser_file.h"
 #include "imgui.h"
-
-#include "app_state.h"
 #include "webapp.h"
 
 void FilePickerWidget::Draw() {
@@ -19,9 +18,9 @@ void FilePickerWidget::Draw() {
   ImGui::End();
 }
 
-void FilePickerWidget::UploadFile(std::string const &filename,
-                                  std::string const & /* unused */,
-                                  std::string_view buffer, void * data_ptr) {
+void FilePickerWidget::UploadFile(std::string const& filename,
+                                  std::string const& /* unused */,
+                                  std::string_view buffer, void* data_ptr) {
   emscripten_log(EM_LOG_INFO, "Receiving %s!", filename.c_str());
 
   std::filesystem::path file_path("uploaded_file.brd");
