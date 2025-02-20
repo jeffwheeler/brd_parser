@@ -47,6 +47,9 @@ class BrdViewerApp : public Mn::Platform::Application {
  private:
   Mn::ImGuiIntegration::Context _imgui{Cr::NoCreate};
 
+  // Only updated at startup
+  Mn::Vector2i window_size_;
+
   LayerWidget layer_widget_;
   FilePickerWidget file_picker_widget_;
   BrdWidget brd_widget_;

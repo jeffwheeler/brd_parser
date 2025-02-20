@@ -14,6 +14,7 @@ BrdViewerApp::BrdViewerApp(const Arguments& arguments)
                                     .setTitle("Mn ImGui Example")
                                     .setWindowFlags(
                                         Configuration::WindowFlag::Resizable)},
+      window_size_(windowSize()),
       file_picker_widget_(this) {
   app = this;
 
@@ -31,11 +32,6 @@ BrdViewerApp::BrdViewerApp(const Arguments& arguments)
       Mn::GL::Renderer::BlendFunction::OneMinusSourceAlpha);
   Mn::GL::Renderer::disable(Mn::GL::Renderer::Feature::FaceCulling);
   Mn::GL::Renderer::enable(Mn::GL::Renderer::Feature::Blending);
-
-#if !defined(MAGNUM_TARGET_WEBGL) && !defined(CORRADE_TARGET_ANDROID)
-  /* Have some sane speed, please */
-  setMinimalLoopPeriod(16.0_msec);
-#endif
 }
 
 auto BrdViewerApp::App() -> BrdViewerApp* { return app; }
@@ -54,7 +50,14 @@ void BrdViewerApp::drawEvent() {
 
   brd_widget_.Draw();
 
+  ImGui::SetNextWindowPos(
+      ImVec2(0.65F * window_size_.x(), 0.1F * window_size_.y()),
+      ImGuiCond_FirstUseEver);
   layer_widget_.Draw();
+
+  ImGui::SetNextWindowPos(
+      ImVec2(0.15F * window_size_.x(), 0.1F * window_size_.y()),
+      ImGuiCond_FirstUseEver);
   file_picker_widget_.Draw();
 
   /* Update application cursor */
