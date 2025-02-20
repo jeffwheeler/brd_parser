@@ -4,9 +4,6 @@
 #include <Magnum/GL/DefaultFramebuffer.h>
 #include <Magnum/Math/Constants.h>
 #include <Magnum/Math/Functions.h>
-#include <Magnum/MeshTools/CompileLines.h>
-#include <Magnum/MeshTools/Concatenate.h>
-#include <Magnum/MeshTools/GenerateLines.h>
 #include <Magnum/Primitives/Circle.h>
 #include <Magnum/Trade/MeshData.h>
 #include <SDL_events.h>
