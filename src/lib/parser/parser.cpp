@@ -442,41 +442,42 @@ auto parse_x3C([[maybe_unused]] File<kAMax>& fs, void*& address) -> uint32_t {
 }
 
 template <AllegroVersion version>
-auto parse_file_raw(boost::interprocess::mapped_region region) -> File<kAMax> {
+auto parse_file_raw(boost::interprocess::mapped_region region)
+    -> std::unique_ptr<File<kAMax>> {
   void* base_addr = region.get_address();
   void* cur_addr = base_addr;
   size_t size = region.get_size();
 
-  File<kAMax> fs(std::move(region));
+  auto fs = std::make_unique<File<kAMax>>(std::move(region));
 
   // Read header
-  fs.hdr = static_cast<Header*>(base_addr);
-  // memcpy(fs.hdr, cur_addr, sizeof(header));
+  fs->hdr = static_cast<Header*>(base_addr);
+  // memcpy(fs->hdr, cur_addr, sizeof(header));
   if (PRINT_ALL_ITEMS) {
-    printf("Magic: 0x%08X\n", fs.hdr->magic);
-    printf("Logcated at %p\n", &fs.hdr->magic);
-    std::cout << fs.hdr->allegro_version << std::endl;
+    printf("Magic: 0x%08X\n", fs->hdr->magic);
+    printf("Logcated at %p\n", &fs->hdr->magic);
+    std::cout << fs->hdr->allegro_version << '\n';
   }
   skip(cur_addr, sizeof(Header));
 
   // This must be done after reading the header
-  fs.prepare();
+  fs->prepare();
 
   // Layer map
   for (uint8_t i = 0; i < 25; i++) {
     uint32_t xs[2] = {*static_cast<uint32_t*>(cur_addr),
                       *(static_cast<uint32_t*>(cur_addr) + 1)};
     skip(cur_addr, sizeof(xs));
-    fs.layers.emplace_back(xs[0], xs[1]);
+    fs->layers.emplace_back(xs[0], xs[1]);
   }
 
   // Strings map
   cur_addr = static_cast<char*>(base_addr) + 0x1200;
-  for (uint32_t i = 0; i < fs.hdr->strings_count; i++) {
+  for (uint32_t i = 0; i < fs->hdr->strings_count; i++) {
     uint32_t id = *static_cast<uint32_t*>(cur_addr);
     skip(cur_addr, 4);
 
-    fs.strings[id] = static_cast<char*>(cur_addr);
+    fs->strings[id] = static_cast<char*>(cur_addr);
 
     // Add one to include the NULL byte that might force the length to one
     // word longer.
@@ -495,20 +496,21 @@ auto parse_file_raw(boost::interprocess::mapped_region region) -> File<kAMax> {
 
     const ParserFunc parser = PARSER_TABLE<version>[t];
     if (t < 0x3E && parser != nullptr) {
-      parser(fs, cur_addr);
+      parser(*fs, cur_addr);
     } else {
       log(base_addr, cur_addr, "Stuck here at t=0x%02X\n", t);
       break;
     }
   }
 
-  // log(base_addr_glb, cur_addr, "Magic = %08X\n", fs.hdr->magic);
-  fs.layer_count = layer_count(&fs);
+  // log(base_addr_glb, cur_addr, "Magic = %08X\n", fs->hdr->magic);
+  // FIXME: Modify `layer_count` to accept the unique pointer.
+  fs->layer_count = layer_count(fs.get());
 
   return fs;
 }
 
-auto parse_file(const std::string& filepath) -> std::optional<File<kAMax>> {
+auto parse_file(const std::string& filepath) -> std::unique_ptr<File<kAMax>> {
   if (!std::filesystem::exists(filepath)) {
     printf("Unable to open file because it does not exist.\n");
     return {};

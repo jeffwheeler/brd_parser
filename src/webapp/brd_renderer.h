@@ -1,58 +1,100 @@
 #pragma once
 
+#include <Magnum/GL/Mesh.h>
+#include <Magnum/Math/Color.h>
+#include <Magnum/Math/Half.h>
+#include <Magnum/Math/Matrix3.h>
+#include <Magnum/Math/Vector2.h>
+#include <Magnum/Platform/EmscriptenApplication.h>
+#include <Magnum/Trade/MeshData.h>
 #include <imgui_impl_sdl2.h>
 
-#include <memory>
-#include <set>
 #include <unordered_set>
+#include <vector>
 
-#include "include/core/SkCanvas.h"
-#include "include/core/SkPath.h"
-#include "include/core/SkPicture.h"
-#include "include/core/SkPictureRecorder.h"
-#include "include/core/SkSurface.h"
-#include "include/effects/SkRuntimeEffect.h"
 #include "lib/structure/types.h"
+#include "webapp/line_shader.h"
+
+namespace Mn = Magnum;
+
+using namespace Mn::Math::Literals;
 
 class BrdWidget {
  public:
   BrdWidget();
 
   void UpdateFile();
-  void Draw(SkSurface* surface);
+  void Draw();
 
-  void HandleMouseWheel(const SDL_Event& event);
-  void HandleMouseDown(const SDL_Event& event);
-  void HandleMouseUp(const SDL_Event& event);
-  void HandleMouseMove(const SDL_Event& event);
+  void UpdateScreenRatio();
+  void HandleMouseWheel(
+      Mn::Platform::EmscriptenApplication::ScrollEvent& event);
+  void HandleMouseDown(
+      Mn::Platform::EmscriptenApplication::PointerEvent& event);
+  void HandleMouseUp(Mn::Platform::EmscriptenApplication::PointerEvent& event);
+  void HandleMouseMove(
+      Mn::Platform::EmscriptenApplication::PointerMoveEvent& event);
   void MarkDirty();
 
  private:
   void IterateFile();
-  void ComposeLayersToDrawable();
-  void InitializeShader();
-  void UpdateLayerShaders();
   void UpdateLayerAlpha(uint8_t layer, float new_alpha);
 
   void DrawShape(uint32_t ptr);
   void DrawX05(const T05Line<kAMax>* inst);
   void DrawX28(const T28Shape<kAMax>* inst);
 
-  auto StartingPoint(uint32_t k) -> std::optional<SkPoint>;
-  auto IsLineSegment(uint32_t k) -> bool;
-  auto GetWidthIndex(float width) -> size_t;
+  // Used for T15LineSegment, T16LineSegment, or T17LineSegment
+  template <class T>
+  void DrawSegment(const T* inst, Mn::Half width, uint8_t layer_id);
 
-  auto ScreenToWorld(const SkPoint& screen_pos) -> SkPoint;
-  static auto LayerToShader(const LayerInfo layer) -> uint8_t;
-  static auto IsPointNearPath(const SkPath& path, const SkPoint& point,
-                              float width) -> bool;
+  void AddSegment(Mn::Vector2 start, Mn::Vector2 end, Mn::Half width,
+                  uint8_t layer);
+  void AddArc(const T01ArcSegment<kAMax>& segment_inst, Mn::Half width,
+              uint8_t layer_id);
+  void AddLineCap(Mn::Vector2 start, Mn::Vector2 end, Mn::Half width,
+                  uint8_t layer);
+  auto StartingPoint(uint32_t k) -> std::optional<Mn::Vector2>;
+  auto IsLineSegment(uint32_t k) -> bool;
+
+  auto ScreenToWorld(const Mn::Vector2& screen_pos, bool center = false)
+      -> Mn::Vector2;
+  static auto LayerToShader(LayerInfo layer) -> uint8_t;
+  // static auto IsPointNearPath(const SkPath& path, const SkPoint& point,
+  //                             float width) -> bool;
 
   std::shared_ptr<File<kAMax>> fs_;
   std::unordered_set<uint32_t> already_drawn_;
 
-  sk_sp<SkPicture> picture_;
+  struct VertexData {
+    Mn::Vector2 position;
+    Mn::Vector2 next;
+    Mn::Half width;
+    Mn::Byte step;
+    Mn::Byte layer_id;
+  };
+
+  Mn::GL::Buffer buffer;
+  Mn::GL::Mesh mesh_;
+  LineShader _lineShader;
+
+  std::vector<VertexData> lines_cache_;
+
+  std::array<Mn::Color4, 32> layer_colors_{};
+  std::array<float, 32> layer_opacities_{};
+  // sk_sp<SkPicture> picture_;
   std::unordered_set<LayerInfo> visible_layers_cache_;
 
+  // This cannot be `constexpr` because the `Half` literal is not `constexpr`.
+  Mn::Half border_width_ = 0.003_h;
+
+  constexpr static float kNormalOpacity = 0.9F;
+  constexpr static float kShadowOpacity = 0.15F;
+
+  // FIXME: Could this be max radians instead?
+  constexpr static uint8_t kArcSegmentDivision = 8;
+
+  /*
   static constexpr size_t common_width_count_ = 8;
   struct LayerPaths {
     std::array<SkPath, common_width_count_> common_width_paths;
@@ -82,12 +124,15 @@ class BrdWidget {
   std::vector<LineSegmentInfo> segment_paths_;
   int hover_segment_index_ = -1;
   SkPoint current_mouse_pos_{};
+  */
 
   bool dirty_ = true;
-  float factor_ = 1000.;
-  int cached_height_ = 0.;
-  float zoom_ = 1.0;
-  SkPoint pan_{0, 0};
+  float factor_ = 500000.;
+  // int cached_height_ = 0.;
+  // float zoom_ = 1.0;
+  // Mn::Vector2 pan_{0, 0};
   bool is_panning_ = false;
-  SkPoint last_mouse_pos_{0, 0};
+  Mn::Vector2 last_mouse_pos_{0, 0};
+
+  Mn::Matrix3 transformation_matrix_, projection_matrix_, aspect_ratio_matrix_;
 };

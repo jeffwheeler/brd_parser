@@ -17,7 +17,7 @@ endif ()
 
 project(AllegroParser)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 add_compile_options("-g")
 # add_compile_options("-O0")
@@ -25,12 +25,13 @@ add_compile_options("-O3")
 add_compile_options("-Wall")
 
 # https://groups.google.com/g/skia-discuss/c/UZil9nCWGhg
-add_compile_options("-DSK_TRIVIAL_ABI=[[clang::trivial_abi]]")
-add_compile_options("-DCK_ENABLE_WEBGL=1")
-add_compile_options("-DSK_GL=1")
-add_compile_options("-DSK_DISABLE_TRACING=1")
-add_compile_options("-DSKNX_NO_SIMD=1")
-add_compile_options("-DSK_FORCE_8_BYTE_ALIGNMENT=1")
+# add_compile_options("-DSK_TRIVIAL_ABI=[[clang::trivial_abi]]")
+# add_compile_options("-DMAGNUM_TARGET_WEBGL=1")
+# add_compile_options("-DCK_ENABLE_WEBGL=1")
+# add_compile_options("-DSK_GL=1")
+# add_compile_options("-DSK_DISABLE_TRACING=1")
+# add_compile_options("-DSKNX_NO_SIMD=1")
+# add_compile_options("-DSK_FORCE_8_BYTE_ALIGNMENT=1")
 
 if (MSVC)
   # Fix Boost compatibility issue with MSVC:
@@ -50,6 +51,14 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 # suppresses the colors. See https://stackoverflow.com/a/73349744/647720.
 set(CMAKE_COLOR_DIAGNOSTICS ON)
 
+set(MAGNUM_WITH_IMGUI ON)
+set(MAGNUM_WITH_EMSCRIPTENAPPLICATION ON)
+set(MAGNUM_WITH_MESHTOOLS ON)
+
+set(MAGNUM_TARGET_WEBGL ON)
+set(MAGNUM_TARGET_GLES ON)
+set(MAGNUM_TARGET_GLES2 OFF)
+
 include(FetchContent)
 FetchContent_Declare(
     googletest
@@ -62,7 +71,22 @@ if (BUILD_WEBAPP)
     GIT_REPOSITORY https://github.com/Armchair-Software/emscripten-browser-file.git
     GIT_TAG b7312b42dc92dc791dac53a7df96e231a8751607
   )
-  FetchContent_MakeAvailable(googletest em_file_browser)
+  FetchContent_Declare(
+      corrade
+      GIT_REPOSITORY https://github.com/mosra/corrade.git
+      GIT_TAG 9ade86c04bd4d930b0c897ec82d2833eea8ceaa4
+  )
+  FetchContent_Declare(
+      magnum
+      GIT_REPOSITORY https://github.com/mosra/magnum.git
+      GIT_TAG 15f76e08b68f89f1e971ab57fa9cd6747018fd16
+  )
+  FetchContent_Declare(
+      magnum_integration
+      GIT_REPOSITORY https://github.com/mosra/magnum-integration.git
+      GIT_TAG ed2730d95836fdcbdbb659c5c070bcde2eb07175
+  )
+  FetchContent_MakeAvailable(googletest em_file_browser corrade magnum magnum_integration)
 else ()
   FetchContent_MakeAvailable(googletest)
 endif ()
@@ -77,8 +101,6 @@ find_package(boost_unordered REQUIRED CONFIG)
 include_directories(${Boost_INCLUDE_DIRS})
 
 # set(WITH_IMGUI ON CACHE BOOL "" FORCE)
-# set(CMAKE_MODULE_PATH "${magnum_integration_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
-# find_package(MagnumIntegration REQUIRED ImGui)
 
 # This allows headers to be imported from "lib/.../*.h"
 include_directories(.)

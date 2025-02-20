@@ -1,5 +1,7 @@
 #include "types.h"
 
+#include <iostream>
+
 template <>
 T01ArcSegment<kA160>::operator T01ArcSegment<kAMax>() const {
   T01ArcSegment<kAMax> new_inst{};

@@ -7,7 +7,7 @@ void TestBrdView::drawAllSymbolPaths() {
 
   auto parsed_file = parse_file("../../test/data/fmc_tlu/fmc_tlu_v1f_38.brd");
   if (parsed_file) {
-    brdview.loadFile(&parsed_file.value());
+    brdview.loadFile(parsed_file.get());
   }
 
   // Show the appropriate layer
@@ -31,7 +31,7 @@ void TestBrdView::handleBackdrills() {
   auto parsed_file = parse_file(
       "../../test/data/opencellular_sdr/OC_CONNECT_1_SDR_LIFE-3.brd");
   if (parsed_file) {
-    brdview.loadFile(&parsed_file.value());
+    brdview.loadFile(parsed_file.get());
   }
 
   // Should draw backdrill chart symbols

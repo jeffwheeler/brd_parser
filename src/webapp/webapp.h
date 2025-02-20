@@ -1,35 +1,58 @@
 #pragma once
 
-#include <GLES3/gl3.h>
-#include <SDL.h>
+// #include <GLES3/gl3.h>
+// #include <SDL.h>
 
-#include "include/core/SkSurface.h"
+// #include "include/core/SkSurface.h"
+// #include "webapp/brd_renderer.h"
+// #include "webapp/layer_widget.h"
+
+#include <Magnum/GL/DefaultFramebuffer.h>
+#include <Magnum/GL/Renderer.h>
+#include <Magnum/Math/Color.h>
+#include <Magnum/Math/Time.h>
+#include <Magnum/Platform/EmscriptenApplication.h>
+
+#include <Magnum/ImGuiIntegration/Context.hpp>
+
 #include "webapp/brd_renderer.h"
+#include "webapp/file_picker.h"
 #include "webapp/layer_widget.h"
 
-class BrdViewerApp {
+namespace Cr = Corrade;
+namespace Mn = Magnum;
+
+using namespace Mn::Math::Literals;
+
+class BrdViewerApp : public Mn::Platform::Application {
  public:
-  explicit BrdViewerApp();
+  explicit BrdViewerApp(const Arguments& arguments);
 
-  static auto App() -> BrdViewerApp&;
-
-  void Render();
+  static auto App() -> BrdViewerApp*;
   void HandleFileUpload(const std::string& filepath);
 
+  void drawEvent() override;
+
+  void viewportEvent(ViewportEvent& event) override;
+
+  void keyPressEvent(KeyEvent& event) override;
+  void keyReleaseEvent(KeyEvent& event) override;
+
+  void pointerPressEvent(PointerEvent& event) override;
+  void pointerReleaseEvent(PointerEvent& event) override;
+  void pointerMoveEvent(PointerMoveEvent& event) override;
+  void scrollEvent(ScrollEvent& event) override;
+  void textInputEvent(TextInputEvent& event) override;
+
  private:
-  SDL_Window* window_;
-  SkSurface* skia_surface_ = nullptr;
-  GrDirectContext* gr_context_ = nullptr;
+  Mn::ImGuiIntegration::Context _imgui{Cr::NoCreate};
+
+  // Only updated at startup
+  Mn::Vector2i window_size_;
 
   LayerWidget layer_widget_;
+  FilePickerWidget file_picker_widget_;
   BrdWidget brd_widget_;
 
-  double device_pixel_ratio_ = 1.0;
-  int width_ = 0;
-  int height_ = 0;
-
-  void RenderSkia();
-  void RenderImGuiOverlay();
-  void Resize(int width, int height);
-  void CreateSkiaSurface();
+  Mn::Color4 _clearColor = 0x72909aff_rgbaf;
 };

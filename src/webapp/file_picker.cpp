@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 
+#include "app_state.h"
 #include "emscripten.h"
 #include "emscripten_browser_file.h"
 #include "imgui.h"
@@ -12,15 +13,14 @@
 void FilePickerWidget::Draw() {
   ImGui::Begin("File Picker");
   if (ImGui::Button("Open file")) {
-    emscripten_browser_file::upload(".brd", UploadFile);
+    emscripten_browser_file::upload(".brd", UploadFile, this);
   }
-  ImGui::Text("You can also drag-and-drop anywhere");
   ImGui::End();
 }
 
-void FilePickerWidget::UploadFile(std::string const &filename,
-                                  std::string const & /* unused */,
-                                  std::string_view buffer, void * /*unused*/) {
+void FilePickerWidget::UploadFile(std::string const& filename,
+                                  std::string const& /* unused */,
+                                  std::string_view buffer, void* data_ptr) {
   emscripten_log(EM_LOG_INFO, "Receiving %s!", filename.c_str());
 
   std::filesystem::path file_path("uploaded_file.brd");
@@ -39,5 +39,6 @@ void FilePickerWidget::UploadFile(std::string const &filename,
   }
   outfile.close();
 
-  BrdViewerApp::App().HandleFileUpload("uploaded_file.brd");
+  auto* widget = static_cast<FilePickerWidget*>(data_ptr);
+  widget->app_->HandleFileUpload("uploaded_file.brd");
 }
