@@ -46,13 +46,12 @@ class BrdWidget {
 
   void DrawShape(uint32_t ptr);
   void DrawX05(const T05Line<kAMax>* inst);
-  void DrawX15(const T15LineSegment<kAMax>* inst, Mn::Half width,
-               uint8_t layer_id);
-  void DrawX16(const T16LineSegment<kAMax>* inst, Mn::Half width,
-               uint8_t layer_id);
-  void DrawX17(const T17LineSegment<kAMax>* inst, Mn::Half width,
-               uint8_t layer_id);
   void DrawX28(const T28Shape<kAMax>* inst);
+
+  // Used for T15LineSegment, T16LineSegment, or T17LineSegment
+  template <class T>
+  void DrawSegment(const T* inst, Mn::Half width,
+               uint8_t layer_id);
 
   void AddSegment(Mn::Vector2 start, Mn::Vector2 end, Mn::Half width,
                   uint8_t layer);

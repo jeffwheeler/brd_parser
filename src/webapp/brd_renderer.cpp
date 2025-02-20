@@ -1,7 +1,5 @@
 #include "webapp/brd_renderer.h"
 
-#include <chrono>
-
 #include <Magnum/GL/Buffer.h>
 #include <Magnum/GL/DefaultFramebuffer.h>
 #include <Magnum/Math/Constants.h>
@@ -16,6 +14,8 @@
 #include <arpa/inet.h>
 #include <emscripten.h>
 #include <emscripten/html5.h>
+
+#include <chrono>
 
 #include "lib/structure/utils.h"
 #include "webapp/app_state.h"
@@ -384,45 +384,24 @@ void BrdWidget::DrawX05(const T05Line<kAMax> *inst) {
       const T15LineSegment<kAMax> segment_inst =
           AppState::CurrentFile()->get_x15(k);
       Mn::Half segment_width{segment_inst.width / factor_};
-      DrawX15(&segment_inst, segment_width, layer_id);
+      DrawSegment(&segment_inst, segment_width, layer_id);
       k = segment_inst.next;
     } else if (AppState::CurrentFile()->is_type(k, 0x16)) {
       const T16LineSegment<kAMax> segment_inst =
           AppState::CurrentFile()->get_x16(k);
       Mn::Half segment_width{segment_inst.width / factor_};
-      DrawX16(&segment_inst, segment_width, layer_id);
+      DrawSegment(&segment_inst, segment_width, layer_id);
       k = segment_inst.next;
     } else if (AppState::CurrentFile()->is_type(k, 0x17)) {
       const T17LineSegment<kAMax> segment_inst =
           AppState::CurrentFile()->get_x17(k);
       Mn::Half segment_width{segment_inst.width / factor_};
-      DrawX17(&segment_inst, segment_width, layer_id);
+      DrawSegment(&segment_inst, segment_width, layer_id);
       k = segment_inst.next;
     } else {
       return;
     }
   }
-}
-
-void BrdWidget::DrawX15(const T15LineSegment<kAMax> *inst, Mn::Half width,
-                        uint8_t layer_id) {
-  Mn::Vector2 start = {inst->coords[0] / factor_, inst->coords[1] / factor_};
-  Mn::Vector2 end = {inst->coords[2] / factor_, inst->coords[3] / factor_};
-  AddSegment(start, end, width, layer_id);
-}
-
-void BrdWidget::DrawX16(const T16LineSegment<kAMax> *inst, Mn::Half width,
-                        uint8_t layer_id) {
-  Mn::Vector2 start = {inst->coords[0] / factor_, inst->coords[1] / factor_};
-  Mn::Vector2 end = {inst->coords[2] / factor_, inst->coords[3] / factor_};
-  AddSegment(start, end, width, layer_id);
-}
-
-void BrdWidget::DrawX17(const T17LineSegment<kAMax> *inst, Mn::Half width,
-                        uint8_t layer_id) {
-  Mn::Vector2 start = {inst->coords[0] / factor_, inst->coords[1] / factor_};
-  Mn::Vector2 end = {inst->coords[2] / factor_, inst->coords[3] / factor_};
-  AddSegment(start, end, width, layer_id);
 }
 
 void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
@@ -438,22 +417,29 @@ void BrdWidget::DrawX28(const T28Shape<kAMax> *inst) {
     } else if (AppState::CurrentFile()->is_type(k, 0x15)) {
       const T15LineSegment<kAMax> segment_inst =
           AppState::CurrentFile()->get_x15(k);
-      DrawX15(&segment_inst, border_width_, layer_id);
+      DrawSegment(&segment_inst, border_width_, layer_id);
       k = segment_inst.next;
     } else if (AppState::CurrentFile()->is_type(k, 0x16)) {
       const T16LineSegment<kAMax> segment_inst =
           AppState::CurrentFile()->get_x16(k);
-      DrawX16(&segment_inst, border_width_, layer_id);
+      DrawSegment(&segment_inst, border_width_, layer_id);
       k = segment_inst.next;
     } else if (AppState::CurrentFile()->is_type(k, 0x17)) {
       const T17LineSegment<kAMax> segment_inst =
           AppState::CurrentFile()->get_x17(k);
-      DrawX17(&segment_inst, border_width_, layer_id);
+      DrawSegment(&segment_inst, border_width_, layer_id);
       k = segment_inst.next;
     } else {
       return;
     }
   }
+}
+
+template <class T>
+void BrdWidget::DrawSegment(const T *inst, Mn::Half width, uint8_t layer_id) {
+  Mn::Vector2 start = {inst->coords[0] / factor_, inst->coords[1] / factor_};
+  Mn::Vector2 end = {inst->coords[2] / factor_, inst->coords[3] / factor_};
+  AddSegment(start, end, width, layer_id);
 }
 
 auto BrdWidget::StartingPoint(uint32_t k) -> std::optional<Mn::Vector2> {
