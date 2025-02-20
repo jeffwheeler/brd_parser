@@ -39,7 +39,8 @@ target_compile_options(webapp PRIVATE "--use-port=sdl2")
 
 target_link_options(webapp PRIVATE "-sALLOW_MEMORY_GROWTH")
 # Enabling DWARF support prevents binaryen optimizations
-target_link_options(webapp PRIVATE "-g")
+# target_link_options(webapp PRIVATE "-g")
+target_link_options(webapp PRIVATE "-sWASM=1")
 target_link_options(webapp PRIVATE "-sFULL_ES2=1")
 target_link_options(webapp PRIVATE "-sFULL_ES3=1")
 target_link_options(webapp PRIVATE "-sUSE_WEBGL2=1")
@@ -54,7 +55,7 @@ install(FILES
   ${MAGNUM_WEBAPPLICATION_CSS}
   DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(FILES
-  ${CMAKE_BINARY_DIR}/webapp/webapp.wasm
+  ${CMAKE_BINARY_DIR}/Release/bin/webapp.wasm
   DESTINATION ${CMAKE_INSTALL_PREFIX})
 # install(FILES
 #   # ${CMAKE_BINARY_DIR}/webapp/webapp.data
