@@ -12,10 +12,11 @@
 #include <Magnum/Math/Color.h>
 #include <Magnum/Math/Time.h>
 #include <Magnum/Platform/EmscriptenApplication.h>
+
 #include <Magnum/ImGuiIntegration/Context.hpp>
 
-#include "webapp/file_picker.h"
 #include "webapp/brd_renderer.h"
+#include "webapp/file_picker.h"
 #include "webapp/layer_widget.h"
 
 namespace Cr = Corrade;
@@ -27,6 +28,7 @@ class BrdViewerApp : public Mn::Platform::Application {
  public:
   explicit BrdViewerApp(const Arguments& arguments);
 
+  static auto App() -> BrdViewerApp*;
   void HandleFileUpload(const std::string& filepath);
 
   void drawEvent() override;

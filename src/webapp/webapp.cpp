@@ -5,6 +5,9 @@
 #include "lib/parser/parser.h"
 #include "webapp/app_state.h"
 
+// Singleton hack
+static BrdViewerApp* app;
+
 BrdViewerApp::BrdViewerApp(const Arguments& arguments)
     : Mn::Platform::Application{arguments,
                                 Configuration{}
@@ -12,6 +15,8 @@ BrdViewerApp::BrdViewerApp(const Arguments& arguments)
                                     .setWindowFlags(
                                         Configuration::WindowFlag::Resizable)},
       file_picker_widget_(this) {
+  app = this;
+
   _imgui =
       Mn::ImGuiIntegration::Context(Mn::Vector2{windowSize()} / dpiScaling(),
                                     windowSize(), framebufferSize());
@@ -32,6 +37,8 @@ BrdViewerApp::BrdViewerApp(const Arguments& arguments)
   setMinimalLoopPeriod(16.0_msec);
 #endif
 }
+
+auto BrdViewerApp::App() -> BrdViewerApp* { return app; }
 
 void BrdViewerApp::drawEvent() {
   Mn::GL::defaultFramebuffer.clear(Mn::GL::FramebufferClear::Color);
@@ -137,6 +144,13 @@ void BrdViewerApp::HandleFileUpload(const std::string& filepath) {
   } else {
     emscripten_log(EM_LOG_ERROR, "Failed to parse dropped file");
   }
+}
+
+extern "C" {
+EMSCRIPTEN_KEEPALIVE
+void handleDroppedFile(const char* filepath) {
+  BrdViewerApp::App()->HandleFileUpload(filepath);
+}
 }
 
 MAGNUM_EMSCRIPTENAPPLICATION_MAIN(BrdViewerApp)

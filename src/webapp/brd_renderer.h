@@ -50,8 +50,7 @@ class BrdWidget {
 
   // Used for T15LineSegment, T16LineSegment, or T17LineSegment
   template <class T>
-  void DrawSegment(const T* inst, Mn::Half width,
-               uint8_t layer_id);
+  void DrawSegment(const T* inst, Mn::Half width, uint8_t layer_id);
 
   void AddSegment(Mn::Vector2 start, Mn::Vector2 end, Mn::Half width,
                   uint8_t layer);
@@ -132,7 +131,7 @@ class BrdWidget {
   */
 
   bool dirty_ = true;
-  float factor_ = 100000.;
+  float factor_ = 500000.;
   // int cached_height_ = 0.;
   // float zoom_ = 1.0;
   // Mn::Vector2 pan_{0, 0};
