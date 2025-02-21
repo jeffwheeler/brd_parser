@@ -5,8 +5,6 @@ cmake_minimum_required(VERSION 3.15)
 cmake_policy(SET CMP0091 NEW)
 cmake_policy(SET CMP0167 NEW)
 
-# set(CMAKE_SYSTEM_PROCESSOR "wasm")
-
 option(BUILD_GUI "Build Qt GUI")
 option(BUILD_WEBAPP "Build WASM web app")
 
